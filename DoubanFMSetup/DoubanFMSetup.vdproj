@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_000454E64ECD774163286F4FB7C56178"
+        "OwnerKey" = "8:_FDCE02E63BAA4DA28A404CE68277EC8F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_07D818E2B6C35187D70F80A8BCE4F063"
         "OwnerKey" = "8:_49005E81110BBD10A5AF645B56A67466"
         "MsmSig" = "8:_UNDEFINED"
@@ -33,12 +39,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4DB1DFDA1909F0EBE86207B4741F3388"
-        "OwnerKey" = "8:_FDCE02E63BAA4DA28A404CE68277EC8F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_FDCE02E63BAA4DA28A404CE68277EC8F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -52,7 +52,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4DB1DFDA1909F0EBE86207B4741F3388"
+        "OwnerKey" = "8:_000454E64ECD774163286F4FB7C56178"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -209,6 +209,37 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_000454E64ECD774163286F4FB7C56178"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:DoubanFM.Core, Version=1.0.1.39864, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_000454E64ECD774163286F4FB7C56178"
+                    {
+                    "Name" = "8:DoubanFM.Core.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:DoubanFM.Core.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_FB4240B52D4F4A36A6E4363EE8A92F7B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_07D818E2B6C35187D70F80A8BCE4F063"
             {
             "AssemblyRegister" = "3:1"
@@ -254,37 +285,6 @@
                     }
                 }
             "SourcePath" = "8:Microsoft.Expression.Interactions.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_FB4240B52D4F4A36A6E4363EE8A92F7B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4DB1DFDA1909F0EBE86207B4741F3388"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DoubanFM.Core, Version=1.0.1.39687, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_4DB1DFDA1909F0EBE86207B4741F3388"
-                    {
-                    "Name" = "8:DoubanFM.Core.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:DoubanFM.Core.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FB4240B52D4F4A36A6E4363EE8A92F7B"
@@ -370,7 +370,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:豆瓣电台"
         "ProductCode" = "8:{5420214E-2FFC-420E-8606-3516DEC1A4C0}"
-        "PackageCode" = "8:{5BD9F3CF-2EAF-4D50-B0BD-D35EEEC6BE2A}"
+        "PackageCode" = "8:{A5B36532-53F9-4E3F-BDAD-496929728940}"
         "UpgradeCode" = "8:{19E0974D-92D0-4336-92EF-EA1CE7F435A6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -919,7 +919,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FDCE02E63BAA4DA28A404CE68277EC8F"
             {
-            "SourcePath" = "8:..\\DoubanFM\\obj\\x86\\Setup\\DoubanFM.exe"
+            "SourcePath" = "8:..\\DoubanFM\\obj\\x86\\Release\\DoubanFM.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FB4240B52D4F4A36A6E4363EE8A92F7B"
