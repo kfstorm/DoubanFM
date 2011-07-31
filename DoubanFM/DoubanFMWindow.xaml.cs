@@ -51,6 +51,8 @@ namespace DoubanFM
         /// DJ频道列表
         /// </summary>
         ObservableCollection<Cate> DjCatesItem;
+        private System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
+        private System.Windows.Forms.ToolStripItem notifyIcon_ShowWindow, notifyIcon_Heart, notifyIcon_Never, notifyIcon_PlayPause, notifyIcon_Next, notifyIcon_Exit;
         #endregion
 
         #region 初始化
@@ -60,6 +62,49 @@ namespace DoubanFM
         public DoubanFMWindow()
         {
             InitializeComponent();
+
+            notifyIcon.Visible = false;
+            notifyIcon.Icon = Properties.Resources.NotifyIcon;
+            notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler((s, e) =>
+            {
+                if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                {
+                    this.Visibility = Visibility.Visible;
+                    this.Activate();
+                }
+            });
+            System.Windows.Forms.ContextMenuStrip notifyIconMenu = new System.Windows.Forms.ContextMenuStrip();
+            notifyIcon.ContextMenuStrip = notifyIconMenu;
+
+            notifyIconMenu.Items.Add("显示窗口");
+            notifyIcon_ShowWindow = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_ShowWindow.Click += new EventHandler((s, e) => { this.Visibility = Visibility.Visible; });
+            notifyIconMenu.Items.Add("-");
+            notifyIconMenu.Items.Add("加红心");
+            notifyIcon_Heart = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_Heart.Click += new EventHandler((s, e) => { LikeOrUnlike(); });
+            notifyIconMenu.Items.Add("不再播放");
+            notifyIcon_Never = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_Never.Click += new EventHandler((s, e) => { Never(); });
+            notifyIconMenu.Items.Add("-");
+            notifyIconMenu.Items.Add("暂停");
+            notifyIcon_PlayPause = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_PlayPause.Click += new EventHandler((s, e) =>
+            {
+                System.Windows.Forms.ToolStripItem sender = (System.Windows.Forms.ToolStripItem)s;
+                if (sender.Text == "播放")
+                    Play();
+                else
+                    Pause();
+            });
+            notifyIconMenu.Items.Add("下一首");
+            notifyIcon_Next = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_Next.Click += new EventHandler((s, e) => { Next(); });
+            notifyIconMenu.Items.Add("-");
+            notifyIconMenu.Items.Add("退出");
+            notifyIcon_Exit = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_Exit.Click += new EventHandler((s, e) => { this.Close(); });
+
             player = (Player)FindResource("Player");
             player.DjChannelPlayingEnded += new EventHandler(player_DjChannelPlayingEnded);
             PbPassword.Password = player.settings.User.Password;
@@ -237,6 +282,7 @@ namespace DoubanFM
             Thread thread = new Thread(new ThreadStart(() =>
             {
                 player.Pause();
+                this.Dispatcher.BeginInvoke(new Action(() => { notifyIcon_PlayPause.Text = "播放"; }));
             }));
             thread.IsBackground = true;
             thread.Start();
@@ -259,6 +305,7 @@ namespace DoubanFM
                             if (LastSong != player.CurrentSong)
                                 Update();
                             Audio.Play();
+                            notifyIcon_PlayPause.Text = "暂停";
                             Debug.WriteLine("Audio.Play()");
                         }));
                 }));
@@ -276,9 +323,15 @@ namespace DoubanFM
             if (CurrentLike != CheckBoxLike.IsChecked)
                 CheckBoxLike.IsChecked = CurrentLike;
             if (CurrentLike)
+            {
                 LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
+                notifyIcon_Heart.Text = "去红心";
+            }
             else
+            {
                 LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+                notifyIcon_Heart.Text = "加红心";
+            }
             Thread thread = new Thread(new ThreadStart(() =>
                 {
                     player.LikeOrUnlike();
@@ -341,9 +394,15 @@ namespace DoubanFM
             {
                 CheckBoxLike.IsEnabled = true;
                 if (song.like)
+                {
                     LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
+                    notifyIcon_Heart.Text = "去红心";
+                }
                 else
+                {
                     LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+                    notifyIcon_Heart.Text = "加红心";
+                }
                 ButtonNever.IsEnabled = true;
                 NeverThumb.IsEnabled = true;
                 NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
@@ -432,33 +491,6 @@ namespace DoubanFM
                 ShowCover1Storyboard.Begin();
             }
         }
-
-        ///// <summary>
-        ///// Applies the settings.
-        ///// </summary>
-        //void ApplySettings()
-        //{
-        //    TbUsername.Text = player.settings.User.Username;
-        //    PbPassword.Password = player.settings.User.Password;
-        //    CheckBoxRememberPassword.IsChecked = player.settings.RememberPassword;
-        //    CheckBoxAutoLogOnNextTime.IsChecked = player.settings.AutoLogOnNextTime;
-        //    CheckBoxRememberLastChannel.IsChecked = player.settings.RememberLastChannel;
-        //    SliderVolume.Value = player.settings.Volume;
-        //    CheckBoxSlideCoverWhenMouseMove.IsChecked = player.settings.SlideCoverWhenMouseMove;
-        //}
-        ///// <summary>
-        ///// Saves the settings.
-        ///// </summary>
-        //void SaveSettings()
-        //{
-        //    player.settings.User.Username = TbUsername.Text;
-        //    player.settings.User.Password = PbPassword.Password;
-        //    player.settings.RememberPassword = CheckBoxRememberPassword.IsChecked == true;
-        //    player.settings.AutoLogOnNextTime = CheckBoxAutoLogOnNextTime.IsChecked == true;
-        //    player.settings.RememberLastChannel = CheckBoxRememberLastChannel.IsChecked == true;
-        //    player.settings.Volume = SliderVolume.Value;
-        //    player.settings.SlideCoverWhenMouseMove = CheckBoxSlideCoverWhenMouseMove.IsChecked == true;
-        //}
         #endregion
 
         #region 事件响应
@@ -600,6 +632,7 @@ namespace DoubanFM
         private void Window_Closed(object sender, EventArgs e)
         {
             Audio.Stop();
+            notifyIcon.Dispose();
             player.SaveSettings();
             if (!player.settings.AutoLogOnNextTime && player.LoggedOn)
                 player.LogOff();
@@ -720,18 +753,18 @@ namespace DoubanFM
                 Thread thread = new Thread(new ThreadStart(() =>
                 {
                     player.LogOff();
-                        this.Dispatcher.BeginInvoke(new Action(() =>
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        LoggingOffPanel.Visibility = Visibility.Hidden;
+                        if (!player.LoggedOn)
                         {
-                            LoggingOffPanel.Visibility = Visibility.Hidden;
-                            if (!player.LoggedOn)
-                            {
-                                LogOnPanel.Visibility = Visibility.Visible;
-                                ShowChannels();
-                                RefreshCaptcha();
-                            }
-                            else
-                                LogOffPanel.Visibility = Visibility.Visible;
-                        }));
+                            LogOnPanel.Visibility = Visibility.Visible;
+                            ShowChannels();
+                            RefreshCaptcha();
+                        }
+                        else
+                            LogOffPanel.Visibility = Visibility.Visible;
+                    }));
                 }));
                 thread.IsBackground = true;
                 thread.Start();
@@ -982,6 +1015,31 @@ namespace DoubanFM
         {
             SlideCoverRightTimer.Stop();
             SlideCoverLeftTimer.Stop();
+        }
+
+        private void ButtonMinimize_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.WindowState = System.Windows.WindowState.Minimized;
+        }
+
+        private void ButtonToNotifyIcon_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.Visibility = Visibility.Hidden;
+        }
+
+        private void ButtonExit_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Window_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            notifyIcon.Visible = !this.IsVisible;
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+        	this.DragMove();
         }
         #endregion
 

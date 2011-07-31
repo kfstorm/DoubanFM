@@ -59,5 +59,12 @@ namespace DoubanFM.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Icon NotifyIcon {
+            get {
+                object obj = ResourceManager.GetObject("NotifyIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

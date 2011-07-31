@@ -842,4 +842,81 @@
 		</Setter>
 	</Style>
 	
+	<Style x:Key="MinimizeStyle" TargetType="{x:Type Button}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="最小化"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+	<Rectangle Width="192" Height="32" Canvas.Left="32" Canvas.Top="192" Stretch="Fill" Fill="{TemplateBinding Foreground}"/>
+</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="ToNotifyIconStyle" TargetType="{x:Type Button}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="最小化到托盘"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+	<Path Width="224" Height="224" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" StrokeThickness="32" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Data="M 32,32L 224,224"/>
+	<Path Width="127.5" Height="128.25" Canvas.Left="112.5" Canvas.Top="112" Stretch="Fill" StrokeThickness="32" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Data="M 128.5,224.25L 224,224L 224,128"/>
+</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="ExitStyle" TargetType="{x:Type Button}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="退出"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+	<Path Width="224" Height="224" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" StrokeThickness="32" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Data="M 32,32L 224,224"/>
+	<Path Width="224" Height="224" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" StrokeThickness="32" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Data="M 224,32L 32,224"/>
+</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
 </ResourceDictionary>
