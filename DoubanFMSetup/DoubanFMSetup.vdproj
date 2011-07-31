@@ -33,7 +33,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_69E0C304D82EEB4AB948909EFDD905BD"
+        "MsmKey" = "8:_4DB1DFDA1909F0EBE86207B4741F3388"
         "OwnerKey" = "8:_FDCE02E63BAA4DA28A404CE68277EC8F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -52,7 +52,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_69E0C304D82EEB4AB948909EFDD905BD"
+        "OwnerKey" = "8:_4DB1DFDA1909F0EBE86207B4741F3388"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -271,14 +271,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_69E0C304D82EEB4AB948909EFDD905BD"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4DB1DFDA1909F0EBE86207B4741F3388"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DoubanFM.Core, Version=1.0.1.34598, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:DoubanFM.Core, Version=1.0.1.39687, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_69E0C304D82EEB4AB948909EFDD905BD"
+                    "_4DB1DFDA1909F0EBE86207B4741F3388"
                     {
                     "Name" = "8:DoubanFM.Core.dll"
                     "Attributes" = "3:512"
@@ -369,15 +369,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:豆瓣电台"
-        "ProductCode" = "8:{7A91CD17-1656-4F9B-8F82-16203F51BD56}"
-        "PackageCode" = "8:{B919DE9A-03D6-4917-BCE8-72E0D9EDC262}"
+        "ProductCode" = "8:{5420214E-2FFC-420E-8606-3516DEC1A4C0}"
+        "PackageCode" = "8:{851D6FC2-0AED-44D7-89B4-1802B9D84E28}"
         "UpgradeCode" = "8:{19E0974D-92D0-4336-92EF-EA1CE7F435A6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.1"
+        "ProductVersion" = "8:1.0.2"
         "Manufacturer" = "8:K.F.Storm"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://kfstorm.wordpress.com"
@@ -919,7 +919,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FDCE02E63BAA4DA28A404CE68277EC8F"
             {
-            "SourcePath" = "8:..\\DoubanFM\\obj\\x86\\Debug\\DoubanFM.exe"
+            "SourcePath" = "8:..\\DoubanFM\\obj\\x86\\Setup\\DoubanFM.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FB4240B52D4F4A36A6E4363EE8A92F7B"
