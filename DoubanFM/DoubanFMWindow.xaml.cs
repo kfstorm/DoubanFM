@@ -928,10 +928,10 @@ namespace DoubanFM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CoverGrid_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void CoverGrid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonUp(e);
-            if (!player.settings.SlideCoverWhenMouseMove)
+            //if (!player.settings.SlideCoverWhenMouseMove)
             {
                 Point leftLocation = e.GetPosition(LeftPanel);
                 Debug.WriteLine("LeftPanel:" + leftLocation);
@@ -1039,7 +1039,7 @@ namespace DoubanFM
 
         private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-        	this.DragMove();
+            this.DragMove();
         }
         #endregion
 
