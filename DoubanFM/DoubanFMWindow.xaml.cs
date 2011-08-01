@@ -185,8 +185,13 @@ namespace DoubanFM
                             LogOnPanel.Visibility = Visibility.Hidden;
                             LogOffPanel.Visibility = Visibility.Visible;
                         }
-                        player.Play();
-                        Audio.Play();
+                        Thread thread2 = new Thread(new ThreadStart(() =>
+                            {
+                                player.Play();
+                                this.Dispatcher.BeginInvoke(new Action(() => { Audio.Play(); }));
+                            }));
+                        thread2.IsBackground = true;
+                        thread2.Start();
                     }));
                 })));
             thread.IsBackground = true;
