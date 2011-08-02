@@ -383,6 +383,7 @@ namespace DoubanFM
                 Audio.Source = new Uri(song.url);
                 if (Paused) Audio.Pause();
                 else Audio.Play();
+                Audio.IsMuted = player.settings.IsMuted;
             }
             catch { }
             ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = song.title;
@@ -391,6 +392,7 @@ namespace DoubanFM
             ChangeSongInfoStoryboard.Begin();
             this.Title = song.title + " - " + song.artist + "    豆瓣电台 - " + player.Channel.Name;
             notifyIcon.Text = this.Title;
+            ChannelTextBlock.Text = player.Channel.Name;
             TotalTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0, 0, song.length));
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
             Slider.Minimum = 0;

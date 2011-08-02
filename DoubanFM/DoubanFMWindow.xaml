@@ -331,13 +331,20 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 							<RowDefinition Height="Auto"/>
 							<RowDefinition/>
 						</Grid.RowDefinitions>
-						<StackPanel x:Name="WindowStateControls" Orientation="Horizontal" HorizontalAlignment="Right" Height="20">
-							<Button x:Name="ButtonMinimize" Click="ButtonMinimize_Click" Style="{DynamicResource MinimizeStyle}"/>
-							<Border Width="10"/>
-							<Button x:Name="ButtonToNotifyIcon" Click="ButtonToNotifyIcon_Click" Style="{DynamicResource ToNotifyIconStyle}"/>
-							<Border Width="10"/>
-							<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
-						</StackPanel>
+						<Grid Height="20">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="2*"/>
+								<ColumnDefinition/>
+							</Grid.ColumnDefinitions>
+							<TextBlock x:Name="ChannelTextBlock" TextTrimming="CharacterEllipsis" Foreground="White" Margin="10,0,0,0" FontSize="14.667"/>
+							<StackPanel Grid.Column="1" x:Name="WindowStateControls" Orientation="Horizontal" HorizontalAlignment="Right">
+								<Button x:Name="ButtonMinimize" Click="ButtonMinimize_Click" Style="{DynamicResource MinimizeStyle}"/>
+								<Border Width="10"/>
+								<Button x:Name="ButtonToNotifyIcon" Click="ButtonToNotifyIcon_Click" Style="{DynamicResource ToNotifyIconStyle}"/>
+								<Border Width="10"/>
+								<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
+							</StackPanel>
+						</Grid>
 						<Grid x:Name="SongInfoPanel" Grid.Row="1" ClipToBounds="True">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="50"/>
