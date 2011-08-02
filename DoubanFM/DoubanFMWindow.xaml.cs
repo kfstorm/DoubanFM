@@ -1056,6 +1056,16 @@ namespace DoubanFM
         {
             this.DragMove();
         }
+
+        private void VisitSoftwareWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Process.Start("http://kfstorm.wordpress.com/doubanfm/");
+        }
+
+        private void VisitOfficialWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Process.Start("http://douban.fm/");
+        }
         #endregion
 
     }

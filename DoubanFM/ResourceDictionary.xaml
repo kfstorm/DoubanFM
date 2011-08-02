@@ -585,6 +585,13 @@
 			</Canvas>
 		</Viewbox>
 	</Border>
+	<Border x:Key="TabItemInfo" Background="Transparent" ToolTip="信息">
+		<Viewbox>
+			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+				<Path Width="192" Height="192" Canvas.Left="32" Canvas.Top="32" Stretch="Fill" Fill="White" Data="F1 M 128,32C 181.493,32 224,74.0339 224,128C 224,181.966 181.493,224 128,224C 74.5073,224 32,181.966 32,128C 32,74.0339 74.5073,32 128,32 Z M 128,52.5715C 116.639,52.5715 107.429,61.7817 107.429,73.1429C 107.429,84.5042 116.639,93.7143 128,93.7143C 139.361,93.7143 148.571,84.5042 148.571,73.1429C 148.571,61.7817 139.361,52.5715 128,52.5715 Z M 107.429,107.429L 107.429,203.429L 148.571,203.429L 148.571,107.429L 107.429,107.429 Z "/>
+			</Canvas>
+		</Viewbox>
+	</Border>
 	<Style TargetType="{x:Type Button}">
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
 		<Setter Property="Background" Value="Transparent"/>
