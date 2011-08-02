@@ -383,15 +383,21 @@ namespace DoubanFM
                 Audio.Source = new Uri(song.url);
                 if (Paused) Audio.Pause();
                 else Audio.Play();
-                Audio.IsMuted = player.settings.IsMuted;
+                Audio.IsMuted = !Audio.IsMuted;
+                Audio.IsMuted = !Audio.IsMuted;
             }
             catch { }
             ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = song.title;
             ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[2]).KeyFrames[0].Value = song.artist;
             ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = song.albumtitle;
             ChangeSongInfoStoryboard.Begin();
-            this.Title = song.title + " - " + song.artist + "    豆瓣电台 - " + player.Channel.Name;
-            notifyIcon.Text = this.Title;
+            string stringA = song.title + " - " + song.artist;
+            string stringB = "    豆瓣电台 - " + player.Channel.Name;
+            this.Title = stringA + stringB;
+            if (this.Title.Length <= 63)        //Windows限制托盘图标的提示信息最长为63个字符
+                notifyIcon.Text = this.Title;
+            else
+                notifyIcon.Text = stringA.Substring(0, 63 - stringB.Length) + stringB;
             ChannelTextBlock.Text = player.Channel.Name;
             TotalTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0, 0, song.length));
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
