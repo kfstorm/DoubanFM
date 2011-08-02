@@ -74,6 +74,7 @@ namespace DoubanFM
                 }
             });
             System.Windows.Forms.ContextMenuStrip notifyIconMenu = new System.Windows.Forms.ContextMenuStrip();
+            notifyIcon.Text = "豆瓣电台";
             notifyIcon.ContextMenuStrip = notifyIconMenu;
 
             notifyIconMenu.Items.Add("显示窗口");
@@ -389,6 +390,7 @@ namespace DoubanFM
             ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = song.albumtitle;
             ChangeSongInfoStoryboard.Begin();
             this.Title = song.title + " - " + song.artist + "    豆瓣电台 - " + player.Channel.Name;
+            notifyIcon.Text = this.Title;
             TotalTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0, 0, song.length));
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
             Slider.Minimum = 0;
