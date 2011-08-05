@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubanFM.Core", "DoubanFM.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubanFM.Test", "DoubanFM.Test\DoubanFM.Test.csproj", "{9C91F8D0-6721-462A-BE66-D79043F73328}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DoubanFMSetup", "DoubanFMSetup\DoubanFMSetup.vdproj", "{C2BACD5B-5869-442F-A0ED-6C460B863AD7}"
-EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 4
@@ -66,12 +64,6 @@ Global
 		{9C91F8D0-6721-462A-BE66-D79043F73328}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{9C91F8D0-6721-462A-BE66-D79043F73328}.Release|Mixed Platforms.Build.0 = Release|x86
 		{9C91F8D0-6721-462A-BE66-D79043F73328}.Release|x86.ActiveCfg = Release|x86
-		{C2BACD5B-5869-442F-A0ED-6C460B863AD7}.Debug|Any CPU.ActiveCfg = Debug
-		{C2BACD5B-5869-442F-A0ED-6C460B863AD7}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{C2BACD5B-5869-442F-A0ED-6C460B863AD7}.Debug|x86.ActiveCfg = Debug
-		{C2BACD5B-5869-442F-A0ED-6C460B863AD7}.Release|Any CPU.ActiveCfg = Release
-		{C2BACD5B-5869-442F-A0ED-6C460B863AD7}.Release|Mixed Platforms.ActiveCfg = Release
-		{C2BACD5B-5869-442F-A0ED-6C460B863AD7}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

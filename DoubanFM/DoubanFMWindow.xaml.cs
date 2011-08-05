@@ -600,11 +600,11 @@ namespace DoubanFM
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.Position);
             Slider.Value = Audio.Position.TotalSeconds;
             TimeSpan totalTime = TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Content);
-            if (totalTime.TotalSeconds >= 1)
-            {
-                if ((Audio.Position - totalTime).TotalSeconds > 1)
-                    this.NaturalNext();
-            }
+            //if (totalTime.TotalSeconds >= 1)
+            //{
+            //    if ((Audio.Position - totalTime).TotalSeconds > 1)
+            //        this.NaturalNext();
+            //}
         }
         /// <summary>
         /// 暂停按钮被按下时自动调用
@@ -615,7 +615,7 @@ namespace DoubanFM
         {
             Pause();
         }
-        /// <summary>
+        /// <summary>qe
         /// 播放按钮被按下时自动调用
         /// </summary>
         /// <param name="sender"></param>
