@@ -113,11 +113,14 @@ namespace DoubanFM.Core
         /// 获取播放列表
         /// </summary>
         /// <param name="sid">上次播放的音乐的sid</param>
-        /// <param name="channelId">频道ID</param>
+        /// <param name="channel">频道</param>
         /// <param name="type">请求类型</param>
         /// <param name="h">播放历史</param>
-        /// <returns>播放列表</returns>
-        public static PlayList GetNewPlayList(string sid, Channel channel, string type, string h)
+        /// <param name="context">The context.</param>
+        /// <returns>
+        /// 播放列表
+        /// </returns>
+        public static PlayList GetPlayList(string sid, Channel channel, string type, string h, string context = null)
         {
 #if DEBUG
             if (System.Environment.GetCommandLineArgs().Contains("-LocalMusic"))
@@ -140,6 +143,8 @@ namespace DoubanFM.Core
                 try
                 {
                     string url = "http://douban.fm/j/mine/playlist?sid=" + sid + "&channel=" + channel.Id + "&type=" + type + "&h=" + h;
+                    if (context != null && context.Length > 0)
+                        url = url + "&context=" + context;
                     if (channel.Id == "dj")
                         url += "&pid=" + channel.pid;
                     string PlayListString = new ConnectionBase().Get(url, @"application/json, text/javascript, */*; q=0.01", @"http://douban.fm");

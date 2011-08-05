@@ -74,6 +74,7 @@ namespace DoubanFM.Core
         /// Gets the pause time.
         /// </summary>
         private DateTime PauseTime { get; set; }
+        private bool ContextPlayCleard { get; set; }
         /// <summary>
         /// 获取或设置当前频道
         /// </summary>
@@ -87,6 +88,11 @@ namespace DoubanFM.Core
             {
                 lock (this)
                 {
+                    if (ContextPlayCleard == false)
+                    {
+                        CurrentSong = null;
+                        ContextPlayCleard = true;
+                    }
                     channel = value;
                     settings.LastChannel = channel;
                     if (channel.Id != "dj")
@@ -125,6 +131,7 @@ namespace DoubanFM.Core
         {
             LoadSettings();
             LoadCookies();
+            ContextPlayCleard = true;
         }
         /// <summary>
         /// 读取偏好设置
@@ -346,7 +353,7 @@ namespace DoubanFM.Core
                 PlayList pl = null;
                 do
                 {
-                    pl = PlayList.GetNewPlayList(CurrentSong.sid, Channel, "p", PlayedSongsToString());
+                    pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "p", PlayedSongsToString());
                 } while (pl.Songs.Count == 0);
                 ChangePlayListSongs(pl);
             }
@@ -395,7 +402,7 @@ namespace DoubanFM.Core
                 PlayList pl = null;
                 do
                 {
-                    pl = PlayList.GetNewPlayList(CurrentSong.sid, Channel, "s", PlayedSongsToString());
+                    pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "s", PlayedSongsToString());
                 } while (Channel.Id != "dj" && pl.Songs.Count == 0);
                 if (Channel.Id != "dj")
                     ChangePlayListSongs(pl);
@@ -407,7 +414,7 @@ namespace DoubanFM.Core
         /// type=n
         /// New
         /// </summary>
-        public void NewPlayList()
+        public void NewPlayList(string context = null)
         {
             lock (this)
             {
@@ -415,7 +422,7 @@ namespace DoubanFM.Core
                 PlayList pl = null;
                 do
                 {
-                    pl = PlayList.GetNewPlayList(null, Channel, "n", PlayedSongsToString());
+                    pl = PlayList.GetPlayList(null, Channel, "n", PlayedSongsToString(), context);
                 } while (pl.Songs.Count == 0);
                 ChangePlayListSongs(pl);
                 ChangeCurrentSong();
@@ -440,12 +447,12 @@ namespace DoubanFM.Core
                     if (CurrentSong.like)
                     {
                         AppendPlayedSongs("r");
-                        pl = PlayList.GetNewPlayList(CurrentSong.sid, Channel, "r", PlayedSongsToString());
+                        pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "r", PlayedSongsToString());
                     }
                     else
                     {
                         AppendPlayedSongs("u");
-                        pl = PlayList.GetNewPlayList(CurrentSong.sid, Channel, "u", PlayedSongsToString());
+                        pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "u", PlayedSongsToString());
                     }
                 } while (pl.Songs.Count == 0);
                 ChangePlayListSongs(pl);
@@ -467,7 +474,7 @@ namespace DoubanFM.Core
                 PlayList pl = null;
                 do
                 {
-                    pl = PlayList.GetNewPlayList(CurrentSong.sid, Channel, "b", PlayedSongsToString());
+                    pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "b", PlayedSongsToString());
                 } while (pl.Songs.Count == 0);
                 ChangePlayListSongs(pl);
                 ChangeCurrentSong();
@@ -503,6 +510,25 @@ namespace DoubanFM.Core
                     NewPlayList();
                 IsPlaying = true;
                 Debug.WriteLine("IsPlaying=true");
+            }
+        }
+        /// <summary>
+        /// 特殊播放
+        /// </summary>
+        /// <param name="context">The context.</param>
+        public void ContextPlay(string context)
+        {
+            if (!Initialized)
+                return;
+            if (context == null || context.Length == 0)
+                return;
+            lock (this)
+            {
+                channel = new Channel();
+                channel.Id = "0";
+                channel.Name = "特殊模式";
+                NewPlayList(context);
+                ContextPlayCleard = false;
             }
         }
     }

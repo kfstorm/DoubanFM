@@ -1,9 +1,10 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:DoubanFM="clr-namespace:DoubanFM">
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:DoubanFM="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core">
 	<!-- 应该在此定义资源字典条目。-->
 	<DoubanFM:SliderThumbWidthConverter x:Key="converter1"/>
-	<LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0">
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter1" />
+    <LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0">
 		<GradientStop Color="#FFE93613" Offset="0"/>
 		<GradientStop Color="#FFFF593A" Offset="1"/>
 	</LinearGradientBrush>
@@ -314,9 +315,6 @@
 	</Style>
 	<Style x:Key="ChannelsStyle" TargetType="{x:Type ListBox}">
         <Setter Property="AlternationCount" Value="12"/>
-		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-		<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
 		<Setter Property="ItemContainerStyle" Value="{StaticResource ChannelStyle}"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 		<Setter Property="ItemsPanel">
@@ -329,7 +327,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ListBox}">
-					<ScrollViewer Style="{DynamicResource ChannelsScrollViewer}" Focusable="false" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+					<ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
 						<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </ScrollViewer>
 				</ControlTemplate>
@@ -460,8 +458,10 @@
 			</Grid>
 		</Border>
 	</ControlTemplate>
-	<Style x:Key="ChannelsScrollViewer" TargetType="{x:Type ScrollViewer}">
+	<Style TargetType="{x:Type ScrollViewer}">
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
+		<Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+		<Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ScrollViewer}">
@@ -589,6 +589,13 @@
 		<Viewbox>
 			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
 				<Path Width="192" Height="192" Canvas.Left="32" Canvas.Top="32" Stretch="Fill" Fill="White" Data="F1 M 128,32C 181.493,32 224,74.0339 224,128C 224,181.966 181.493,224 128,224C 74.5073,224 32,181.966 32,128C 32,74.0339 74.5073,32 128,32 Z M 128,52.5715C 116.639,52.5715 107.429,61.7817 107.429,73.1429C 107.429,84.5042 116.639,93.7143 128,93.7143C 139.361,93.7143 148.571,84.5042 148.571,73.1429C 148.571,61.7817 139.361,52.5715 128,52.5715 Z M 107.429,107.429L 107.429,203.429L 148.571,203.429L 148.571,107.429L 107.429,107.429 Z "/>
+			</Canvas>
+		</Viewbox>
+	</Border>
+	<Border x:Key="TabItemSearch" Background="Transparent" ToolTip="搜索">
+		<Viewbox>
+			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+				<Path Width="193.87" Height="201" Canvas.Left="31.5" Canvas.Top="31.5" Stretch="Fill" Fill="White" Data="F1 M 108,56C 79.2812,56 56,79.2812 56,108C 56,136.719 79.2812,160 108,160C 136.719,160 160,136.719 160,108C 160,79.2812 136.719,56 108,56 Z M 108,32C 149.974,32 184,66.0264 184,108C 184,122.615 179.874,136.267 172.724,147.854L 224.87,200L 192.87,232L 138.502,177.632C 129.165,181.727 118.848,184 108,184C 66.0263,184 32,149.974 32,108C 32,66.0264 66.0264,32 108,32 Z "/>
 			</Canvas>
 		</Viewbox>
 	</Border>
@@ -925,5 +932,202 @@
 				<Setter Property="Foreground" Value="White"/>
 			</Trigger>
 		</Style.Triggers>
+	</Style>
+	<Style x:Key="SearchResultListStyle" TargetType="{x:Type ListBox}">
+		<Setter Property="Background" Value="#7F000000"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="ItemContainerStyle" Value="{DynamicResource SearchItemStyle}"/>
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate DataType="{x:Type core:SearchItem}">
+					<Grid Height="70" Width="225">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="10"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Viewbox Width="70">
+							<Image Source="{Binding Picture}"/>
+						</Viewbox>
+						<Grid Grid.Column="2">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+							<TextBlock Foreground="White" Text="{Binding Title}" MaxHeight="50" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+							<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Margin="0,0,20,0" Visibility="{Binding IsArtist, Converter={StaticResource BooleanToVisibilityConverter1}}" Foreground="White">艺术家</TextBlock>
+								<TextBlock Visibility="{Binding Path=CanContextPlay, Converter={StaticResource BooleanToVisibilityConverter1}}" Padding="0" Foreground="White">收听</TextBlock>
+							</StackPanel>
+						</Grid>
+					</Grid>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="AlternationCount" Value="12"/>
+	</Style>
+	<Style x:Key="SearchItemStyle" TargetType="{x:Type ListBoxItem}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBoxItem}">
+				    <Grid x:Name="grid" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled"/>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="Unselected"/>
+                                <VisualState x:Name="Selected">
+                                	<Storyboard AutoReverse="True" RepeatBehavior="Forever">
+                                		<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
+                                			<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
+                                		</ColorAnimationUsingKeyFrames>
+                                	</Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="SelectedUnfocused">
+                                	<Storyboard AutoReverse="True" RepeatBehavior="Forever">
+                                		<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
+                                			<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
+                                		</ColorAnimationUsingKeyFrames>
+                                	</Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid"/>
+                                <VisualState x:Name="InvalidFocused"/>
+                                <VisualState x:Name="InvalidUnfocused"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+					    <ContentPresenter x:Name="contentPresenter" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <Border x:Name="border1" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent"/>
+                    </Grid>
+					<ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="1"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Margin" Value="3"/>
+		<Setter Property="BorderThickness" Value="5"/>
+	</Style>
+	<Style x:Key="SearchStyle" TargetType="{x:Type Button}">
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="#7F222222"/>
+			</Trigger>
+		</Style.Triggers>
+		<Setter Property="OverridesDefaultStyle" Value="True"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="搜索"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="193.87" Height="201" Canvas.Left="31.5" Canvas.Top="31.5" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 108,56C 79.2812,56 56,79.2812 56,108C 56,136.719 79.2812,160 108,160C 136.719,160 160,136.719 160,108C 160,79.2812 136.719,56 108,56 Z M 108,32C 149.974,32 184,66.0264 184,108C 184,122.615 179.874,136.267 172.724,147.854L 224.87,200L 192.87,232L 138.502,177.632C 129.165,181.727 118.848,184 108,184C 66.0263,184 32,149.974 32,108C 32,66.0264 66.0264,32 108,32 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
+	<Style x:Key="PreviousPageStyle" TargetType="{x:Type Button}">
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="#7F222222"/>
+			</Trigger>
+		</Style.Triggers>
+		<Setter Property="OverridesDefaultStyle" Value="True"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="上一页"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="128" Clip="F1 M 0,0L 256,0L 256,128L 0,128L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="224" Height="96" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 16,64L 99.1384,16L 99.1384,40L 240,40L 240,88L 99.1384,88L 99.1384,112L 16,64 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
+	<Style x:Key="NextPageStyle" TargetType="{x:Type Button}">
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="#7F222222"/>
+			</Trigger>
+		</Style.Triggers>
+		<Setter Property="OverridesDefaultStyle" Value="True"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="下一页"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="128" Clip="F1 M 0,0L 256,0L 256,128L 0,128L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="224" Height="96" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 240,64L 156.862,112L 156.862,88L 16,88L 16,40L 156.862,40L 156.862,16L 240,64 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Foreground" Value="White"/>
 	</Style>
 </ResourceDictionary>

@@ -51,8 +51,19 @@ namespace DoubanFM
         /// DJ频道列表
         /// </summary>
         ObservableCollection<Cate> DjCatesItem;
+        /// <summary>
+        /// 托盘图标
+        /// </summary>
         private System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
+        /// <summary>
+        /// 托盘图标右键菜单中的各个菜单项
+        /// </summary>
         private System.Windows.Forms.ToolStripItem notifyIcon_ShowWindow, notifyIcon_Heart, notifyIcon_Never, notifyIcon_PlayPause, notifyIcon_Next, notifyIcon_Exit;
+        /// <summary>
+        /// 搜索
+        /// </summary>
+        private MusicSearch currentSearch;
+
         #endregion
 
         #region 初始化
@@ -384,6 +395,7 @@ namespace DoubanFM
                 if (Paused) Audio.Pause();
                 else Audio.Play();
                 Audio.IsMuted = !Audio.IsMuted;
+                Thread.Sleep(50);
                 Audio.IsMuted = !Audio.IsMuted;
             }
             catch { }
@@ -587,6 +599,12 @@ namespace DoubanFM
         {
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.Position);
             Slider.Value = Audio.Position.TotalSeconds;
+            TimeSpan totalTime = TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Content);
+            if (totalTime.TotalSeconds >= 1)
+            {
+                if ((Audio.Position - totalTime).TotalSeconds > 1)
+                    this.NaturalNext();
+            }
         }
         /// <summary>
         /// 暂停按钮被按下时自动调用
@@ -844,6 +862,7 @@ namespace DoubanFM
                 Channel channel = (Channel)PersonalChannels.SelectedItem;
                 PublicChannels.SelectedItem = null;
                 DjCates.SelectedItem = null;
+                SearchResultList.SelectedItem = null;
                 Thread thread = new Thread(new ThreadStart(() =>
                 {
                     player.Channel = channel;
@@ -869,6 +888,7 @@ namespace DoubanFM
                 Channel channel = (Channel)PublicChannels.SelectedItem;
                 PersonalChannels.SelectedItem = null;
                 DjCates.SelectedItem = null;
+                SearchResultList.SelectedItem = null;
                 Thread thread = new Thread(new ThreadStart(() =>
                 {
                     player.Channel = channel;
@@ -894,6 +914,7 @@ namespace DoubanFM
                 Channel channel = (Channel)DjChannels.SelectedItem;
                 PersonalChannels.SelectedItem = null;
                 PublicChannels.SelectedItem = null;
+                SearchResultList.SelectedItem = null;
                 Thread thread = new Thread(new ThreadStart(() =>
                 {
                     player.Channel = channel;
@@ -1032,42 +1053,198 @@ namespace DoubanFM
             SlideCoverLeftTimer.Stop();
         }
 
+        /// <summary>
+        /// Handles the Click event of the ButtonMinimize control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void ButtonMinimize_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.WindowState = System.Windows.WindowState.Minimized;
         }
 
+        /// <summary>
+        /// Handles the Click event of the ButtonToNotifyIcon control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void ButtonToNotifyIcon_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.Visibility = Visibility.Hidden;
         }
 
+        /// <summary>
+        /// Handles the Click event of the ButtonExit control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void ButtonExit_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// Handles the IsVisibleChanged event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void Window_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
             notifyIcon.Visible = !this.IsVisible;
         }
 
+        /// <summary>
+        /// Handles the MouseLeftButtonDown event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
         private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             this.DragMove();
         }
 
+        /// <summary>
+        /// Handles the Click event of the VisitSoftwareWebsite control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void VisitSoftwareWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Process.Start("http://kfstorm.wordpress.com/doubanfm/");
         }
 
+        /// <summary>
+        /// Handles the Click event of the VisitOfficialWebsite control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void VisitOfficialWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Process.Start("http://douban.fm/");
         }
+
+        /// <summary>
+        /// Handles the Click event of the Search control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
+        private void Search_Click(object sender, RoutedEventArgs e)
+        {
+            string searchText = SearchText.Text;
+            NoResult.Visibility = Visibility.Hidden;
+            PreviousPage.IsEnabled = false;
+            NextPage.IsEnabled = false;
+            Thread thread = new Thread(new ThreadStart(() =>
+                {
+                    if (currentSearch != null)
+                        currentSearch.Stop();
+                    currentSearch = new MusicSearch();
+                    currentSearch.SearchFinished += new EventHandler(search_SearchFinished);
+                    currentSearch.Search(searchText);
+                }));
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the PreviousPage control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
+        private void PreviousPage_Click(object sender, RoutedEventArgs e)
+        {
+            NoResult.Visibility = Visibility.Hidden;
+            PreviousPage.IsEnabled = false;
+            NextPage.IsEnabled = false;
+            Thread thread = new Thread(new ThreadStart(() =>
+            {
+                if (currentSearch != null)
+                    currentSearch.Stop();
+                currentSearch.PreviousPage();
+            }));
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the NextPage control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
+        private void NextPage_Click(object sender, RoutedEventArgs e)
+        {
+            NoResult.Visibility = Visibility.Hidden;
+            PreviousPage.IsEnabled = false;
+            NextPage.IsEnabled = false;
+            Thread thread = new Thread(new ThreadStart(() =>
+            {
+                if (currentSearch != null)
+                    currentSearch.Stop();
+                currentSearch.NextPage();
+            }));
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        /// <summary>
+        /// Handles the SearchFinished event of the search control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        void search_SearchFinished(object sender, EventArgs e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    MusicSearch search = (MusicSearch)sender;
+                    this.SearchResultList.ItemsSource = search.SearchResult;
+                    if (!this.SearchResultList.HasItems)
+                        NoResult.Visibility = Visibility.Visible;
+                    PreviousPage.IsEnabled = search.IsPreviousPageEnabled;
+                    NextPage.IsEnabled = search.IsNextPageEnabled;
+                }));
+        }
+
+        /// <summary>
+        /// Handles the SelectionChanged event of the SearchResultList control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Controls.SelectionChangedEventArgs"/> instance containing the event data.</param>
+        private void SearchResultList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (SearchResultList.SelectedItem == null) return;
+            string context = ((SearchItem)SearchResultList.SelectedItem).Context;
+            if (context != null && context.Length > 0)
+            {
+                Audio.Stop();
+                PersonalChannels.SelectedItem = null;
+                PublicChannels.SelectedItem = null;
+                DjCates.SelectedItem = null;
+                Thread thread = new Thread(new ThreadStart(() =>
+                {
+                    player.ContextPlay(context);
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        Update();
+                    }));
+                }));
+                thread.IsBackground = true;
+                thread.Start();
+            }
+        }
+
+        /// <summary>
+        /// Handles the KeyDown event of the SearchText control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Input.KeyEventArgs"/> instance containing the event data.</param>
+        private void SearchText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+                Search_Click(null, null);
+        }
+
         #endregion
 
-    }
 
+    }
 }

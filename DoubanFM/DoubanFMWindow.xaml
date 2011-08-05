@@ -59,7 +59,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 			<GradientStop Color="#03000000" Offset="0.85" />
 			<GradientStop Color="#00000000" Offset="1"/>
 		</GradientStopCollection>
-	</Window.Resources>
+    </Window.Resources>
 	<Window.TaskbarItemInfo>
 		<TaskbarItemInfo>
 			<TaskbarItemInfo.ThumbButtonInfos>
@@ -223,6 +223,37 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 								</Grid>
 							</Grid>
 						</TabItem>
+						<TabItem Header="{DynamicResource TabItemSearch}">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition/>
+									<RowDefinition Height="40"/>
+								</Grid.RowDefinitions>
+								<Grid Margin="10" Height="30">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition/>
+										<ColumnDefinition Width="Auto"/>
+									</Grid.ColumnDefinitions>
+									<TextBox x:Name="SearchText" Height="20" KeyDown="SearchText_KeyDown"/>
+									<Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" Style="{DynamicResource SearchStyle}"/>
+								</Grid>
+								<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{DynamicResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged"/>
+								<Grid Grid.Row="1" x:Name="NoResult" Visibility="Hidden" Height="Auto" VerticalAlignment="Center">
+									<Grid.RowDefinitions>
+										<RowDefinition/>
+										<RowDefinition/>
+									</Grid.RowDefinitions>
+									<Label HorizontalAlignment="Center" VerticalAlignment="Center">没有任何搜索结果</Label>
+									<Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">请不要输入过短或过长的内容</Label>
+								</Grid>
+								<StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Height="30">
+									<Button x:Name="PreviousPage" IsEnabled="False" Click="PreviousPage_Click" Style="{DynamicResource PreviousPageStyle}"/>
+									<Border Width="20"/>
+                                    <Button x:Name="NextPage" IsEnabled="False" Click="NextPage_Click" Style="{DynamicResource NextPageStyle}"/>
+								</StackPanel>
+							</Grid>
+						</TabItem>
 						<TabItem x:Name="Account" Header="{DynamicResource TabItemAccount}">
 							<Grid>
 								<Grid x:Name="LogOnPanel">
@@ -321,7 +352,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 							</Border>			
 						</TabItem>
 						<TabItem Header="{DynamicResource TabItemInfo}">
-							<Border Padding="30">
+							<Border Padding="20">
 								<Grid>
 									<Grid.RowDefinitions>
 										<RowDefinition/>

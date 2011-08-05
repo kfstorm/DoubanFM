@@ -137,5 +137,65 @@ namespace DoubanFM.Core
             Match match = Regex.Match(File, "\"(http://www\\.douban\\.com/accounts/logout\\?source=radio&[^\\s]*)\"", RegexOptions.IgnoreCase);
             return match.Groups[1].Value;
         }
+
+        /// <summary>
+        /// 获取搜索的结果
+        /// </summary>
+        /// <returns></returns>
+        internal SearchItem[] GetSearchItems()
+        {
+            List<SearchItem> list = new List<SearchItem>();
+
+            try
+            {
+                //找出艺术家
+                MatchCollection mc = Regex.Matches(File, @"<div class=\""pic\"">.*?<img src=\""([^\""]+)\"" alt=\""([^\""]+)\"".*?</h3>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                foreach (Match ma in mc)
+                {
+                    list.Add(new SearchItem(ma.Groups[2].Value, ma.Groups[1].Value, null, true, Regex.Match(ma.Groups[0].Value, @"href=""http://douban.fm/\?context=([^\""]+)""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value));
+                }
+
+                //找出专辑
+                mc = Regex.Matches(File, @"<table.*?</table>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                foreach (Match ma in mc)
+                {
+                    Match m = Regex.Match(ma.Groups[0].Value, @"<img src=\""([^\""]+)\"" alt=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    list.Add(new SearchItem(m.Groups[2].Value, m.Groups[1].Value, null, false, Regex.Match(ma.Groups[0].Value, @"href=""http://douban.fm/\?context=([^\""]+)""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value));
+                }
+            }
+            catch { }
+
+            return list.ToArray();
+        }
+        /// <summary>
+        /// 获取上一页的链接
+        /// </summary>
+        /// <returns></returns>
+        internal string GetPreviousPageLink()
+        {
+            try
+            {
+                Match mc = Regex.Match(File, @"<span class=\""prev\"">.*?</span>", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                Match mc2 = Regex.Match(mc.Groups[0].Value, @"<a href=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                return mc2.Groups[1].Value;
+            }
+            catch { }
+            return null;
+        }
+        /// <summary>
+        /// 获取下一页的链接
+        /// </summary>
+        /// <returns></returns>
+        internal string GetNextPageLink()
+        {
+            try
+            {
+                Match mc = Regex.Match(File, @"<span class=\""next\"">.*?</span>", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                Match mc2 = Regex.Match(mc.Groups[0].Value, @"<a href=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                return mc2.Groups[1].Value;
+            }
+            catch { }
+            return null;
+        }
     }
 }
