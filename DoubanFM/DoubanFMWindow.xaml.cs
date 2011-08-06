@@ -417,10 +417,22 @@ namespace DoubanFM
             Slider.Minimum = 0;
             Slider.Maximum = song.length;
             Slider.Value = 0;
+            UpdateHeartAndNever();
+        }
+
+        /// <summary>
+        /// 根据当前信息决定红心和垃圾箱是否可用
+        /// </summary>
+        void UpdateHeartAndNever()
+        {
+            Song song = player.CurrentSong;
             CheckBoxLike.IsChecked = song.like;
-            if (player.Channel.Id == "0")
+
+            if (player.Channel.Id != "dj")
             {
                 CheckBoxLike.IsEnabled = true;
+                LikeThumb.IsEnabled = true;
+                notifyIcon_Heart.Enabled = true;
                 if (song.like)
                 {
                     LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
@@ -431,30 +443,32 @@ namespace DoubanFM
                     LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
                     notifyIcon_Heart.Text = "加红心";
                 }
-                ButtonNever.IsEnabled = true;
-                NeverThumb.IsEnabled = true;
-                NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
-            }
-            else if (player.Channel.Id != "dj")
-            {
-                CheckBoxLike.IsEnabled = true;
-                if (song.like)
-                    LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
-                else
-                    LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
-                ButtonNever.IsEnabled = false;
-                NeverThumb.IsEnabled = false;
-                NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage_Disabled");
             }
             else
             {
                 CheckBoxLike.IsEnabled = false;
+                LikeThumb.IsEnabled = false;
+                notifyIcon_Heart.Enabled = false;
                 LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
+                notifyIcon_Heart.Text = "加红心";
+            }
+
+            if (player.Channel.Id == "0" && player.LoggedOn)
+            {
+                ButtonNever.IsEnabled = true;
+                NeverThumb.IsEnabled = true;
+                notifyIcon_Never.Enabled = true;
+                NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
+            }
+            else
+            {
                 ButtonNever.IsEnabled = false;
                 NeverThumb.IsEnabled = false;
+                notifyIcon_Never.Enabled = false;
                 NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage_Disabled");
             }
         }
+
         /// <summary>
         /// 更改封面
         /// </summary>
@@ -700,6 +714,7 @@ namespace DoubanFM
                     player.LogOn(text);
                     this.Dispatcher.BeginInvoke(new Action(() =>
                     {
+                        UpdateHeartAndNever();
                         LoggingOnPanel.Visibility = Visibility.Hidden;
                         if (player.LoggedOn)
                         {
@@ -789,6 +804,7 @@ namespace DoubanFM
                     player.LogOff();
                     this.Dispatcher.BeginInvoke(new Action(() =>
                     {
+                        UpdateHeartAndNever();
                         LoggingOffPanel.Visibility = Visibility.Hidden;
                         if (!player.LoggedOn)
                         {
@@ -797,7 +813,9 @@ namespace DoubanFM
                             RefreshCaptcha();
                         }
                         else
+                        {
                             LogOffPanel.Visibility = Visibility.Visible;
+                        }
                     }));
                 }));
                 thread.IsBackground = true;
