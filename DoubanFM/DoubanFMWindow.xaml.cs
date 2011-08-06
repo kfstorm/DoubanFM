@@ -397,6 +397,7 @@ namespace DoubanFM
                 Audio.IsMuted = !Audio.IsMuted;
                 Thread.Sleep(50);
                 Audio.IsMuted = !Audio.IsMuted;
+                Audio.Volume = player.settings.Volume;
             }
             catch { }
             ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = song.title;
@@ -1241,6 +1242,24 @@ namespace DoubanFM
         {
             if (e.Key == System.Windows.Input.Key.Enter)
                 Search_Click(null, null);
+        }
+
+        private void Window_Activated(object sender, System.EventArgs e)
+        {
+            GradientStopCollection active = (GradientStopCollection)FindResource("ActiveShadowGradientStops");
+            GradientStopCollection now = (GradientStopCollection)FindResource("ShadowGradientStops");
+            now.Clear();
+            foreach (GradientStop g in active)
+                now.Add(g);
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            GradientStopCollection inactive = (GradientStopCollection)FindResource("InactiveShadowGradientStops");
+            GradientStopCollection now = (GradientStopCollection)FindResource("ShadowGradientStops");
+            now.Clear();
+            foreach (GradientStop g in inactive)
+                now.Add(g);
         }
 
         #endregion
