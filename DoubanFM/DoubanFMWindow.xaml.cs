@@ -10,6 +10,7 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace DoubanFM
 {
@@ -19,14 +20,15 @@ namespace DoubanFM
     public partial class DoubanFMWindow : Window
     {
         #region 成员变量
+
         /// <summary>
         /// 播放器
         /// </summary>
-        private Player player;
+        private Player _player;
         /// <summary>
         /// 进度更新计时器
         /// </summary>
-        private DispatcherTimer timer;
+        private DispatcherTimer _timer;
         /// <summary>
         /// 各种无法在XAML里直接启动的Storyboard
         /// </summary>
@@ -34,46 +36,159 @@ namespace DoubanFM
         /// <summary>
         /// 滑动封面的计时器
         /// </summary>
-        private DispatcherTimer SlideCoverRightTimer, SlideCoverLeftTimer;
+        private DispatcherTimer _slideCoverRightTimer, _slideCoverLeftTimer;
         /// <summary>
         /// 当前显示的封面
         /// </summary>
-        private Image Cover;
-        /// <summary>
-        /// 是否已暂停
-        /// </summary>
-        private bool Paused;
-        /// <summary>
-        /// 私人与公共频道列表
-        /// </summary>
-        ObservableCollection<Channel> PersonalChannelsItem, PublicChannelsItem;
-        /// <summary>
-        /// DJ频道列表
-        /// </summary>
-        ObservableCollection<Cate> DjCatesItem;
-        /// <summary>
+        private Image _cover;
         /// 托盘图标
         /// </summary>
         private System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
         /// <summary>
         /// 托盘图标右键菜单中的各个菜单项
         /// </summary>
-        private System.Windows.Forms.ToolStripItem notifyIcon_ShowWindow, notifyIcon_Heart, notifyIcon_Never, notifyIcon_PlayPause, notifyIcon_Next, notifyIcon_Exit;
-        /// <summary>
-        /// 搜索
-        /// </summary>
-        private MusicSearch currentSearch;
+        private System.Windows.Forms.ToolStripMenuItem notifyIcon_ShowWindow, notifyIcon_Heart, notifyIcon_Never, notifyIcon_PlayPause, notifyIcon_Next, notifyIcon_Exit;
 
         #endregion
 
-        #region 初始化
-        /// <summary>
-        /// 构造函数
-        /// </summary>
+        #region 构造和初始化
+
         public DoubanFMWindow()
         {
             InitializeComponent();
+            InitNotifyIcon();
 
+            _player = (Player)FindResource("Player");
+            PbPassword.Password = _player.Settings.User.Password;
+            if (_player.Settings.SlideCoverWhenMouseMove == false)
+                RadioButtonSlideCoverWhenClick.IsChecked = true;
+            BackgroundColorStoryboard = (Storyboard)FindResource("BackgroundColorStoryboard");
+            ShowCover1Storyboard = (Storyboard)FindResource("ShowCover1Storyboard");
+            ShowCover2Storyboard = (Storyboard)FindResource("ShowCover2Storyboard");
+            SlideCoverRightStoryboard = (Storyboard)FindResource("SlideCoverRightStoryboard");
+            SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
+            ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
+            DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
+            _cover = Cover1;
+            _timer = new DispatcherTimer();
+            _timer.Interval = new TimeSpan(1000000);
+            _timer.Tick += new EventHandler(timer_Tick);
+            _timer.Start();
+            _slideCoverRightTimer = new DispatcherTimer();
+            _slideCoverRightTimer.Interval = new TimeSpan(5000000);
+            _slideCoverRightTimer.Tick += new EventHandler(SlideCoverRightTimer_Tick);
+            _slideCoverLeftTimer = new DispatcherTimer();
+            _slideCoverLeftTimer.Interval = new TimeSpan(5000000);
+            _slideCoverLeftTimer.Tick += new EventHandler(SlideCoverLeftTimer_Tick);
+
+            _player.Initialized += new EventHandler((o, e) =>
+            {
+                ShowChannels();
+            });
+            _player.CurrentChannelChanged += new EventHandler((o, e) =>
+                {
+                    if (!_player.CurrentChannel.IsPersonal || _player.CurrentChannel.IsSpecial)
+                        PersonalChannels.SelectedItem = null;
+                    if (!_player.CurrentChannel.IsPublic)
+                        PublicChannels.SelectedItem = null;
+                    if (!_player.CurrentChannel.IsDj)
+                        DjCates.SelectedItem = null;
+                    if (!_player.CurrentChannel.IsSpecial)
+                        SearchResultList.SelectedItem = null;
+                    if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != PersonalChannels.SelectedItem)
+                    {
+                        PersonalChannels.SelectedItem = _player.CurrentChannel;
+                        PersonalClickStoryboard.Begin();
+                    }
+                    if (_player.CurrentChannel.IsPublic && _player.CurrentChannel != PublicChannels.SelectedItem)
+                    {
+                        PublicChannels.SelectedItem = _player.CurrentChannel;
+                        PublicClickStoryboard.Begin();
+                    }
+                    if (_player.CurrentChannel.IsDj && DjChannels.Items.Contains(_player.CurrentChannel) && DjChannels.SelectedItem != _player.CurrentChannel)
+                    {
+                        DjChannels.SelectedItem = _player.CurrentChannel;
+                        DjChannelClickStoryboard.Begin();
+                    }
+                });
+            _player.CurrentSongChanged += new EventHandler((o, e) =>
+            {
+                Update();
+                if (_player.CurrentSong.IsAd)
+                    _player.Skip();
+                if (_player.IsPlaying) Audio.Play();
+                else Audio.Pause();
+            });
+            _player.Paused += new EventHandler((o, e) =>
+            {
+                CheckBoxPause.IsChecked = !_player.IsPlaying;
+                PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
+                Audio.Pause();
+                notifyIcon_PlayPause.Text = "播放";
+            });
+            _player.Played += new EventHandler((o, e) =>
+            {
+                CheckBoxPause.IsChecked = !_player.IsPlaying;
+                PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
+                Audio.Play();
+                notifyIcon_PlayPause.Text = "暂停";
+            });
+            _player.Stoped += new EventHandler((o, e) => { Audio.Stop(); });
+            _player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
+            {
+                if (_player.UserAssistant.HasCaptcha)
+                    Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));
+            });
+            _player.UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
+            {
+                ShowChannels();
+            });
+            _player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
+            {
+                if (_player.UserAssistant.HasCaptcha)
+                    Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));
+                ShowChannels();
+            });
+
+            _player.IsLikedChanged += new EventHandler((o, e) =>
+            {
+                CheckBoxLike.IsChecked = _player.IsLiked;
+                if (_player.IsLikedEnabled)
+                    if (_player.IsLiked)
+                        LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
+                    else LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+                else
+                    LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
+                notifyIcon_Heart.Checked = _player.IsLiked;
+            });
+            _player.IsLikedEnabledChanged += new EventHandler((o, e) =>
+            {
+                if (_player.IsLikedEnabled)
+                    if (_player.IsLiked)
+                        LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
+                    else LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+                else
+                    LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
+                LikeThumb.IsEnabled = _player.IsLikedEnabled;
+                notifyIcon_Heart.Enabled = _player.IsLikedEnabled;
+            });
+            _player.IsNeverEnabledChanged += new EventHandler((o, e) =>
+            {
+                if (_player.IsNeverEnabled)
+                    NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
+                else
+                    NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage_Disabled");
+                NeverThumb.IsEnabled = _player.IsNeverEnabled;
+                notifyIcon_Never.Enabled = _player.IsNeverEnabled;
+            });
+
+            _player.Initialize();
+        }
+        /// <summary>
+        /// 初始化托盘图标
+        /// </summary>
+        private void InitNotifyIcon()
+        {
             notifyIcon.Visible = false;
             notifyIcon.Icon = Properties.Resources.NotifyIcon;
             notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler((s, e) =>
@@ -88,385 +203,104 @@ namespace DoubanFM
             notifyIcon.Text = "豆瓣电台";
             notifyIcon.ContextMenuStrip = notifyIconMenu;
 
-            notifyIconMenu.Items.Add("显示窗口");
-            notifyIcon_ShowWindow = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIconMenu.Items.Add(new ToolStripMenuItem("显示窗口"));
+            notifyIcon_ShowWindow = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
             notifyIcon_ShowWindow.Click += new EventHandler((s, e) => { this.Visibility = Visibility.Visible; });
             notifyIconMenu.Items.Add("-");
-            notifyIconMenu.Items.Add("加红心");
-            notifyIcon_Heart = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-            notifyIcon_Heart.Click += new EventHandler((s, e) => { LikeOrUnlike(); });
-            notifyIconMenu.Items.Add("不再播放");
-            notifyIcon_Never = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-            notifyIcon_Never.Click += new EventHandler((s, e) => { Never(); });
+            notifyIconMenu.Items.Add(new ToolStripMenuItem("喜欢"));
+            notifyIcon_Heart = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_Heart.CheckOnClick = true;
+            notifyIcon_Heart.CheckedChanged += new EventHandler((o, e) =>
+            {
+                _player.IsLiked = notifyIcon_Heart.Checked;
+            });
+            notifyIconMenu.Items.Add(new ToolStripMenuItem("不再播放"));
+            notifyIcon_Never = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_Never.Enabled = false;
+            notifyIcon_Never.Click += new EventHandler((s, e) => { _player.Never(); });
             notifyIconMenu.Items.Add("-");
-            notifyIconMenu.Items.Add("暂停");
-            notifyIcon_PlayPause = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIconMenu.Items.Add(new ToolStripMenuItem("暂停"));
+            notifyIcon_PlayPause = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
             notifyIcon_PlayPause.Click += new EventHandler((s, e) =>
             {
                 System.Windows.Forms.ToolStripItem sender = (System.Windows.Forms.ToolStripItem)s;
-                if (sender.Text == "播放")
-                    Play();
-                else
-                    Pause();
+                if (sender.Text == "播放") _player.IsPlaying = true;
+                else _player.IsPlaying = false;
             });
-            notifyIconMenu.Items.Add("下一首");
-            notifyIcon_Next = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-            notifyIcon_Next.Click += new EventHandler((s, e) => { Next(); });
+            notifyIconMenu.Items.Add(new ToolStripMenuItem("下一首"));
+            notifyIcon_Next = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIcon_Next.Click += new EventHandler((s, e) => { _player.Skip(); });
             notifyIconMenu.Items.Add("-");
-            notifyIconMenu.Items.Add("退出");
-            notifyIcon_Exit = notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+            notifyIconMenu.Items.Add(new ToolStripMenuItem("退出"));
+            notifyIcon_Exit = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
             notifyIcon_Exit.Click += new EventHandler((s, e) => { this.Close(); });
-
-            player = (Player)FindResource("Player");
-            player.DjChannelPlayingEnded += new EventHandler(player_DjChannelPlayingEnded);
-            PbPassword.Password = player.settings.User.Password;
-            if (player.settings.SlideCoverWhenMouseMove == false)
-                RadioButtonSlideCoverWhenClick.IsChecked = true;
-            //ApplySettings();
-            new ColorFunctions();
-            BackgroundColorStoryboard = (Storyboard)FindResource("BackgroundColorStoryboard");
-            ShowCover1Storyboard = (Storyboard)FindResource("ShowCover1Storyboard");
-            ShowCover2Storyboard = (Storyboard)FindResource("ShowCover2Storyboard");
-            SlideCoverRightStoryboard = (Storyboard)FindResource("SlideCoverRightStoryboard");
-            SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
-            ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
-            DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
-            Cover = Cover1;
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(1000000);
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Start();
-            SlideCoverRightTimer = new DispatcherTimer();
-            SlideCoverRightTimer.Interval = new TimeSpan(5000000);
-            SlideCoverRightTimer.Tick += new EventHandler(SlideCoverRightTimer_Tick);
-            SlideCoverLeftTimer = new DispatcherTimer();
-            SlideCoverLeftTimer.Interval = new TimeSpan(5000000);
-            SlideCoverLeftTimer.Tick += new EventHandler(SlideCoverLeftTimer_Tick);
-
-            Thread thread = new Thread(new ThreadStart(new Action(() =>
-                {
-                    player.Initialize();
-                    ShowChannels();
-                    this.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        bool selected = false;
-                        if (player.settings.RememberLastChannel && player.settings.LastChannel != null)
-                        {
-                            Channel firstChannel = player.settings.LastChannel;
-                            if (firstChannel.Id == "0" && player.LoggedOn)
-                            {
-                                PersonalChannels.SelectedIndex = 0;
-                                PersonalClickStoryboard.Begin();
-                                selected = true;
-                            }
-                            else if (firstChannel.Id == "dj")
-                            {
-                                foreach (Cate djcate in DjCates.Items)
-                                {
-                                    foreach (Channel channel in djcate.Channels)
-                                    {
-                                        if (channel.pid == firstChannel.pid)
-                                        {
-                                            DjCates.SelectedItem = djcate;
-                                            DjChannels.SelectedItem = channel;
-                                            DjChannelClickStoryboard.Begin();
-                                            selected = true;
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                foreach (Channel channel in PublicChannels.Items)
-                                    if (channel.Id == firstChannel.Id)
-                                    {
-                                        PublicChannels.SelectedItem = channel;
-                                        PublicClickStoryboard.Begin();
-                                        selected = true;
-                                    }
-                            }
-                        }
-                        if (!selected)
-                            if (PublicChannels.Items.Count > 0)
-                            {
-                                PublicChannels.SelectedIndex = 0;
-                                PublicClickStoryboard.Begin();
-                            }
-                        if (player.LoggedOn)
-                        {
-                            LogOnPanel.Visibility = Visibility.Hidden;
-                            LogOffPanel.Visibility = Visibility.Visible;
-                        }
-                        Thread thread2 = new Thread(new ThreadStart(() =>
-                            {
-                                player.Play();
-                                this.Dispatcher.BeginInvoke(new Action(() => { Audio.Play(); }));
-                            }));
-                        thread2.IsBackground = true;
-                        thread2.Start();
-                    }));
-                })));
-            thread.IsBackground = true;
-            thread.Start();
         }
+
+        #endregion
+
+        #region 其他
 
         /// <summary>
         /// 显示频道列表
         /// </summary>
         private void ShowChannels()
         {
-            PersonalChannelsItem = new ObservableCollection<Channel>();
-            if (player.LoggedOn)
-            {
-                this.Dispatcher.Invoke(new Action(() => { ButtonPersonal.IsEnabled = true; }));
-                foreach (Cate cate in player.channelinfo.Personal)
-                {
+            ObservableCollection<Channel> PersonalChannelsItem = new ObservableCollection<Channel>();
+            if (_player.UserAssistant.IsLoggedOn)
+                foreach (Cate cate in _player.ChannelInfo.Personal)
                     foreach (Channel channel in cate.Channels)
-                    {
                         PersonalChannelsItem.Add(channel);
-                    }
-                }
-            }
-            else
-                this.Dispatcher.Invoke(new Action(() => { ButtonPersonal.IsEnabled = false; }));
-            PublicChannelsItem = new ObservableCollection<Channel>();
-            foreach (Cate cate in player.channelinfo.Public)
-            {
+            ObservableCollection<Channel> PublicChannelsItem = new ObservableCollection<Channel>();
+            foreach (Cate cate in _player.ChannelInfo.Public)
                 foreach (Channel channel in cate.Channels)
-                {
                     PublicChannelsItem.Add(channel);
-                }
-            }
-            DjCatesItem = new ObservableCollection<Cate>();
-            foreach (Cate djcate in player.channelinfo.Dj)
-            {
+            ObservableCollection<Cate> DjCatesItem = new ObservableCollection<Cate>();
+            foreach (Cate djcate in _player.ChannelInfo.Dj)
                 DjCatesItem.Add(djcate);
-            }
-            this.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                PersonalChannels.ItemsSource = PersonalChannelsItem;
-                PublicChannels.ItemsSource = PublicChannelsItem;
-                DjCates.ItemsSource = DjCatesItem;
-            }));
+            PersonalChannels.ItemsSource = PersonalChannelsItem;
+            PublicChannels.ItemsSource = PublicChannelsItem;
+            DjCates.ItemsSource = DjCatesItem;
         }
-        #endregion
-
-        #region 播放器控制
-        /// <summary>
-        /// 用户点击下一首。异步方法。不保证一定成功。
-        /// </summary>
-        public void Next()
-        {
-            if (player.CurrentSong == null) return;
-            Audio.Stop();
-            Thread thread = new Thread(new ThreadStart(new Action(() =>
-                {
-                    player.Skip();
-                    this.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        Update();
-                    }));
-                })));
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        /// <summary>
-        /// 播放结束后下一首。异步方法。不保证一定成功。
-        /// </summary>
-        public void NaturalNext()
-        {
-            Thread thread = new Thread(new ThreadStart(new Action(() =>
-            {
-                player.SongFinished();
-                this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    Update();
-                }));
-            })));
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        /// <summary>
-        /// 暂停。不保证一定成功。
-        /// </summary>
-        public void Pause()
-        {
-            if (CheckBoxPause.IsChecked == false)
-                CheckBoxPause.IsChecked = true;
-            PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
-            Paused = true;
-            Audio.Pause();
-            Thread thread = new Thread(new ThreadStart(() =>
-            {
-                player.Pause();
-                this.Dispatcher.BeginInvoke(new Action(() => { notifyIcon_PlayPause.Text = "播放"; }));
-            }));
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        /// <summary>
-        /// 播放。不保证一定成功。
-        /// </summary>
-        public void Play()
-        {
-            if (CheckBoxPause.IsChecked == true)
-                CheckBoxPause.IsChecked = false;
-            PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
-            Paused = false;
-            Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    Song LastSong = player.CurrentSong;
-                    player.Play();
-                    this.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            if (LastSong != player.CurrentSong)
-                                Update();
-                            Audio.Play();
-                            notifyIcon_PlayPause.Text = "暂停";
-                            Debug.WriteLine("Audio.Play()");
-                        }));
-                }));
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        /// <summary>
-        /// 标记喜欢或不喜欢。
-        /// </summary>
-        public void LikeOrUnlike()
-        {
-            if (player.CurrentSong == null)
-                return;
-            bool CurrentLike = !player.CurrentSong.like;
-            if (CurrentLike != CheckBoxLike.IsChecked)
-                CheckBoxLike.IsChecked = CurrentLike;
-            if (CurrentLike)
-            {
-                LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
-                notifyIcon_Heart.Text = "去红心";
-            }
-            else
-            {
-                LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
-                notifyIcon_Heart.Text = "加红心";
-            }
-            Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    player.LikeOrUnlike();
-                }));
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        /// <summary>
-        /// 标记不再播放。
-        /// </summary>
-        public void Never()
-        {
-            if (player.CurrentSong == null)
-                return;
-            Audio.Stop();
-            Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    player.Never();
-                    this.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            Update();
-                        }));
-                }));
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        #endregion
-
-        #region 其他
         /// <summary>
         /// 更新界面内容，主要是音乐信息。换音乐时自动调用。
         /// </summary>
         private void Update()
         {
-            if (player.CurrentSong == null)
-                return;
-            Song song = player.CurrentSong;
-            if (song == null) return;
+            Song song = _player.CurrentSong;
             ChangeCover(song);
             try
             {
-                //Audio.Stop();
-                Audio.Source = new Uri(song.url);
-                if (Paused) Audio.Pause();
-                else Audio.Play();
-                Audio.IsMuted = !Audio.IsMuted;
+                Audio.Source = new Uri(song.FileUrl);
+
+                Audio.IsMuted = !Audio.IsMuted;     //防止无敌静音
                 Thread.Sleep(50);
                 Audio.IsMuted = !Audio.IsMuted;
-                Audio.Volume = player.settings.Volume;
+                Audio.Volume = _player.Settings.Volume;
             }
             catch { }
-            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = song.title;
-            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[2]).KeyFrames[0].Value = song.artist;
-            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = song.albumtitle;
+            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = song.Title;
+            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[2]).KeyFrames[0].Value = song.Artist;
+            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = song.Album;
             ChangeSongInfoStoryboard.Begin();
-            string stringA = song.title + " - " + song.artist;
-            string stringB = "    豆瓣电台 - " + player.Channel.Name;
+            string stringA = song.Title + " - " + song.Artist;
+            string stringB = "    豆瓣电台 - " + _player.CurrentChannel.Name;
             this.Title = stringA + stringB;
             if (this.Title.Length <= 63)        //Windows限制托盘图标的提示信息最长为63个字符
                 notifyIcon.Text = this.Title;
             else
-                notifyIcon.Text = stringA.Substring(0, 63 - stringB.Length) + stringB;
-            ChannelTextBlock.Text = player.Channel.Name;
-            TotalTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0, 0, song.length));
+            {
+                notifyIcon.Text = stringA.Substring(0, Math.Max(63 - stringB.Length, 0));
+                if (notifyIcon.Text.Length + stringB.Length <= 63)
+                    notifyIcon.Text += stringB.Length;
+                else
+                    notifyIcon.Text = stringA.Substring(0, Math.Min(stringA.Length, 63));
+            }
+            ChannelTextBlock.Text = _player.CurrentChannel.Name;
+            TotalTime.Content = TimeSpanToStringConverter.QuickConvert(song.Length);
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
             Slider.Minimum = 0;
-            Slider.Maximum = song.length;
+            Slider.Maximum = song.Length.TotalSeconds;
             Slider.Value = 0;
-            UpdateHeartAndNever();
-        }
-
-        /// <summary>
-        /// 根据当前信息决定红心和垃圾箱是否可用
-        /// </summary>
-        void UpdateHeartAndNever()
-        {
-            Song song = player.CurrentSong;
-            CheckBoxLike.IsChecked = song.like;
-
-            if (player.Channel.Id != "dj")
-            {
-                CheckBoxLike.IsEnabled = true;
-                LikeThumb.IsEnabled = true;
-                notifyIcon_Heart.Enabled = true;
-                if (song.like)
-                {
-                    LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
-                    notifyIcon_Heart.Text = "去红心";
-                }
-                else
-                {
-                    LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
-                    notifyIcon_Heart.Text = "加红心";
-                }
-            }
-            else
-            {
-                CheckBoxLike.IsEnabled = false;
-                LikeThumb.IsEnabled = false;
-                notifyIcon_Heart.Enabled = false;
-                LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
-                notifyIcon_Heart.Text = "加红心";
-            }
-
-            if (player.Channel.Id == "0" && player.LoggedOn)
-            {
-                ButtonNever.IsEnabled = true;
-                NeverThumb.IsEnabled = true;
-                notifyIcon_Never.Enabled = true;
-                NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
-            }
-            else
-            {
-                ButtonNever.IsEnabled = false;
-                NeverThumb.IsEnabled = false;
-                notifyIcon_Never.Enabled = false;
-                NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage_Disabled");
-            }
         }
 
         /// <summary>
@@ -477,12 +311,7 @@ namespace DoubanFM
         {
             try
             {
-                BitmapImage bitmap = new BitmapImage(new Uri(song.picture));
-#if DEBUG
-                if (System.Environment.GetCommandLineArgs().Contains("-LocalMusic"))
-                    bitmap_DownloadCompleted(bitmap, null);
-                else
-#endif
+                BitmapImage bitmap = new BitmapImage(new Uri(song.Picture));
                 {
                     bitmap.DownloadCompleted += new EventHandler(bitmap_DownloadCompleted);
                     bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>(bitmap_DownloadFailed);
@@ -520,16 +349,16 @@ namespace DoubanFM
         /// <param name="NewCover">新封面</param>
         void SwitchCover(BitmapImage NewCover)
         {
-            if (Cover == Cover1)
+            if (_cover == Cover1)
             {
                 Cover2.Source = NewCover;
-                Cover = Cover2;
+                _cover = Cover2;
                 ShowCover2Storyboard.Begin();
             }
             else
             {
                 Cover1.Source = NewCover;
-                Cover = Cover1;
+                _cover = Cover1;
                 ShowCover1Storyboard.Begin();
             }
         }
@@ -543,7 +372,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         void bitmap_DownloadFailed(object sender, ExceptionEventArgs e)
         {
-            if (((BitmapImage)sender).UriSource.AbsoluteUri.ToString() == new Uri(player.CurrentSong.picture).AbsoluteUri.ToString())
+            if (((BitmapImage)sender).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
             {
                 BitmapImage bitmap = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
                 this.Dispatcher.BeginInvoke(new Action(() =>
@@ -565,7 +394,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         void bitmap_DownloadCompleted(object sender, EventArgs e)
         {
-            if (((BitmapImage)sender).UriSource.AbsoluteUri == new Uri(player.CurrentSong.picture).AbsoluteUri)
+            if (((BitmapImage)sender).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
             {
                 this.Dispatcher.BeginInvoke(new Action(() =>
                 {
@@ -585,7 +414,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void ButtonNext_Click(object sender, RoutedEventArgs e)
         {
-            Next();
+            _player.Skip();
         }
         /// <summary>
         /// 音乐播放结束时自动调用
@@ -594,7 +423,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void Audio_MediaEnded(object sender, RoutedEventArgs e)
         {
-            NaturalNext();
+            _player.CurrentSongFinishedPlaying();
         }
         /// <summary>
         /// 音乐遇到错误时自动调用
@@ -603,7 +432,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void Audio_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            NaturalNext();
+            _player.CurrentSongFinishedPlaying();
         }
         /// <summary>
         /// 计时器响应函数，用于更新时间信息。自动调用
@@ -614,30 +443,6 @@ namespace DoubanFM
         {
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.Position);
             Slider.Value = Audio.Position.TotalSeconds;
-            TimeSpan totalTime = TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Content);
-            //if (totalTime.TotalSeconds >= 1)
-            //{
-            //    if ((Audio.Position - totalTime).TotalSeconds > 1)
-            //        this.NaturalNext();
-            //}
-        }
-        /// <summary>
-        /// 暂停按钮被按下时自动调用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CheckBoxPause_Checked(object sender, RoutedEventArgs e)
-        {
-            Pause();
-        }
-        /// <summary>qe
-        /// 播放按钮被按下时自动调用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CheckBoxPause_Unchecked(object sender, RoutedEventArgs e)
-        {
-            Play();
         }
         /// <summary>
         /// 修正音乐总时间。音乐加载完成时自动调用。
@@ -660,8 +465,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void PauseThumb_Click(object sender, EventArgs e)
         {
-            if (Paused) Play();
-            else Pause();
+            _player.IsPlaying = !_player.IsPlaying;
         }
         /// <summary>
         /// 任务栏“下一首”按钮按下时自动调用
@@ -670,7 +474,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void NextThumb_Click(object sender, EventArgs e)
         {
-            Next();
+            _player.Skip();
         }
         /// <summary>
         /// 保存各种信息
@@ -679,12 +483,9 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void Window_Closed(object sender, EventArgs e)
         {
-            Audio.Stop();
+            Audio.Close();
             notifyIcon.Dispose();
-            player.SaveSettings();
-            if (!player.settings.AutoLogOnNextTime && player.LoggedOn)
-                player.LogOff();
-            player.SaveCookies();
+            _player.Dispose();
         }
         /// <summary>
         /// 更新密码
@@ -693,7 +494,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void PbPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            player.settings.User.Password = PbPassword.Password;
+            _player.Settings.User.Password = PbPassword.Password;
         }
         /// <summary>
         /// 登录
@@ -702,91 +503,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void ButtonLogOn_Click(object sender, RoutedEventArgs e)
         {
-            //SaveSettings();
-            if (player.LoggedOn == false)
-            {
-                LoggingOnPanel.Visibility = Visibility.Visible;
-                LogOnPanel.Visibility = Visibility.Hidden;
-                LogOnFailedHint.Visibility = Visibility.Hidden;
-                string text = CaptchaText.Text;
-                Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    player.LogOn(text);
-                    this.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        UpdateHeartAndNever();
-                        LoggingOnPanel.Visibility = Visibility.Hidden;
-                        if (player.LoggedOn)
-                        {
-                            LogOnFailedHint.Visibility = Visibility.Hidden;
-                            ShowChannels();
-                            LogOffPanel.Visibility = Visibility.Visible;
-                        }
-                        else
-                        {
-                            LogOnPanel.Visibility = Visibility.Visible;
-                            LogOnFailedHint.Visibility = Visibility.Visible;
-                            RefreshCaptcha();
-                        }
-                    }));
-                }));
-                thread.IsBackground = true;
-                thread.Start();
-            }
-        }
-        /// <summary>
-        /// 根据情况显示帐号面板的内容
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ControlPanel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (ControlPanel.SelectedItem == Account && player.LoggedOn == false)
-            {
-                LogOnPanel.Visibility = Visibility.Visible;
-                LogOffPanel.Visibility = Visibility.Hidden;
-                RefreshCaptcha();
-            }
-            else
-            {
-                LogOnPanel.Visibility = Visibility.Hidden;
-                LogOffPanel.Visibility = Visibility.Visible;
-            }
-        }
-        /// <summary>
-        /// 刷新验证码
-        /// </summary>
-        private void RefreshCaptcha()
-        {
-            CaptchaGrid.Visibility = Visibility.Collapsed;
-            Thread thread = new Thread(new ThreadStart(() =>
-            {
-                string CaptchaID = player.GetNewCaptchaId();
-                this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    CaptchaText.Text = "";
-                    if (CaptchaID != null || CaptchaID != string.Empty)
-                    {
-                        BitmapImage CaptchaImage = new BitmapImage(new Uri("http://www.douban.com/misc/captcha?id=" + CaptchaID + "&amp;size=s"));
-                        CaptchaImage.DownloadCompleted += new EventHandler(CaptchaImage_DownloadCompleted);
-                        Captcha.Source = CaptchaImage;
-                    }
-                }));
-            }));
-            thread.IsBackground = true;
-            thread.Start();
-        }
-        /// <summary>
-        /// 验证码图标下载完成
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void CaptchaImage_DownloadCompleted(object sender, EventArgs e)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                CaptchaGrid.Visibility = Visibility.Visible;
-            }));
+            _player.UserAssistant.LogOn(CaptchaText.Text);
         }
         /// <summary>
         /// 注销
@@ -795,32 +512,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void ButtonLogOff_Click(object sender, RoutedEventArgs e)
         {
-            if (player.LoggedOn)
-            {
-                LoggingOffPanel.Visibility = Visibility.Visible;
-                LogOffPanel.Visibility = Visibility.Hidden;
-                Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    player.LogOff();
-                    this.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        UpdateHeartAndNever();
-                        LoggingOffPanel.Visibility = Visibility.Hidden;
-                        if (!player.LoggedOn)
-                        {
-                            LogOnPanel.Visibility = Visibility.Visible;
-                            ShowChannels();
-                            RefreshCaptcha();
-                        }
-                        else
-                        {
-                            LogOffPanel.Visibility = Visibility.Visible;
-                        }
-                    }));
-                }));
-                thread.IsBackground = true;
-                thread.Start();
-            }
+            _player.UserAssistant.LogOff();
         }
         /// <summary>
         /// 验证码被点击
@@ -829,17 +521,9 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void ButtonRefreshCaptcha_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            RefreshCaptcha();
+            _player.UserAssistant.Refresh();
         }
-        /// <summary>
-        /// 主界面点击"喜欢"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CheckBoxLike_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            LikeOrUnlike();
-        }
+
         /// <summary>
         /// 任务栏点击“喜欢”
         /// </summary>
@@ -847,7 +531,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void LikeThumb_Click(object sender, EventArgs e)
         {
-            LikeOrUnlike();
+            _player.IsLiked = !_player.IsLiked;
         }
         /// <summary>
         /// 主界面点击“不再播放”
@@ -856,7 +540,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void ButtonNever_Click(object sender, RoutedEventArgs e)
         {
-            Never();
+            _player.Never();
         }
         /// <summary>
         /// 任务栏点击“不再播放”
@@ -865,7 +549,7 @@ namespace DoubanFM
         /// <param name="e"></param>
         private void NeverThumb_Click(object sender, EventArgs e)
         {
-            Never();
+            _player.Never();
         }
 
         /// <summary>
@@ -876,23 +560,7 @@ namespace DoubanFM
         private void PersonalChannels_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (PersonalChannels.SelectedItem != null)
-            {
-                Audio.Stop();
-                Channel channel = (Channel)PersonalChannels.SelectedItem;
-                PublicChannels.SelectedItem = null;
-                DjCates.SelectedItem = null;
-                SearchResultList.SelectedItem = null;
-                Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    player.Channel = channel;
-                    this.Dispatcher.Invoke(new Action(() =>
-                    {
-                        Update();
-                    }));
-                }));
-                thread.IsBackground = true;
-                thread.Start();
-            }
+                _player.CurrentChannel = (Channel)PersonalChannels.SelectedItem;
         }
         /// <summary>
         /// 更换公共频道。公共频道选择改变时自动调用。
@@ -902,23 +570,7 @@ namespace DoubanFM
         private void PublicChannels_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (PublicChannels.SelectedItem != null)
-            {
-                Audio.Stop();
-                Channel channel = (Channel)PublicChannels.SelectedItem;
-                PersonalChannels.SelectedItem = null;
-                DjCates.SelectedItem = null;
-                SearchResultList.SelectedItem = null;
-                Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    player.Channel = channel;
-                    this.Dispatcher.Invoke(new Action(() =>
-                    {
-                        Update();
-                    }));
-                }));
-                thread.IsBackground = true;
-                thread.Start();
-            }
+                _player.CurrentChannel = (Channel)PublicChannels.SelectedItem;
         }
         /// <summary>
         /// 更换DJ节目。DJ节目选择改变时自动调用。
@@ -929,54 +581,29 @@ namespace DoubanFM
         {
             if (DjChannels.SelectedItem != null)
             {
-                Audio.Stop();
-                Channel channel = (Channel)DjChannels.SelectedItem;
-                PersonalChannels.SelectedItem = null;
-                PublicChannels.SelectedItem = null;
-                SearchResultList.SelectedItem = null;
-                Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    player.Channel = channel;
-                    this.Dispatcher.Invoke(new Action(() =>
-                    {
-                        Update();
-                    }));
-                }));
-                thread.IsBackground = true;
-                thread.Start();
+                _player.CurrentDjCate = (Cate)DjCates.SelectedItem;
+                _player.CurrentChannel = (Channel)DjChannels.SelectedItem;
             }
         }
-
         /// <summary>
         /// 当用户在某DJ频道上点击鼠标左键时，切换到DJ节目列表
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DjCates_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void DjCates_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.OriginalSource is TextBlock)
+            if (DjCates.SelectedItem != null)
+            {
+                DjChannels.ItemsSource = ((Cate)DjCates.SelectedItem).Channels;
                 DjChannelClickStoryboard.Begin();
+            }
         }
         /// <summary>
-        /// DJ节目播放完毕时，切换到下一个DJ节目
+        /// 当用户在按钮“DJ兆赫”上点击时，去除DjCates的选择
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void player_DjChannelPlayingEnded(object sender, EventArgs e)
+        private void ButtonDjCates_Click(object sender, RoutedEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    foreach (Cate djcate in DjCates.Items)
-                    {
-                        int index = djcate.Channels.ToList().IndexOf(player.Channel);
-                        if (index != -1)
-                        {
-                            DjCates.SelectedItem = djcate;
-                            if (DjChannels.Items.Count != 0)
-                                DjChannels.SelectedIndex = (index + 1) % DjChannels.Items.Count;
-                        }
-                    }
-                }));
+            DjCates.SelectedItem = null;
         }
         /// <summary>
         /// 鼠标左键点击封面时滑动封面
@@ -986,7 +613,7 @@ namespace DoubanFM
         private void CoverGrid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonUp(e);
-            //if (!player.settings.SlideCoverWhenMouseMove)
+            //if (!_player.Settings.SlideCoverWhenMouseMove)
             {
                 Point leftLocation = e.GetPosition(LeftPanel);
                 Debug.WriteLine("LeftPanel:" + leftLocation);
@@ -1008,36 +635,24 @@ namespace DoubanFM
             }
         }
 
-        /// <summary>
-        /// Handles the Tick event of the SlideCoverRightTimer control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void SlideCoverRightTimer_Tick(object sender, EventArgs e)
         {
             SlideCoverRightStoryboard.Begin();
-            SlideCoverRightTimer.Stop();
+            _slideCoverRightTimer.Stop();
         }
-        /// <summary>
-        /// Handles the Tick event of the SlideCoverLeftTimer control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void SlideCoverLeftTimer_Tick(object sender, EventArgs e)
         {
             SlideCoverLeftStoryboard.Begin();
-            SlideCoverLeftTimer.Stop();
+            _slideCoverLeftTimer.Stop();
         }
 
         /// <summary>
         /// 当鼠标移动时滑动封面
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Input.MouseEventArgs"/> instance containing the event data.</param>
         private void CoverGrid_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (player.settings.SlideCoverWhenMouseMove)
+            if (_player.Settings.SlideCoverWhenMouseMove)
             {
                 Point leftLocation = e.GetPosition(LeftPanel);
                 Debug.WriteLine("LeftPanel:" + leftLocation);
@@ -1045,8 +660,8 @@ namespace DoubanFM
                 if (leftResult != null)
                 {
                     Debug.WriteLine("SlideRight");
-                    SlideCoverRightTimer.Start();
-                    SlideCoverLeftTimer.Stop();
+                    _slideCoverRightTimer.Start();
+                    _slideCoverLeftTimer.Stop();
                     return;
                 }
                 Point rightLocation = e.GetPosition(RightPanel);
@@ -1055,207 +670,75 @@ namespace DoubanFM
                 if (rightResult != null)
                 {
                     Debug.WriteLine("SlideLeft");
-                    SlideCoverLeftTimer.Start();
-                    SlideCoverRightTimer.Stop();
+                    _slideCoverLeftTimer.Start();
+                    _slideCoverRightTimer.Stop();
                 }
             }
         }
 
-        /// <summary>
-        /// Handles the MouseLeave event of the CoverGrid control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Input.MouseEventArgs"/> instance containing the event data.</param>
         private void CoverGrid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            SlideCoverRightTimer.Stop();
-            SlideCoverLeftTimer.Stop();
+            _slideCoverRightTimer.Stop();
+            _slideCoverLeftTimer.Stop();
         }
 
-        /// <summary>
-        /// Handles the Click event of the ButtonMinimize control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void ButtonMinimize_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.WindowState = System.Windows.WindowState.Minimized;
         }
 
-        /// <summary>
-        /// Handles the Click event of the ButtonToNotifyIcon control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void ButtonToNotifyIcon_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.Visibility = Visibility.Hidden;
         }
 
-        /// <summary>
-        /// Handles the Click event of the ButtonExit control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void ButtonExit_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.Close();
         }
 
-        /// <summary>
-        /// Handles the IsVisibleChanged event of the Window control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void Window_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
             notifyIcon.Visible = !this.IsVisible;
         }
 
-        /// <summary>
-        /// Handles the MouseLeftButtonDown event of the Window control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
         private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             this.DragMove();
         }
 
-        /// <summary>
-        /// Handles the Click event of the VisitSoftwareWebsite control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void VisitSoftwareWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Process.Start("http://kfstorm.wordpress.com/doubanfm/");
         }
 
-        /// <summary>
-        /// Handles the Click event of the VisitOfficialWebsite control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void VisitOfficialWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Process.Start("http://douban.fm/");
         }
 
-        /// <summary>
-        /// Handles the Click event of the Search control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void Search_Click(object sender, RoutedEventArgs e)
         {
-            string searchText = SearchText.Text;
-            NoResult.Visibility = Visibility.Hidden;
-            PreviousPage.IsEnabled = false;
-            NextPage.IsEnabled = false;
-            Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    if (currentSearch != null)
-                        currentSearch.Stop();
-                    currentSearch = new MusicSearch();
-                    currentSearch.SearchFinished += new EventHandler(search_SearchFinished);
-                    currentSearch.Search(searchText);
-                }));
-            thread.IsBackground = true;
-            thread.Start();
+            _player.MusicSearch.StartSearch(SearchText.Text);
         }
 
-        /// <summary>
-        /// Handles the Click event of the PreviousPage control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void PreviousPage_Click(object sender, RoutedEventArgs e)
         {
-            NoResult.Visibility = Visibility.Hidden;
-            PreviousPage.IsEnabled = false;
-            NextPage.IsEnabled = false;
-            Thread thread = new Thread(new ThreadStart(() =>
-            {
-                if (currentSearch != null)
-                    currentSearch.Stop();
-                currentSearch.PreviousPage();
-            }));
-            thread.IsBackground = true;
-            thread.Start();
+            _player.MusicSearch.PreviousPage();
         }
 
-        /// <summary>
-        /// Handles the Click event of the NextPage control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs"/> instance containing the event data.</param>
         private void NextPage_Click(object sender, RoutedEventArgs e)
         {
-            NoResult.Visibility = Visibility.Hidden;
-            PreviousPage.IsEnabled = false;
-            NextPage.IsEnabled = false;
-            Thread thread = new Thread(new ThreadStart(() =>
-            {
-                if (currentSearch != null)
-                    currentSearch.Stop();
-                currentSearch.NextPage();
-            }));
-            thread.IsBackground = true;
-            thread.Start();
+            _player.MusicSearch.NextPage();
         }
 
-        /// <summary>
-        /// Handles the SearchFinished event of the search control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        void search_SearchFinished(object sender, EventArgs e)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    MusicSearch search = (MusicSearch)sender;
-                    this.SearchResultList.ItemsSource = search.SearchResult;
-                    if (!this.SearchResultList.HasItems)
-                        NoResult.Visibility = Visibility.Visible;
-                    PreviousPage.IsEnabled = search.IsPreviousPageEnabled;
-                    NextPage.IsEnabled = search.IsNextPageEnabled;
-                }));
-        }
-
-        /// <summary>
-        /// Handles the SelectionChanged event of the SearchResultList control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Controls.SelectionChangedEventArgs"/> instance containing the event data.</param>
         private void SearchResultList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (SearchResultList.SelectedItem == null) return;
-            string context = ((SearchItem)SearchResultList.SelectedItem).Context;
-            if (context != null && context.Length > 0)
-            {
-                Audio.Stop();
-                PersonalChannels.SelectedItem = null;
-                PublicChannels.SelectedItem = null;
-                DjCates.SelectedItem = null;
-                Thread thread = new Thread(new ThreadStart(() =>
-                {
-                    player.ContextPlay(context);
-                    this.Dispatcher.Invoke(new Action(() =>
-                    {
-                        Update();
-                    }));
-                }));
-                thread.IsBackground = true;
-                thread.Start();
-            }
+            Channel channel = ((SearchItem)SearchResultList.SelectedItem).GetChannel();
+            if (channel != null) _player.CurrentChannel = channel;
         }
 
-        /// <summary>
-        /// Handles the KeyDown event of the SearchText control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Input.KeyEventArgs"/> instance containing the event data.</param>
         private void SearchText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
@@ -1280,8 +763,27 @@ namespace DoubanFM
                 now.Add(g);
         }
 
-        #endregion
+        private void CheckBoxPause_Checked(object sender, RoutedEventArgs e)
+        {
+            _player.IsPlaying = false;
+        }
 
+        private void CheckBoxPause_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _player.IsPlaying = true;
+        }
+
+        private void CheckBoxLike_Checked(object sender, RoutedEventArgs e)
+        {
+            _player.IsLiked = true;
+        }
+
+        private void CheckBoxLike_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _player.IsLiked = false;
+        }
+
+        #endregion
 
     }
 }

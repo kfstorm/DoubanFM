@@ -13,7 +13,7 @@ namespace DoubanFM.Core
     /// <summary>
     /// 网络连接基础类
     /// </summary>
-    internal class ConnectionBase
+    class ConnectionBase
     {
         /// <summary>
         /// Cookie
@@ -35,6 +35,7 @@ namespace DoubanFM.Core
         /// 你懂的……
         /// </summary>
         string UserAgent, Accept, ContentType;
+        private static string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
 
         static ConnectionBase()
         {
@@ -63,31 +64,30 @@ namespace DoubanFM.Core
         /// <param name="Content">请求正文</param>
         /// <param name="encoding">解读响应正文的字符编码</param>
         /// <returns>响应正文</returns>
-        virtual internal string Post(string PostUri, string Accept, string Referer, string ContentType, byte[] Content)
+        internal string Post(string PostUri, string Accept, string Referer, string ContentType, byte[] Content)
         {
-            string file = string.Empty;
+            string file = null;
 
-            try
-            {
-                HttpWebRequest request = WebRequest.Create(PostUri) as HttpWebRequest;
-                request.Accept = Accept;
-                request.AllowAutoRedirect = true;
-                request.ContentLength = Content.Length;
-                request.ContentType = ContentType;
-                request.CookieContainer = cc;
-                request.KeepAlive = true;
-                request.Method = "POST";
-                request.Referer = Referer;
-                request.UserAgent = UserAgent;
-                using (Stream requestStream = request.GetRequestStream())
-                    requestStream.Write(Content, 0, Content.Length);
-                using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
-                using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
-                    file = sr.ReadToEnd();
-            }
-            catch (WebException)
-            {
-            }
+            while (file == null)
+                try
+                {
+                    HttpWebRequest request = WebRequest.Create(PostUri) as HttpWebRequest;
+                    request.Accept = Accept;
+                    request.AllowAutoRedirect = true;
+                    request.ContentLength = Content.Length;
+                    request.ContentType = ContentType;
+                    request.CookieContainer = cc;
+                    request.KeepAlive = true;
+                    request.Method = "POST";
+                    request.Referer = Referer;
+                    request.UserAgent = UserAgent;
+                    using (Stream requestStream = request.GetRequestStream())
+                        requestStream.Write(Content, 0, Content.Length);
+                    using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
+                    using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
+                        file = sr.ReadToEnd();
+                }
+                catch { }
 
             return file;
         }
@@ -120,26 +120,27 @@ namespace DoubanFM.Core
         /// <param name="Referer">Referer头</param>
         /// <param name="encoding">解读响应正文的字符编码</param>
         /// <returns>响应正文</returns>
-        virtual internal string Get(string GetUri, string Accept, string Referer)
+        internal string Get(string GetUri, string Accept, string Referer)
         {
-            string file = string.Empty;
-            try
-            {
-                HttpWebRequest request = WebRequest.Create(GetUri) as HttpWebRequest;
-                request.Accept = Accept;
-                request.AllowAutoRedirect = true;
-                request.CookieContainer = cc;
-                request.KeepAlive = true;
-                request.Method = "GET";
-                request.Referer = Referer;
-                request.UserAgent = UserAgent;
-                using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
-                using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
-                    file = sr.ReadToEnd();
-            }
-            catch (WebException)
-            {
-            }
+            string file = null;
+
+            while (file == null)
+                try
+                {
+                    HttpWebRequest request = WebRequest.Create(GetUri) as HttpWebRequest;
+                    request.Accept = Accept;
+                    request.AllowAutoRedirect = true;
+                    request.CookieContainer = cc;
+                    request.KeepAlive = true;
+                    request.Method = "GET";
+                    request.Referer = Referer;
+                    request.UserAgent = UserAgent;
+                    using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
+                    using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
+                        file = sr.ReadToEnd();
+                }
+                catch { }
+
             return file;
         }
         /// <summary>
@@ -166,11 +167,11 @@ namespace DoubanFM.Core
         /// 读取Cookies
         /// </summary>
         /// <returns>成功与否</returns>
-        public static bool LoadCookies()
+        internal static bool LoadCookies()
         {
             try
             {
-                using (FileStream stream = File.OpenRead(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\cookies.dat"))
+                using (FileStream stream = File.OpenRead(_dataFolder + "cookies.dat"))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     cc = (CookieContainer)formatter.Deserialize(stream);
@@ -186,14 +187,13 @@ namespace DoubanFM.Core
         /// 保存Cookies
         /// </summary>
         /// <returns>成功与否</returns>
-        public static bool SaveCookies()
+        internal static bool SaveCookies()
         {
             try
             {
-                string dir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台";
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
-                using (FileStream stream = File.OpenWrite(dir + @"\cookies.dat"))
+                if (!Directory.Exists(_dataFolder))
+                    Directory.CreateDirectory(_dataFolder);
+                using (FileStream stream = File.OpenWrite(_dataFolder + @"cookies.dat"))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(stream, cc);
@@ -206,6 +206,49 @@ namespace DoubanFM.Core
             }
 
             return true;
+        }
+        /// <summary>
+        /// Constructs the URL with parameters.
+        /// </summary>
+        /// <param name="baseUrl">The base URL.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        internal static string ConstructUrlWithParameters(string baseUrl, IEnumerable<UrlParameter> parameters)
+        {
+            if (parameters == null || parameters.Count() == 0)
+                return baseUrl;
+            StringBuilder sb = new StringBuilder(baseUrl);
+            sb.Append("?");
+            foreach (var p in parameters)
+            {
+                if (p.Value != null || p.Value != string.Empty)
+                {
+                    if (sb[sb.Length - 1] != '?')
+                        sb.Append("&");
+                    sb.Append(p.Key);
+                    sb.Append("=");
+                    sb.Append(p.Value);
+                }
+            }
+            return sb.ToString();
+        }
+    }
+
+    class UrlParameter
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        internal UrlParameter(string key, string value)
+        {
+            Key = key;
+            Value = value;
+        }
+    }
+    class Parameters : List<UrlParameter>
+    {
+        internal void Add(string key, string value)
+        {
+            Add(new UrlParameter(key, value));
         }
     }
 }

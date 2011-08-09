@@ -7,17 +7,20 @@ using System.IO;
 
 namespace DoubanFM.Core
 {
-    internal class Encryption
+    /// <summary>
+    /// 用于字符串加密的类
+    /// </summary>
+    static class Encryption
     {
         /// <summary>
         /// 加密
         /// </summary>
         /// <param name="rs"></param>
         /// <returns></returns>
-        public static string Encrypt(string rs)
+        internal static string Encrypt(string rs)
         {
-            byte[] desKey = new byte[] { 0x16, 0x09, 0x14, 0x15, 0x07, 0x01, 0x05, 0x08 };
-            byte[] desIV = new byte[] { 0x16, 0x09, 0x14, 0x15, 0x07, 0x01, 0x05, 0x08 };
+            byte[] desKey = Encoding.ASCII.GetBytes("DoubanFM");
+            byte[] desIV = Encoding.ASCII.GetBytes("DoubanFM");
 
             using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
                 try
@@ -58,10 +61,10 @@ namespace DoubanFM.Core
         /// </summary>
         /// <param name="rs"></param>
         /// <returns></returns>
-        public static string Decrypt(string rs)
+        internal static string Decrypt(string rs)
         {
-            byte[] desKey = new byte[] { 0x16, 0x09, 0x14, 0x15, 0x07, 0x01, 0x05, 0x08 };
-            byte[] desIV = new byte[] { 0x16, 0x09, 0x14, 0x15, 0x07, 0x01, 0x05, 0x08 };
+            byte[] desKey = Encoding.ASCII.GetBytes("DoubanFM");
+            byte[] desIV = Encoding.ASCII.GetBytes("DoubanFM");
 
             using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
                 try

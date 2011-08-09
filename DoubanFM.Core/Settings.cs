@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 
 namespace DoubanFM.Core
 {
@@ -14,52 +12,71 @@ namespace DoubanFM.Core
     public class Settings
     {
         /// <summary>
-        /// 用户信息
+        /// 用户
         /// </summary>
-        public UserInfo User { get; set; }
+        public User User
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// 记住密码
         /// </summary>
-        public bool RememberPassword { get; set; }
+        public bool RememberPassword
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// 下次自动登录
         /// </summary>
-        public bool AutoLogOnNextTime { get; set; }
+        public bool AutoLogOnNextTime
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// 记住最后播放的频道
         /// </summary>
-        public bool RememberLastChannel { get; set; }
+        public bool RememberLastChannel
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// 最后播放的频道
         /// </summary>
-        public Channel LastChannel { get; set; }
+        public Channel LastChannel
+        {
+            get;
+            set;
+        }
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is muted.
+        /// 静音
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is muted; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsMuted { get; set; }
+        public bool IsMuted
+        {
+            get;
+            set;
+        }
         /// <summary>
-        /// Gets or sets the volume.
+        /// 音量
         /// </summary>
-        /// <value>
-        /// The volume.
-        /// </value>
-        public double Volume { get; set; }
+        public double Volume
+        {
+            get;
+            set;
+        }
         /// <summary>
-        /// Gets or sets a value indicating whether [slide cover when mouse move].
+        /// 当鼠标移动到封面上时滑动封面
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if [slide cover when mouse move]; otherwise, <c>false</c>.
-        /// </value>
-        public bool SlideCoverWhenMouseMove { get; set; }
+        public bool SlideCoverWhenMouseMove
+        {
+            get;
+            set;
+        }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Settings"/> class.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        public Settings(UserInfo user)
+        internal Settings(User user)
         {
             User = user;
             RememberPassword = false;
@@ -70,18 +87,9 @@ namespace DoubanFM.Core
             Volume = 1;
             SlideCoverWhenMouseMove = true;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Settings"/> class.
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        public Settings(string username, string password)
-            : this(new UserInfo(username, password)) { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Settings"/> class.
-        /// </summary>
-        public Settings()
+        internal Settings(string username, string password)
+            : this(new User(username, password)) { }
+        internal Settings()
             : this("", "") { }
 
     }

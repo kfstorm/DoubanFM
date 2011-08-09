@@ -2,26 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
 
 namespace DoubanFM.Core
 {
     /// <summary>
-    /// 用户信息
+    /// 用户
     /// </summary>
     [Serializable]
-    public class UserInfo
+    public class User
     {
+
         /// <summary>
         /// 用户名
         /// </summary>
-        public string Username { get; set; }
+        public string Username
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// 密码
         /// </summary>
-        public string Password { get; set; }
+        public string Password
+        {
+            get;
+            set;
+        }
 
-        public UserInfo(string Username, string Password)
+        internal User(string Username, string Password)
         {
             this.Username = Username;
             this.Password = Password;

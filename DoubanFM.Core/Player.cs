@@ -2,196 +2,619 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO.IsolatedStorage;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
+using System.Windows;
 using System.ComponentModel;
-using System.Diagnostics;
 
 namespace DoubanFM.Core
 {
     /// <summary>
-    /// 播放器
+    /// 播放器核心
     /// </summary>
-    public class Player
+    public class Player : DependencyObject, IDisposable
     {
-        private Channel channel { get; set; }
+        #region 依赖项属性
+
+        public static readonly DependencyProperty IsInitializedProperty = DependencyProperty.Register("IsInitialized", typeof(bool), typeof(Player));
+        public static readonly DependencyProperty CurrentChannelProperty = DependencyProperty.Register("CurrentChannel", typeof(Channel), typeof(Player));
+        public static readonly DependencyProperty CurrentDjCateProperty = DependencyProperty.Register("CurrentDjCate", typeof(Cate), typeof(Player));
+        public static readonly DependencyProperty IsLikedProperty = DependencyProperty.Register("IsLiked", typeof(bool), typeof(Player));
+        public static readonly DependencyProperty IsLikedEnabledProperty = DependencyProperty.Register("IsLikedEnabled", typeof(bool), typeof(Player));
+        public static readonly DependencyProperty IsNeverEnabledProperty = DependencyProperty.Register("IsNeverEnabled", typeof(bool), typeof(Player));
+        public static readonly DependencyProperty IsPlayingProperty = DependencyProperty.Register("IsPlaying", typeof(bool), typeof(Player));
+        public static readonly DependencyProperty SettingsProperty = DependencyProperty.Register("Settings", typeof(Settings), typeof(Player));
+
+        #endregion
+
+        #region 属性
+
         /// <summary>
-        /// 获取频道列表
+        /// 频道列表
         /// </summary>
-        public ChannelInfo channelinfo { get; private set; }
+        public ChannelInfo ChannelInfo { get; private set; }
         /// <summary>
-        /// 播放器设置
+        /// 当前频道，异步
         /// </summary>
-        public Settings settings { get; set; }
-        /// <summary>
-        /// 获取验证码ID
-        /// </summary>
-        public string CaptchaId { get; private set; }
-        /// <summary>
-        /// Gets a value indicating whether [logged on].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [logged on]; otherwise, <c>false</c>.
-        /// </value>
-        public bool LoggedOn { get; private set; }
-        /// <summary>
-        /// 获取注销的链接
-        /// </summary>
-        public string LogOffLink { get; private set; }
-        /// <summary>
-        /// 已播放音乐的列表
-        /// </summary>
-        private Queue<Song> PlayedSongs = new Queue<Song>();
-        /// <summary>
-        /// 待播放音乐的列表
-        /// </summary>
-        private Queue<Song> PlayListSongs = new Queue<Song>();
-        /// <summary>
-        /// 已播放音乐的字符串表示
-        /// </summary>
-        private Queue<string> PlayedSongsString = new Queue<string>();
-        /// <summary>
-        /// 获取当前播放的音乐
-        /// </summary>
-        public Song CurrentSong { get; private set; }
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Player"/> is initialized.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if initialized; otherwise, <c>false</c>.
-        /// </value>
-        public bool Initialized { get; private set; }
-        /// <summary>
-        /// Gets a value indicating whether this instance is playing.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is playing; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsPlaying { get; private set; }
-        /// <summary>
-        /// Gets the pause time.
-        /// </summary>
-        private DateTime PauseTime { get; set; }
-        private bool ContextPlayCleard { get; set; }
-        /// <summary>
-        /// 获取或设置当前频道
-        /// </summary>
-        public Channel Channel
+        public Channel CurrentChannel
         {
-            get
-            {
-                return channel;
-            }
+            get { return (Channel)GetValue(CurrentChannelProperty); }
             set
             {
-                lock (this)
+                if (value == null)
+                    throw new Exception("频道不能设为空");
+                if (CurrentChannel != null && CurrentChannel.IsSpecial && !value.IsSpecial)     //由特殊模式转为普通模式
+                    CurrentSong = null;
+                if (CurrentChannel != value)
                 {
-                    if (ContextPlayCleard == false)
-                    {
-                        CurrentSong = null;
-                        ContextPlayCleard = true;
-                    }
-                    channel = value;
-                    settings.LastChannel = channel;
-                    if (channel.Id != "dj")
-                    {
-                        if (CurrentSong != null)
-                            Skip();
-                        else
-                            NewPlayList();
-                    }
-                    else
-                    {
+                    if (!value.IsDj) CurrentDjCate = null;
+                    if ((value.IsDj && (CurrentDjCate == null || !CurrentDjCate.Channels.Contains(value)))
+                        || (!value.IsDj && CurrentDjCate != null))
+                        throw new Exception("在改变CurrentDjCate前改变了CurrentChannel");
+                    SetValue(CurrentChannelProperty, value);
+                    RaiseStopedEvent(EventArgs.Empty);
+                    if (!CurrentChannel.IsSpecial)
+                        Settings.LastChannel = CurrentChannel;
+                    if (CurrentChannel.IsSpecial || CurrentChannel.IsDj || CurrentSong == null)
                         NewPlayList();
-                    }
+                    else Skip();
+                    RaiseCurrentChannelChangedEvent(EventArgs.Empty);
                 }
             }
         }
+        /// <summary>
+        /// 当前DJ门类
+        /// </summary>
+        public Cate CurrentDjCate
+        {
+            get { return (Cate)GetValue(CurrentDjCateProperty); }
+            set { SetValue(CurrentDjCateProperty, value); }
+        }
+        private Song _currentSong;
+        /// <summary>
+        /// 当前歌曲
+        /// </summary>
+        public Song CurrentSong
+        {
+            get { return _currentSong; }
+            private set
+            {
+                if (_currentSong != value)
+                {
+                    _currentSong = value;
+                    if (_currentSong != null)
+                        RaiseCurrentSongChangedEvent(EventArgs.Empty);
+                }
+            }
+        }
+        /// <summary>
+        /// 设置
+        /// </summary>
+        public Settings Settings
+        {
+            get { return (Settings)GetValue(SettingsProperty); }
+            set { SetValue(SettingsProperty, value); }
+        }
+        /// <summary>
+        /// 是否已初始化
+        /// </summary>
+        public bool IsInitialized
+        {
+            get { return (bool)GetValue(IsInitializedProperty); }
+            private set
+            {
+                if (value == false) return;
+                if (IsInitialized == false)
+                {
+                    SetValue(IsInitializedProperty, true);
+                    RaiseInitializedEvent(EventArgs.Empty);
+                }
+            }
+        }
+        /// <summary>
+        /// 是否正在播放，异步
+        /// </summary>
+        public bool IsPlaying
+        {
+            get { return (bool)GetValue(IsPlayingProperty); }
+            set
+            {
+                if (IsPlaying != value)
+                {
+                    SetValue(IsPlayingProperty, value);
+                    if (IsPlaying == true) Play();
+                    else Pause();
+                    RaiseIsPlayingChangedEvent(EventArgs.Empty);
+                }
+            }
+        }
+        /// <summary>
+        /// 是否喜欢这首歌
+        /// </summary>
+        public bool IsLiked
+        {
+            get { return (bool)GetValue(IsLikedProperty); }
+            set
+            {
+                if (IsLiked != value)
+                {
+                    SetValue(IsLikedProperty, value);
+                    RaiseIsLikedChangedEvent(EventArgs.Empty);
+                    if (IsLiked) Like();
+                    else Unlike();
+                }
+            }
+        }
+        /// <summary>
+        /// 获取一个值，该值指示红心是否启用
+        /// </summary>
+        public bool IsLikedEnabled
+        {
+            get { return (bool)GetValue(IsLikedEnabledProperty); }
+            private set
+            {
+                if (IsLikedEnabled != value)
+                {
+                    SetValue(IsLikedEnabledProperty, value);
+                    RaiseIsLikedEnabledChangedEvent(EventArgs.Empty);
+                }
+            }
+        }
+        /// <summary>
+        /// 获取一个值，该值指示垃圾桶是否启用
+        /// </summary>
+        public bool IsNeverEnabled
+        {
+            get { return (bool)GetValue(IsNeverEnabledProperty); }
+            private set
+            {
+                if (IsNeverEnabled != value)
+                {
+                    SetValue(IsNeverEnabledProperty, value);
+                    RaiseIsNeverEnabledChangedEvent(EventArgs.Empty);
+                }
+            }
+        }
+        /// <summary>
+        /// 处理登录、注销等
+        /// </summary>
+        public UserAssistant UserAssistant { get; private set; }
+        /// <summary>
+        /// 搜索
+        /// </summary>
+        public MusicSearch MusicSearch { get; private set; }
+
+        #endregion
+
+        #region 成员变量
 
         /// <summary>
-        /// Occurs when [dj channel playing ended].
+        /// 已播放音乐的列表
         /// </summary>
-        public event EventHandler DjChannelPlayingEnded;
+        private Queue<Song> _playedSongs = new Queue<Song>();
         /// <summary>
-        /// Raises the DjChannelPlayingEnded event.
+        /// 待播放音乐的列表
         /// </summary>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void RaiseDjChannelPlayingEnded(EventArgs e)
+        private Queue<Song> _playListSongs = new Queue<Song>();
+        /// <summary>
+        /// 播放历史的字符串表示
+        /// </summary>
+        private Queue<string> _playedSongsString = new Queue<string>();
+        /// <summary>
+        /// 上次暂停的时间
+        /// </summary>
+        private DateTime _pauseTime = DateTime.Now;
+        /// <summary>
+        /// 数据保存文件夹
+        /// </summary>
+        private string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
+
+        #endregion
+
+        #region 事件
+
+        /// <summary>
+        /// 当DJ频道播放完毕时发生。
+        /// </summary>
+        public event EventHandler DjChannelFinishedPlaying;
+        private void RaiseDjChannelFinishedPlayingEvent(EventArgs e)
         {
-            if (DjChannelPlayingEnded != null)
-                DjChannelPlayingEnded(this, e);
+            if (DjChannelFinishedPlaying != null)
+                DjChannelFinishedPlaying(this, e);
+        }
+        /// <summary>
+        /// 当当前频道改变时发生。
+        /// </summary>
+        public event EventHandler CurrentChannelChanged;
+        private void RaiseCurrentChannelChangedEvent(EventArgs e)
+        {
+            if (CurrentChannelChanged != null)
+                CurrentChannelChanged(this, e);
+        }
+        /// <summary>
+        /// 当当前歌曲改变时发生。
+        /// </summary>
+        public event EventHandler CurrentSongChanged;
+        private void RaiseCurrentSongChangedEvent(EventArgs e)
+        {
+            if (CurrentSongChanged != null)
+                CurrentSongChanged(this, e);
+        }
+        /// <summary>
+        /// 当初始化完成时发生。
+        /// </summary>
+        public event EventHandler Initialized;
+        private void RaiseInitializedEvent(EventArgs e)
+        {
+            if (Initialized != null)
+                Initialized(this, e);
+        }
+        /// <summary>
+        /// 当音乐继续时发生。
+        /// </summary>
+        public event EventHandler Played;
+        private void RaisePlayedEvent(EventArgs e)
+        {
+            if (Played != null)
+                Played(this, e);
+        }
+        /// <summary>
+        /// 当音乐暂停时发生。
+        /// </summary>
+        public event EventHandler Paused;
+        private void RaisePausedEvent(EventArgs e)
+        {
+            if (Paused != null)
+                Paused(this, e);
+        }
+        /// <summary>
+        /// 当音乐停止时发生。
+        /// </summary>
+        public event EventHandler Stoped;
+        private void RaiseStopedEvent(EventArgs e)
+        {
+            if (Stoped != null)
+                Stoped(this, e);
+        }
+        /// <summary>
+        /// 当IsLiked改变时发生。
+        /// </summary>
+        public event EventHandler IsLikedChanged;
+        private void RaiseIsLikedChangedEvent(EventArgs e)
+        {
+            if (IsLikedChanged != null)
+                IsLikedChanged(this, e);
+        }
+        /// <summary>
+        /// 当IsLikedEnabled改变时发生。
+        /// </summary>
+        public event EventHandler IsLikedEnabledChanged;
+        private void RaiseIsLikedEnabledChangedEvent(EventArgs e)
+        {
+            if (IsLikedEnabledChanged != null)
+                IsLikedEnabledChanged(this, e);
+        }
+        /// <summary>
+        /// 当IsNeverEnabled改变时发生。
+        /// </summary>
+        public event EventHandler IsNeverEnabledChanged;
+        private void RaiseIsNeverEnabledChangedEvent(EventArgs e)
+        {
+            if (IsNeverEnabledChanged != null)
+                IsNeverEnabledChanged(this, e);
+        }
+        /// <summary>
+        /// 当IsPlaying改变时发生。
+        /// </summary>
+        public event EventHandler IsPlayingChanged;
+        private void RaiseIsPlayingChangedEvent(EventArgs e)
+        {
+            if (IsPlayingChanged != null)
+                IsPlayingChanged(this, e);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Player"/> class.
-        /// </summary>
+        #endregion
+
+        #region 构造及初始化
+
         public Player()
+            : base()
         {
             LoadSettings();
             LoadCookies();
-            ContextPlayCleard = true;
+            UserAssistant = new UserAssistant();
+            UserAssistant.Settings = Settings;
+            MusicSearch = new MusicSearch();
+            IsLikedEnabled = true;
+            IsPlaying = true;
+            CurrentChannelChanged += new EventHandler((o, e) =>
+            {
+                IsLikedEnabled = !CurrentChannel.IsDj;
+                IsNeverEnabled = CurrentChannel.IsPersonal && UserAssistant.IsLoggedOn;
+            });
+            CurrentSongChanged += new EventHandler((o, e) =>
+            {
+                if (IsLikedEnabled)
+                    IsLiked = CurrentSong.Like;
+            });
+            DjChannelFinishedPlaying += new EventHandler((o, e) =>
+            {
+                foreach (var channel in CurrentDjCate.Channels)
+                    if (CurrentChannel == channel)
+                    {
+                        if (CurrentChannel == CurrentDjCate.Channels.Last())
+                            CurrentChannel = CurrentDjCate.Channels.First();
+                        else
+                            CurrentChannel = CurrentDjCate.Channels.ElementAt(CurrentDjCate.Channels.ToList().IndexOf(CurrentChannel) + 1);
+                        return;
+                    }
+            });
+            UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
+            {
+                IsNeverEnabled = CurrentChannel.IsPersonal;
+            });
+            UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
+            {
+                IsNeverEnabled = false;
+                if (CurrentChannel.IsPersonal && !CurrentChannel.IsSpecial)
+                    CurrentChannel = ChannelInfo.Public.First().Channels.First();
+            });
         }
+        /// <summary>
+        /// 播放器初始化，异步
+        /// </summary>
+        public void Initialize()
+        {
+            if (IsInitialized) return;
+            ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+                {
+                    ChannelInfo channelInfo = null;
+                    while (channelInfo == null)
+                    {
+                        string file = new ConnectionBase().Get("http://douban.fm");
+                        channelInfo = new ChannelInfo(Json.ChannelInfo.FromHtml(file));
+                        UserAssistant.Update(file);
+                    }
+                    Dispatcher.Invoke(new Action(() =>
+                        {
+                            ChannelInfo = channelInfo;
+                            IsInitialized = true;
+                            ChooseChannelAtStartup();
+                        }));
+                }));
+        }
+
+        /// <summary>
+        /// 刚启动时选择一个频道
+        /// </summary>
+        private void ChooseChannelAtStartup()
+        {
+            if (Settings.RememberLastChannel && Settings.LastChannel != null)
+            {
+                bool selected = false;
+                Channel firstChannel = Settings.LastChannel;
+                if (firstChannel.IsPersonal && UserAssistant.IsLoggedOn)
+                    selected = true;
+                else if (firstChannel.IsDj)
+                {
+                    foreach (Cate djCate in ChannelInfo.Dj)
+                        foreach (Channel channel in djCate.Channels)
+                            if (channel == firstChannel)
+                            {
+                                CurrentDjCate = djCate;
+                                selected = true;
+                            }
+                }
+                else
+                    foreach (Cate cate in ChannelInfo.Public)
+                        foreach (Channel channel in cate.Channels)
+                            if (channel == firstChannel)
+                                selected = true;
+                if (selected)
+                    CurrentChannel = firstChannel;
+            }
+            if (CurrentChannel == null)
+                CurrentChannel = ChannelInfo.Public.First().Channels.First();
+        }
+
+        #endregion
+
+        #region 播放器控制
+
+        /// <summary>
+        /// 歌曲自然播放完毕，添加播放记录或请求新播放列表。异步
+        /// type=e
+        /// Played
+        /// </summary>
+        public void CurrentSongFinishedPlaying()
+        {
+            ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+                {
+                    PlayerState ps = GetPlayerState();
+                    AppendPlayedSongs("e");
+                    Parameters parameters = new Parameters();
+                    parameters.Add("sid", ps.CurrentSong.SongId);
+                    parameters.Add("channel", ps.CurrentChannel.Id);
+                    parameters.Add("type", "e");
+                    string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
+                    string Result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
+                    ChangeCurrentSong();
+                }));
+        }
+        /// <summary>
+        /// 跳过当前歌曲，异步
+        /// type=s
+        /// Skip
+        /// </summary>
+        public void Skip()
+        {
+            if (CurrentSong == null) return;
+            RaiseStopedEvent(EventArgs.Empty);
+            ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+                {
+                    AppendPlayedSongs("s");
+                    PlayList pl = null;
+                    PlayerState ps = GetPlayerState();
+                    do
+                    {
+                        pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "s", PlayedSongsToString());
+                    } while (!ps.CurrentChannel.IsDj && pl.Count == 0);
+                    if (!ps.CurrentChannel.IsDj)
+                        ChangePlayListSongs(pl);
+                    ChangeCurrentSong();
+                }));
+        }
+        /// <summary>
+        /// 喜欢这首歌，异步
+        /// </summary>
+        void Like()
+        {
+            if (CurrentSong == null) return;
+            if (CurrentChannel.IsDj) return;
+            if (CurrentSong.Like) return;
+            CurrentSong.Like = true;
+            ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+            {
+                PlayList pl = null;
+                PlayerState ps = GetPlayerState();
+                do
+                {
+                    pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "r", PlayedSongsToString());
+                } while (pl.Count == 0);
+                ChangePlayListSongs(pl);
+            }));
+        }
+        /// <summary>
+        /// 不喜欢这首歌，异步
+        /// </summary>
+        void Unlike()
+        {
+            if (CurrentSong == null) return;
+            if (CurrentChannel.IsDj) return;
+            if (!CurrentSong.Like) return;
+            CurrentSong.Like = false;
+            ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+            {
+                PlayList pl = null;
+                PlayerState ps = GetPlayerState();
+                do
+                {
+                    pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "u", PlayedSongsToString());
+                } while (pl.Count == 0);
+                ChangePlayListSongs(pl);
+            }));
+        }
+        /// <summary>
+        /// 对当前音乐标记不再播放，异步
+        /// type=b
+        /// Ban
+        /// </summary>
+        public void Never()
+        {
+            if (CurrentSong == null) return;
+            if (!CurrentChannel.IsPersonal) return;
+            RaiseStopedEvent(EventArgs.Empty);
+            ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+            {
+                AppendPlayedSongs("b");
+                PlayList pl = null;
+                PlayerState ps = GetPlayerState();
+                do
+                {
+                    pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "b", PlayedSongsToString());
+                } while (pl.Count == 0);
+                ChangePlayListSongs(pl);
+                ChangeCurrentSong();
+            }));
+        }
+        /// <summary>
+        /// 暂停，同步
+        /// </summary>
+        void Pause()
+        {
+            if (CurrentSong == null) return;
+            IsPlaying = false;
+            _pauseTime = DateTime.Now;
+            RaisePausedEvent(EventArgs.Empty);
+        }
+        /// <summary>
+        /// 播放。若暂停时长超过半个小时，则播放一个新的播放列表，异步
+        /// </summary>
+        void Play()
+        {
+            if (CurrentSong == null) return;
+            IsPlaying = true;
+            RaisePlayedEvent(EventArgs.Empty);
+            if ((DateTime.Now - _pauseTime).TotalMinutes > 30 && !CurrentChannel.IsDj)
+            {
+                _playListSongs.Clear();
+                CheckPlayListSongsLength();
+                //NewPlayList();
+            }
+        }
+
+        #endregion
+
+        #region 成员方法
+
         /// <summary>
         /// 读取偏好设置
         /// </summary>
         /// <returns>读取成功与否</returns>
-        public bool LoadSettings()
+        bool LoadSettings()
         {
             try
             {
-                using (FileStream stream = File.OpenRead(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\settings.dat"))
+                using (FileStream stream = File.OpenRead(_dataFolder + "Settings.dat"))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    settings = (Settings)formatter.Deserialize(stream);
+                    Settings = (Settings)formatter.Deserialize(stream);
                 }
-                settings.User.Password = Encryption.Decrypt(settings.User.Password);
+                Settings.User.Password = Encryption.Decrypt(Settings.User.Password);
             }
             catch
             {
-                settings = new Settings();
+                Settings = new Settings();
                 return false;
             }
-            if (settings.User == null)
-                settings.User = new UserInfo("", "");
+            if (Settings.User == null)
+                Settings.User = new User("", "");
             return true;
         }
         /// <summary>
         /// 保存偏好设置
         /// </summary>
         /// <returns>保存成功与否</returns>
-        public bool SaveSettings()
+        bool SaveSettings()
         {
-            string tempPassword = settings.User.Password;
-            if (!settings.RememberPassword)
-                settings.User.Password = "";
+            string tempPassword = Settings.User.Password;
+            if (!Settings.RememberPassword)
+                Settings.User.Password = "";
             try
             {
-                settings.User.Password = Encryption.Encrypt(settings.User.Password);
-                string dir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台";
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
-                using (FileStream stream = File.OpenWrite(dir + @"\settings.dat"))
+                Settings.User.Password = Encryption.Encrypt(Settings.User.Password);
+                if (!Directory.Exists(_dataFolder))
+                    Directory.CreateDirectory(_dataFolder);
+                using (FileStream stream = File.OpenWrite(_dataFolder + "Settings.dat"))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(stream, settings);
+                    formatter.Serialize(stream, Settings);
                 }
             }
-
             catch
             {
-                settings.User.Password = tempPassword;
+                Settings.User.Password = tempPassword;
                 return false;
             }
-            settings.User.Password = tempPassword;
+            Settings.User.Password = tempPassword;
             return true;
         }
         /// <summary>
         /// 加载Cookies
         /// </summary>
         /// <returns>成功与否</returns>
-        public static bool LoadCookies()
+        static bool LoadCookies()
         {
             return ConnectionBase.LoadCookies();
         }
@@ -199,145 +622,98 @@ namespace DoubanFM.Core
         /// 保存Cookies
         /// </summary>
         /// <returns>成功与否</returns>
-        public bool SaveCookies()
+        static bool SaveCookies()
         {
             return ConnectionBase.SaveCookies();
         }
         /// <summary>
-        /// 播放器初始化
+        /// 执行与释放或重置非托管资源相关的应用程序定义的任务。
         /// </summary>
-        public void Initialize()
+        public void Dispose()
         {
-            if (Initialized) return;
-#if DEBUG
-            if (System.Environment.GetCommandLineArgs().Contains("-LocalMusic"))
-                channelinfo = ChannelInfo.GetChannelInfo();
-            else
-#endif
-            lock (this)
+            SaveSettings();
+            if (UserAssistant.IsLoggedOn && !Settings.AutoLogOnNextTime)
+                UserAssistant.ForceLogOff();
+            SaveCookies();
+        }
+        /// <summary>
+        /// 获取全新的播放列表，异步
+        /// type=n
+        /// New
+        /// </summary>
+        void NewPlayList()          //根据douban.fm的网络传输观察，只有全新的播放列表才利用context信息，其他播放列表请求都不传输context
+        {
+            if (!IsInitialized) return;
+            ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
             {
-                while (channelinfo == null)
+                PlayList pl = null;
+                PlayerState ps = GetPlayerState();
+                do
                 {
-                    string file = new ConnectionBase().Get("http://douban.fm");
-                    //string file = new StreamReader(File.OpenRead(@"F:\K.F.Storm\Documents\Visual Studio 2010\Projects\DoubanFM\Research\douban.fm(Loggedout).html"), Encoding.Default).ReadToEnd();
-                    //channelinfo = ChannelInfo.GetChannelInfo(file);
-                    //System.Runtime.Serialization.Json.DataContractJsonSerializer ser = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(ChannelInfo));
-                    //using (FileStream fs = File.OpenWrite("LocalMusic_ChannelInfo.dat"))
-                    //    ser.WriteObject(fs, channelinfo);
-                    HtmlAnalysis ha = new HtmlAnalysis(file);
-                    channelinfo = ha.GetChannelInfo();
-                    LoggedOn = ha.IsLoggedOn();
-                    LogOffLink = ha.GetLogOffLink();
-                }
-            }
-            Initialized = true;
-            PauseTime = DateTime.Now;
-            return;
-        }
-        /// <summary>
-        /// 用户登录
-        /// </summary>
-        /// <returns>登录操作成功与否</returns>
-        public bool LogOn(string captchaText)
-        {
-            lock (this)
-            {
-                if (LoggedOn) return true;
-                string PostData = "source=radio&form_email=" + settings.User.Username + "&form_password=" + settings.User.Password;
-                if (CaptchaId != null)
-                    PostData += "&captcha-solution=" + captchaText + "&captcha-id=" + CaptchaId;
-                if (settings.AutoLogOnNextTime)
-                    PostData += "&remember=on";
-                else
-                    PostData += "&remember=off";
-                //PostData += "&user_login=%E7%99%BB%E5%BD%95";
-                string file = new ConnectionBase().Post("https://www.douban.com/accounts/login", "http://www.douban.com/accounts/login?source=radio", Encoding.Default.GetBytes(PostData));
-                HtmlAnalysis ha = new HtmlAnalysis(file);
-                LoggedOn = ha.IsLoggedOn();
-                LogOffLink = ha.GetLogOffLink();
-                return LoggedOn;
-            }
-        }
-        /// <summary>
-        /// 获取验证码ID
-        /// </summary>
-        /// <returns>ID，若没有，则返回0</returns>
-        public string GetNewCaptchaId()
-        {
-            lock (this)
-            {
-                string file = new ConnectionBase().Get("http://www.douban.com/accounts/login");
-                HtmlAnalysis ha = new HtmlAnalysis(file);
-                CaptchaId = ha.GetCaptchaID();
-                return CaptchaId;
-            }
-        }
-        /// <summary>
-        /// 注销
-        /// </summary>
-        /// <returns>成功与否</returns>
-        public bool LogOff()
-        {
-            lock (this)
-            {
-                if (!LoggedOn) return true;
-                new ConnectionBase().Get(LogOffLink);
-                string file = new ConnectionBase().Get("http://douban.fm");
-                LoggedOn = new HtmlAnalysis(file).IsLoggedOn();
-                return !LoggedOn;
-            }
+                    pl = PlayList.GetPlayList(ps.CurrentChannel.Context, null, ps.CurrentChannel, "n", PlayedSongsToString());
+                } while (pl.Count == 0);
+                ChangePlayListSongs(pl);
+                ChangeCurrentSong();
+            }));
         }
         /// <summary>
         /// 增加已播放音乐的记录
         /// </summary>
-        /// <param name="type">操作类型</param>
-        private void AppendPlayedSongs(string type)
+        /// <param name="operationType">操作类型</param>
+        void AppendPlayedSongs(string operationType)
         {
-            if (CurrentSong == null) return;
-            PlayedSongs.Enqueue(CurrentSong);
-            PlayedSongsString.Enqueue("|" + CurrentSong.sid + ":" + type);
-            while (PlayedSongs.Count > 20)
-            {
-                PlayedSongs.Dequeue();
-                PlayedSongsString.Dequeue();
-            }
+            PlayerState ps = GetPlayerState();
+            if (ps.CurrentSong == null) return;
+            lock (_playedSongs) lock (_playedSongsString)
+                {
+                    _playedSongs.Enqueue(CurrentSong);
+                    _playedSongsString.Enqueue("|" + CurrentSong.SongId + ":" + operationType);
+                    while (_playedSongs.Count > 20)
+                    {
+                        _playedSongs.Dequeue();
+                        _playedSongsString.Dequeue();
+                    }
+                }
         }
         /// <summary>
-        /// 将已播放音乐的记录转换成字符串，用于h参数
+        /// 将已播放音乐的记录转换成字符串
         /// </summary>
-        /// <returns>字符串</returns>
-        private string PlayedSongsToString()
+        string PlayedSongsToString()
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (string s in PlayedSongsString)
-                sb.Append(s);
-            return sb.ToString();
+            lock (_playedSongsString)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var s in _playedSongsString)
+                    sb.Append(s);
+                return sb.ToString();
+            }
         }
         /// <summary>
         /// 更换播放列表队列
         /// </summary>
         /// <param name="pl">新播放列表</param>
-        private void ChangePlayListSongs(PlayList pl)
+        void ChangePlayListSongs(PlayList pl)
         {
-            var songs = pl.Songs;
-            PlayListSongs.Clear();
-            foreach (Song song in songs)
-                PlayListSongs.Enqueue(song);
+            lock (_playListSongs)
+            {
+                _playListSongs.Clear();
+                foreach (var song in pl)
+                    _playListSongs.Enqueue(song);
+            }
         }
         /// <summary>
         /// 更换当前播放的音乐
         /// </summary>
-        private void ChangeCurrentSong()
+        void ChangeCurrentSong()
         {
-            if (PlayListSongs.Count == 0 && Channel.Id == "dj")
-                RaiseDjChannelPlayingEnded(EventArgs.Empty);
+            PlayerState ps = GetPlayerState();
+            if (_playListSongs.Count == 0 && ps.CurrentChannel.IsDj)
+                Dispatcher.Invoke(new Action(() => { RaiseDjChannelFinishedPlayingEvent(EventArgs.Empty); }));
             else
             {
+                lock (_playListSongs)
+                    Dispatcher.Invoke(new Action(() => { CurrentSong = _playListSongs.Dequeue(); }));
                 CheckPlayListSongsLength();
-                CurrentSong = PlayListSongs.Dequeue();
-                CheckPlayListSongsLength();
-                if (CurrentSong.subtype == "T")
-                    SongFinished();
             }
         }
         /// <summary>
@@ -345,190 +721,45 @@ namespace DoubanFM.Core
         /// type=p
         /// PlayOut
         /// </summary>
-        private void CheckPlayListSongsLength()
+        void CheckPlayListSongsLength()
         {
-            if (!Initialized) return;
-            if (PlayListSongs.Count == 0 && Channel.Id != "dj")
-            {
-                PlayList pl = null;
-                do
-                {
-                    pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "p", PlayedSongsToString());
-                } while (pl.Songs.Count == 0);
-                ChangePlayListSongs(pl);
-            }
-        }
-        /// <summary>
-        /// 歌曲自然播放完毕，添加播放记录或请求新播放列表
-        /// type=e
-        /// Played
-        /// </summary>
-        public void SongFinished()
-        {
-            lock (this)
-            {
-                if (!Initialized) return;
-#if DEBUG
-                if (System.Environment.GetCommandLineArgs().Contains("-LocalMusic"))
-                {
-                    CurrentSong = PlayListSongs.ElementAt(new Random().Next(PlayListSongs.Count));
-                    return;
-                }
-#endif
-                AppendPlayedSongs("e");
-                string url = "http://douban.fm/j/mine/playlist?sid=" + CurrentSong.sid + "&channel=" + Channel.Id + "&type=" + "e";
-                string Result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
-                ChangeCurrentSong();
-            }
-        }
-        /// <summary>
-        /// 跳过当前歌曲
-        /// type=s
-        /// Skip
-        /// </summary>
-        public void Skip()
-        {
-            if (!Initialized) return;
-#if DEBUG
-            if (System.Environment.GetCommandLineArgs().Contains("-LocalMusic"))
-            {
-                CurrentSong = PlayListSongs.ElementAt(new Random().Next(PlayListSongs.Count));
-                return;
-            }
-#endif
-            lock (this)
-            {
-                AppendPlayedSongs("s");
-                PlayList pl = null;
-                do
-                {
-                    pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "s", PlayedSongsToString());
-                } while (Channel.Id != "dj" && pl.Songs.Count == 0);
-                if (Channel.Id != "dj")
-                    ChangePlayListSongs(pl);
-                ChangeCurrentSong();
-            }
-        }
-        /// <summary>
-        /// 获取全新的播放列表
-        /// type=n
-        /// New
-        /// </summary>
-        public void NewPlayList(string context = null)
-        {
-            lock (this)
-            {
-                if (!Initialized) return;
-                PlayList pl = null;
-                do
-                {
-                    pl = PlayList.GetPlayList(null, Channel, "n", PlayedSongsToString(), context);
-                } while (pl.Songs.Count == 0);
-                ChangePlayListSongs(pl);
-                ChangeCurrentSong();
-            }
-        }
-        /// <summary>
-        /// 对当前音乐标记喜欢或不喜欢
-        /// type=r or type=u
-        /// Like or Unlike
-        /// </summary>
-        public void LikeOrUnlike()
-        {
-            lock (this)
-            {
-                if (!Initialized) return;
-                if (CurrentSong == null) return;
-                if (Channel.Id == "dj") return;
-                CurrentSong.like = !CurrentSong.like;
-                PlayList pl = null;
-                do
-                {
-                    if (CurrentSong.like)
+            PlayerState ps = GetPlayerState();
+            if (_playListSongs.Count == 0 && !ps.CurrentChannel.IsDj)
+                ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
                     {
-                        AppendPlayedSongs("r");
-                        pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "r", PlayedSongsToString());
-                    }
-                    else
-                    {
-                        AppendPlayedSongs("u");
-                        pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "u", PlayedSongsToString());
-                    }
-                } while (pl.Songs.Count == 0);
-                ChangePlayListSongs(pl);
-            }
+                        PlayList pl = null;
+                        do
+                        {
+                            pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "p", PlayedSongsToString());
+                        } while (pl.Count == 0);
+                        ChangePlayListSongs(pl);
+                    }));
         }
         /// <summary>
-        /// 对当前音乐标记不再播放
-        /// type=b
-        /// Ban
+        /// 获取当前状态，用于向线程池加入任务时传递参数
         /// </summary>
-        public void Never()
+        /// <returns></returns>
+        PlayerState GetPlayerState()
         {
-            lock (this)
-            {
-                if (!Initialized) return;
-                if (CurrentSong == null) return;
-                if (Channel.Id != "0") return;
-                AppendPlayedSongs("b");
-                PlayList pl = null;
-                do
-                {
-                    pl = PlayList.GetPlayList(CurrentSong.sid, Channel, "b", PlayedSongsToString());
-                } while (pl.Songs.Count == 0);
-                ChangePlayListSongs(pl);
-                ChangeCurrentSong();
-            }
+            PlayerState ps = null;
+            if (CheckAccess())
+                ps = new PlayerState(CurrentChannel == null ? null : (Channel)CurrentChannel.Clone(), CurrentSong == null ? null : (Song)CurrentSong.Clone());
+            else
+                Dispatcher.Invoke(new Action(() => { ps = GetPlayerState(); }));
+            return ps;
         }
-        /// <summary>
-        /// 暂停
-        /// </summary>
-        public void Pause()
+
+        #endregion
+
+        class PlayerState
         {
-            lock (this)
+            public Channel CurrentChannel { get; set; }
+            public Song CurrentSong { get; set; }
+
+            internal PlayerState(Channel currentChannel, Song currentSong)
             {
-                if (!Initialized) return;
-                if (IsPlaying == false) return;
-                IsPlaying = false;
-                PauseTime = DateTime.Now;
-            }
-        }
-        /// <summary>
-        /// 播放。若暂停时长超过半个小时，则播放一个新的播放列表
-        /// </summary>
-        public void Play()
-        {
-            Debug.WriteLine("In Player.Play()");
-            lock (this)
-            {
-                Debug.WriteLine("In lock block in Player.Play()");
-                if (!Initialized) return;
-                Debug.WriteLine("Initialized");
-                if (IsPlaying) return;
-                Debug.WriteLine("IsPlaying=false");
-                if ((DateTime.Now - PauseTime).TotalMinutes > 30 && Channel.Id != "dj")
-                    NewPlayList();
-                IsPlaying = true;
-                Debug.WriteLine("IsPlaying=true");
-            }
-        }
-        /// <summary>
-        /// 特殊播放
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public void ContextPlay(string context)
-        {
-            if (!Initialized)
-                return;
-            if (context == null || context.Length == 0)
-                return;
-            lock (this)
-            {
-                channel = new Channel();
-                channel.Id = "0";
-                channel.Name = "特殊模式";
-                NewPlayList(context);
-                ContextPlayCleard = false;
+                CurrentChannel = currentChannel;
+                CurrentSong = currentSong;
             }
         }
     }

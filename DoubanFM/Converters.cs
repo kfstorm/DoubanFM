@@ -12,13 +12,6 @@ namespace DoubanFM
         /// <summary>
         /// 由Slider的Value值确定Slider的Thumb宽度
         /// </summary>
-        /// <param name="values"><see cref="T:System.Windows.Data.MultiBinding"/> 中源绑定生成的值的数组。值 <see cref="F:System.Windows.DependencyProperty.UnsetValue"/> 表示源绑定没有要提供以进行转换的值。</param>
-        /// <param name="targetType">绑定目标属性的类型。</param>
-        /// <param name="parameter">要使用的转换器参数。</param>
-        /// <param name="culture">要用在转换器中的区域性。</param>
-        /// <returns>
-        /// 转换后的值。如果该方法返回 null，则使用有效的 null 值。<see cref="T:System.Windows.DependencyProperty"/>.<see cref="F:System.Windows.DependencyProperty.UnsetValue"/> 的返回值表示转换器没有生成任何值，且绑定将使用 <see cref="P:System.Windows.Data.BindingBase.FallbackValue"/>（如果可用），否则将使用默认值。<see cref="T:System.Windows.Data.Binding"/>.<see cref="F:System.Windows.Data.Binding.DoNothing"/> 的返回值表示绑定不传输值，或不使用 <see cref="P:System.Windows.Data.BindingBase.FallbackValue"/> 或默认值。
-        /// </returns>
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             double Value = (double)values[0];
@@ -35,16 +28,6 @@ namespace DoubanFM
                 ret = 1;
             return ret;
         }
-        /// <summary>
-        /// 不支持
-        /// </summary>
-        /// <param name="value">绑定目标生成的值。</param>
-        /// <param name="targetTypes">要转换到的类型数组。数组长度指示为要返回的方法所建议的值的数量与类型。</param>
-        /// <param name="parameter">要使用的转换器参数。</param>
-        /// <param name="culture">要用在转换器中的区域性。</param>
-        /// <returns>
-        /// 从目标值转换回源值的值的数组。
-        /// </returns>
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
@@ -59,13 +42,6 @@ namespace DoubanFM
         /// <summary>
         /// 由TimeSpan值转换为字符串，用于时间显示
         /// </summary>
-        /// <param name="value">绑定源生成的值。</param>
-        /// <param name="targetType">绑定目标属性的类型。</param>
-        /// <param name="parameter">要使用的转换器参数。</param>
-        /// <param name="culture">要用在转换器中的区域性。</param>
-        /// <returns>
-        /// 转换后的值。如果该方法返回 null，则使用有效的 null 值。
-        /// </returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             TimeSpan timespan = (TimeSpan)value;
@@ -74,13 +50,6 @@ namespace DoubanFM
         /// <summary>
         /// 由时间字符串转换回TimeSpan值
         /// </summary>
-        /// <param name="value">绑定目标生成的值。</param>
-        /// <param name="targetType">要转换到的类型。</param>
-        /// <param name="parameter">要使用的转换器参数。</param>
-        /// <param name="culture">要用在转换器中的区域性。</param>
-        /// <returns>
-        /// 转换后的值。如果该方法返回 null，则使用有效的 null 值。
-        /// </returns>
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string value2 = "00:" + (string)value;
@@ -113,32 +82,48 @@ namespace DoubanFM
         /// <summary>
         /// 由窗口背景转换为进度条前景
         /// </summary>
-        /// <param name="value">绑定源生成的值。</param>
-        /// <param name="targetType">绑定目标属性的类型。</param>
-        /// <param name="parameter">要使用的转换器参数。</param>
-        /// <param name="culture">要用在转换器中的区域性。</param>
-        /// <returns>
-        /// 转换后的值。如果该方法返回 null，则使用有效的 null 值。
-        /// </returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value is SolidColorBrush)
             {
                 return new SolidColorBrush(ColorFunctions.ReviseBrighter(new HSLColor(((SolidColorBrush)value).Color), ColorFunctions.ProgressBarReviseParameter).ToRGB());
-                //return new SolidColorBrush(ColorFunctions.ReviseBrighter(ColorFunctions.ReviseBrighter(new HSLColor(((SolidColorBrush)value).Color))).ToRGB());
             }
             return value;
         }
-        /// <summary>
-        /// 不支持
-        /// </summary>
-        /// <param name="value">绑定目标生成的值。</param>
-        /// <param name="targetType">要转换到的类型。</param>
-        /// <param name="parameter">要使用的转换器参数。</param>
-        /// <param name="culture">要用在转换器中的区域性。</param>
-        /// <returns>
-        /// 转换后的值。如果该方法返回 null，则使用有效的 null 值。
-        /// </returns>
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// 将Bool值反转的转换器
+    /// </summary>
+    public class BoolReverseConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+    }
+    /// <summary>
+    /// 将Bool值反转并转换为Visibility的转换器
+    /// </summary>
+    public class BoolReverseToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if ((bool)value)
+                return System.Windows.Visibility.Hidden;
+            else
+                return System.Windows.Visibility.Visible;
+        }
+
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();

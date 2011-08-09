@@ -47,36 +47,6 @@ namespace DoubanFM
         /// </summary>
         public readonly static double AlmostZeroSaturation = 0.001;
 
-#if DEBUG
-        /// <summary>
-        /// 静态构造函数
-        /// </summary>
-        static ColorFunctions()
-        {
-            try
-            {
-                INIClass ini = new INIClass(new FileInfo(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName).DirectoryName + "/Config.ini");
-                if (ini.ExistINIFile())
-                {
-                    //ini.IniWriteValue("Color", "CoverColorDiff", CoverColorDiff.ToString());
-                    //ini.IniWriteValue("Color", "ReviseParameter", ReviseParameter.ToString());
-                    //ini.IniWriteValue("Color", "RightSideWidth", RightSideWidth.ToString());
-                    //ini.IniWriteValue("Color", "TooDark", TooDark.ToString());
-
-                    CoverColorDiff = double.Parse(ini.IniReadValue("Color", "CoverColorDiff"));
-                    ReviseParameter = double.Parse(ini.IniReadValue("Color", "ReviseParameter"));
-                    RightSideWidth = double.Parse(ini.IniReadValue("Color", "RightSideWidth"));
-                    TooDark = double.Parse(ini.IniReadValue("Color", "TooDark"));
-                    TooBright = double.Parse(ini.IniReadValue("Color", "TooBright"));
-                    HueOffset = double.Parse(ini.IniReadValue("Color", "HueOffset"));
-                    ProgressBarReviseParameter = double.Parse(ini.IniReadValue("Color", "ProgressBarReviseParameter"));
-                    NotSaturateEnough = double.Parse(ini.IniReadValue("Color", "NotSaturateEnough"));
-                    AlmostZeroSaturation = double.Parse(ini.IniReadValue("Color", "AlmostZeroSaturation"));
-                }
-            }
-            catch { };
-        }
-#endif
         /// <summary>
         /// 从图片中获取背景颜色
         /// </summary>
@@ -292,11 +262,6 @@ namespace DoubanFM
         {
             return ReviseBrighter(color, ReviseParameter);
         }
-
-        //static byte ReviseByteBigger(byte x)
-        //{
-        //    return (byte)(255 - ReviseByteSmaller((byte)(255 - x)));
-        //}
         /// <summary>
         /// 将颜色调暗特定亮度
         /// </summary>
@@ -306,7 +271,6 @@ namespace DoubanFM
         public static HSLColor ReviseDarker(HSLColor color, double darker)
         {
             return new HSLColor(color.Alpha, color.Hue, color.Saturation, color.Lightness - darker);
-            //return Color.FromRgb(ReviseByteSmaller(color.R), ReviseByteSmaller(color.G), ReviseByteSmaller(color.B));
         }
         /// <summary>
         /// 将颜色调暗一些
@@ -317,13 +281,6 @@ namespace DoubanFM
         {
             return ReviseDarker(color, ReviseParameter);
         }
-
-        //static byte ReviseByteSmaller(byte x)
-        //{
-        //    int y = (int)(x * ReviseParameter);
-        //    if (y < 0) y = 0;
-        //    return (byte)y;
-        //}
     }
     /// <summary>
     /// HSL色彩空间的颜色类
