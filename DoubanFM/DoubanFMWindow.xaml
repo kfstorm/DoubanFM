@@ -350,6 +350,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										<RowDefinition/>
 										<RowDefinition/>
 										<RowDefinition/>
+										<RowDefinition/>
 									</Grid.RowDefinitions>
 									<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}"/>
                                     <CheckBox Grid.Row="1" x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
@@ -361,7 +362,8 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
 										<TextBlock Grid.Row="1" Foreground="White">（重启后生效，关闭后动画更平滑）</TextBlock>
 									</Grid>
-									<Grid Grid.Row="3">
+									<CheckBox Grid.Row="3" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" >总是显示托盘图标</CheckBox>
+									<Grid Grid.Row="4">
 										<Grid.RowDefinitions>
 											<RowDefinition/>                    	
 											<RowDefinition/>                    	

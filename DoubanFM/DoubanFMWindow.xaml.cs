@@ -57,12 +57,7 @@ namespace DoubanFM
         public DoubanFMWindow()
         {
             InitializeComponent();
-            InitNotifyIcon();
-
             _player = (Player)FindResource("Player");
-            PbPassword.Password = _player.Settings.User.Password;
-            if (!_player.Settings.IsShadowEnabled)
-                MainPanel.Margin = new Thickness(1);
             BackgroundColorStoryboard = (Storyboard)FindResource("BackgroundColorStoryboard");
             ShowCover1Storyboard = (Storyboard)FindResource("ShowCover1Storyboard");
             ShowCover2Storyboard = (Storyboard)FindResource("ShowCover2Storyboard");
@@ -70,6 +65,12 @@ namespace DoubanFM
             SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
             ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
             DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
+            
+            InitNotifyIcon();
+
+            PbPassword.Password = _player.Settings.User.Password;
+            if (!_player.Settings.IsShadowEnabled)
+                MainPanel.Margin = new Thickness(1);
             _cover = Cover1;
             _timer = new DispatcherTimer();
             _timer.Interval = new TimeSpan(1000000);
@@ -82,10 +83,7 @@ namespace DoubanFM
             _slideCoverLeftTimer.Interval = new TimeSpan(5000000);
             _slideCoverLeftTimer.Tick += new EventHandler(SlideCoverLeftTimer_Tick);
 
-            _player.Initialized += new EventHandler((o, e) =>
-            {
-                ShowChannels();
-            });
+            _player.Initialized += new EventHandler((o, e) => { ShowChannels(); });
             _player.CurrentChannelChanged += new EventHandler((o, e) =>
                 {
                     if (!_player.CurrentChannel.IsPersonal || _player.CurrentChannel.IsSpecial)
@@ -99,12 +97,12 @@ namespace DoubanFM
                     }
                     if (!_player.CurrentChannel.IsSpecial)
                         SearchResultList.SelectedItem = null;
-                    if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != PersonalChannels.SelectedItem)
+                    if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != (Channel)PersonalChannels.SelectedItem)
                     {
                         PersonalChannels.SelectedItem = _player.CurrentChannel;
                         PersonalClickStoryboard.Begin();
                     }
-                    if (_player.CurrentChannel.IsPublic && _player.CurrentChannel != PublicChannels.SelectedItem)
+                    if (_player.CurrentChannel.IsPublic && _player.CurrentChannel != (Channel)PublicChannels.SelectedItem)
                     {
                         PublicChannels.SelectedItem = _player.CurrentChannel;
                         PublicClickStoryboard.Begin();
@@ -112,7 +110,7 @@ namespace DoubanFM
                     if (_player.CurrentChannel.IsDj && DjCates.Items.Contains(_player.CurrentDjCate))
                     {
                         DjCates.SelectedItem = _player.CurrentDjCate;
-                        if (DjChannels.Items.Contains(_player.CurrentChannel) && DjChannels.SelectedItem != _player.CurrentChannel)
+                        if (DjChannels.Items.Contains(_player.CurrentChannel) && (Channel)DjChannels.SelectedItem != _player.CurrentChannel)
                         {
                             DjChannels.SelectedItem = _player.CurrentChannel;
                             DjChannelClickStoryboard.Begin();
@@ -147,10 +145,7 @@ namespace DoubanFM
                 if (_player.UserAssistant.HasCaptcha)
                     Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));
             });
-            _player.UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
-            {
-                ShowChannels();
-            });
+            _player.UserAssistant.LogOnSucceed += new EventHandler((o, e) => { ShowChannels(); });
             _player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
             {
                 if (_player.UserAssistant.HasCaptcha)
@@ -202,14 +197,18 @@ namespace DoubanFM
         /// </summary>
         private void InitNotifyIcon()
         {
-            notifyIcon.Visible = false;
+            notifyIcon.Visible = _player.Settings.AlwaysShowNotifyIcon;
             notifyIcon.Icon = Properties.Resources.NotifyIcon;
             notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler((s, e) =>
             {
                 if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 {
-                    this.Visibility = Visibility.Visible;
-                    this.Activate();
+                    if (this.IsVisible == false)
+                    {
+                        this.Visibility = Visibility.Visible;
+                        this.Activate();
+                    }
+                    else this.Visibility = Visibility.Hidden;
                 }
             });
             System.Windows.Forms.ContextMenuStrip notifyIconMenu = new System.Windows.Forms.ContextMenuStrip();
@@ -668,7 +667,16 @@ namespace DoubanFM
 
         private void Window_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            notifyIcon.Visible = !this.IsVisible;
+            if (!_player.Settings.AlwaysShowNotifyIcon)
+                notifyIcon.Visible = !this.IsVisible;
+        }
+
+
+        private void CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (CheckBoxAlwaysShowNotifyIcon.IsChecked == false)
+                notifyIcon.Visible = !this.IsVisible;
+            else notifyIcon.Visible = true;
         }
 
         private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

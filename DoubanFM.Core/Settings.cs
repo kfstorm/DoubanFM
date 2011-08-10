@@ -24,6 +24,7 @@ namespace DoubanFM.Core
         public static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof(double), typeof(Settings));
         public static readonly DependencyProperty SlideCoverWhenMouseMoveProperty = DependencyProperty.Register("SlideCoverWhenMouseMove", typeof(bool), typeof(Settings));
         public static readonly DependencyProperty IsShadowEnabledProperty = DependencyProperty.Register("IsShadowEnabled", typeof(bool), typeof(Settings));
+        public static readonly DependencyProperty AlwaysShowNotifyIconProperty = DependencyProperty.Register("AlwaysShowNotifyIcon", typeof(bool), typeof(Settings));
 
         #endregion
 
@@ -99,6 +100,14 @@ namespace DoubanFM.Core
             get { return (bool)GetValue(IsShadowEnabledProperty); }
             set { SetValue(IsShadowEnabledProperty, value); }
         }
+        /// <summary>
+        /// 总是显示托盘图标
+        /// </summary>
+        public bool AlwaysShowNotifyIcon
+        {
+            get { return (bool)GetValue(AlwaysShowNotifyIconProperty); }
+            set { SetValue(AlwaysShowNotifyIconProperty, value); }
+        }
 
         internal Settings(User user)
         {
@@ -111,6 +120,7 @@ namespace DoubanFM.Core
             Volume = 1;
             SlideCoverWhenMouseMove = true;
             IsShadowEnabled = true;
+            AlwaysShowNotifyIcon = false;
         }
         internal Settings(string username, string password)
             : this(new User(username, password)) { }
@@ -192,6 +202,14 @@ namespace DoubanFM.Core
             {
                 IsShadowEnabled = def.IsShadowEnabled;
             }
+            try
+            {
+                AlwaysShowNotifyIcon = info.GetBoolean("AlwaysShowNotifyIcon");
+            }
+            catch
+            {
+                AlwaysShowNotifyIcon = def.AlwaysShowNotifyIcon;
+            }
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -205,6 +223,7 @@ namespace DoubanFM.Core
             info.AddValue("Volume", Volume);
             info.AddValue("SlideCoverWhenMouseMove", SlideCoverWhenMouseMove);
             info.AddValue("IsShadowEnabled", IsShadowEnabled);
+            info.AddValue("AlwaysShowNotifyIcon", AlwaysShowNotifyIcon);
         }
     }
 }
