@@ -39,7 +39,7 @@ namespace DoubanFM.Core
                     SetValue(IsSearchFinishedProperty, value);
                     SetValue(ShowNoResultHintProperty, IsSearchFinished && (SearchResult == null || SearchResult.Count() == 0));
                     if (value == true)
-                        RaiseSearchFinishedEvent(EventArgs.Empty);
+                        RaiseSearchFinishedEvent();
                 }
             }
         }
@@ -121,10 +121,10 @@ namespace DoubanFM.Core
         /// <summary>
         /// 触发SearchFinished事件。
         /// </summary>
-        private void RaiseSearchFinishedEvent(EventArgs e)
+        private void RaiseSearchFinishedEvent()
         {
             if (SearchFinished != null)
-                SearchFinished(this, e);
+                SearchFinished(this, EventArgs.Empty);
         }
 
         #endregion

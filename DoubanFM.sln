@@ -5,23 +5,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubanFM", "DoubanFM\Douban
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubanFM.Core", "DoubanFM.Core\DoubanFM.Core.csproj", "{AA75B5E6-F373-49D7-B2E0-16C3E57321F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubanFM.Test", "DoubanFM.Test\DoubanFM.Test.csproj", "{9C91F8D0-6721-462A-BE66-D79043F73328}"
-EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs31
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = DoubanFM.Core\\DoubanFM.Core.csproj
 		SccProjectName1 = DoubanFM.Core
 		SccLocalPath1 = DoubanFM.Core
-		SccProjectUniqueName2 = DoubanFM.Test\\DoubanFM.Test.csproj
-		SccProjectName2 = DoubanFM.Test
-		SccLocalPath2 = DoubanFM.Test
-		SccProjectUniqueName3 = DoubanFM\\DoubanFM.csproj
-		SccProjectName3 = DoubanFM
-		SccLocalPath3 = DoubanFM
+		SccProjectUniqueName2 = DoubanFM\\DoubanFM.csproj
+		SccProjectName2 = DoubanFM
+		SccLocalPath2 = DoubanFM
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,14 +51,6 @@ Global
 		{AA75B5E6-F373-49D7-B2E0-16C3E57321F7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AA75B5E6-F373-49D7-B2E0-16C3E57321F7}.Release|x86.ActiveCfg = Release|Any CPU
 		{AA75B5E6-F373-49D7-B2E0-16C3E57321F7}.Release|x86.Build.0 = Release|Any CPU
-		{9C91F8D0-6721-462A-BE66-D79043F73328}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{9C91F8D0-6721-462A-BE66-D79043F73328}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{9C91F8D0-6721-462A-BE66-D79043F73328}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{9C91F8D0-6721-462A-BE66-D79043F73328}.Debug|x86.ActiveCfg = Debug|x86
-		{9C91F8D0-6721-462A-BE66-D79043F73328}.Release|Any CPU.ActiveCfg = Release|x86
-		{9C91F8D0-6721-462A-BE66-D79043F73328}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{9C91F8D0-6721-462A-BE66-D79043F73328}.Release|Mixed Platforms.Build.0 = Release|x86
-		{9C91F8D0-6721-462A-BE66-D79043F73328}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

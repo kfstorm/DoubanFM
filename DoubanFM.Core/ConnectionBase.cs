@@ -248,6 +248,7 @@ namespace DoubanFM.Core
     {
         internal void Add(string key, string value)
         {
+            if (string.IsNullOrEmpty(value)) return;
             Add(new UrlParameter(key, value));
         }
     }

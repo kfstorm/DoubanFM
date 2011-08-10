@@ -1,12 +1,14 @@
-﻿<Application x:Class="DoubanFM.App"
+﻿<Application
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:DoubanFM_Core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" x:Class="DoubanFM.App"
              StartupUri="DoubanFMWindow.xaml">
     <Application.Resources>
     	<ResourceDictionary>
     		<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+    		<DoubanFM_Core:Player x:Key="Player"/>
     	</ResourceDictionary>
          
     </Application.Resources>

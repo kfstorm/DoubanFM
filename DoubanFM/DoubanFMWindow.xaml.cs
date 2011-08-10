@@ -41,6 +41,7 @@ namespace DoubanFM
         /// 当前显示的封面
         /// </summary>
         private Image _cover;
+        /// <summary>
         /// 托盘图标
         /// </summary>
         private System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
@@ -60,8 +61,8 @@ namespace DoubanFM
 
             _player = (Player)FindResource("Player");
             PbPassword.Password = _player.Settings.User.Password;
-            if (_player.Settings.SlideCoverWhenMouseMove == false)
-                RadioButtonSlideCoverWhenClick.IsChecked = true;
+            if (!_player.Settings.IsShadowEnabled)
+                MainPanel.Margin = new Thickness(1);
             BackgroundColorStoryboard = (Storyboard)FindResource("BackgroundColorStoryboard");
             ShowCover1Storyboard = (Storyboard)FindResource("ShowCover1Storyboard");
             ShowCover2Storyboard = (Storyboard)FindResource("ShowCover2Storyboard");
@@ -92,7 +93,10 @@ namespace DoubanFM
                     if (!_player.CurrentChannel.IsPublic)
                         PublicChannels.SelectedItem = null;
                     if (!_player.CurrentChannel.IsDj)
+                    {
                         DjCates.SelectedItem = null;
+                        DjChannels.SelectedItem = null;
+                    }
                     if (!_player.CurrentChannel.IsSpecial)
                         SearchResultList.SelectedItem = null;
                     if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != PersonalChannels.SelectedItem)
@@ -105,10 +109,14 @@ namespace DoubanFM
                         PublicChannels.SelectedItem = _player.CurrentChannel;
                         PublicClickStoryboard.Begin();
                     }
-                    if (_player.CurrentChannel.IsDj && DjChannels.Items.Contains(_player.CurrentChannel) && DjChannels.SelectedItem != _player.CurrentChannel)
+                    if (_player.CurrentChannel.IsDj && DjCates.Items.Contains(_player.CurrentDjCate))
                     {
-                        DjChannels.SelectedItem = _player.CurrentChannel;
-                        DjChannelClickStoryboard.Begin();
+                        DjCates.SelectedItem = _player.CurrentDjCate;
+                        if (DjChannels.Items.Contains(_player.CurrentChannel) && DjChannels.SelectedItem != _player.CurrentChannel)
+                        {
+                            DjChannels.SelectedItem = _player.CurrentChannel;
+                            DjChannelClickStoryboard.Begin();
+                        }
                     }
                 });
             _player.CurrentSongChanged += new EventHandler((o, e) =>
@@ -180,6 +188,11 @@ namespace DoubanFM
                     NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage_Disabled");
                 NeverThumb.IsEnabled = _player.IsNeverEnabled;
                 notifyIcon_Never.Enabled = _player.IsNeverEnabled;
+            });
+            _player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
+            {
+                System.Windows.MessageBox.Show(this, "获取播放列表失败：" + e.Msg, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
             });
 
             _player.Initialize();
@@ -366,10 +379,8 @@ namespace DoubanFM
 
         #region 事件响应
         /// <summary>
-        /// 封面加载失败时自动调用
+        /// 封面加载失败
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void bitmap_DownloadFailed(object sender, ExceptionEventArgs e)
         {
             if (((BitmapImage)sender).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
@@ -388,10 +399,8 @@ namespace DoubanFM
             }
         }
         /// <summary>
-        /// 封面加载成功时自动调用
+        /// 封面加载成功
         /// </summary>
-        /// <param name="sender">封面BitmapImage</param>
-        /// <param name="e"></param>
         void bitmap_DownloadCompleted(object sender, EventArgs e)
         {
             if (((BitmapImage)sender).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
@@ -408,47 +417,37 @@ namespace DoubanFM
             }
         }
         /// <summary>
-        /// 主界面中按下“下一首”按钮时自动调用
+        /// 主界面中按下“下一首”
         /// </summary>
-        /// <param name="sender">按钮</param>
-        /// <param name="e"></param>
         private void ButtonNext_Click(object sender, RoutedEventArgs e)
         {
             _player.Skip();
         }
         /// <summary>
-        /// 音乐播放结束时自动调用
+        /// 音乐播放结束
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Audio_MediaEnded(object sender, RoutedEventArgs e)
         {
             _player.CurrentSongFinishedPlaying();
         }
         /// <summary>
-        /// 音乐遇到错误时自动调用
+        /// 音乐遇到错误
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Audio_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
             _player.CurrentSongFinishedPlaying();
         }
         /// <summary>
-        /// 计时器响应函数，用于更新时间信息。自动调用
+        /// 计时器响应函数，用于更新时间信息
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void timer_Tick(object sender, EventArgs e)
         {
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.Position);
             Slider.Value = Audio.Position.TotalSeconds;
         }
         /// <summary>
-        /// 修正音乐总时间。音乐加载完成时自动调用。
+        /// 修正音乐总时间。音乐加载完成时调用。
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void Audio_MediaOpened(object sender, RoutedEventArgs e)
         {
             if (Audio.NaturalDuration.HasTimeSpan)
@@ -459,19 +458,15 @@ namespace DoubanFM
             }
         }
         /// <summary>
-        /// 任务栏“暂停/播放”按钮按下时自动调用
+        /// 任务栏按下“暂停/播放”按钮
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void PauseThumb_Click(object sender, EventArgs e)
         {
             _player.IsPlaying = !_player.IsPlaying;
         }
         /// <summary>
-        /// 任务栏“下一首”按钮按下时自动调用
+        /// 任务栏按下“下一首”按钮
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void NextThumb_Click(object sender, EventArgs e)
         {
             _player.Skip();
@@ -479,8 +474,6 @@ namespace DoubanFM
         /// <summary>
         /// 保存各种信息
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Window_Closed(object sender, EventArgs e)
         {
             Audio.Close();
@@ -490,8 +483,6 @@ namespace DoubanFM
         /// <summary>
         /// 更新密码
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void PbPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
             _player.Settings.User.Password = PbPassword.Password;
@@ -499,8 +490,6 @@ namespace DoubanFM
         /// <summary>
         /// 登录
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ButtonLogOn_Click(object sender, RoutedEventArgs e)
         {
             _player.UserAssistant.LogOn(CaptchaText.Text);
@@ -508,8 +497,6 @@ namespace DoubanFM
         /// <summary>
         /// 注销
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ButtonLogOff_Click(object sender, RoutedEventArgs e)
         {
             _player.UserAssistant.LogOff();
@@ -517,8 +504,6 @@ namespace DoubanFM
         /// <summary>
         /// 验证码被点击
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ButtonRefreshCaptcha_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             _player.UserAssistant.Refresh();
@@ -527,8 +512,6 @@ namespace DoubanFM
         /// <summary>
         /// 任务栏点击“喜欢”
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void LikeThumb_Click(object sender, EventArgs e)
         {
             _player.IsLiked = !_player.IsLiked;
@@ -536,8 +519,6 @@ namespace DoubanFM
         /// <summary>
         /// 主界面点击“不再播放”
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ButtonNever_Click(object sender, RoutedEventArgs e)
         {
             _player.Never();
@@ -545,38 +526,30 @@ namespace DoubanFM
         /// <summary>
         /// 任务栏点击“不再播放”
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void NeverThumb_Click(object sender, EventArgs e)
         {
             _player.Never();
         }
 
         /// <summary>
-        /// 更换私人频道。私人频道选择改变时自动调用。
+        /// 更换私人频道
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void PersonalChannels_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (PersonalChannels.SelectedItem != null)
                 _player.CurrentChannel = (Channel)PersonalChannels.SelectedItem;
         }
         /// <summary>
-        /// 更换公共频道。公共频道选择改变时自动调用。
+        /// 更换公共频道
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void PublicChannels_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (PublicChannels.SelectedItem != null)
                 _player.CurrentChannel = (Channel)PublicChannels.SelectedItem;
         }
         /// <summary>
-        /// 更换DJ节目。DJ节目选择改变时自动调用。
+        /// 更换DJ节目
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void DjChannels_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DjChannels.SelectedItem != null)
@@ -586,10 +559,8 @@ namespace DoubanFM
             }
         }
         /// <summary>
-        /// 当用户在某DJ频道上点击鼠标左键时，切换到DJ节目列表
+        /// 当用户选择某DJ频道时，切换到DJ节目列表
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void DjCates_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DjCates.SelectedItem != null)
@@ -599,7 +570,7 @@ namespace DoubanFM
             }
         }
         /// <summary>
-        /// 当用户在按钮“DJ兆赫”上点击时，去除DjCates的选择
+        /// 当用户在按钮“DJ兆赫”上点击时，去除DjCates的选择，以便再次点击“DJ兆赫”时仍然可以选择刚才的项目
         /// </summary>
         private void ButtonDjCates_Click(object sender, RoutedEventArgs e)
         {
@@ -608,12 +579,10 @@ namespace DoubanFM
         /// <summary>
         /// 鼠标左键点击封面时滑动封面
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CoverGrid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonUp(e);
-            //if (!_player.Settings.SlideCoverWhenMouseMove)
+            //if (!_player.Settings.SlideCoverWhenMouseMove)                //当设置为“鼠标移动到封面上时滑动”时点击封面仍然应该滑动，所以注释掉
             {
                 Point leftLocation = e.GetPosition(LeftPanel);
                 Debug.WriteLine("LeftPanel:" + leftLocation);
@@ -739,12 +708,6 @@ namespace DoubanFM
             if (channel != null) _player.CurrentChannel = channel;
         }
 
-        private void SearchText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-                Search_Click(null, null);
-        }
-
         private void Window_Activated(object sender, System.EventArgs e)
         {
             GradientStopCollection active = (GradientStopCollection)FindResource("ActiveShadowGradientStops");
@@ -761,26 +724,6 @@ namespace DoubanFM
             now.Clear();
             foreach (GradientStop g in inactive)
                 now.Add(g);
-        }
-
-        private void CheckBoxPause_Checked(object sender, RoutedEventArgs e)
-        {
-            _player.IsPlaying = false;
-        }
-
-        private void CheckBoxPause_Unchecked(object sender, RoutedEventArgs e)
-        {
-            _player.IsPlaying = true;
-        }
-
-        private void CheckBoxLike_Checked(object sender, RoutedEventArgs e)
-        {
-            _player.IsLiked = true;
-        }
-
-        private void CheckBoxLike_Unchecked(object sender, RoutedEventArgs e)
-        {
-            _player.IsLiked = false;
         }
 
         #endregion

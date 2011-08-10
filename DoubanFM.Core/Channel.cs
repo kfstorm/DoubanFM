@@ -9,7 +9,7 @@ namespace DoubanFM.Core
     /// 频道
     /// </summary>
     [Serializable]
-    public class Channel : ICloneable
+    public class Channel : ICloneable, IEquatable<Channel>
     {
         /// <summary>
         /// 频道ID
@@ -76,16 +76,37 @@ namespace DoubanFM.Core
         }
         public override bool Equals(object obj)
         {
-            if (System.Object.ReferenceEquals(this, obj))
-                return true;
-            Channel rh = obj as Channel;
-            if (rh == null)
-                return false;
-            return Id == rh.Id && Name == rh.Name && ProgramId == rh.ProgramId && Context == rh.Context;
+            return this.Equals(obj as Channel);
         }
         public override int GetHashCode()
         {
-            return Id.GetHashCode() ^ Name.GetHashCode() ^ (ProgramId == null ? 0 : ProgramId.GetHashCode()) ^ (Context == null ? 0 : Context.GetHashCode());
+            return Id.GetHashCode() ^ Name.GetHashCode() ^ (string.IsNullOrEmpty(ProgramId) ? 0 : ProgramId.GetHashCode()) ^ (string.IsNullOrEmpty(Context) ? 0 : Context.GetHashCode());
+        }
+
+        public bool Equals(Channel other)
+        {
+            if (Object.ReferenceEquals(other, null))
+                return false;
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (this.GetType() != other.GetType())
+                return false;
+            return Id == other.Id && Name == other.Name &&
+                ((string.IsNullOrEmpty(ProgramId) && string.IsNullOrEmpty(other.ProgramId)) || ProgramId == other.ProgramId) &&
+                ((string.IsNullOrEmpty(Context) && string.IsNullOrEmpty(other.Context)) || Context == other.Context);
+        }
+
+        public static bool operator ==(Channel lhs, Channel rhs)
+        {
+            if (Object.ReferenceEquals(lhs, null))
+                if (Object.ReferenceEquals(rhs, null))
+                    return true;
+                else return false;
+            return lhs.Equals(rhs);
+        }
+        public static bool operator !=(Channel lhs, Channel rhs)
+        {
+            return !(lhs == rhs);
         }
     }
 }

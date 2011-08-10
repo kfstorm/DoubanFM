@@ -52,17 +52,17 @@ namespace DoubanFM.Core
                 ShowLogOnFailedHint = false;
                 if (lastState == State.LoggingOn)
                     if (CurrentState == State.LoggedOn)
-                        RaiseLogOnSucceedEvent(EventArgs.Empty);
+                        RaiseLogOnSucceedEvent();
                     else if (CurrentState == State.LoggedOff)
                     {
                         ShowLogOnFailedHint = true;
-                        RaiseLogOnFailedEvent(EventArgs.Empty);
+                        RaiseLogOnFailedEvent();
                     }
                 if (lastState == State.LoggingOff)
                     if (CurrentState == State.LoggedOff)
-                        RaiseLogOffSucceedEvent(EventArgs.Empty);
+                        RaiseLogOffSucceedEvent();
                     else if (CurrentState == State.LoggedOn)
-                        RaiseLogOffFailedEvent(EventArgs.Empty);
+                        RaiseLogOffFailedEvent();
                 //if (lastState == State.Unknown && CurrentState == State.LoggedOff)      //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
                     //Refresh();
             }
@@ -130,25 +130,25 @@ namespace DoubanFM.Core
         /// 当注销失败时发生。
         /// </summary>
         public event EventHandler LogOffFailed;
-        void RaiseLogOnSucceedEvent(EventArgs e)
+        void RaiseLogOnSucceedEvent()
         {
             if (LogOnSucceed != null)
-                LogOnSucceed(this, e);
+                LogOnSucceed(this, EventArgs.Empty);
         }
-        void RaiseLogOffSucceedEvent(EventArgs e)
+        void RaiseLogOffSucceedEvent()
         {
             if (LogOffSucceed != null)
-                LogOffSucceed(this, e);
+                LogOffSucceed(this, EventArgs.Empty);
         }
-        void RaiseLogOnFailedEvent(EventArgs e)
+        void RaiseLogOnFailedEvent()
         {
             if (LogOnFailed != null)
-                LogOnFailed(this, e);
+                LogOnFailed(this, EventArgs.Empty);
         }
-        void RaiseLogOffFailedEvent(EventArgs e)
+        void RaiseLogOffFailedEvent()
         {
             if (LogOffFailed != null)
-                LogOffFailed(this, e);
+                LogOffFailed(this, EventArgs.Empty);
         }
 
         #endregion
@@ -184,7 +184,7 @@ namespace DoubanFM.Core
         /// <param name="html">HTML文件</param>
         internal void Update(string html)
         {
-            _captchaId = GetCaptchaId(html);
+            //_captchaId = GetCaptchaId(html);          //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
             _logOffLink = GetLogOffLink(html);
             Match match = Regex.Match(html, @"var\s*globalConfig\s*=\s*{\s*uid\s*:\s*'(\d*)'", RegexOptions.IgnoreCase);
             string s = match.Groups[1].Value;

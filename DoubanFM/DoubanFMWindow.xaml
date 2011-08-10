@@ -2,9 +2,8 @@
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
-		Title="豆瓣电台" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" WindowStyle="None" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="{x:Null}" Activated="Window_Activated" Deactivated="Window_Deactivated">
+		Title="豆瓣电台" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" WindowStyle="None" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="{x:Null}" Activated="Window_Activated" Deactivated="Window_Deactivated" AllowsTransparency="{Binding Source={StaticResource Player}, Path=Settings.IsShadowEnabled}">
 	<Window.Resources>
-		<core:Player x:Key="Player"/>
 		<PowerEase x:Key="Smooth" Power="3"/>
 		<local:WindowBackgroundToSliderForegroundConverter x:Key="WindowBackgroundToSliderForegroundConverter"/>
         <local:BoolReverseConverter x:Key="BoolReverseConverter"/>
@@ -82,7 +81,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
             </TaskbarItemInfo.ThumbButtonInfos>
 		</TaskbarItemInfo>
 	</Window.TaskbarItemInfo>
-	<Grid>
+    <Grid>
 		<Grid x:Name="ShadowPanel">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="{Binding Margin.Left, ElementName=MainPanel}"/>
@@ -142,7 +141,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 					<ColumnDefinition Width="300"/>
 				</Grid.ColumnDefinitions>
 				<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1">
-					<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPaneStyle}" Foreground="{Binding Background, ElementName=MainPanel}" ClipToBounds="True">
+					<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPaneStyle}" Foreground="{Binding Background, ElementName=MainPanel}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
 						<TabItem Header="{DynamicResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
 							<Grid x:Name="ChannelsGrid">
 								<Grid.RowDefinitions>
@@ -247,8 +246,8 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										<ColumnDefinition/>
 										<ColumnDefinition Width="Auto"/>
 									</Grid.ColumnDefinitions>
-                                    <TextBox x:Name="SearchText" Height="20" KeyDown="SearchText_KeyDown" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}"/>
-                                    <Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" Style="{DynamicResource SearchStyle}"/>
+                                    <TextBox x:Name="SearchText" Height="20" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}"/>
+                                    <Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsDefault="True" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" Style="{DynamicResource SearchStyle}"/>
 								</Grid>
 								<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{DynamicResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=MusicSearch.SearchResult}" />
 								<Label Grid.Row="1" Visibility="{Binding Converter={StaticResource BoolReverseToVisibilityConverter}, Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" HorizontalAlignment="Center" VerticalAlignment="Center">正在搜索...</Label>
@@ -344,22 +343,31 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 							</Grid>
 						</TabItem>
 						<TabItem Header="{DynamicResource TabItemSettings}">
-							<Border Padding="30">
+							<Border Padding="20">
 								<Grid>
 									<Grid.RowDefinitions>
 										<RowDefinition Height="Auto"/>
 										<RowDefinition/>
 										<RowDefinition/>
+										<RowDefinition/>
 									</Grid.RowDefinitions>
 									<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}"/>
                                     <CheckBox Grid.Row="1" x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
-									<Grid Grid.Row="2">
+									<Grid Grid.Row="2" VerticalAlignment="Center">
+										<Grid.RowDefinitions>
+											<RowDefinition/>
+											<RowDefinition/>
+										</Grid.RowDefinitions>
+										<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
+										<TextBlock Grid.Row="1" Foreground="White">（重启后生效，关闭后动画更平滑）</TextBlock>
+									</Grid>
+									<Grid Grid.Row="3">
 										<Grid.RowDefinitions>
 											<RowDefinition/>                    	
 											<RowDefinition/>                    	
 										</Grid.RowDefinitions>
                                         <RadioButton x:Name="RadioButtonSlideCoverWhenMouseMove" Content="当鼠标移动到封面上时滑动封面" IsChecked="{Binding Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-										<RadioButton Grid.Row="1" x:Name="RadioButtonSlideCoverWhenClick" Content="当鼠标点击封面时滑动封面" VerticalAlignment="Center"/>
+										<RadioButton Grid.Row="1" IsChecked="{Binding Converter={StaticResource BoolReverseConverter}, Path=Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" x:Name="RadioButtonSlideCoverWhenClick" Content="当鼠标点击封面时滑动封面" VerticalAlignment="Center"/>
 									</Grid>
 								</Grid>			
 							</Border>			
@@ -444,9 +452,9 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 								<ColumnDefinition Width="20"/>
 								<ColumnDefinition Width="38"/>
 							</Grid.ColumnDefinitions>
-                            <CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{DynamicResource LikeStyle}" Checked="CheckBoxLike_Checked" Unchecked="CheckBoxLike_Unchecked" IsEnabled="{Binding Source={StaticResource Player}, Path=IsLikedEnabled}" />
+                            <CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{DynamicResource LikeStyle}" IsChecked="{Binding Path=IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsLikedEnabled}" />
                             <Button Grid.Column="2" x:Name="ButtonNever" Style="{DynamicResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding Source={StaticResource Player}, Path=IsNeverEnabled}" />
-                            <CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{DynamicResource PauseStyle}" Checked="CheckBoxPause_Checked" Unchecked="CheckBoxPause_Unchecked" />
+                            <CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{DynamicResource PauseStyle}" IsChecked="{Binding Path=IsPlaying, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" />
 							<Button Grid.Column="6" x:Name="ButtonNext" Click="ButtonNext_Click" Style="{DynamicResource NextStyle}"/>
 						</Grid>
 					</Grid>

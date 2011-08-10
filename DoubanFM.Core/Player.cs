@@ -20,10 +20,26 @@ namespace DoubanFM.Core
         public static readonly DependencyProperty IsInitializedProperty = DependencyProperty.Register("IsInitialized", typeof(bool), typeof(Player));
         public static readonly DependencyProperty CurrentChannelProperty = DependencyProperty.Register("CurrentChannel", typeof(Channel), typeof(Player));
         public static readonly DependencyProperty CurrentDjCateProperty = DependencyProperty.Register("CurrentDjCate", typeof(Cate), typeof(Player));
-        public static readonly DependencyProperty IsLikedProperty = DependencyProperty.Register("IsLiked", typeof(bool), typeof(Player));
-        public static readonly DependencyProperty IsLikedEnabledProperty = DependencyProperty.Register("IsLikedEnabled", typeof(bool), typeof(Player));
+        public static readonly DependencyProperty IsLikedProperty = DependencyProperty.Register("IsLiked", typeof(bool), typeof(Player),
+            new PropertyMetadata(new PropertyChangedCallback((o, e) =>
+            {
+                Player player = (Player)o;
+                if (player.CurrentSong == null) return;
+                player.RaiseIsLikedChangedEvent();
+                if ((bool)e.NewValue == player.CurrentSong.Like) return;
+                if (player.CurrentSong.Like == false) player.Like();
+                else player.Unlike();
+            })));
+        public static readonly DependencyProperty IsLikedEnabledProperty = DependencyProperty.Register("IsLikedEnabled", typeof(bool), typeof(Player), new PropertyMetadata(true));
         public static readonly DependencyProperty IsNeverEnabledProperty = DependencyProperty.Register("IsNeverEnabled", typeof(bool), typeof(Player));
-        public static readonly DependencyProperty IsPlayingProperty = DependencyProperty.Register("IsPlaying", typeof(bool), typeof(Player));
+        public static readonly DependencyProperty IsPlayingProperty = DependencyProperty.Register("IsPlaying", typeof(bool), typeof(Player),
+            new PropertyMetadata(true, new PropertyChangedCallback((o, e) =>
+            {
+                Player player = (Player)o;
+                if ((bool)e.NewValue == true) player.Play();
+                else player.Pause();
+                player.RaiseIsPlayingChangedEvent();
+            })));
         public static readonly DependencyProperty SettingsProperty = DependencyProperty.Register("Settings", typeof(Settings), typeof(Player));
 
         #endregion
@@ -52,14 +68,15 @@ namespace DoubanFM.Core
                     if ((value.IsDj && (CurrentDjCate == null || !CurrentDjCate.Channels.Contains(value)))
                         || (!value.IsDj && CurrentDjCate != null))
                         throw new Exception("在改变CurrentDjCate前改变了CurrentChannel");
+                    Channel lastChannel = CurrentChannel;
                     SetValue(CurrentChannelProperty, value);
-                    RaiseStopedEvent(EventArgs.Empty);
+                    RaiseStopedEvent();
                     if (!CurrentChannel.IsSpecial)
                         Settings.LastChannel = CurrentChannel;
-                    if (CurrentChannel.IsSpecial || CurrentChannel.IsDj || CurrentSong == null)
+                    if (CurrentChannel.IsSpecial || CurrentChannel.IsDj || CurrentSong == null || lastChannel.IsDj)
                         NewPlayList();
                     else Skip();
-                    RaiseCurrentChannelChangedEvent(EventArgs.Empty);
+                    RaiseCurrentChannelChangedEvent();
                 }
             }
         }
@@ -84,7 +101,7 @@ namespace DoubanFM.Core
                 {
                     _currentSong = value;
                     if (_currentSong != null)
-                        RaiseCurrentSongChangedEvent(EventArgs.Empty);
+                        RaiseCurrentSongChangedEvent();
                 }
             }
         }
@@ -108,7 +125,7 @@ namespace DoubanFM.Core
                 if (IsInitialized == false)
                 {
                     SetValue(IsInitializedProperty, true);
-                    RaiseInitializedEvent(EventArgs.Empty);
+                    RaiseInitializedEvent();
                 }
             }
         }
@@ -118,16 +135,7 @@ namespace DoubanFM.Core
         public bool IsPlaying
         {
             get { return (bool)GetValue(IsPlayingProperty); }
-            set
-            {
-                if (IsPlaying != value)
-                {
-                    SetValue(IsPlayingProperty, value);
-                    if (IsPlaying == true) Play();
-                    else Pause();
-                    RaiseIsPlayingChangedEvent(EventArgs.Empty);
-                }
-            }
+            set { SetValue(IsPlayingProperty, value); }
         }
         /// <summary>
         /// 是否喜欢这首歌
@@ -135,16 +143,7 @@ namespace DoubanFM.Core
         public bool IsLiked
         {
             get { return (bool)GetValue(IsLikedProperty); }
-            set
-            {
-                if (IsLiked != value)
-                {
-                    SetValue(IsLikedProperty, value);
-                    RaiseIsLikedChangedEvent(EventArgs.Empty);
-                    if (IsLiked) Like();
-                    else Unlike();
-                }
-            }
+            set { SetValue(IsLikedProperty, value); }
         }
         /// <summary>
         /// 获取一个值，该值指示红心是否启用
@@ -157,7 +156,7 @@ namespace DoubanFM.Core
                 if (IsLikedEnabled != value)
                 {
                     SetValue(IsLikedEnabledProperty, value);
-                    RaiseIsLikedEnabledChangedEvent(EventArgs.Empty);
+                    RaiseIsLikedEnabledChangedEvent();
                 }
             }
         }
@@ -172,7 +171,7 @@ namespace DoubanFM.Core
                 if (IsNeverEnabled != value)
                 {
                     SetValue(IsNeverEnabledProperty, value);
-                    RaiseIsNeverEnabledChangedEvent(EventArgs.Empty);
+                    RaiseIsNeverEnabledChangedEvent();
                 }
             }
         }
@@ -218,100 +217,109 @@ namespace DoubanFM.Core
         /// 当DJ频道播放完毕时发生。
         /// </summary>
         public event EventHandler DjChannelFinishedPlaying;
-        private void RaiseDjChannelFinishedPlayingEvent(EventArgs e)
+        private void RaiseDjChannelFinishedPlayingEvent()
         {
             if (DjChannelFinishedPlaying != null)
-                DjChannelFinishedPlaying(this, e);
+                DjChannelFinishedPlaying(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当当前频道改变时发生。
         /// </summary>
         public event EventHandler CurrentChannelChanged;
-        private void RaiseCurrentChannelChangedEvent(EventArgs e)
+        private void RaiseCurrentChannelChangedEvent()
         {
             if (CurrentChannelChanged != null)
-                CurrentChannelChanged(this, e);
+                CurrentChannelChanged(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当当前歌曲改变时发生。
         /// </summary>
         public event EventHandler CurrentSongChanged;
-        private void RaiseCurrentSongChangedEvent(EventArgs e)
+        private void RaiseCurrentSongChangedEvent()
         {
             if (CurrentSongChanged != null)
-                CurrentSongChanged(this, e);
+                CurrentSongChanged(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当初始化完成时发生。
         /// </summary>
         public event EventHandler Initialized;
-        private void RaiseInitializedEvent(EventArgs e)
+        private void RaiseInitializedEvent()
         {
             if (Initialized != null)
-                Initialized(this, e);
+                Initialized(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当音乐继续时发生。
         /// </summary>
         public event EventHandler Played;
-        private void RaisePlayedEvent(EventArgs e)
+        private void RaisePlayedEvent()
         {
             if (Played != null)
-                Played(this, e);
+                Played(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当音乐暂停时发生。
         /// </summary>
         public event EventHandler Paused;
-        private void RaisePausedEvent(EventArgs e)
+        private void RaisePausedEvent()
         {
             if (Paused != null)
-                Paused(this, e);
+                Paused(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当音乐停止时发生。
         /// </summary>
         public event EventHandler Stoped;
-        private void RaiseStopedEvent(EventArgs e)
+        private void RaiseStopedEvent()
         {
             if (Stoped != null)
-                Stoped(this, e);
+                Stoped(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当IsLiked改变时发生。
         /// </summary>
         public event EventHandler IsLikedChanged;
-        private void RaiseIsLikedChangedEvent(EventArgs e)
+        private void RaiseIsLikedChangedEvent()
         {
             if (IsLikedChanged != null)
-                IsLikedChanged(this, e);
+                IsLikedChanged(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当IsLikedEnabled改变时发生。
         /// </summary>
         public event EventHandler IsLikedEnabledChanged;
-        private void RaiseIsLikedEnabledChangedEvent(EventArgs e)
+        private void RaiseIsLikedEnabledChangedEvent()
         {
             if (IsLikedEnabledChanged != null)
-                IsLikedEnabledChanged(this, e);
+                IsLikedEnabledChanged(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当IsNeverEnabled改变时发生。
         /// </summary>
         public event EventHandler IsNeverEnabledChanged;
-        private void RaiseIsNeverEnabledChangedEvent(EventArgs e)
+        private void RaiseIsNeverEnabledChangedEvent()
         {
             if (IsNeverEnabledChanged != null)
-                IsNeverEnabledChanged(this, e);
+                IsNeverEnabledChanged(this, EventArgs.Empty);
         }
         /// <summary>
         /// 当IsPlaying改变时发生。
         /// </summary>
         public event EventHandler IsPlayingChanged;
-        private void RaiseIsPlayingChangedEvent(EventArgs e)
+        private void RaiseIsPlayingChangedEvent()
         {
             if (IsPlayingChanged != null)
-                IsPlayingChanged(this, e);
+                IsPlayingChanged(this, EventArgs.Empty);
+        }
+        /// <summary>
+        /// 当获取播放列表失败时发生。
+        /// </summary>
+        public event EventHandler<PlayList.PlayListEventArgs> GetPlayListFailed;
+        private void RaiseGetPlayListFailedEvent(PlayList.PlayListEventArgs e)
+        {
+            if (GetPlayListFailed != null)
+                GetPlayListFailed(this, e);
         }
 
         #endregion
@@ -326,8 +334,6 @@ namespace DoubanFM.Core
             UserAssistant = new UserAssistant();
             UserAssistant.Settings = Settings;
             MusicSearch = new MusicSearch();
-            IsLikedEnabled = true;
-            IsPlaying = true;
             CurrentChannelChanged += new EventHandler((o, e) =>
             {
                 IsLikedEnabled = !CurrentChannel.IsDj;
@@ -335,8 +341,7 @@ namespace DoubanFM.Core
             });
             CurrentSongChanged += new EventHandler((o, e) =>
             {
-                if (IsLikedEnabled)
-                    IsLiked = CurrentSong.Like;
+                IsLiked = CurrentSong.Like;
             });
             DjChannelFinishedPlaying += new EventHandler((o, e) =>
             {
@@ -359,6 +364,10 @@ namespace DoubanFM.Core
                 IsNeverEnabled = false;
                 if (CurrentChannel.IsPersonal && !CurrentChannel.IsSpecial)
                     CurrentChannel = ChannelInfo.Public.First().Channels.First();
+            });
+            PlayList.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
+            {
+                Dispatcher.Invoke(new Action(() => { RaiseGetPlayListFailedEvent(e); }));
             });
         }
         /// <summary>
@@ -450,16 +459,18 @@ namespace DoubanFM.Core
         public void Skip()
         {
             if (CurrentSong == null) return;
-            RaiseStopedEvent(EventArgs.Empty);
+            RaiseStopedEvent();
             ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
                 {
                     AppendPlayedSongs("s");
                     PlayList pl = null;
                     PlayerState ps = GetPlayerState();
-                    do
+                    while(true)
                     {
                         pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "s", PlayedSongsToString());
-                    } while (!ps.CurrentChannel.IsDj && pl.Count == 0);
+                        if (!ps.CurrentChannel.IsDj && pl.Count == 0) TakeABreak();
+                        else break;
+                    }
                     if (!ps.CurrentChannel.IsDj)
                         ChangePlayListSongs(pl);
                     ChangeCurrentSong();
@@ -478,10 +489,12 @@ namespace DoubanFM.Core
             {
                 PlayList pl = null;
                 PlayerState ps = GetPlayerState();
-                do
+                while(true)
                 {
                     pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "r", PlayedSongsToString());
-                } while (pl.Count == 0);
+                    if (pl.Count == 0) TakeABreak();
+                    else break;
+                }
                 ChangePlayListSongs(pl);
             }));
         }
@@ -498,10 +511,12 @@ namespace DoubanFM.Core
             {
                 PlayList pl = null;
                 PlayerState ps = GetPlayerState();
-                do
+                while(true)
                 {
                     pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "u", PlayedSongsToString());
-                } while (pl.Count == 0);
+                    if (pl.Count == 0) TakeABreak();
+                    else break;
+                }
                 ChangePlayListSongs(pl);
             }));
         }
@@ -514,16 +529,18 @@ namespace DoubanFM.Core
         {
             if (CurrentSong == null) return;
             if (!CurrentChannel.IsPersonal) return;
-            RaiseStopedEvent(EventArgs.Empty);
+            RaiseStopedEvent();
             ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
             {
                 AppendPlayedSongs("b");
                 PlayList pl = null;
                 PlayerState ps = GetPlayerState();
-                do
+                while (true)
                 {
                     pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "b", PlayedSongsToString());
-                } while (pl.Count == 0);
+                    if (pl.Count == 0) TakeABreak();
+                    else break;
+                }
                 ChangePlayListSongs(pl);
                 ChangeCurrentSong();
             }));
@@ -536,7 +553,7 @@ namespace DoubanFM.Core
             if (CurrentSong == null) return;
             IsPlaying = false;
             _pauseTime = DateTime.Now;
-            RaisePausedEvent(EventArgs.Empty);
+            RaisePausedEvent();
         }
         /// <summary>
         /// 播放。若暂停时长超过半个小时，则播放一个新的播放列表，异步
@@ -545,12 +562,25 @@ namespace DoubanFM.Core
         {
             if (CurrentSong == null) return;
             IsPlaying = true;
-            RaisePlayedEvent(EventArgs.Empty);
+            RaisePlayedEvent();
+            /* 由于豆瓣电台的音乐地址都是临时的，所以超过一定时间后按道理应该立即重新获取一个全新的播放列表，
+             * 但考虑到播放体验的流畅性，这里仍然播放当前的音乐，但是_playListSongs要更换，
+             * 所以这里只是复制了一下NewPlayList()的代码，然后把ChangeCurrentSong();这句话删除掉
+             * */
             if ((DateTime.Now - _pauseTime).TotalMinutes > 30 && !CurrentChannel.IsDj)
             {
-                _playListSongs.Clear();
-                CheckPlayListSongsLength();
-                //NewPlayList();
+                ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+                {
+                    PlayList pl = null;
+                    PlayerState ps = GetPlayerState();
+                    while (true)
+                    {
+                        pl = PlayList.GetPlayList(ps.CurrentChannel.Context, null, ps.CurrentChannel, "n", PlayedSongsToString());
+                        if (pl.Count == 0) TakeABreak();
+                        else break;
+                    }
+                    ChangePlayListSongs(pl);
+                }));
             }
         }
 
@@ -578,8 +608,6 @@ namespace DoubanFM.Core
                 Settings = new Settings();
                 return false;
             }
-            if (Settings.User == null)
-                Settings.User = new User("", "");
             return true;
         }
         /// <summary>
@@ -648,10 +676,12 @@ namespace DoubanFM.Core
             {
                 PlayList pl = null;
                 PlayerState ps = GetPlayerState();
-                do
+                while(true)
                 {
                     pl = PlayList.GetPlayList(ps.CurrentChannel.Context, null, ps.CurrentChannel, "n", PlayedSongsToString());
-                } while (pl.Count == 0);
+                    if (pl.Count == 0) TakeABreak();
+                    else break;
+                }
                 ChangePlayListSongs(pl);
                 ChangeCurrentSong();
             }));
@@ -708,7 +738,7 @@ namespace DoubanFM.Core
         {
             PlayerState ps = GetPlayerState();
             if (_playListSongs.Count == 0 && ps.CurrentChannel.IsDj)
-                Dispatcher.Invoke(new Action(() => { RaiseDjChannelFinishedPlayingEvent(EventArgs.Empty); }));
+                Dispatcher.Invoke(new Action(() => { RaiseDjChannelFinishedPlayingEvent(); }));
             else
             {
                 lock (_playListSongs)
@@ -728,12 +758,21 @@ namespace DoubanFM.Core
                 ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
                     {
                         PlayList pl = null;
-                        do
+                        while (true)
                         {
                             pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "p", PlayedSongsToString());
-                        } while (pl.Count == 0);
+                            if (pl.Count == 0) TakeABreak();
+                            else break;
+                        }
                         ChangePlayListSongs(pl);
                     }));
+        }
+        /// <summary>
+        /// 网络发送间歇
+        /// </summary>
+        void TakeABreak()
+        {
+            Thread.Sleep(1000);
         }
         /// <summary>
         /// 获取当前状态，用于向线程池加入任务时传递参数

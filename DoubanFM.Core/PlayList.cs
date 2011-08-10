@@ -7,6 +7,17 @@ namespace DoubanFM.Core
 {
     public class PlayList : List<Song>
     {
+        /// <summary>
+        /// 当获取播放列表失败时发生。
+        /// </summary>
+        internal static event EventHandler<PlayListEventArgs> GetPlayListFailed;
+
+        private static void RaiseGetPlayListFailedEvent(string json)
+        {
+            if (GetPlayListFailed != null)
+                GetPlayListFailed(null, new PlayListEventArgs(json));
+        }
+
         internal PlayList(DoubanFM.Core.Json.PlayList pl)
             :base()
         {
@@ -37,12 +48,24 @@ namespace DoubanFM.Core
             parameters.Add("h", history);
             string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters.ToArray());
             string json = new ConnectionBase().Get(url, @"application/json, text/javascript, */*; q=0.01", @"http://douban.fm");
-            PlayList pl = new PlayList(Json.PlayList.FromJson(json));
+            var jsonPlayList = Json.PlayList.FromJson(json);
+            if (jsonPlayList.r != 0)
+                RaiseGetPlayListFailedEvent(json);
+            PlayList pl = new PlayList(jsonPlayList);
             foreach (var song in pl)
             {
                 song.Picture = song.Picture.Replace("/mpic/", "/lpic/").Replace("//otho.", "//img3.");
             }
             return pl;
+        }
+
+        public class PlayListEventArgs : EventArgs
+        {
+            public string Msg { get; private set; }
+            internal PlayListEventArgs(string msg)
+            {
+                Msg = msg;
+            }
         }
     }
 }
