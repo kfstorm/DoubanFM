@@ -386,7 +386,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										<RowDefinition Height="Auto"/>
 									</Grid.RowDefinitions>
 									<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
-									<Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top">1.2.0测试版</Label>
+									<Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top">1.2.0 Beta2</Label>
 									<Button x:Name="VisitSoftwareWebsite" Grid.Row="2" Width="100" Height="30" Click="VisitSoftwareWebsite_Click">检查更新</Button>
 									<Button x:Name="VisitOfficialWebsite" Grid.Row="3" Width="100" Height="30" Click="VisitOfficialWebsite_Click">豆瓣电台官网</Button>
 									<Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
