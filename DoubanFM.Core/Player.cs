@@ -379,12 +379,15 @@ namespace DoubanFM.Core
             ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
                 {
                     ChannelInfo channelInfo = null;
-                    while (channelInfo == null)
+                    string file = null;
+                    while (true)
                     {
-                        string file = new ConnectionBase().Get("http://douban.fm");
+                        file = new ConnectionBase().Get("http://douban.fm");
                         channelInfo = new ChannelInfo(Json.ChannelInfo.FromHtml(file));
-                        UserAssistant.Update(file);
+                        if (!channelInfo.IsEffective) TakeABreak();
+                        else break;
                     }
+                    UserAssistant.Update(file);
                     Dispatcher.Invoke(new Action(() =>
                         {
                             ChannelInfo = channelInfo;
@@ -447,7 +450,7 @@ namespace DoubanFM.Core
                     parameters.Add("channel", ps.CurrentChannel.Id);
                     parameters.Add("type", "e");
                     string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
-                    string Result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
+                    string result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
                     ChangeCurrentSong();
                 }));
         }

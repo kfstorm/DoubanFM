@@ -68,26 +68,25 @@ namespace DoubanFM.Core
         {
             string file = null;
 
-            while (file == null)
-                try
-                {
-                    HttpWebRequest request = WebRequest.Create(PostUri) as HttpWebRequest;
-                    request.Accept = Accept;
-                    request.AllowAutoRedirect = true;
-                    request.ContentLength = Content.Length;
-                    request.ContentType = ContentType;
-                    request.CookieContainer = cc;
-                    request.KeepAlive = true;
-                    request.Method = "POST";
-                    request.Referer = Referer;
-                    request.UserAgent = UserAgent;
-                    using (Stream requestStream = request.GetRequestStream())
-                        requestStream.Write(Content, 0, Content.Length);
-                    using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
-                    using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
-                        file = sr.ReadToEnd();
-                }
-                catch { }
+            try
+            {
+                HttpWebRequest request = WebRequest.Create(PostUri) as HttpWebRequest;
+                request.Accept = Accept;
+                request.AllowAutoRedirect = true;
+                request.ContentLength = Content.Length;
+                request.ContentType = ContentType;
+                request.CookieContainer = cc;
+                request.KeepAlive = true;
+                request.Method = "POST";
+                request.Referer = Referer;
+                request.UserAgent = UserAgent;
+                using (Stream requestStream = request.GetRequestStream())
+                    requestStream.Write(Content, 0, Content.Length);
+                using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
+                using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
+                    file = sr.ReadToEnd();
+            }
+            catch { }
 
             return file;
         }
@@ -124,22 +123,21 @@ namespace DoubanFM.Core
         {
             string file = null;
 
-            while (file == null)
-                try
-                {
-                    HttpWebRequest request = WebRequest.Create(GetUri) as HttpWebRequest;
-                    request.Accept = Accept;
-                    request.AllowAutoRedirect = true;
-                    request.CookieContainer = cc;
-                    request.KeepAlive = true;
-                    request.Method = "GET";
-                    request.Referer = Referer;
-                    request.UserAgent = UserAgent;
-                    using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
-                    using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
-                        file = sr.ReadToEnd();
-                }
-                catch { }
+            try
+            {
+                HttpWebRequest request = WebRequest.Create(GetUri) as HttpWebRequest;
+                request.Accept = Accept;
+                request.AllowAutoRedirect = true;
+                request.CookieContainer = cc;
+                request.KeepAlive = true;
+                request.Method = "GET";
+                request.Referer = Referer;
+                request.UserAgent = UserAgent;
+                using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
+                using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
+                    file = sr.ReadToEnd();
+            }
+            catch { }
 
             return file;
         }

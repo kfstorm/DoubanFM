@@ -217,7 +217,11 @@ namespace DoubanFM
 
             notifyIconMenu.Items.Add(new ToolStripMenuItem("显示窗口"));
             notifyIcon_ShowWindow = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-            notifyIcon_ShowWindow.Click += new EventHandler((s, e) => { this.Visibility = Visibility.Visible; });
+            notifyIcon_ShowWindow.Click += new EventHandler((s, e) =>
+            {
+                this.Visibility = Visibility.Visible;
+                this.Activate();
+            });
             notifyIconMenu.Items.Add("-");
             notifyIconMenu.Items.Add(new ToolStripMenuItem("喜欢"));
             notifyIcon_Heart = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];

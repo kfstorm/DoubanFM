@@ -23,8 +23,14 @@ namespace DoubanFM.Core
         /// </summary>
         public IEnumerable<Cate> Dj { get; private set; }
 
+        /// <summary>
+        /// 是否是有效的频道列表
+        /// </summary>
+        public bool IsEffective { get { return Personal != null && Public != null && Public.Count() > 0 && Dj != null; } }
+
         internal ChannelInfo(Json.ChannelInfo ci)
         {
+            if (ci == null) return;
             List<Cate> list1 = new List<Cate>();
             foreach (var cate in ci.personal)
                 list1.Add(new Cate(cate));

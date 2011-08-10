@@ -49,7 +49,7 @@ namespace DoubanFM.Core
             string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters.ToArray());
             string json = new ConnectionBase().Get(url, @"application/json, text/javascript, */*; q=0.01", @"http://douban.fm");
             var jsonPlayList = Json.PlayList.FromJson(json);
-            if (jsonPlayList.r != 0)
+            if (jsonPlayList != null && jsonPlayList.r != 0)
                 RaiseGetPlayListFailedEvent(json);
             PlayList pl = new PlayList(jsonPlayList);
             foreach (var song in pl)

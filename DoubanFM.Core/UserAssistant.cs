@@ -186,13 +186,25 @@ namespace DoubanFM.Core
         {
             //_captchaId = GetCaptchaId(html);          //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
             _logOffLink = GetLogOffLink(html);
-            Match match = Regex.Match(html, @"var\s*globalConfig\s*=\s*{\s*uid\s*:\s*'(\d*)'", RegexOptions.IgnoreCase);
-            string s = match.Groups[1].Value;
-            Dispatcher.Invoke(new Action(() =>
+            string s = null;
+            if (!string.IsNullOrEmpty(html))
+            {
+                Match match = Regex.Match(html, @"var\s*globalConfig\s*=\s*{\s*uid\s*:\s*'(\d*)'", RegexOptions.IgnoreCase);
+                s = match.Groups[1].Value;
+                Dispatcher.Invoke(new Action(() =>
                 {
                     if (!string.IsNullOrEmpty(s)) CurrentState = State.LoggedOn;
                     else CurrentState = State.LoggedOff;
                 }));
+            }
+            else
+                Dispatcher.Invoke(new Action(() =>
+                    {
+                        if (CurrentState == State.LoggingOn) CurrentState = State.LoggedOff;
+                        else if (CurrentState == State.LoggingOff) CurrentState = State.LoggedOn;
+                        else if (CurrentState == State.Unknown) CurrentState = State.LoggedOff;
+                        else CurrentState = State.LoggedOff;
+                    }));
         }
         /// <summary>
         /// 刷新登录页面
@@ -212,6 +224,7 @@ namespace DoubanFM.Core
         /// <returns></returns>
         string GetCaptchaId(string html)
         {
+            if (html == null) return null;
             Match match = Regex.Match(html, "<img src=\"http[s]?://www\\.douban\\.com/misc/captcha\\?id=(\\w*)", RegexOptions.IgnoreCase);
             return match.Groups[1].Value;
         }
@@ -222,6 +235,7 @@ namespace DoubanFM.Core
         /// <returns></returns>
         string GetLogOffLink(string html)
         {
+            if (html == null) return null;
             Match match = Regex.Match(html, "\"(http://www\\.douban\\.com/accounts/logout\\?source=radio&[^\\s]*)\"", RegexOptions.IgnoreCase);
             return match.Groups[1].Value;
         }
