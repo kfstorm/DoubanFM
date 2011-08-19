@@ -11,6 +11,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Windows.Shell;
 
 namespace DoubanFM
 {
@@ -28,7 +30,11 @@ namespace DoubanFM
         /// <summary>
         /// 进度更新计时器
         /// </summary>
-        private DispatcherTimer _timer;
+        private DispatcherTimer _progressRefreshTimer;
+        /// <summary>
+        /// 防止不执行下一首
+        /// </summary>
+        private DispatcherTimer _forceNextTimer;
         /// <summary>
         /// 各种无法在XAML里直接启动的Storyboard
         /// </summary>
@@ -49,13 +55,31 @@ namespace DoubanFM
         /// 托盘图标右键菜单中的各个菜单项
         /// </summary>
         private System.Windows.Forms.ToolStripMenuItem notifyIcon_ShowWindow, notifyIcon_Heart, notifyIcon_Never, notifyIcon_PlayPause, notifyIcon_Next, notifyIcon_Exit;
-
+        /// <summary>
+        /// 隐藏窗口
+        /// </summary>
+        private InteropWindow _interopWindow;
+        
         #endregion
 
         #region 构造和初始化
 
         public DoubanFMWindow()
         {
+            IntPtr hwnd = InteropWindow.FindWindow(null, "InteropWindow {CB66A0B0-DC2A-4F8C-BDA7-C2E1202D35AB}");
+            if (hwnd != IntPtr.Zero)
+            {
+                InteropWindow.SendMessage("InteropWindow {CB66A0B0-DC2A-4F8C-BDA7-C2E1202D35AB}", Environment.CommandLine);
+                App.Current.Shutdown(0);
+                return;
+            }
+            else
+            {
+                _interopWindow = new InteropWindow();
+                _interopWindow.Show();
+                _interopWindow.Visibility = Visibility.Hidden;
+            }
+            
             InitializeComponent();
             _player = (Player)FindResource("Player");
             BackgroundColorStoryboard = (Storyboard)FindResource("BackgroundColorStoryboard");
@@ -65,17 +89,21 @@ namespace DoubanFM
             SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
             ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
             DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
-            
+
             InitNotifyIcon();
 
             PbPassword.Password = _player.Settings.User.Password;
             if (!_player.Settings.IsShadowEnabled)
                 MainPanel.Margin = new Thickness(1);
             _cover = Cover1;
-            _timer = new DispatcherTimer();
-            _timer.Interval = new TimeSpan(1000000);
-            _timer.Tick += new EventHandler(timer_Tick);
-            _timer.Start();
+            _progressRefreshTimer = new DispatcherTimer();
+            _progressRefreshTimer.Interval = new TimeSpan(1000000);
+            _progressRefreshTimer.Tick += new EventHandler(timer_Tick);
+            _progressRefreshTimer.Start();
+            _forceNextTimer = new DispatcherTimer();
+            _forceNextTimer.Interval = new TimeSpan(600000000);
+            _forceNextTimer.Tick += new EventHandler(_forceNextTimer_Tick);
+            _forceNextTimer.Start();
             _slideCoverRightTimer = new DispatcherTimer();
             _slideCoverRightTimer.Interval = new TimeSpan(5000000);
             _slideCoverRightTimer.Tick += new EventHandler(SlideCoverRightTimer_Tick);
@@ -116,6 +144,8 @@ namespace DoubanFM
                             DjChannelClickStoryboard.Begin();
                         }
                     }
+                    if (!_player.CurrentChannel.IsDj)
+                        AddChannelToJumpList(_player.CurrentChannel);
                 });
             _player.CurrentSongChanged += new EventHandler((o, e) =>
             {
@@ -190,8 +220,11 @@ namespace DoubanFM
                 this.Close();
             });
 
+            Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
+            if (channel != null) _player.Settings.LastChannel = channel;
             _player.Initialize();
         }
+
         /// <summary>
         /// 初始化托盘图标
         /// </summary>
@@ -206,7 +239,11 @@ namespace DoubanFM
                     if (this.IsVisible == false)
                     {
                         this.Visibility = Visibility.Visible;
-                        this.Activate();
+                        Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                this.WindowState = WindowState.Normal;
+                                this.Activate();
+                            }));
                     }
                     else this.Visibility = Visibility.Hidden;
                 }
@@ -220,7 +257,11 @@ namespace DoubanFM
             notifyIcon_ShowWindow.Click += new EventHandler((s, e) =>
             {
                 this.Visibility = Visibility.Visible;
-                this.Activate();
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    this.WindowState = WindowState.Normal;
+                    this.Activate();
+                }));
             });
             notifyIconMenu.Items.Add("-");
             notifyIconMenu.Items.Add(new ToolStripMenuItem("喜欢"));
@@ -282,11 +323,10 @@ namespace DoubanFM
         /// </summary>
         private void Update()
         {
-            Song song = _player.CurrentSong;
-            ChangeCover(song);
+            ChangeCover();
             try
             {
-                Audio.Source = new Uri(song.FileUrl);
+                Audio.Source = new Uri(_player.CurrentSong.FileUrl);
 
                 Audio.IsMuted = !Audio.IsMuted;     //防止无敌静音
                 Thread.Sleep(50);
@@ -294,11 +334,11 @@ namespace DoubanFM
                 Audio.Volume = _player.Settings.Volume;
             }
             catch { }
-            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = song.Title;
-            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[2]).KeyFrames[0].Value = song.Artist;
-            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = song.Album;
+            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = _player.CurrentSong.Title;
+            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[2]).KeyFrames[0].Value = _player.CurrentSong.Artist;
+            ((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = _player.CurrentSong.Album;
             ChangeSongInfoStoryboard.Begin();
-            string stringA = song.Title + " - " + song.Artist;
+            string stringA = _player.CurrentSong.Title + " - " + _player.CurrentSong.Artist;
             string stringB = "    豆瓣电台 - " + _player.CurrentChannel.Name;
             this.Title = stringA + stringB;
             if (this.Title.Length <= 63)        //Windows限制托盘图标的提示信息最长为63个字符
@@ -312,26 +352,52 @@ namespace DoubanFM
                     notifyIcon.Text = stringA.Substring(0, Math.Min(stringA.Length, 63));
             }
             ChannelTextBlock.Text = _player.CurrentChannel.Name;
-            TotalTime.Content = TimeSpanToStringConverter.QuickConvert(song.Length);
+            TotalTime.Content = TimeSpanToStringConverter.QuickConvert(_player.CurrentSong.Length);
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
             Slider.Minimum = 0;
-            Slider.Maximum = song.Length.TotalSeconds;
+            Slider.Maximum = _player.CurrentSong.Length.TotalSeconds;
             Slider.Value = 0;
         }
 
         /// <summary>
         /// 更改封面
         /// </summary>
-        /// <param name="song">音乐</param>
-        void ChangeCover(Song song)
+        void ChangeCover()
         {
             try
             {
-                BitmapImage bitmap = new BitmapImage(new Uri(song.Picture));
+                BitmapImage bitmap = new BitmapImage(new Uri(_player.CurrentSong.Picture));
+                bitmap.DownloadCompleted += new EventHandler((o, e) =>
                 {
-                    bitmap.DownloadCompleted += new EventHandler(bitmap_DownloadCompleted);
-                    bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>(bitmap_DownloadFailed);
-                }
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        try
+                        {
+                            if (((BitmapImage)o).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
+                            {
+                                ChangeBackground((BitmapImage)o);
+                                SwitchCover((BitmapImage)o);
+                            }
+                        }
+                        catch { }
+                    }));
+                });
+                bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
+                {
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        try
+                        {
+                            if (((BitmapImage)o).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
+                            {
+                                BitmapImage bitmapDefault = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
+                                ChangeBackground(bitmapDefault);
+                                SwitchCover(bitmapDefault);
+                            }
+                        }
+                        catch { }
+                    }));
+                });
             }
             catch
             {
@@ -347,17 +413,15 @@ namespace DoubanFM
         void ChangeBackground(BitmapImage NewCover)
         {
             ColorAnimation animation = (ColorAnimation)BackgroundColorStoryboard.Children[0];
-            Thread thread = new Thread(new ThreadStart(() =>
+            ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
                 {
                     Color to = ColorFunctions.GetImageColorForBackground(NewCover);
-                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    Dispatcher.Invoke(new Action(() =>
                         {
                             animation.To = to;
                             BackgroundColorStoryboard.Begin();
                         }));
                 }));
-            thread.IsBackground = true;
-            thread.Start();
         }
         /// <summary>
         /// 更换封面。封面加载成功时自动调用
@@ -378,47 +442,33 @@ namespace DoubanFM
                 ShowCover1Storyboard.Begin();
             }
         }
+        /// <summary>
+        /// 将频道添加到跳转列表
+        /// </summary>
+        private void AddChannelToJumpList(Channel channel)
+        {
+            JumpList jumpList = JumpList.GetJumpList(App.Current);
+            if (jumpList == null) jumpList = new JumpList();
+            jumpList.ShowRecentCategory = true;
+            jumpList.ShowFrequentCategory = true;
+            foreach (JumpTask jumpItem in jumpList.JumpItems)
+            {
+                if (jumpItem.Title == channel.Name) return;
+            }
+            JumpTask jumpTask = new JumpTask();
+            jumpTask.Title = channel.Name;
+            jumpTask.Description = jumpTask.Title;
+            jumpTask.Arguments = channel.ToCommandLineArgs();
+            JumpList.AddToRecentCategory(jumpTask);
+            JumpList.SetJumpList(App.Current, jumpList);
+        }
+        internal void InteropChangeChannel(Channel channel)
+        {
+            _player.CurrentChannel = channel;
+        }
         #endregion
 
         #region 事件响应
-        /// <summary>
-        /// 封面加载失败
-        /// </summary>
-        void bitmap_DownloadFailed(object sender, ExceptionEventArgs e)
-        {
-            if (((BitmapImage)sender).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
-            {
-                BitmapImage bitmap = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
-                this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    try
-                    {
-                        ChangeBackground(bitmap);
-                        SwitchCover(bitmap);
-                    }
-                    catch { }
-                }));
-
-            }
-        }
-        /// <summary>
-        /// 封面加载成功
-        /// </summary>
-        void bitmap_DownloadCompleted(object sender, EventArgs e)
-        {
-            if (((BitmapImage)sender).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
-            {
-                this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    try
-                    {
-                        ChangeBackground((BitmapImage)sender);
-                        SwitchCover((BitmapImage)sender);
-                    }
-                    catch { }
-                }));
-            }
-        }
         /// <summary>
         /// 主界面中按下“下一首”
         /// </summary>
@@ -447,6 +497,15 @@ namespace DoubanFM
         {
             CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.Position);
             Slider.Value = Audio.Position.TotalSeconds;
+        }
+        /// <summary>
+        /// 当已播放时间超过总时间时，报告音乐已播放完毕。防止网络不好时播放完毕但不换歌
+        /// </summary>
+        void _forceNextTimer_Tick(object sender, EventArgs e)
+        {
+            if (Audio.NaturalDuration.HasTimeSpan)
+                if ((Audio.Position - Audio.NaturalDuration.TimeSpan).TotalSeconds > 5)
+                    _player.CurrentSongFinishedPlaying();
         }
         /// <summary>
         /// 修正音乐总时间。音乐加载完成时调用。
@@ -479,9 +538,14 @@ namespace DoubanFM
         /// </summary>
         private void Window_Closed(object sender, EventArgs e)
         {
-            Audio.Close();
-            notifyIcon.Dispose();
-            _player.Dispose();
+            if (_interopWindow != null)
+                _interopWindow.Close();
+            if (Audio != null)
+                Audio.Close();
+            if (notifyIcon != null)
+                notifyIcon.Dispose();
+            if (_player != null)
+                _player.Dispose();
         }
         /// <summary>
         /// 更新密码

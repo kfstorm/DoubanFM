@@ -51,13 +51,14 @@ namespace DoubanFM.Core
         /// </summary>
         public ChannelInfo ChannelInfo { get; private set; }
         /// <summary>
-        /// 当前频道，异步
+        /// 当前频道
         /// </summary>
         public Channel CurrentChannel
         {
             get { return (Channel)GetValue(CurrentChannelProperty); }
             set
             {
+                if (!IsInitialized) return;
                 if (value == null)
                     throw new Exception("频道不能设为空");
                 if (CurrentChannel != null && CurrentChannel.IsSpecial && !value.IsSpecial)     //由特殊模式转为普通模式
@@ -71,8 +72,7 @@ namespace DoubanFM.Core
                     Channel lastChannel = CurrentChannel;
                     SetValue(CurrentChannelProperty, value);
                     RaiseStopedEvent();
-                    if (!CurrentChannel.IsSpecial)
-                        Settings.LastChannel = CurrentChannel;
+                    Settings.LastChannel = CurrentChannel;
                     if (CurrentChannel.IsSpecial || CurrentChannel.IsDj || CurrentSong == null || lastChannel.IsDj)
                         NewPlayList();
                     else Skip();
@@ -130,7 +130,7 @@ namespace DoubanFM.Core
             }
         }
         /// <summary>
-        /// 是否正在播放，异步
+        /// 是否正在播放
         /// </summary>
         public bool IsPlaying
         {
@@ -371,7 +371,7 @@ namespace DoubanFM.Core
             });
         }
         /// <summary>
-        /// 播放器初始化，异步
+        /// 播放器初始化
         /// </summary>
         public void Initialize()
         {
@@ -435,7 +435,7 @@ namespace DoubanFM.Core
         #region 播放器控制
 
         /// <summary>
-        /// 歌曲自然播放完毕，添加播放记录或请求新播放列表。异步
+        /// 歌曲自然播放完毕，添加播放记录或请求新播放列表。
         /// type=e
         /// Played
         /// </summary>
@@ -455,7 +455,7 @@ namespace DoubanFM.Core
                 }));
         }
         /// <summary>
-        /// 跳过当前歌曲，异步
+        /// 跳过当前歌曲
         /// type=s
         /// Skip
         /// </summary>
@@ -480,7 +480,7 @@ namespace DoubanFM.Core
                 }));
         }
         /// <summary>
-        /// 喜欢这首歌，异步
+        /// 喜欢这首歌
         /// </summary>
         void Like()
         {
@@ -502,7 +502,7 @@ namespace DoubanFM.Core
             }));
         }
         /// <summary>
-        /// 不喜欢这首歌，异步
+        /// 不喜欢这首歌
         /// </summary>
         void Unlike()
         {
@@ -524,7 +524,7 @@ namespace DoubanFM.Core
             }));
         }
         /// <summary>
-        /// 对当前音乐标记不再播放，异步
+        /// 对当前音乐标记不再播放
         /// type=b
         /// Ban
         /// </summary>
@@ -549,7 +549,7 @@ namespace DoubanFM.Core
             }));
         }
         /// <summary>
-        /// 暂停，同步
+        /// 暂停
         /// </summary>
         void Pause()
         {
@@ -559,7 +559,7 @@ namespace DoubanFM.Core
             RaisePausedEvent();
         }
         /// <summary>
-        /// 播放。若暂停时长超过半个小时，则播放一个新的播放列表，异步
+        /// 播放。若暂停时长超过半个小时，则播放一个新的播放列表
         /// </summary>
         void Play()
         {
@@ -668,7 +668,7 @@ namespace DoubanFM.Core
             SaveCookies();
         }
         /// <summary>
-        /// 获取全新的播放列表，异步
+        /// 获取全新的播放列表
         /// type=n
         /// New
         /// </summary>

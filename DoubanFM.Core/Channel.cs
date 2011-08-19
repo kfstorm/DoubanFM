@@ -60,6 +60,58 @@ namespace DoubanFM.Core
             Context = context;
         }
 
+        /// <summary>
+        /// 由命令行参数构造Channel
+        /// </summary>
+        /// <param name="args">The args.</param>
+        /// <returns></returns>
+        public static Channel FromCommandLineArgs(List<string> args)
+        {
+            if (args.Contains("-channel"))
+            {
+                int index = args.IndexOf("-channel");
+                if (index != -1)
+                    try
+                    {
+                        string id = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 1)));
+                        string name = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 2)));
+                        string programId = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 3)));
+                        string context = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 4)));
+                        return new Channel(id, name, programId, context);
+                    }
+                    catch { }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 转换为命令行参数
+        /// </summary>
+        /// <returns></returns>
+        public string ToCommandLineArgs()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("-channel ");
+
+            sb.Append("\"");
+            sb.Append(Convert.ToBase64String(Encoding.Unicode.GetBytes(Id)));
+            sb.Append("\" ");
+
+            sb.Append("\"");
+            sb.Append(Convert.ToBase64String(Encoding.Unicode.GetBytes(Name)));
+            sb.Append("\" ");
+
+            sb.Append("\"");
+            sb.Append(Convert.ToBase64String(Encoding.Unicode.GetBytes(ProgramId == null ? "" : ProgramId)));
+            sb.Append("\" ");
+
+            sb.Append("\"");
+            sb.Append(Convert.ToBase64String(Encoding.Unicode.GetBytes(Context == null ? "" : Context)));
+            sb.Append("\" ");
+
+            return sb.ToString();
+        }
+
         internal const string PersonalId = "0";
         internal const string DjId = "dj";
 
