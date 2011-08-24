@@ -406,7 +406,7 @@ namespace DoubanFM.Core
             {
                 bool selected = false;
                 Channel firstChannel = Settings.LastChannel;
-                if (firstChannel.IsPersonal && UserAssistant.IsLoggedOn)
+                if (firstChannel.IsPersonal && UserAssistant.IsLoggedOn ||firstChannel.IsSpecial)
                     selected = true;
                 else if (firstChannel.IsDj)
                 {

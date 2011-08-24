@@ -212,13 +212,13 @@ namespace DoubanFM.Core
             try
             {
                 //找出艺术家
-                MatchCollection mc = Regex.Matches(file, @"<div class=\""pic\"">.*?<img src=\""([^\""]+)\"" alt=\""([^\""]+)\"".*?</h3>",
-                    RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                MatchCollection mc = Regex.Matches(file, @"<div class=\""result-item musician\"">.*?<a class=\""nbg\"".*?title=\""([^\""]+)\"">.*?<img src=\""([^\""]+)\"" class=\""answer_pic\""/>.*?\""http://douban\.fm/\?context=([^\""]+)\"">", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 foreach (Match ma in mc)
                 {
-                    items.Add(new SearchItem(ma.Groups[2].Value, ma.Groups[1].Value, null, true,
-                        Regex.Match(ma.Groups[0].Value, @"href=""http://douban.fm/\?context=([^\""]+)""",
-                        RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value));
+                    string title = ma.Groups[1].Value;
+                    string picture = ma.Groups[2].Value;
+                    string context = ma.Groups[3].Value;
+                    items.Add(new SearchItem(title, picture, null, true,context));
                 }
 
                 //找出专辑
