@@ -1,7 +1,7 @@
 ﻿<Window x:Class="DoubanFM.InteropWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="InteropWindow {CB66A0B0-DC2A-4F8C-BDA7-C2E1202D35AB}" Height="300" Width="300" Loaded="Window_Loaded" AllowsTransparency="True" WindowStyle="None" Opacity="0">
+        Title="InteropWindow" Height="300" Width="300" AllowsTransparency="True" WindowStyle="None" Opacity="0" WindowState="Minimized" ShowInTaskbar="False">
     <Grid>
         
     </Grid>
