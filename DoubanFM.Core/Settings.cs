@@ -119,7 +119,7 @@ namespace DoubanFM.Core
             IsMuted = false;
             Volume = 1;
             SlideCoverWhenMouseMove = true;
-            IsShadowEnabled = true;
+            IsShadowEnabled = false;
             AlwaysShowNotifyIcon = false;
         }
         internal Settings(string username, string password)
