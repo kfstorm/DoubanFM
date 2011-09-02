@@ -437,37 +437,46 @@ namespace DoubanFM
 			try
 			{
 				BitmapImage bitmap = new BitmapImage(new Uri(_player.CurrentSong.Picture));
-				bitmap.DownloadCompleted += new EventHandler((o, e) =>
+				Debug.WriteLine(_player.CurrentSong.Picture);
+				if (bitmap.IsDownloading)
 				{
-					Dispatcher.Invoke(new Action(() =>
+					bitmap.DownloadCompleted += new EventHandler((o, e) =>
 					{
-						try
+						Dispatcher.Invoke(new Action(() =>
 						{
-							if (((BitmapImage)o).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
+							try
 							{
-								ChangeBackground((BitmapImage)o);
-								SwitchCover((BitmapImage)o);
+								if (((BitmapImage)o).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
+								{
+									ChangeBackground((BitmapImage)o);
+									SwitchCover((BitmapImage)o);
+								}
 							}
-						}
-						catch { }
-					}));
-				});
-				bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
+							catch { }
+						}));
+					});
+					bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
+					{
+						Dispatcher.Invoke(new Action(() =>
+						{
+							try
+							{
+								if (((BitmapImage)o).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
+								{
+									BitmapImage bitmapDefault = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
+									ChangeBackground(bitmapDefault);
+									SwitchCover(bitmapDefault);
+								}
+							}
+							catch { }
+						}));
+					});
+				}
+				else
 				{
-					Dispatcher.Invoke(new Action(() =>
-					{
-						try
-						{
-							if (((BitmapImage)o).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
-							{
-								BitmapImage bitmapDefault = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
-								ChangeBackground(bitmapDefault);
-								SwitchCover(bitmapDefault);
-							}
-						}
-						catch { }
-					}));
-				});
+					ChangeBackground(bitmap);
+					SwitchCover(bitmap);
+				}
 			}
 			catch
 			{
