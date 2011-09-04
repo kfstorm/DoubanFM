@@ -833,7 +833,7 @@ namespace DoubanFM
 
 		private void VisitSoftwareWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			Process.Start("http://kfstorm.wordpress.com/doubanfm/");
+			Process.Start("http://www.kfstorm.com/blog/doubanfm/");
 		}
 
 		private void VisitOfficialWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
