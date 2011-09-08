@@ -11,10 +11,10 @@ using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using System.Windows.Shell;
-using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.IO.MemoryMappedFiles;
+using System.IO;
 
 namespace DoubanFM
 {
@@ -58,14 +58,13 @@ namespace DoubanFM
 		/// </summary>
 		private System.Windows.Forms.ToolStripMenuItem notifyIcon_ShowWindow, notifyIcon_Heart, notifyIcon_Never, notifyIcon_PlayPause, notifyIcon_Next, notifyIcon_Exit;
 		/// <summary>
-		/// 隐藏窗口
+		/// 用于进程间更换频道的内存映射文件
 		/// </summary>
-		private InteropWindow _interopWindow;
+		private MemoryMappedFile _mappedFile;
 		/// <summary>
-		/// 用于进程间更换频道的临时文件
+		/// 内存映射文件的文件名
 		/// </summary>
-		private string _channelTempFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\" + "channeltemp.dat";
-
+		private string _mappedFileName = "{04EFCEB4-F10A-403D-9824-1E685C4B7961}";
 		#endregion
 
 		#region 构造和初始化
@@ -76,7 +75,7 @@ namespace DoubanFM
 			//只允许运行一个实例
 			if (HasAnotherInstance())
 			{
-				if (channel != null) WriteChannelToTempFile(channel);
+				if (channel != null) WriteChannelToMappedFile(channel);
 				App.Current.Shutdown(0);
 				return;
 			}
@@ -221,34 +220,21 @@ namespace DoubanFM
 				this.Close();
 			});
 
-			this.Loaded += new RoutedEventHandler((o, e) =>
-			{
-				_interopWindow = new InteropWindow();
-				_interopWindow.Show();
-			});
-
 			if (channel != null) _player.Settings.LastChannel = channel;
-			//定时检查临时文件，看是否需要更换频道
+			//定时检查内存映射文件，看是否需要更换频道
 			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
 			{
+				_mappedFile = MemoryMappedFile.CreateOrOpen(_mappedFileName, 10240);
 				while (true)
 				{
-					Thread.Sleep(100);
-					if (File.Exists(_channelTempFile))
-					{
-						Channel ch = LoadChannelFromTempFile();
-						try
+					Thread.Sleep(50);
+					Channel ch = LoadChannelFromMappedFile();
+					if (ch != null)
+						Dispatcher.Invoke(new Action(() =>
 						{
-							File.Delete(_channelTempFile);
-						}
-						catch { }
-						if (ch != null)
-							Dispatcher.Invoke(new Action(() =>
-							{
-								if (_player.IsInitialized) _player.CurrentChannel = ch;
-								else _player.Settings.LastChannel = ch;
-							}));
-					}
+							if (_player.IsInitialized) _player.CurrentChannel = ch;
+							else _player.Settings.LastChannel = ch;
+						}));
 				}
 			}));
 			_player.Initialize();
@@ -330,18 +316,26 @@ namespace DoubanFM
 		/// </summary>
 		bool HasAnotherInstance()
 		{
-			IntPtr hwnd = InteropWindow.FindWindow(null, InteropWindow.CorrectTitle);
-			return hwnd != IntPtr.Zero;
+			try
+			{
+				MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName);
+				return mappedFile != null;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 		/// <summary>
-		/// 将频道写入临时文件
+		/// 将频道写入内存映射文件
 		/// </summary>
-		void WriteChannelToTempFile(Channel channel)
+		void WriteChannelToMappedFile(Channel channel)
 		{
 			if (channel != null)
 				try
 				{
-					using (FileStream stream = File.OpenWrite(_channelTempFile))
+					using (MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName))
+					using (Stream stream = mappedFile.CreateViewStream())
 					{
 						BinaryFormatter formatter = new BinaryFormatter();
 						formatter.Serialize(stream, channel);
@@ -350,13 +344,13 @@ namespace DoubanFM
 				catch { }
 		}
 		/// <summary>
-		/// 从临时文件加载频道
+		/// 从内存映射文件加载频道
 		/// </summary>
-		Channel LoadChannelFromTempFile()
+		Channel LoadChannelFromMappedFile()
 		{
 			try
 			{
-				using (FileStream stream = File.OpenRead(_channelTempFile))
+				using (Stream stream = _mappedFile.CreateViewStream())
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					return (Channel)formatter.Deserialize(stream);
@@ -617,8 +611,6 @@ namespace DoubanFM
 		/// </summary>
 		private void Window_Closed(object sender, EventArgs e)
 		{
-			if (_interopWindow != null)
-				_interopWindow.Close();
 			if (Audio != null)
 				Audio.Close();
 			if (notifyIcon != null)
@@ -833,7 +825,7 @@ namespace DoubanFM
 
 		private void VisitSoftwareWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			Process.Start("http://www.kfstorm.com/blog/doubanfm/");
+			Process.Start("http://www.kfstorm.com/doubanfm/");
 		}
 
 		private void VisitOfficialWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
