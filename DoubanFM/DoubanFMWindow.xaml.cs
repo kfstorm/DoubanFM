@@ -230,11 +230,14 @@ namespace DoubanFM
 					Thread.Sleep(50);
 					Channel ch = LoadChannelFromMappedFile();
 					if (ch != null)
+					{
+						ClearMappedFile();
 						Dispatcher.Invoke(new Action(() =>
 						{
 							if (_player.IsInitialized) _player.CurrentChannel = ch;
 							else _player.Settings.LastChannel = ch;
 						}));
+					}
 				}
 			}));
 			_player.Initialize();
@@ -360,6 +363,21 @@ namespace DoubanFM
 			{
 				return null;
 			}
+		}
+		/// <summary>
+		/// 清除内存映射文件的内容
+		/// </summary>
+		void ClearMappedFile()
+		{
+			try
+			{
+				using (Stream stream = _mappedFile.CreateViewStream())
+				{
+					BinaryFormatter formatter = new BinaryFormatter();
+					formatter.Serialize(stream, 0);
+				}
+			}
+			catch { }
 		}
 		/// <summary>
 		/// 显示频道列表
