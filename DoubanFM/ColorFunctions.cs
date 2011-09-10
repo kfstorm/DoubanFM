@@ -25,11 +25,11 @@ namespace DoubanFM
         /// <summary>
         /// 判断颜色是否太暗
         /// </summary>
-        public readonly static double TooDark = 0.4;
+        public readonly static double TooDark = 0.15;
         /// <summary>
         /// 判断颜色是否太暗亮
         /// </summary>
-        public readonly static double TooBright = 0.6;
+        public readonly static double TooBright = 0.4;
         /// <summary>
         /// 色相偏移
         /// </summary>
