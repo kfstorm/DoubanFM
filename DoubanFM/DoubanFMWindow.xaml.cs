@@ -10,7 +10,6 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 using System.Diagnostics;
-using System.Windows.Forms;
 using System.Windows.Shell;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO.MemoryMappedFiles;
@@ -65,6 +64,7 @@ namespace DoubanFM
 		/// 内存映射文件的文件名
 		/// </summary>
 		private string _mappedFileName = "{04EFCEB4-F10A-403D-9824-1E685C4B7961}";
+		
 		#endregion
 
 		#region 构造和初始化
@@ -81,6 +81,16 @@ namespace DoubanFM
 			}
 			
 			InitializeComponent();
+			/*
+			ThreadPool.QueueUserWorkItem(new WaitCallback((o) =>
+				{
+					System.Threading.Thread.Sleep(5000);
+					Dispatcher.Invoke(new Action(() =>
+						{
+							ChangeBackground(new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png")));
+						}));
+				}));
+			*/
 			_player = (Player)FindResource("Player");
 			BackgroundColorStoryboard = (Storyboard)FindResource("BackgroundColorStoryboard");
 			ShowCover1Storyboard = (Storyboard)FindResource("ShowCover1Storyboard");
@@ -221,6 +231,7 @@ namespace DoubanFM
 			});
 
 			if (channel != null) _player.Settings.LastChannel = channel;
+			
 			//定时检查内存映射文件，看是否需要更换频道
 			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
 			{
@@ -241,6 +252,28 @@ namespace DoubanFM
 				}
 			}));
 			_player.Initialize();
+			
+			//启动时检查更新
+			if (_player.Settings.AutoUpdate && (DateTime.Now - _player.Settings.LastTimeCheckUpdate).TotalDays > 1)
+			{
+				Updater updater = new Updater(_player.Settings);
+				updater.StateChanged += new EventHandler((o, e) =>
+				{
+					switch (updater.Now)
+					{
+						case Updater.State.CheckFailed:
+							updater.Dispose();
+							break;
+						case Updater.State.NoNewVersion:
+							updater.Dispose();
+							break;
+						case Updater.State.HasNewVersion:
+							ShowUpdateWindow(updater);
+							break;
+					}
+				});
+				updater.Start();
+			}
 		}
 
 		/// <summary>
@@ -270,8 +303,8 @@ namespace DoubanFM
 			notifyIcon.Text = "豆瓣电台";
 			notifyIcon.ContextMenuStrip = notifyIconMenu;
 
-			notifyIconMenu.Items.Add(new ToolStripMenuItem("显示窗口"));
-			notifyIcon_ShowWindow = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("显示窗口"));
+			notifyIcon_ShowWindow = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			notifyIcon_ShowWindow.Click += new EventHandler((s, e) =>
 			{
 				this.Visibility = Visibility.Visible;
@@ -282,36 +315,51 @@ namespace DoubanFM
 				}));
 			});
 			notifyIconMenu.Items.Add("-");
-			notifyIconMenu.Items.Add(new ToolStripMenuItem("喜欢"));
-			notifyIcon_Heart = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("喜欢"));
+			notifyIcon_Heart = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			notifyIcon_Heart.CheckOnClick = true;
 			notifyIcon_Heart.CheckedChanged += new EventHandler((o, e) =>
 			{
 				_player.IsLiked = notifyIcon_Heart.Checked;
 			});
-			notifyIconMenu.Items.Add(new ToolStripMenuItem("不再播放"));
-			notifyIcon_Never = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("不再播放"));
+			notifyIcon_Never = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			notifyIcon_Never.Enabled = false;
 			notifyIcon_Never.Click += new EventHandler((s, e) => { _player.Never(); });
 			notifyIconMenu.Items.Add("-");
-			notifyIconMenu.Items.Add(new ToolStripMenuItem("暂停"));
-			notifyIcon_PlayPause = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("暂停"));
+			notifyIcon_PlayPause = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			notifyIcon_PlayPause.Click += new EventHandler((s, e) =>
 			{
 				System.Windows.Forms.ToolStripItem sender = (System.Windows.Forms.ToolStripItem)s;
 				if (sender.Text == "播放") _player.IsPlaying = true;
 				else _player.IsPlaying = false;
 			});
-			notifyIconMenu.Items.Add(new ToolStripMenuItem("下一首"));
-			notifyIcon_Next = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("下一首"));
+			notifyIcon_Next = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			notifyIcon_Next.Click += new EventHandler((s, e) => { _player.Skip(); });
 			notifyIconMenu.Items.Add("-");
-			notifyIconMenu.Items.Add(new ToolStripMenuItem("退出"));
-			notifyIcon_Exit = (ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("退出"));
+			notifyIcon_Exit = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			notifyIcon_Exit.Click += new EventHandler((s, e) => { this.Close(); });
 		}
 
 		#endregion
+
+		void ShowUpdateWindow(Updater updater = null)
+		{
+			UpdateWindow update = new UpdateWindow(this, updater);
+			update.Closed += new EventHandler((o, ee) =>
+			{
+				CheckUpdate.IsEnabled = true;
+				if (update.Updater.Now == Updater.State.DownloadCompleted)
+				{
+					Process.Start(update.Updater.DownloadedFilePath);
+					this.Close();
+				}
+			});
+			update.Show();
+		}
 
 		#region 其他
 		/// <summary>
@@ -553,10 +601,7 @@ namespace DoubanFM
 			JumpList.AddToRecentCategory(jumpTask);
 			JumpList.SetJumpList(App.Current, jumpList);
 		}
-		internal void InteropChangeChannel(Channel channel)
-		{
-			_player.CurrentChannel = channel;
-		}
+
 		#endregion
 
 		#region 事件响应
@@ -841,9 +886,10 @@ namespace DoubanFM
 			this.DragMove();
 		}
 
-		private void VisitSoftwareWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void CheckUpdate_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			Process.Start("http://www.kfstorm.com/doubanfm/");
+			CheckUpdate.IsEnabled = false;
+			ShowUpdateWindow();
 		}
 
 		private void VisitOfficialWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -878,7 +924,7 @@ namespace DoubanFM
 			GradientStopCollection active = (GradientStopCollection)FindResource("ActiveShadowGradientStops");
 			GradientStopCollection now = (GradientStopCollection)FindResource("ShadowGradientStops");
 			now.Clear();
-			foreach (GradientStop g in active)
+			foreach (var g in active)
 				now.Add(g);
 		}
 
@@ -887,11 +933,30 @@ namespace DoubanFM
 			GradientStopCollection inactive = (GradientStopCollection)FindResource("InactiveShadowGradientStops");
 			GradientStopCollection now = (GradientStopCollection)FindResource("ShadowGradientStops");
 			now.Clear();
-			foreach (GradientStop g in inactive)
+			foreach (var g in inactive)
 				now.Add(g);
 		}
 
-		#endregion
+		private void Window_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case System.Windows.Input.Key.MediaPlayPause:
+					_player.IsPlaying = !_player.IsPlaying;
+					break;
+				case System.Windows.Input.Key.MediaNextTrack:
+					_player.Skip();
+					break;
+			}
+		}
 
+		private void Feedback_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			Core.Feedback.OpenFeedbackPage();
+		}
+
+		#endregion
+	
 	}
 }

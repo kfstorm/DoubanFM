@@ -10,244 +10,292 @@ using System.Runtime.Serialization;
 
 namespace DoubanFM.Core
 {
-    /// <summary>
-    /// 网络连接基础类
-    /// </summary>
-    class ConnectionBase
-    {
-        /// <summary>
-        /// Cookie
-        /// </summary>
-        public static CookieContainer cc;
-        /// <summary>
-        /// 默认HTTP头：UserAgent
-        /// </summary>
-        public static string DefaultUserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-        /// <summary>
-        /// 默认HTTP头：Accept
-        /// </summary>
-        public static string DefaultAccept = "text/html, application/xhtml+xml, */*";
-        /// <summary>
-        /// 默认HTTP头：ContentType
-        /// </summary>
-        public static string DefaultContentType = "application/x-www-form-urlencoded";
-        /// <summary>
-        /// 你懂的……
-        /// </summary>
-        string UserAgent, Accept, ContentType;
-        private static string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
+	/// <summary>
+	/// 网络连接基础类
+	/// </summary>
+	class ConnectionBase
+	{
+		/// <summary>
+		/// Cookie
+		/// </summary>
+		public static CookieContainer cc;
+		/// <summary>
+		/// 默认HTTP头：UserAgent
+		/// </summary>
+		public static string DefaultUserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+		/// <summary>
+		/// 默认HTTP头：Accept
+		/// </summary>
+		public static string DefaultAccept = "text/html, application/xhtml+xml, */*";
+		/// <summary>
+		/// 默认HTTP头：ContentType
+		/// </summary>
+		public static string DefaultContentType = "application/x-www-form-urlencoded";
+		/// <summary>
+		/// 默认编码
+		/// </summary>
+		public static Encoding DefaultEncoding = Encoding.UTF8;
+		/// <summary>
+		/// 你懂的……
+		/// </summary>
+		public string UserAgent, Accept, ContentType;
+		/// <summary>
+		/// 编码
+		/// </summary>
+		public Encoding Encoding;
+		/// <summary>
+		/// 是否抛出异常
+		/// </summary>
+		public bool ThrowException;
+		private static string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
 
-        static ConnectionBase()
-        {
-            if (!LoadCookies())
-                cc = new CookieContainer(10000, 10000, 100000);
-        }
+		static ConnectionBase()
+		{
+			if (!LoadCookies())
+				cc = new CookieContainer(10000, 10000, 100000);
+		}
 
-        internal ConnectionBase(string UserAgent, string Accept, string ContentType)
-        {
-            this.UserAgent = UserAgent;
-            this.Accept = Accept;
-            this.ContentType = ContentType;
-        }
+		internal ConnectionBase(bool throwException, string userAgent, string accept, string contentType, Encoding encoding)
+		{
+			ThrowException = throwException;
+			UserAgent = userAgent;
+			Accept = accept;
+			ContentType = contentType;
+			Encoding = encoding;
+		}
 
-        internal ConnectionBase()
-            : this(DefaultUserAgent, DefaultAccept, DefaultContentType)
-        {
-        }
-        /// <summary>
-        /// 用Post方法发送请求
-        /// </summary>
-        /// <param name="PostUri">请求的地址</param>
-        /// <param name="Accept">Accept头</param>
-        /// <param name="Referer">Referer头</param>
-        /// <param name="ContentType">ContentType头</param>
-        /// <param name="Content">请求正文</param>
-        /// <param name="encoding">解读响应正文的字符编码</param>
-        /// <returns>响应正文</returns>
-        internal string Post(string PostUri, string Accept, string Referer, string ContentType, byte[] Content)
-        {
-            string file = null;
+		internal ConnectionBase(bool throwException = false)
+			: this(DefaultEncoding, throwException)
+		{
+		}
 
-            try
-            {
-                HttpWebRequest request = WebRequest.Create(PostUri) as HttpWebRequest;
-                request.Accept = Accept;
-                request.AllowAutoRedirect = true;
-                request.ContentLength = Content.Length;
-                request.ContentType = ContentType;
-                request.CookieContainer = cc;
-                request.KeepAlive = true;
-                request.Method = "POST";
-                request.Referer = Referer;
-                request.UserAgent = UserAgent;
-                using (Stream requestStream = request.GetRequestStream())
-                    requestStream.Write(Content, 0, Content.Length);
-                using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
-                using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
-                    file = sr.ReadToEnd();
-            }
-            catch { }
+		internal ConnectionBase(Encoding encoding, bool throwException = false)
+			: this(throwException, DefaultUserAgent, DefaultAccept, DefaultContentType, encoding)
+		{
+		}
+		/// <summary>
+		/// 用Post方法发送请求
+		/// </summary>
+		/// <param name="PostUri">请求的地址</param>
+		/// <param name="Accept">Accept头</param>
+		/// <param name="Referer">Referer头</param>
+		/// <param name="ContentType">ContentType头</param>
+		/// <param name="Content">请求正文</param>
+		/// <returns>
+		/// 响应正文
+		/// </returns>
+		internal string Post(string PostUri, string Accept, string Referer, string ContentType, byte[] Content)
+		{
+			string file = null;
 
-            return file;
-        }
-        /// <summary>
-        /// 用Post方法发送请求
-        /// </summary>
-        /// <param name="PostUri">请求的地址</param>
-        /// <param name="Content">请求正文</param>
-        /// <returns>响应正文</returns>
-        internal string Post(string PostUri, byte[] Content)
-        {
-            return Post(PostUri, null, Content);
-        }
-        /// <summary>
-        /// 用Post方法发送请求
-        /// </summary>
-        /// <param name="PostUri">请求的地址</param>
-        /// <param name="Referer">Referer头</param>
-        /// <param name="Content">请求正文</param>
-        /// <returns>响应正文</returns>
-        internal string Post(string PostUri, string Referer, byte[] Content)
-        {
-            return Post(PostUri, Accept, Referer, ContentType, Content);
-        }
-        /// <summary>
-        /// 用Get方法发送请求
-        /// </summary>
-        /// <param name="GetUri">请求的地址</param>
-        /// <param name="Accept">Accept头</param>
-        /// <param name="Referer">Referer头</param>
-        /// <param name="encoding">解读响应正文的字符编码</param>
-        /// <returns>响应正文</returns>
-        internal string Get(string GetUri, string Accept, string Referer)
-        {
-            string file = null;
+			try
+			{
+				HttpWebRequest request = WebRequest.Create(PostUri) as HttpWebRequest;
+				request.Accept = Accept;
+				request.AllowAutoRedirect = true;
+				request.ContentLength = Content.Length;
+				request.ContentType = ContentType;
+				request.CookieContainer = cc;
+				request.KeepAlive = true;
+				request.Method = "POST";
+				request.Referer = Referer;
+				request.UserAgent = UserAgent;
+				using (Stream requestStream = request.GetRequestStream())
+					requestStream.Write(Content, 0, Content.Length);
+				using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
+				using (StreamReader sr = new StreamReader(responce.GetResponseStream(), Encoding))
+					file = sr.ReadToEnd();
+			}
+			catch (Exception e)
+			{
+				if (ThrowException)
+					throw e;
+			}
 
-            try
-            {
-                HttpWebRequest request = WebRequest.Create(GetUri) as HttpWebRequest;
-                request.Accept = Accept;
-                request.AllowAutoRedirect = true;
-                request.CookieContainer = cc;
-                request.KeepAlive = true;
-                request.Method = "GET";
-                request.Referer = Referer;
-                request.UserAgent = UserAgent;
-                using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
-                using (StreamReader sr = new StreamReader(responce.GetResponseStream()))
-                    file = sr.ReadToEnd();
-            }
-            catch { }
+			return file;
+		}
+		/// <summary>
+		/// 用Post方法发送请求
+		/// </summary>
+		/// <param name="PostUri">请求的地址</param>
+		/// <param name="Content">请求正文</param>
+		/// <returns>响应正文</returns>
+		internal string Post(string PostUri, byte[] Content)
+		{
+			return Post(PostUri, null, Content);
+		}
+		/// <summary>
+		/// 用Post方法发送请求
+		/// </summary>
+		/// <param name="PostUri">请求的地址</param>
+		/// <param name="Referer">Referer头</param>
+		/// <param name="Content">请求正文</param>
+		/// <returns>响应正文</returns>
+		internal string Post(string PostUri, string Referer, byte[] Content)
+		{
+			return Post(PostUri, Accept, Referer, ContentType, Content);
+		}
+		/// <summary>
+		/// 用Get方法发送请求
+		/// </summary>
+		/// <param name="GetUri">请求的地址</param>
+		/// <param name="Accept">Accept头</param>
+		/// <param name="Referer">Referer头</param>
+		/// <returns>
+		/// 响应正文
+		/// </returns>
+		internal string Get(string GetUri, string Accept, string Referer)
+		{
+			string file = null;
 
-            return file;
-        }
-        /// <summary>
-        /// 用Get方法发送请求
-        /// </summary>
-        /// <param name="GetUri">请求的地址</param>
-        /// <returns>响应正文</returns>
-        internal string Get(string GetUri)
-        {
-            return Get(GetUri, Accept, null);
-        }
+			try
+			{
+				HttpWebRequest request = WebRequest.Create(GetUri) as HttpWebRequest;
+				request.Accept = Accept;
+				request.AllowAutoRedirect = true;
+				request.CookieContainer = cc;
+				request.KeepAlive = true;
+				request.Method = "GET";
+				request.Referer = Referer;
+				request.UserAgent = UserAgent;
+				using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
+				using (StreamReader sr = new StreamReader(responce.GetResponseStream(), Encoding))
+					file = sr.ReadToEnd();
+			}
+			catch (Exception e)
+			{
+				if (ThrowException)
+					throw e;
+			}
 
-        /// <summary>
-        /// 用Get方法发送请求
-        /// </summary>
-        /// <param name="GetUri">请求的地址</param>
-        /// <param name="Referer">Referer头</param>
-        /// <returns>响应正文</returns>
-        internal string Get(string GetUri, string Referer)
-        {
-            return Get(GetUri, Accept, Referer);
-        }
-        /// <summary>
-        /// 读取Cookies
-        /// </summary>
-        /// <returns>成功与否</returns>
-        internal static bool LoadCookies()
-        {
-            try
-            {
-                using (FileStream stream = File.OpenRead(_dataFolder + "cookies.dat"))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    cc = (CookieContainer)formatter.Deserialize(stream);
-                }
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
-        /// <summary>
-        /// 保存Cookies
-        /// </summary>
-        /// <returns>成功与否</returns>
-        internal static bool SaveCookies()
-        {
-            try
-            {
-                if (!Directory.Exists(_dataFolder))
-                    Directory.CreateDirectory(_dataFolder);
-                using (FileStream stream = File.OpenWrite(_dataFolder + @"cookies.dat"))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(stream, cc);
-                }
-            }
+			return file;
+		}
+		/// <summary>
+		/// 用Get方法发送请求
+		/// </summary>
+		/// <param name="GetUri">请求的地址</param>
+		/// <returns>响应正文</returns>
+		internal string Get(string GetUri)
+		{
+			return Get(GetUri, Accept, null);
+		}
 
-            catch
-            {
-                return false;
-            }
+		/// <summary>
+		/// 用Get方法发送请求
+		/// </summary>
+		/// <param name="GetUri">请求的地址</param>
+		/// <param name="Referer">Referer头</param>
+		/// <returns>响应正文</returns>
+		internal string Get(string GetUri, string Referer)
+		{
+			return Get(GetUri, Accept, Referer);
+		}
+		/// <summary>
+		/// 读取Cookies
+		/// </summary>
+		/// <returns>成功与否</returns>
+		internal static bool LoadCookies()
+		{
+			try
+			{
+				using (FileStream stream = File.OpenRead(_dataFolder + "cookies.dat"))
+				{
+					BinaryFormatter formatter = new BinaryFormatter();
+					cc = (CookieContainer)formatter.Deserialize(stream);
+				}
+			}
+			catch
+			{
+				return false;
+			}
+			return true;
+		}
+		/// <summary>
+		/// 保存Cookies
+		/// </summary>
+		/// <returns>成功与否</returns>
+		internal static bool SaveCookies()
+		{
+			try
+			{
+				if (!Directory.Exists(_dataFolder))
+					Directory.CreateDirectory(_dataFolder);
+				using (FileStream stream = File.OpenWrite(_dataFolder + @"cookies.dat"))
+				{
+					BinaryFormatter formatter = new BinaryFormatter();
+					formatter.Serialize(stream, cc);
+				}
+			}
 
-            return true;
-        }
-        /// <summary>
-        /// Constructs the URL with parameters.
-        /// </summary>
-        /// <param name="baseUrl">The base URL.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
-        internal static string ConstructUrlWithParameters(string baseUrl, IEnumerable<UrlParameter> parameters)
-        {
-            if (parameters == null || parameters.Count() == 0)
-                return baseUrl;
-            StringBuilder sb = new StringBuilder(baseUrl);
-            sb.Append("?");
-            foreach (var p in parameters)
-            {
-                if (p.Value != null || p.Value != string.Empty)
-                {
-                    if (sb[sb.Length - 1] != '?')
-                        sb.Append("&");
-                    sb.Append(p.Key);
-                    sb.Append("=");
-                    sb.Append(p.Value);
-                }
-            }
-            return sb.ToString();
-        }
-    }
+			catch
+			{
+				return false;
+			}
 
-    class UrlParameter
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-        internal UrlParameter(string key, string value)
-        {
-            Key = key;
-            Value = value;
-        }
-    }
-    class Parameters : List<UrlParameter>
-    {
-        internal void Add(string key, string value)
-        {
-            if (string.IsNullOrEmpty(value)) return;
-            Add(new UrlParameter(key, value));
-        }
-    }
+			return true;
+		}
+		/// <summary>
+		/// 根据请求的URL和参数构造一个新的URL
+		/// </summary>
+		/// <param name="baseUrl">请求URL</param>
+		/// <param name="parameters">参数</param>
+		/// <returns>新的URL</returns>
+		internal static string ConstructUrlWithParameters(string baseUrl, Parameters parameters)
+		{
+			if (parameters == null || parameters.Count() == 0)
+				return baseUrl;
+			return baseUrl + "?" + parameters;
+		}
+	}
+
+	/// <summary>
+	/// URL参数
+	/// </summary>
+	class UrlParameter
+	{
+		/// <summary>
+		/// 参数名
+		/// </summary>
+		public string Key { get; set; }
+		/// <summary>
+		/// 参数值
+		/// </summary>
+		public string Value { get; set; }
+
+		internal UrlParameter(string key, string value)
+		{
+			Key = key;
+			Value = value;
+		}
+	}
+	/// <summary>
+	/// 多个URL参数
+	/// </summary>
+	class Parameters : List<UrlParameter>
+	{
+		/// <summary>
+		/// 添加参数
+		/// </summary>
+		internal void Add(string key, string value)
+		{
+			if (string.IsNullOrEmpty(value)) return;
+			Add(new UrlParameter(key, value));
+		}
+
+		public override string ToString()
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (var p in this)
+			{
+				if (!string.IsNullOrEmpty(p.Value))
+				{
+					if (sb.Length != 0) sb.Append("&");
+					sb.Append(p.Key);
+					sb.Append("=");
+					sb.Append(p.Value);
+				}
+			}
+			return sb.ToString();
+		}
+	}
 }

@@ -46,7 +46,7 @@ namespace DoubanFM.Core
                 parameters.Add("pid", channel.ProgramId);
             parameters.Add("type", operationType);
             parameters.Add("h", history);
-            string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters.ToArray());
+            string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
             string json = new ConnectionBase().Get(url, @"application/json, text/javascript, */*; q=0.01", @"http://douban.fm");
             var jsonPlayList = Json.PlayList.FromJson(json);
             if (jsonPlayList != null && jsonPlayList.r != 0)
