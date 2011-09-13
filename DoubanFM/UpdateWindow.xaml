@@ -130,7 +130,7 @@
 						<Label Content="发布日期："/>
 						<Label x:Name="PublishTime"/>
 					</StackPanel>
-					<Button Grid.Row="2" Margin="10" Width="100" Height="40" Click="AutoDownload" FontSize="18.667" Content="自动下载"/>
+					<Button Grid.Row="2" Margin="10" Width="100" Height="40" Click="AutoDownload" FontSize="18.667" Content="更新"/>
 					<Label Grid.Row="3" Margin="5,0" Content="更新说明："/>
 					<TextBox x:Name="UpdateDetail" Grid.Row="4" Margin="5" Style="{DynamicResource UpdateDetailStyle}"/>
 					<Grid Grid.Row="5">
@@ -140,7 +140,7 @@
 							<ColumnDefinition/>
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
-						<Button Grid.Column="0" Margin="5" Click="ManualDownload" Content="手动下载"/>
+						<Button Grid.Column="0" Margin="5" Click="ManualDownload" Content="下载"/>
 						<Button Grid.Column="1" Margin="5" Click="HomePage" Content="软件主页"/>
 						<Button Grid.Column="3" Margin="5" Click="Close" Content="取消"/>
 					</Grid>

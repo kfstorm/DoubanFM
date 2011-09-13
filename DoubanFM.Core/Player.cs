@@ -322,6 +322,17 @@ namespace DoubanFM.Core
 			if (GetPlayListFailed != null)
 				GetPlayListFailed(this, e);
 		}
+		/// <summary>
+		/// 当一首歌自然播放完成时向服务器发送添加播放记录的消息失败时发生。
+		/// </summary>
+		public event EventHandler<ErrorEventArgs> FinishedPlayingReportFailed;
+		private void RaiseFinishedPlayingReportFailedEvent(ErrorEventArgs e)
+		{
+			if (FinishedPlayingReportFailed != null)
+			{
+				FinishedPlayingReportFailed(this, e);
+			}
+		}
 
 		#endregion
 
@@ -451,7 +462,18 @@ namespace DoubanFM.Core
 					parameters.Add("channel", ps.CurrentChannel.Id);
 					parameters.Add("type", "e");
 					string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
-					string result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
+					while (true)
+					{
+						string result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
+						if (string.IsNullOrEmpty(result))
+						{
+							TakeABreak();
+							continue;
+						}
+						if (result != "\"ok\"")
+							RaiseFinishedPlayingReportFailedEvent(new ErrorEventArgs(new Exception("发送播放完成消息时出错，返回内容：" + result)));
+						else break;
+					}
 					ChangeCurrentSong();
 				}));
 		}
@@ -592,6 +614,34 @@ namespace DoubanFM.Core
 
 		#region 成员方法
 
+		/// <summary>
+		/// 当预加载音乐完成后，可调用此方法改变下一首音乐的文件地址
+		/// </summary>
+		public void ChangeNextSongUrl(string address)
+		{
+			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+				{
+					if (string.IsNullOrEmpty(address)) return;
+					lock (_playListSongs)
+					{
+						if (_playListSongs.Count == 0) return;
+						_playListSongs.First().FileUrl = address;
+					}
+				}));
+		}
+		/// <summary>
+		/// 获取下一首音乐的URL
+		/// </summary>
+		/// <returns></returns>
+		public string GetNextSongUrl()
+		{
+			lock (_playListSongs)
+			{
+				if (_playListSongs.Count > 0)
+					return _playListSongs.First().FileUrl;
+				else return null;
+			}
+		}
 		/// <summary>
 		/// 读取偏好设置
 		/// </summary>
@@ -746,6 +796,10 @@ namespace DoubanFM.Core
 				Dispatcher.Invoke(new Action(() => { RaiseDjChannelFinishedPlayingEvent(); }));
 			else
 			{
+				while (_playListSongs.Count == 0)
+				{
+					TakeABreak();
+				}
 				lock (_playListSongs)
 					Dispatcher.Invoke(new Action(() => { CurrentSong = _playListSongs.Dequeue(); }));
 				CheckPlayListSongsLength();

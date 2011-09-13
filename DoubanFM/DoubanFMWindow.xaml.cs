@@ -14,6 +14,7 @@ using System.Windows.Shell;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO.MemoryMappedFiles;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace DoubanFM
 {
@@ -226,7 +227,12 @@ namespace DoubanFM
 			});
 			_player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
 			{
-				System.Windows.MessageBox.Show(this, "获取播放列表失败：" + e.Msg, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(this, "获取播放列表失败：" + e.Msg, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
+				this.Close();
+			});
+			_player.FinishedPlayingReportFailed += new EventHandler<ErrorEventArgs>((o, e) =>
+			{
+				MessageBox.Show(this, e.GetException().Message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
 				this.Close();
 			});
 
@@ -251,6 +257,60 @@ namespace DoubanFM
 					}
 				}
 			}));
+
+			//音乐预加载
+			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+				{
+					using (System.Net.WebClient client = new System.Net.WebClient())
+					{
+						string currentSongUrl = null;
+						string nextSongUrl = null;
+						bool downloaded = false;
+						string filepath = null;
+						client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler((oo, e) =>
+						{
+							if (!e.Cancelled && e.Error == null)
+							{
+								downloaded = true;
+								Dispatcher.Invoke(new Action(() =>
+								{
+									if (_player.GetNextSongUrl() == nextSongUrl)
+										_player.ChangeNextSongUrl(filepath);
+								}));
+							}
+						});
+						while (true)
+						{
+							Thread.Sleep(1000);
+							Dispatcher.Invoke(new Action(() =>
+								{
+									if (_player.CurrentSong != null &&_player.CurrentSong.FileUrl != currentSongUrl)
+									{
+										currentSongUrl = _player.CurrentSong.FileUrl;
+										downloaded = false;
+										if (client.IsBusy) client.CancelAsync();
+									}
+									else
+									{
+										if (Audio.DownloadProgress > 0.999 && !client.IsBusy && !downloaded)
+										{
+											nextSongUrl = _player.GetNextSongUrl();
+											if (!string.IsNullOrEmpty(nextSongUrl))
+											{
+												Match mc = Regex.Match(nextSongUrl, @".*/(.*)");
+												filepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.InternetCache) + "/" + mc.Groups[1].Value;
+												try
+												{
+													client.DownloadFileAsync(new Uri(nextSongUrl), filepath);
+												}
+												catch { }
+											}
+										}
+									}
+								}));
+						}
+					}
+				}));
 			_player.Initialize();
 			
 			//启动时检查更新

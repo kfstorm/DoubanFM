@@ -236,13 +236,15 @@ namespace DoubanFM.Core
 							{
 								writer.Write(file);
 								writer.Flush();
-								XmlSerializer serializer = new XmlSerializer(typeof(Products));
+								XmlSerializer serializer = new XmlSerializer(typeof(UpdateResult));
 								stream.Position = 0;
-								Products products = (Products)serializer.Deserialize(stream);
+								UpdateResult result = (UpdateResult)serializer.Deserialize(stream);
 								Dispatcher.BeginInvoke(new Action(() =>
 									{
-										if (products.Count > 0) HasNewVersion(products);
-										else NoNewVersion();
+										if (!string.IsNullOrEmpty(result.Error)) CheckFailed(new Exception(result.Error));
+										else
+											if (result.Products.Count > 0) HasNewVersion(result.Products);
+											else NoNewVersion();
 									}));
 							}
 						}

@@ -372,21 +372,26 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 							<Border Padding="20">
 								<Grid>
 									<Grid.RowDefinitions>
-										<RowDefinition/>
-										<RowDefinition/>
-										<RowDefinition/>
+										<RowDefinition Height="Auto"/>
+										<RowDefinition Height="Auto"/>
 										<RowDefinition/>
 										<RowDefinition/>
 										<RowDefinition Height="Auto"/>
 										<RowDefinition Height="Auto"/>
 									</Grid.RowDefinitions>
 									<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
-									<Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top">1.2.5</Label>
-									<Button x:Name="CheckUpdate" Grid.Row="2" Width="100" Height="30" Click="CheckUpdate_Click">检查更新</Button>
-									<Button x:Name="Feedback" Grid.Row="3" Width="100" Height="30" Click="Feedback_Click">意见与反馈</Button>
-									<Button x:Name="VisitOfficialWebsite" Grid.Row="4" Width="100" Height="30" Click="VisitOfficialWebsite_Click">豆瓣电台官网</Button>
-									<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
-									<Label Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center">All rights reserved.</Label>
+									<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.2.5</Label>
+									<Button x:Name="CheckUpdate" Grid.Row="2" FontSize="16" Width="120" Height="40" Click="CheckUpdate_Click">检查更新</Button>
+									<Grid Grid.Row="3">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition/>
+											<ColumnDefinition/>
+										</Grid.ColumnDefinitions>
+										<Button x:Name="Feedback" Width="90" Height="30" Click="Feedback_Click">意见与反馈</Button>
+										<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Width="90" Height="30" Click="VisitOfficialWebsite_Click">豆瓣电台官网</Button>
+									</Grid>
+									<Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
+									<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">All rights reserved.</Label>
 								</Grid>
 							</Border>
 						</TabItem>

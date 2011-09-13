@@ -91,6 +91,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="Updater.cs" />
+    <Compile Include="UpdateResult.cs" />
     <Compile Include="UpdateWork.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserAssistant.cs" />
