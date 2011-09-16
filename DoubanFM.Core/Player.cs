@@ -461,6 +461,7 @@ namespace DoubanFM.Core
 					parameters.Add("sid", ps.CurrentSong.SongId);
 					parameters.Add("channel", ps.CurrentChannel.Id);
 					parameters.Add("type", "e");
+					parameters.Add("pid", ps.CurrentChannel.ProgramId);
 					string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
 					while (true)
 					{
@@ -470,8 +471,11 @@ namespace DoubanFM.Core
 							TakeABreak();
 							continue;
 						}
-						if (result != "\"ok\"")
-							RaiseFinishedPlayingReportFailedEvent(new ErrorEventArgs(new Exception("发送播放完成消息时出错，返回内容：" + result)));
+						if (!ps.CurrentChannel.IsDj && result != "\"ok\"")
+							Dispatcher.Invoke(new Action(() =>
+								{
+									RaiseFinishedPlayingReportFailedEvent(new ErrorEventArgs(new Exception("发送播放完成消息时出错，返回内容：" + result)));
+								}));
 						else break;
 					}
 					ChangeCurrentSong();

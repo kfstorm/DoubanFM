@@ -290,9 +290,9 @@ namespace DoubanFM.Core
 				if (!string.IsNullOrEmpty(p.Value))
 				{
 					if (sb.Length != 0) sb.Append("&");
-					sb.Append(p.Key);
+					sb.Append(Uri.EscapeDataString(p.Key));
 					sb.Append("=");
-					sb.Append(p.Value);
+					sb.Append(Uri.EscapeDataString(p.Value));
 				}
 			}
 			return sb.ToString();

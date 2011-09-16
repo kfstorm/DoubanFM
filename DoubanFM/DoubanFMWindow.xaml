@@ -63,10 +63,10 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 	<Window.TaskbarItemInfo>
 		<TaskbarItemInfo>
 			<TaskbarItemInfo.ThumbButtonInfos>
-				<ThumbButtonInfo x:Name="LikeThumb" ImageSource="{StaticResource UnlikeThumbImage}" Click="LikeThumb_Click" />
-				<ThumbButtonInfo x:Name="NeverThumb" ImageSource="{StaticResource NeverThumbImage_Disabled}" Click="NeverThumb_Click" IsEnabled="False"/>
-				<ThumbButtonInfo x:Name="PauseThumb" Click="PauseThumb_Click" ImageSource="{StaticResource PauseThumbImage}" />
-				<ThumbButtonInfo x:Name="NextThumb" Click="NextThumb_Click" ImageSource="{StaticResource NextThumbImage}" />
+				<ThumbButtonInfo x:Name="LikeThumb" ImageSource="{StaticResource UnlikeThumbImage}" Click="LikeThumb_Click" Description="喜欢" />
+				<ThumbButtonInfo x:Name="NeverThumb" ImageSource="{StaticResource NeverThumbImage_Disabled}" Click="NeverThumb_Click" Description="不再播放" IsEnabled="False"/>
+				<ThumbButtonInfo x:Name="PauseThumb" Click="PauseThumb_Click" ImageSource="{StaticResource PauseThumbImage}" Description="暂停" />
+				<ThumbButtonInfo x:Name="NextThumb" Click="NextThumb_Click" ImageSource="{StaticResource NextThumbImage}" Description="下一首" />
 			</TaskbarItemInfo.ThumbButtonInfos>
 		</TaskbarItemInfo>
 	</Window.TaskbarItemInfo>

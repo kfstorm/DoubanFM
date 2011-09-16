@@ -52,11 +52,11 @@ namespace DoubanFM
 		/// <summary>
 		/// 托盘图标
 		/// </summary>
-		private System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
+		private System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
 		/// <summary>
 		/// 托盘图标右键菜单中的各个菜单项
 		/// </summary>
-		private System.Windows.Forms.ToolStripMenuItem notifyIcon_ShowWindow, notifyIcon_Heart, notifyIcon_Never, notifyIcon_PlayPause, notifyIcon_Next, notifyIcon_Exit;
+		private System.Windows.Forms.ToolStripMenuItem _notifyIcon_ShowWindow, _notifyIcon_Heart, _notifyIcon_Never, _notifyIcon_PlayPause, _notifyIcon_Next, _notifyIcon_Exit;
 		/// <summary>
 		/// 用于进程间更换频道的内存映射文件
 		/// </summary>
@@ -65,6 +65,38 @@ namespace DoubanFM
 		/// 内存映射文件的文件名
 		/// </summary>
 		private string _mappedFileName = "{04EFCEB4-F10A-403D-9824-1E685C4B7961}";
+		/// <summary>
+		/// 托盘菜单“显示窗口”的图片
+		/// </summary>
+		private System.Drawing.Bitmap _notifyIconImage_ShowWindow = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_ShowWindow.png")).Stream);
+		/// <summary>
+		/// 托盘菜单“喜欢”未标记喜欢时的图片
+		/// </summary>
+		private System.Drawing.Bitmap _notifyIconImage_Like_Unlike = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_Like_Unlike.png")).Stream);
+		/// <summary>
+		/// 托盘菜单“喜欢”标记喜欢时的图片
+		/// </summary>
+		private System.Drawing.Bitmap _notifyIconImage_Like_Like = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_Like_Like.png")).Stream);
+		/// <summary>
+		/// 托盘菜单“不再播放”的图片
+		/// </summary>
+		private System.Drawing.Bitmap _notifyIconImage_Never = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_Never.png")).Stream);
+		/// <summary>
+		/// 托盘菜单“暂停”的图片
+		/// </summary>
+		private System.Drawing.Bitmap _notifyIconImage_Pause = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_Pause.png")).Stream);
+		/// <summary>
+		/// 托盘菜单“播放”的图片
+		/// </summary>
+		private System.Drawing.Bitmap _notifyIconImage_Play = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_Play.png")).Stream);
+		/// <summary>
+		/// 托盘菜单“下一首”的图片
+		/// </summary>
+		private System.Drawing.Bitmap _notifyIconImage_Next = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_Next.png")).Stream);
+		/// <summary>
+		/// 托盘菜单“退出”的图片
+		/// </summary>
+		private System.Drawing.Bitmap _notifyIconImage_Exit = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_Exit.png")).Stream);
 		
 		#endregion
 
@@ -170,15 +202,19 @@ namespace DoubanFM
 			{
 				CheckBoxPause.IsChecked = !_player.IsPlaying;
 				PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
+				PauseThumb.Description = "播放";
 				Audio.Pause();
-				notifyIcon_PlayPause.Text = "播放";
+				_notifyIcon_PlayPause.Text = "播放";
+				_notifyIcon_PlayPause.Image = _notifyIconImage_Play;
 			});
 			_player.Played += new EventHandler((o, e) =>
 			{
 				CheckBoxPause.IsChecked = !_player.IsPlaying;
 				PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
+				PauseThumb.Description = "暂停";
 				Audio.Play();
-				notifyIcon_PlayPause.Text = "暂停";
+				_notifyIcon_PlayPause.Text = "暂停";
+				_notifyIcon_PlayPause.Image = _notifyIconImage_Pause;
 			});
 			_player.Stoped += new EventHandler((o, e) => { Audio.Stop(); });
 			_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
@@ -199,11 +235,17 @@ namespace DoubanFM
 				CheckBoxLike.IsChecked = _player.IsLiked;
 				if (_player.IsLikedEnabled)
 					if (_player.IsLiked)
+					{
 						LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
-					else LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+						_notifyIcon_Heart.Image = _notifyIconImage_Like_Like;
+					}
+					else
+					{
+						LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+						_notifyIcon_Heart.Image = _notifyIconImage_Like_Unlike;
+					}
 				else
 					LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
-				notifyIcon_Heart.Checked = _player.IsLiked;
 			});
 			_player.IsLikedEnabledChanged += new EventHandler((o, e) =>
 			{
@@ -214,7 +256,7 @@ namespace DoubanFM
 				else
 					LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
 				LikeThumb.IsEnabled = _player.IsLikedEnabled;
-				notifyIcon_Heart.Enabled = _player.IsLikedEnabled;
+				_notifyIcon_Heart.Enabled = _player.IsLikedEnabled;
 			});
 			_player.IsNeverEnabledChanged += new EventHandler((o, e) =>
 			{
@@ -223,7 +265,7 @@ namespace DoubanFM
 				else
 					NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage_Disabled");
 				NeverThumb.IsEnabled = _player.IsNeverEnabled;
-				notifyIcon_Never.Enabled = _player.IsNeverEnabled;
+				_notifyIcon_Never.Enabled = _player.IsNeverEnabled;
 			});
 			_player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
 			{
@@ -341,9 +383,9 @@ namespace DoubanFM
 		/// </summary>
 		private void InitNotifyIcon()
 		{
-			notifyIcon.Visible = _player.Settings.AlwaysShowNotifyIcon;
-			notifyIcon.Icon = Properties.Resources.NotifyIcon;
-			notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler((s, e) =>
+			_notifyIcon.Visible = _player.Settings.AlwaysShowNotifyIcon;
+			_notifyIcon.Icon = Properties.Resources.NotifyIcon;
+			_notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler((s, e) =>
 			{
 				if (e.Button == System.Windows.Forms.MouseButtons.Left)
 				{
@@ -360,12 +402,13 @@ namespace DoubanFM
 				}
 			});
 			System.Windows.Forms.ContextMenuStrip notifyIconMenu = new System.Windows.Forms.ContextMenuStrip();
-			notifyIcon.Text = "豆瓣电台";
-			notifyIcon.ContextMenuStrip = notifyIconMenu;
+			_notifyIcon.Text = "豆瓣电台";
+			_notifyIcon.ContextMenuStrip = notifyIconMenu;
 
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("显示窗口"));
-			notifyIcon_ShowWindow = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			notifyIcon_ShowWindow.Click += new EventHandler((s, e) =>
+			_notifyIcon_ShowWindow = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_ShowWindow.Image = _notifyIconImage_ShowWindow;
+			_notifyIcon_ShowWindow.Click += new EventHandler((s, e) =>
 			{
 				this.Visibility = Visibility.Visible;
 				Dispatcher.BeginInvoke(new Action(() =>
@@ -376,32 +419,38 @@ namespace DoubanFM
 			});
 			notifyIconMenu.Items.Add("-");
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("喜欢"));
-			notifyIcon_Heart = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			notifyIcon_Heart.CheckOnClick = true;
-			notifyIcon_Heart.CheckedChanged += new EventHandler((o, e) =>
+			_notifyIcon_Heart = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_Heart.Image = _notifyIconImage_Like_Unlike;
+			_notifyIcon_Heart.Click += new EventHandler((o, e) =>
 			{
-				_player.IsLiked = notifyIcon_Heart.Checked;
+				if (_notifyIcon_Heart.Image == _notifyIconImage_Like_Unlike)
+					_player.IsLiked = true;
+				else _player.IsLiked = false;
 			});
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("不再播放"));
-			notifyIcon_Never = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			notifyIcon_Never.Enabled = false;
-			notifyIcon_Never.Click += new EventHandler((s, e) => { _player.Never(); });
+			_notifyIcon_Never = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_Never.Image = _notifyIconImage_Never;
+			_notifyIcon_Never.Enabled = false;
+			_notifyIcon_Never.Click += new EventHandler((s, e) => { _player.Never(); });
 			notifyIconMenu.Items.Add("-");
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("暂停"));
-			notifyIcon_PlayPause = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			notifyIcon_PlayPause.Click += new EventHandler((s, e) =>
+			_notifyIcon_PlayPause = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_PlayPause.Image = _notifyIconImage_Pause;
+			_notifyIcon_PlayPause.Click += new EventHandler((s, e) =>
 			{
 				System.Windows.Forms.ToolStripItem sender = (System.Windows.Forms.ToolStripItem)s;
 				if (sender.Text == "播放") _player.IsPlaying = true;
 				else _player.IsPlaying = false;
 			});
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("下一首"));
-			notifyIcon_Next = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			notifyIcon_Next.Click += new EventHandler((s, e) => { _player.Skip(); });
+			_notifyIcon_Next = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_Next.Image = _notifyIconImage_Next;
+			_notifyIcon_Next.Click += new EventHandler((s, e) => { _player.Skip(); });
 			notifyIconMenu.Items.Add("-");
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("退出"));
-			notifyIcon_Exit = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			notifyIcon_Exit.Click += new EventHandler((s, e) => { this.Close(); });
+			_notifyIcon_Exit = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_Exit.Image = _notifyIconImage_Exit;
+			_notifyIcon_Exit.Click += new EventHandler((s, e) => { this.Close(); });
 		}
 
 		#endregion
@@ -532,14 +581,14 @@ namespace DoubanFM
 			string stringB = "    豆瓣电台 - " + _player.CurrentChannel.Name;
 			this.Title = stringA + stringB;
 			if (this.Title.Length <= 63)        //Windows限制托盘图标的提示信息最长为63个字符
-				notifyIcon.Text = this.Title;
+				_notifyIcon.Text = this.Title;
 			else
 			{
-				notifyIcon.Text = stringA.Substring(0, Math.Max(63 - stringB.Length, 0));
-				if (notifyIcon.Text.Length + stringB.Length <= 63)
-					notifyIcon.Text += stringB.Length;
+				_notifyIcon.Text = stringA.Substring(0, Math.Max(63 - stringB.Length, 0));
+				if (_notifyIcon.Text.Length + stringB.Length <= 63)
+					_notifyIcon.Text += stringB.Length;
 				else
-					notifyIcon.Text = stringA.Substring(0, Math.Min(stringA.Length, 63));
+					_notifyIcon.Text = stringA.Substring(0, Math.Min(stringA.Length, 63));
 			}
 			ChannelTextBlock.Text = _player.CurrentChannel.Name;
 			TotalTime.Content = TimeSpanToStringConverter.QuickConvert(_player.CurrentSong.Length);
@@ -736,8 +785,8 @@ namespace DoubanFM
 		{
 			if (Audio != null)
 				Audio.Close();
-			if (notifyIcon != null)
-				notifyIcon.Dispose();
+			if (_notifyIcon != null)
+				_notifyIcon.Dispose();
 			if (_player != null)
 				_player.Dispose();
 		}
@@ -930,15 +979,15 @@ namespace DoubanFM
 		private void Window_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
 		{
 			if (!_player.Settings.AlwaysShowNotifyIcon)
-				notifyIcon.Visible = !this.IsVisible;
+				_notifyIcon.Visible = !this.IsVisible;
 		}
 
 
 		private void CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged(object sender, RoutedEventArgs e)
 		{
 			if (CheckBoxAlwaysShowNotifyIcon.IsChecked == false)
-				notifyIcon.Visible = !this.IsVisible;
-			else notifyIcon.Visible = true;
+				_notifyIcon.Visible = !this.IsVisible;
+			else _notifyIcon.Visible = true;
 		}
 
 		private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

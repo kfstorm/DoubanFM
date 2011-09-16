@@ -184,7 +184,7 @@
 	<Style x:Key="LikeStyle" TargetType="{x:Type CheckBox}">
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-		<Setter Property="ToolTip" Value="加红心"/>
+		<Setter Property="ToolTip" Value="喜欢"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type CheckBox}">
@@ -207,7 +207,6 @@
 		<Style.Triggers>
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="Foreground" Value="#DFE75849"/>
-				<Setter Property="ToolTip" Value="去红心"/>
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Foreground" Value="#7F000000"/>
