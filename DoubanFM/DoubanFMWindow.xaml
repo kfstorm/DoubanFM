@@ -41,6 +41,23 @@
 				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
 			</StringAnimationUsingKeyFrames>
 		</Storyboard>
+		<Storyboard x:Key="ChangeLyricsStoryboard">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Opacity">
+				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
+				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:0.6" EasingFunction="{StaticResource Smooth}"/>
+			</DoubleAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Text">
+				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
+			</StringAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="HideLyricsStoryboard">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Opacity">
+				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
+			</DoubleAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Text">
+				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
+			</StringAnimationUsingKeyFrames>
+		</Storyboard>
 		<Storyboard x:Key="DjChannelClickStoryboard">
 			<BooleanAnimationUsingKeyFrames Storyboard.TargetName="DjCates" Storyboard.TargetProperty="IsEnabled">
 				<DiscreteBooleanKeyFrame KeyTime="0" Value="False"/>
@@ -343,14 +360,16 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										<RowDefinition/>
 										<RowDefinition/>
 										<RowDefinition/>
+										<RowDefinition Height="Auto"/>
 										<RowDefinition/>
 										<RowDefinition Height="Auto"/>
 									</Grid.RowDefinitions>
 									<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}"/>
-									<CheckBox Grid.Row="1" x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
-									<CheckBox Grid.Row="2" x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
-									<CheckBox Grid.Row="3" x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-									<Grid Grid.Row="4" VerticalAlignment="Center">
+									<CheckBox Grid.Row="1" x:Name="CheckBoxShowLyrics" Content="显示歌词" IsChecked="{Binding Settings.ShowLyrics, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Checked="CheckBoxShowLyrics_Checked"/>
+									<CheckBox Grid.Row="2" x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
+									<CheckBox Grid.Row="3" x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
+									<CheckBox Grid.Row="4" x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
+									<Grid Grid.Row="5" VerticalAlignment="Center">
 										<Grid.RowDefinitions>
 											<RowDefinition/>
 											<RowDefinition/>
@@ -358,8 +377,8 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
 										<TextBlock Grid.Row="1" Foreground="White">（重启后生效，关闭后动画更平滑）</TextBlock>
 									</Grid>
-									<CheckBox Grid.Row="5" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" >总是显示托盘图标</CheckBox>
-									<Grid Grid.Row="6">
+									<CheckBox Grid.Row="6" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" >总是显示托盘图标</CheckBox>
+									<Grid Grid.Row="7">
 										<Grid.RowDefinitions>
 											<RowDefinition/>                    	
 											<RowDefinition/>                    	
@@ -467,10 +486,22 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 					</Grid>
 				</Grid>
 			</Grid>
-			<Grid x:Name="CoverGrid" MouseLeftButtonDown="CoverGrid_MouseLeftButtonDown" Width="{Binding ActualWidth, ElementName=LeftPanel}" Height="{Binding ActualHeight, ElementName=LeftPanel}" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment, GridBox" d:IsHidden="True" MouseMove="CoverGrid_MouseMove" MouseLeave="CoverGrid_MouseLeave">
-				<MediaElement x:Name="Audio" LoadedBehavior="Manual" MediaEnded="Audio_MediaEnded" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" MediaFailed="Audio_MediaFailed" MediaOpened="Audio_MediaOpened" d:IsHidden="True" UnloadedBehavior="Manual" />
+			<Grid x:Name="CoverGrid" MouseLeftButtonDown="CoverGrid_MouseLeftButtonDown" Width="{Binding ActualWidth, ElementName=LeftPanel}" Height="{Binding ActualHeight, ElementName=LeftPanel}" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment, GridBox" MouseMove="CoverGrid_MouseMove" MouseLeave="CoverGrid_MouseLeave" d:IsHidden="True">
+				<MediaElement x:Name="Audio" LoadedBehavior="Manual" MediaEnded="Audio_MediaEnded" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" MediaFailed="Audio_MediaFailed" MediaOpened="Audio_MediaOpened" UnloadedBehavior="Manual" d:IsHidden="True" />
 				<Image x:Name="Cover2" Stretch="UniformToFill"/>
 				<Image x:Name="Cover1" Stretch="UniformToFill" Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" />
+				<Grid x:Name="LyricsPanel" Height="70" VerticalAlignment="Bottom" Visibility="{Binding Path=Settings.ShowLyrics, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
+					<Border Background="{Binding Background, ElementName=MainPanel}">
+						<Border.OpacityMask>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Offset="0"/>
+								<GradientStop Color="#CC38FFA8" Offset="0.815"/>
+								<GradientStop Color="#9047FFAE" Offset="0.422"/>
+							</LinearGradientBrush>
+						</Border.OpacityMask>
+					</Border>
+					<TextBlock x:Name="CurrentLyrics" Foreground="White" Margin="7" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" TextTrimming="WordEllipsis"/>
+				</Grid>
 			</Grid>
 		</Grid>
 	</Grid>

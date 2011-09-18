@@ -31,6 +31,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty LastTimeCheckUpdateProperty = DependencyProperty.Register("LastTimeCheckUpdate", typeof(DateTime), typeof(Settings), new PropertyMetadata(DateTime.MinValue));
 		public static readonly DependencyProperty OpenAlbumInfoWhenClickCoverProperty = DependencyProperty.Register("OpenAlbumInfoWhenClickCover", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty IsSearchFilterEnabledProperty = DependencyProperty.Register("IsSearchFilterEnabled", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty ShowLyricsProperty = DependencyProperty.Register("ShowLyrics", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		
 		#endregion
 
@@ -145,6 +146,14 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(IsSearchFilterEnabledProperty); }
 			set { SetValue(IsSearchFilterEnabledProperty, value); }
+		}
+		/// <summary>
+		/// 是否显示歌词
+		/// </summary>
+		public bool ShowLyrics
+		{
+			get { return (bool)GetValue(ShowLyricsProperty); }
+			set { SetValue(ShowLyricsProperty, value); }
 		}
 		/// <summary>
 		/// 数据保存文件夹
@@ -275,6 +284,14 @@ namespace DoubanFM.Core
 			{
 				IsSearchFilterEnabled = def.IsSearchFilterEnabled;
 			}
+			try
+			{
+				ShowLyrics = info.GetBoolean("ShowLyrics");
+			}
+			catch
+			{
+				ShowLyrics = def.ShowLyrics;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -293,6 +310,7 @@ namespace DoubanFM.Core
 			info.AddValue("LastTimeCheckUpdate", LastTimeCheckUpdate);
 			info.AddValue("OpenAlbumInfoWhenClickCover", OpenAlbumInfoWhenClickCover);
 			info.AddValue("IsSearchFilterEnabled", IsSearchFilterEnabled);
+			info.AddValue("ShowLyrics", ShowLyrics);
 		}
 
 		/// <summary>

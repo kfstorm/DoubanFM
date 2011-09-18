@@ -40,7 +40,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 各种无法在XAML里直接启动的Storyboard
 		/// </summary>
-		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, DjChannelClickStoryboard;
+		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, DjChannelClickStoryboard, ChangeLyricsStoryboard, HideLyricsStoryboard;
 		/// <summary>
 		/// 滑动封面的计时器
 		/// </summary>
@@ -97,7 +97,12 @@ namespace DoubanFM
 		/// 托盘菜单“退出”的图片
 		/// </summary>
 		private System.Drawing.Bitmap _notifyIconImage_Exit = new System.Drawing.Bitmap(App.GetResourceStream(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NotifyIcon_Exit.png")).Stream);
-		
+		/// <summary>
+		/// 歌词分析器
+		/// </summary>
+		private LyricsParser _lyricsParser;
+		private int _lyricsCurrentIndex = int.MinValue;
+
 		#endregion
 
 		#region 构造和初始化
@@ -112,7 +117,7 @@ namespace DoubanFM
 				App.Current.Shutdown(0);
 				return;
 			}
-			
+
 			InitializeComponent();
 			/*
 			ThreadPool.QueueUserWorkItem(new WaitCallback((o) =>
@@ -132,6 +137,8 @@ namespace DoubanFM
 			SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
 			ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
 			DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
+			ChangeLyricsStoryboard = (Storyboard)FindResource("ChangeLyricsStoryboard");
+			HideLyricsStoryboard = (Storyboard)FindResource("HideLyricsStoryboard");
 
 			InitNotifyIcon();
 
@@ -216,7 +223,12 @@ namespace DoubanFM
 				_notifyIcon_PlayPause.Text = "暂停";
 				_notifyIcon_PlayPause.Image = _notifyIconImage_Pause;
 			});
-			_player.Stoped += new EventHandler((o, e) => { Audio.Stop(); });
+			_player.Stoped += new EventHandler((o, e) =>
+			{
+				Audio.Stop();
+				_lyricsParser = null;
+				_lyricsCurrentIndex = int.MinValue;
+			});
 			_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
 			{
 				if (_player.UserAssistant.HasCaptcha)
@@ -279,82 +291,72 @@ namespace DoubanFM
 			});
 
 			if (channel != null) _player.Settings.LastChannel = channel;
-			
+
 			//定时检查内存映射文件，看是否需要更换频道
-			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+			DispatcherTimer checkMappedFileTimer = new DispatcherTimer();
+			checkMappedFileTimer.Interval = new TimeSpan(500000);
+			checkMappedFileTimer.Tick += new EventHandler((o, e) =>
 			{
-				_mappedFile = MemoryMappedFile.CreateOrOpen(_mappedFileName, 10240);
-				while (true)
+				Channel ch = LoadChannelFromMappedFile();
+				if (ch != null)
 				{
-					Thread.Sleep(50);
-					Channel ch = LoadChannelFromMappedFile();
-					if (ch != null)
-					{
-						ClearMappedFile();
-						Dispatcher.Invoke(new Action(() =>
-						{
-							if (_player.IsInitialized) _player.CurrentChannel = ch;
-							else _player.Settings.LastChannel = ch;
-						}));
-					}
+					ClearMappedFile();
+					if (_player.IsInitialized) _player.CurrentChannel = ch;
+					else _player.Settings.LastChannel = ch;
 				}
-			}));
+			});
+			_mappedFile = MemoryMappedFile.CreateOrOpen(_mappedFileName, 10240);
+			checkMappedFileTimer.Start();
 
 			//音乐预加载
-			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+			System.Net.WebClient client = new System.Net.WebClient();
+			string currentSongUrl = null;
+			string nextSongUrl = null;
+			bool downloaded = false;
+			string filepath = null;
+			client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler((oo, e) =>
+			{
+				if (!e.Cancelled && e.Error == null)
 				{
-					using (System.Net.WebClient client = new System.Net.WebClient())
+					downloaded = true;
+					Dispatcher.Invoke(new Action(() =>
 					{
-						string currentSongUrl = null;
-						string nextSongUrl = null;
-						bool downloaded = false;
-						string filepath = null;
-						client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler((oo, e) =>
+						if (_player.GetNextSongUrl() == nextSongUrl)
+							_player.ChangeNextSongUrl(filepath);
+					}));
+				}
+			});
+			DispatcherTimer checkMusicDownloadProgressTimer = new DispatcherTimer();
+			checkMusicDownloadProgressTimer.Interval = new TimeSpan(10000000);
+			checkMusicDownloadProgressTimer.Tick += new System.EventHandler((o, e) =>
+			{
+				if (_player.CurrentSong != null && _player.CurrentSong.FileUrl != currentSongUrl)
+				{
+					currentSongUrl = _player.CurrentSong.FileUrl;
+					downloaded = false;
+					if (client.IsBusy) client.CancelAsync();
+				}
+				else
+				{
+					if (Audio.DownloadProgress > 0.999 && !client.IsBusy && !downloaded)
+					{
+						nextSongUrl = _player.GetNextSongUrl();
+						if (!string.IsNullOrEmpty(nextSongUrl))
 						{
-							if (!e.Cancelled && e.Error == null)
+							Match mc = Regex.Match(nextSongUrl, @".*/(.*)");
+							filepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.InternetCache) + "/" + mc.Groups[1].Value;
+							try
 							{
-								downloaded = true;
-								Dispatcher.Invoke(new Action(() =>
-								{
-									if (_player.GetNextSongUrl() == nextSongUrl)
-										_player.ChangeNextSongUrl(filepath);
-								}));
+								client.DownloadFileAsync(new Uri(nextSongUrl), filepath);
 							}
-						});
-						while (true)
-						{
-							Thread.Sleep(1000);
-							Dispatcher.Invoke(new Action(() =>
-								{
-									if (_player.CurrentSong != null &&_player.CurrentSong.FileUrl != currentSongUrl)
-									{
-										currentSongUrl = _player.CurrentSong.FileUrl;
-										downloaded = false;
-										if (client.IsBusy) client.CancelAsync();
-									}
-									else
-									{
-										if (Audio.DownloadProgress > 0.999 && !client.IsBusy && !downloaded)
-										{
-											nextSongUrl = _player.GetNextSongUrl();
-											if (!string.IsNullOrEmpty(nextSongUrl))
-											{
-												Match mc = Regex.Match(nextSongUrl, @".*/(.*)");
-												filepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.InternetCache) + "/" + mc.Groups[1].Value;
-												try
-												{
-													client.DownloadFileAsync(new Uri(nextSongUrl), filepath);
-												}
-												catch { }
-											}
-										}
-									}
-								}));
+							catch { }
 						}
 					}
-				}));
+				}
+			});
+			checkMusicDownloadProgressTimer.Start();
 			_player.Initialize();
-			
+
 			//启动时检查更新
 			if (_player.Settings.AutoUpdate && (DateTime.Now - _player.Settings.LastTimeCheckUpdate).TotalDays > 1)
 			{
@@ -455,6 +457,29 @@ namespace DoubanFM
 
 		#endregion
 
+		#region 其他
+		/// <summary>
+		/// 下载歌词
+		/// </summary>
+		void DownloadLyrics()
+		{
+			if (_lyricsParser == null && _player != null && _player.CurrentSong != null)
+			{
+				Song song = _player.CurrentSong;
+				ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+				{
+					LyricsParser parser = LyricsAssistant.GetLyrics(song.Artist, song.Title);
+					Dispatcher.Invoke(new Action(() =>
+					{
+						if (_player.CurrentSong == song) _lyricsParser = parser;
+					}));
+				}));
+			}
+		}
+		/// <summary>
+		/// 显示更新窗口
+		/// </summary>
+		/// <param name="updater">指定的更新器</param>
 		void ShowUpdateWindow(Updater updater = null)
 		{
 			UpdateWindow update = new UpdateWindow(this, updater);
@@ -472,8 +497,6 @@ namespace DoubanFM
 			});
 			update.Show();
 		}
-
-		#region 其他
 		/// <summary>
 		/// 检测是否有另一个实例正在运行
 		/// </summary>
@@ -566,6 +589,7 @@ namespace DoubanFM
 		private void Update()
 		{
 			ChangeCover();
+			if (_player.Settings.ShowLyrics) DownloadLyrics();
 			try
 			{
 				Audio.Source = new Uri(_player.CurrentSong.FileUrl);
@@ -739,12 +763,23 @@ namespace DoubanFM
 			_player.CurrentSongFinishedPlaying();
 		}
 		/// <summary>
-		/// 计时器响应函数，用于更新时间信息
+		/// 计时器响应函数，用于更新时间信息和歌词
 		/// </summary>
 		void timer_Tick(object sender, EventArgs e)
 		{
 			CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.Position);
 			Slider.Value = Audio.Position.TotalSeconds;
+			if (_lyricsParser != null)
+			{
+				_lyricsParser.Refresh(Audio.Position.TotalSeconds + ((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[1]).KeyFrames[0].KeyTime.TimeSpan.TotalSeconds);
+				if (_lyricsParser.CurrentIndex != _lyricsCurrentIndex)
+				{
+					((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[1]).KeyFrames[0].Value = _lyricsParser.CurrentLyrics;
+					ChangeLyricsStoryboard.Begin();
+					_lyricsCurrentIndex = _lyricsParser.CurrentIndex;
+				}
+			}
+			else HideLyricsStoryboard.Begin();
 		}
 		/// <summary>
 		/// 当已播放时间超过总时间时，报告音乐已播放完毕。防止网络不好时播放完毕但不换歌
@@ -1078,6 +1113,12 @@ namespace DoubanFM
 		{
 			// 在此处添加事件处理程序实现。
 			Core.Feedback.OpenFeedbackPage();
+		}
+
+		private void CheckBoxShowLyrics_Checked(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			DownloadLyrics();
 		}
 
 		#endregion

@@ -81,6 +81,10 @@
     <Compile Include="Json\Song.cs" />
     <Compile Include="Json\SubDjCate.cs" />
     <Compile Include="Json\SubDjChannel.cs" />
+    <Compile Include="LyricsParser.cs" />
+    <Compile Include="LyricsAssistant.cs" />
+    <Compile Include="LyricsItem.cs" />
+    <Compile Include="LyricsResult.cs" />
     <Compile Include="MusicSearch.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayList.cs" />
