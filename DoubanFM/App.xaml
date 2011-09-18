@@ -6,17 +6,17 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="ResourceDictionary.xaml"/>
+				<ResourceDictionary Source="Style.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 			<DoubanFM_Core:Player x:Key="Player"/>
 		</ResourceDictionary>
 		 
 	</Application.Resources>
-    
+	
 	<!--<JumpList.JumpList>
 		<JumpList>
-            <JumpTask Title="私人兆赫" Description="私人兆赫" Arguments="-channel 0 私人兆赫 &quot;&quot; &quot;&quot;"/>
-            <JumpTask Title="alan" Description="alan" Arguments="-channel 0 alan &quot;&quot; channel:0|musician_id:104953"/>
+			<JumpTask Title="私人兆赫" Description="私人兆赫" Arguments="-channel 0 私人兆赫 &quot;&quot; &quot;&quot;"/>
+			<JumpTask Title="alan" Description="alan" Arguments="-channel 0 alan &quot;&quot; channel:0|musician_id:104953"/>
 		</JumpList>
 	</JumpList.JumpList>-->
 </Application>

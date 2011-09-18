@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:DoubanFM="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="DoubanFM.Style"
+	xmlns:DoubanFM="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 	<!-- 应该在此定义资源字典条目。-->
 	<DoubanFM:SliderThumbWidthConverter x:Key="converter1"/>
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter1" />
@@ -971,8 +973,9 @@
 							</Grid.RowDefinitions>
 							<TextBlock Foreground="White" Text="{Binding Title}" MaxHeight="50" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
 							<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
-								<TextBlock Margin="0,0,20,0" Visibility="{Binding IsArtist, Converter={StaticResource BooleanToVisibilityConverter1}}" Foreground="White"><Run Text="艺术家"/></TextBlock>
-								<TextBlock Visibility="{Binding CanContextPlay, Converter={StaticResource BooleanToVisibilityConverter1}}" Padding="0" Foreground="White"><Run Text="收听"/></TextBlock>
+								<TextBlock Margin="0,0,20,0" Visibility="{Binding IsArtist, Converter={StaticResource BooleanToVisibilityConverter1}}" VerticalAlignment="Center" Foreground="White"><Run Text="艺术家"/></TextBlock>
+								<TextBlock Margin="0,0,20,0" Visibility="{Binding CanContextPlay, Converter={StaticResource BooleanToVisibilityConverter1}}" VerticalAlignment="Center" Foreground="White"><Run Text="收听"/></TextBlock>
+								<Button x:Name="Link" BorderThickness="1" Padding="0" Click="Link_Click" Tag="{Binding Link, Mode=OneWay}">资料</Button>
 							</StackPanel>
 						</Grid>
 					</Grid>

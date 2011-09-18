@@ -15,10 +15,10 @@ namespace DoubanFM.Core
 	{
 		#region 依赖项属性
 
-		public static readonly DependencyProperty IsSearchFinishedProperty = DependencyProperty.Register("IsSearchFinished", typeof(bool), typeof(MusicSearch));
+		public static readonly DependencyProperty IsSearchFinishedProperty = DependencyProperty.Register("IsSearchFinished", typeof(bool), typeof(MusicSearch), new PropertyMetadata(true));
 		public static readonly DependencyProperty IsPreviousPageEnabledProperty = DependencyProperty.Register("IsPreviousPageEnabled", typeof(bool), typeof(MusicSearch));
 		public static readonly DependencyProperty IsNextPageEnabledProperty = DependencyProperty.Register("IsNextPageEnabled", typeof(bool), typeof(MusicSearch));
-		public static readonly DependencyProperty ShowNoResultHintProperty = DependencyProperty.Register("ShowNoResultHint", typeof(bool), typeof(MusicSearch));
+		public static readonly DependencyProperty ShowNoResultHintProperty = DependencyProperty.Register("ShowNoResultHint", typeof(bool), typeof(MusicSearch), new PropertyMetadata(true));
 		public static readonly DependencyProperty SearchResultProperty = DependencyProperty.Register("SearchResult", typeof(IEnumerable<SearchItem>), typeof(MusicSearch));
 		
 		#endregion
@@ -96,6 +96,10 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(ShowNoResultHintProperty); }
 		}
+		/// <summary>
+		/// 设置
+		/// </summary>
+		public Settings Settings { get; private set; }
 
 		#endregion
 
@@ -111,6 +115,12 @@ namespace DoubanFM.Core
 		int _page;
 		
 		#endregion
+
+		internal MusicSearch(Settings settings)
+			:base()
+		{
+			Settings = settings;
+		}
 
 		#region 事件
 
@@ -128,13 +138,6 @@ namespace DoubanFM.Core
 		}
 
 		#endregion
-
-		public MusicSearch()
-			: base()
-		{
-			SetValue(IsSearchFinishedProperty, true);
-			SetValue(ShowNoResultHintProperty, true);
-		}
 
 		#region 搜索操作
 
@@ -208,9 +211,11 @@ namespace DoubanFM.Core
 		private IEnumerable<SearchItem> GetSearchItems(string file)
 		{
 			List<SearchItem> items = new List<SearchItem>();
-
 			try
 			{
+				bool isSearchFilterEnabled = true;
+				Dispatcher.Invoke(new Action(() => { isSearchFilterEnabled = Settings.IsSearchFilterEnabled; }));
+
 				//找出艺术家
 				MatchCollection mc = Regex.Matches(file, @"<div class=\""result-item musician\"".*?>.*?</h3>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 				foreach(Match mm in mc)
@@ -218,27 +223,34 @@ namespace DoubanFM.Core
 					string temp = mm.Groups[0].Value;
 					string titleTemp = Regex.Match(temp, @"<a.*?class=\""nbg\"".*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
 					string title = Regex.Match(titleTemp, @".*?title=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+					string link = Regex.Match(titleTemp, @".*?href=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
 					string pictureTemp = Regex.Match(temp, @"<img.*?class=\""answer_pic\"".*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
 					string picture = Regex.Match(pictureTemp, @".*?src=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
-					MatchCollection mc2 = Regex.Matches(temp, @"<a.*?class=\""start_radio_musician ll\"".*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+					Match ma = Regex.Match(temp, @".*?href=\""http://douban\.fm/\?context=([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 					string context = null;
-					foreach (Match ma in mc2)
-					{
-						string contextTemp = ma.Groups[0].Value;
-						context = Regex.Match(contextTemp, @".*?href=\""http://douban\.fm/\?context=([^\""]+)\""").Groups[1].Value;
-					}
-					items.Add(new SearchItem(title, picture, null, true, context));
+					if (ma != null) context = ma.Groups[1].Value;
+					SearchItem item = new SearchItem(title, picture, link, null, true, context);
+					if (!isSearchFilterEnabled || !string.IsNullOrEmpty(item.Context))
+						items.Add(item);
 				}
 
 				//找出专辑
-				mc = Regex.Matches(file, @"<table.*?</table>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-				foreach (Match ma in mc)
+				mc = Regex.Matches(file, @"<tr.*?class=\""item\"">.*?</tr>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+				foreach (Match mm in mc)
 				{
-					Match m = Regex.Match(ma.Groups[0].Value, @"<img src=\""([^\""]+)\"" alt=\""([^\""]+)\""",
-						RegexOptions.IgnoreCase | RegexOptions.Singleline);
-					items.Add(new SearchItem(m.Groups[2].Value, m.Groups[1].Value, null, false,
-						Regex.Match(ma.Groups[0].Value, @"href=\""http://douban.fm/\?context=([^\""]+)""",
-						RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value));
+					string temp = mm.Groups[0].Value;
+					string titleTemp = Regex.Match(temp, @"<a.*?class=\""nbg\"".*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
+					string title = Regex.Match(titleTemp, @".*?title=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+					string link = Regex.Match(titleTemp, @".*?href=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+					string pictureTemp = Regex.Match(temp, @"<img.*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
+					string picture = Regex.Match(pictureTemp, @".*?src=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+					Match ma = Regex.Match(temp, @".*?href=\""http://douban\.fm/\?context=([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+					string context = null;
+					if (ma != null) context = ma.Groups[1].Value;
+				
+					SearchItem item = new SearchItem(title, picture, link, null, false, context);
+					if (!isSearchFilterEnabled || !string.IsNullOrEmpty(item.Context))
+						items.Add(item);
 				}
 			}
 			catch { }

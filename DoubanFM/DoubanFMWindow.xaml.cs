@@ -458,12 +458,15 @@ namespace DoubanFM
 		void ShowUpdateWindow(Updater updater = null)
 		{
 			UpdateWindow update = new UpdateWindow(this, updater);
-			update.Closed += new EventHandler((o, ee) =>
+			update.Closed += new EventHandler((o, e) =>
 			{
 				CheckUpdate.IsEnabled = true;
 				if (update.Updater.Now == Updater.State.DownloadCompleted)
 				{
-					Process.Start(update.Updater.DownloadedFilePath);
+					App.Current.Exit += new ExitEventHandler((oo, ee) =>
+					{
+						Process.Start(update.Updater.DownloadedFilePath, "/S");
+					});
 					this.Close();
 				}
 			});
@@ -892,7 +895,7 @@ namespace DoubanFM
 		private void CoverGrid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			base.OnMouseLeftButtonUp(e);
-			//if (!_player.Settings.SlideCoverWhenMouseMove)                //当设置为“鼠标移动到封面上时滑动”时点击封面仍然应该滑动，所以注释掉
+			if (!_player.Settings.SlideCoverWhenMouseMove || !_player.Settings.OpenAlbumInfoWhenClickCover)
 			{
 				Point leftLocation = e.GetPosition(LeftPanel);
 				Debug.WriteLine("LeftPanel:" + leftLocation);
@@ -911,6 +914,13 @@ namespace DoubanFM
 					Debug.WriteLine("SlideLeft");
 					SlideCoverLeftStoryboard.Begin();
 				}
+			}
+			else
+			{
+				if (_player.CurrentSong != null && !string.IsNullOrEmpty(_player.CurrentSong.AlbumInfo))
+					if (_player.CurrentSong.AlbumInfo.Contains("http://"))
+						Process.Start(_player.CurrentSong.AlbumInfo);
+					else Process.Start("http://music.douban.com" + _player.CurrentSong.AlbumInfo);
 			}
 		}
 
@@ -992,7 +1002,12 @@ namespace DoubanFM
 
 		private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			this.DragMove();
+			//如果不加try catch语句，在点击封面打开资料页面时很容易报错
+			try
+			{
+				this.DragMove();
+			}
+			catch { }
 		}
 
 		private void CheckUpdate_Click(object sender, System.Windows.RoutedEventArgs e)

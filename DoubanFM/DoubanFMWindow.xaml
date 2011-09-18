@@ -344,11 +344,13 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										<RowDefinition/>
 										<RowDefinition/>
 										<RowDefinition/>
+										<RowDefinition Height="Auto"/>
 									</Grid.RowDefinitions>
 									<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}"/>
 									<CheckBox Grid.Row="1" x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
 									<CheckBox Grid.Row="2" x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
-									<Grid Grid.Row="3" VerticalAlignment="Center">
+									<CheckBox Grid.Row="3" x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
+									<Grid Grid.Row="4" VerticalAlignment="Center">
 										<Grid.RowDefinitions>
 											<RowDefinition/>
 											<RowDefinition/>
@@ -356,14 +358,16 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
 										<TextBlock Grid.Row="1" Foreground="White">（重启后生效，关闭后动画更平滑）</TextBlock>
 									</Grid>
-									<CheckBox Grid.Row="4" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" >总是显示托盘图标</CheckBox>
-									<Grid Grid.Row="5">
+									<CheckBox Grid.Row="5" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" >总是显示托盘图标</CheckBox>
+									<Grid Grid.Row="6">
 										<Grid.RowDefinitions>
+											<RowDefinition/>                    	
 											<RowDefinition/>                    	
 											<RowDefinition/>                    	
 										</Grid.RowDefinitions>
 										<RadioButton x:Name="RadioButtonSlideCoverWhenMouseMove" Content="当鼠标移动到封面上时滑动封面" IsChecked="{Binding Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-										<RadioButton Grid.Row="1" IsChecked="{Binding Converter={StaticResource BoolReverseConverter}, Path=Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" x:Name="RadioButtonSlideCoverWhenClick" Content="当鼠标点击封面时滑动封面" VerticalAlignment="Center"/>
+										<CheckBox x:Name="CheckBoxOpenAlbumInfoWhenClickCover" Grid.Row="1" Content="点击封面时打开豆瓣资料页面" IsChecked="{Binding Settings.OpenAlbumInfoWhenClickCover, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=RadioButtonSlideCoverWhenMouseMove}" VerticalAlignment="Center" Margin="20,0,0,3"/>
+										<RadioButton Grid.Row="2" IsChecked="{Binding Converter={StaticResource BoolReverseConverter}, Path=Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" x:Name="RadioButtonSlideCoverWhenClick" Content="当鼠标点击封面时滑动封面" VerticalAlignment="Center"/>
 									</Grid>
 								</Grid>			
 							</Border>			

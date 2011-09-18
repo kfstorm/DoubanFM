@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Runtime.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace DoubanFM.Core
 {
@@ -17,16 +19,18 @@ namespace DoubanFM.Core
 
 		public static readonly DependencyProperty UserProperty = DependencyProperty.Register("User", typeof(User), typeof(Settings));
 		public static readonly DependencyProperty RememberPasswordProperty = DependencyProperty.Register("RememberPassword", typeof(bool), typeof(Settings));
-		public static readonly DependencyProperty AutoLogOnNextTimeProperty = DependencyProperty.Register("AutoLogOnNextTime", typeof(bool), typeof(Settings));
-		public static readonly DependencyProperty RememberLastChannelProperty = DependencyProperty.Register("RememberLastChannel", typeof(bool), typeof(Settings));
+		public static readonly DependencyProperty AutoLogOnNextTimeProperty = DependencyProperty.Register("AutoLogOnNextTime", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty RememberLastChannelProperty = DependencyProperty.Register("RememberLastChannel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty LastChannelProperty = DependencyProperty.Register("LastChannel", typeof(Channel), typeof(Settings));
 		public static readonly DependencyProperty IsMutedProperty = DependencyProperty.Register("IsMuted", typeof(bool), typeof(Settings));
-		public static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof(double), typeof(Settings));
-		public static readonly DependencyProperty SlideCoverWhenMouseMoveProperty = DependencyProperty.Register("SlideCoverWhenMouseMove", typeof(bool), typeof(Settings));
+		public static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof(double), typeof(Settings),new PropertyMetadata(1.0));
+		public static readonly DependencyProperty SlideCoverWhenMouseMoveProperty = DependencyProperty.Register("SlideCoverWhenMouseMove", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty IsShadowEnabledProperty = DependencyProperty.Register("IsShadowEnabled", typeof(bool), typeof(Settings));
 		public static readonly DependencyProperty AlwaysShowNotifyIconProperty = DependencyProperty.Register("AlwaysShowNotifyIcon", typeof(bool), typeof(Settings));
-		public static readonly DependencyProperty AutoUpdateProperty = DependencyProperty.Register("AutoUpdate", typeof(bool), typeof(Settings));
-		public static readonly DependencyProperty LastTimeCheckUpdateProperty = DependencyProperty.Register("LastTimeCheckUpdate", typeof(DateTime), typeof(Settings));
+		public static readonly DependencyProperty AutoUpdateProperty = DependencyProperty.Register("AutoUpdate", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty LastTimeCheckUpdateProperty = DependencyProperty.Register("LastTimeCheckUpdate", typeof(DateTime), typeof(Settings), new PropertyMetadata(DateTime.MinValue));
+		public static readonly DependencyProperty OpenAlbumInfoWhenClickCoverProperty = DependencyProperty.Register("OpenAlbumInfoWhenClickCover", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty IsSearchFilterEnabledProperty = DependencyProperty.Register("IsSearchFilterEnabled", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		
 		#endregion
 
@@ -126,21 +130,30 @@ namespace DoubanFM.Core
 			get { return (DateTime)GetValue(LastTimeCheckUpdateProperty); }
 			set { SetValue(LastTimeCheckUpdateProperty, value); }
 		}
+		/// <summary>
+		/// 点击封面时打开专辑的豆瓣资料页面
+		/// </summary>
+		public bool OpenAlbumInfoWhenClickCover
+		{
+			get { return (bool)GetValue(OpenAlbumInfoWhenClickCoverProperty); }
+			set { SetValue(OpenAlbumInfoWhenClickCoverProperty, value); }
+		}
+		/// <summary>
+		/// 自动剔除搜索结果中无法收听的项目
+		/// </summary>
+		public bool IsSearchFilterEnabled
+		{
+			get { return (bool)GetValue(IsSearchFilterEnabledProperty); }
+			set { SetValue(IsSearchFilterEnabledProperty, value); }
+		}
+		/// <summary>
+		/// 数据保存文件夹
+		/// </summary>
+		private static string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
 
 		internal Settings(User user)
 		{
 			User = user;
-			RememberPassword = false;
-			AutoLogOnNextTime = true;
-			RememberLastChannel = true;
-			LastChannel = null;
-			IsMuted = false;
-			Volume = 1;
-			SlideCoverWhenMouseMove = true;
-			IsShadowEnabled = false;
-			AlwaysShowNotifyIcon = false;
-			AutoUpdate = true;
-			LastTimeCheckUpdate = DateTime.MinValue;
 		}
 		internal Settings(string username, string password)
 			: this(new User(username, password)) { }
@@ -237,7 +250,7 @@ namespace DoubanFM.Core
 			catch
 			{
 				AutoUpdate = def.AutoUpdate;
-			} 
+			}
 			try
 			{
 				LastTimeCheckUpdate = info.GetDateTime("LastTimeCheckUpdate");
@@ -245,6 +258,22 @@ namespace DoubanFM.Core
 			catch
 			{
 				LastTimeCheckUpdate = def.LastTimeCheckUpdate;
+			}
+			try
+			{
+				OpenAlbumInfoWhenClickCover = info.GetBoolean("OpenAlbumInfoWhenClickCover");
+			}
+			catch
+			{
+				OpenAlbumInfoWhenClickCover = def.OpenAlbumInfoWhenClickCover;
+			}
+			try
+			{
+				IsSearchFilterEnabled = info.GetBoolean("IsSearchFilterEnabled");
+			}
+			catch
+			{
+				IsSearchFilterEnabled = def.IsSearchFilterEnabled;
 			}
 		}
 
@@ -262,6 +291,55 @@ namespace DoubanFM.Core
 			info.AddValue("AlwaysShowNotifyIcon", AlwaysShowNotifyIcon);
 			info.AddValue("AutoUpdate", AutoUpdate);
 			info.AddValue("LastTimeCheckUpdate", LastTimeCheckUpdate);
+			info.AddValue("OpenAlbumInfoWhenClickCover", OpenAlbumInfoWhenClickCover);
+			info.AddValue("IsSearchFilterEnabled", IsSearchFilterEnabled);
+		}
+
+		/// <summary>
+		/// 读取设置
+		/// </summary>
+		internal static Settings Load()
+		{
+			Settings settings = null;
+			try
+			{
+				using (FileStream stream = File.OpenRead(_dataFolder + "Settings.dat"))
+				{
+					BinaryFormatter formatter = new BinaryFormatter();
+					settings = (Settings)formatter.Deserialize(stream);
+				}
+				settings.User.Password = Encryption.Decrypt(settings.User.Password);
+			}
+			catch
+			{
+				settings = new Settings();
+			}
+			return settings;
+		}
+		/// <summary>
+		/// 保存设置
+		/// </summary>
+		internal void Save()
+		{
+			string tempPassword = User.Password;
+			if (!RememberPassword)
+				User.Password = "";
+			Channel tempLastChannel = LastChannel;
+			if (!RememberLastChannel) LastChannel = null;
+			try
+			{
+				User.Password = Encryption.Encrypt(User.Password);
+				if (!Directory.Exists(_dataFolder))
+					Directory.CreateDirectory(_dataFolder);
+				using (FileStream stream = File.OpenWrite(_dataFolder + "Settings.dat"))
+				{
+					BinaryFormatter formatter = new BinaryFormatter();
+					formatter.Serialize(stream, this);
+				}
+			}
+			catch { }
+			User.Password = tempPassword;
+			LastChannel = tempLastChannel;
 		}
 	}
 }

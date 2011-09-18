@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows;
-using System.ComponentModel;
 
 namespace DoubanFM.Core
 {
@@ -205,11 +203,7 @@ namespace DoubanFM.Core
 		/// 上次暂停的时间
 		/// </summary>
 		private DateTime _pauseTime = DateTime.Now;
-		/// <summary>
-		/// 数据保存文件夹
-		/// </summary>
-		private string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
-
+		
 		#endregion
 
 		#region 事件
@@ -342,10 +336,9 @@ namespace DoubanFM.Core
 			: base()
 		{
 			LoadSettings();
-			LoadCookies();
 			UserAssistant = new UserAssistant();
 			UserAssistant.Settings = Settings;
-			MusicSearch = new MusicSearch();
+			MusicSearch = new MusicSearch(Settings);
 			CurrentChannelChanged += new EventHandler((o, e) =>
 			{
 				IsLikedEnabled = !CurrentChannel.IsDj;
@@ -402,6 +395,12 @@ namespace DoubanFM.Core
 					UserAssistant.Update(file);
 					Dispatcher.Invoke(new Action(() =>
 						{
+							/**
+							当上次退出时是登录状态，但之后在浏览器里注销后，再打开软件会显示未登录，
+							但Cookie还在，如果不清除Cookie，第一次登录会失败，清除后第一次登录也能成功
+							 * */
+							if (UserAssistant.CurrentState != Core.UserAssistant.State.LoggedOn)
+								ConnectionBase.cc = ConnectionBase.DefaultCookie;
 							ChannelInfo = channelInfo;
 							IsInitialized = true;
 							ChooseChannelAtStartup();
@@ -649,61 +648,16 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 读取偏好设置
 		/// </summary>
-		/// <returns>读取成功与否</returns>
-		bool LoadSettings()
+		void LoadSettings()
 		{
-			try
-			{
-				using (FileStream stream = File.OpenRead(_dataFolder + "Settings.dat"))
-				{
-					BinaryFormatter formatter = new BinaryFormatter();
-					Settings = (Settings)formatter.Deserialize(stream);
-				}
-				Settings.User.Password = Encryption.Decrypt(Settings.User.Password);
-			}
-			catch
-			{
-				Settings = new Settings();
-				return false;
-			}
-			return true;
+			Settings = Core.Settings.Load();
 		}
 		/// <summary>
 		/// 保存偏好设置
 		/// </summary>
-		/// <returns>保存成功与否</returns>
-		bool SaveSettings()
+		void SaveSettings()
 		{
-			string tempPassword = Settings.User.Password;
-			if (!Settings.RememberPassword)
-				Settings.User.Password = "";
-			if (!Settings.RememberLastChannel) Settings.LastChannel = null;
-			try
-			{
-				Settings.User.Password = Encryption.Encrypt(Settings.User.Password);
-				if (!Directory.Exists(_dataFolder))
-					Directory.CreateDirectory(_dataFolder);
-				using (FileStream stream = File.OpenWrite(_dataFolder + "Settings.dat"))
-				{
-					BinaryFormatter formatter = new BinaryFormatter();
-					formatter.Serialize(stream, Settings);
-				}
-			}
-			catch
-			{
-				Settings.User.Password = tempPassword;
-				return false;
-			}
-			Settings.User.Password = tempPassword;
-			return true;
-		}
-		/// <summary>
-		/// 加载Cookies
-		/// </summary>
-		/// <returns>成功与否</returns>
-		static bool LoadCookies()
-		{
-			return ConnectionBase.LoadCookies();
+			Settings.Save();
 		}
 		/// <summary>
 		/// 保存Cookies
@@ -720,7 +674,7 @@ namespace DoubanFM.Core
 		{
 			SaveSettings();
 			if (UserAssistant.IsLoggedOn && !Settings.AutoLogOnNextTime)
-				UserAssistant.ForceLogOff();
+				ConnectionBase.cc = ConnectionBase.DefaultCookie;
 			SaveCookies();
 		}
 		/// <summary>

@@ -36,6 +36,10 @@ namespace DoubanFM.Core
 		/// </summary>
 		public static Encoding DefaultEncoding = Encoding.UTF8;
 		/// <summary>
+		/// 空Cookie
+		/// </summary>
+		public static CookieContainer DefaultCookie = new CookieContainer(1000, 1000, 100000);
+		/// <summary>
 		/// 你懂的……
 		/// </summary>
 		public string UserAgent, Accept, ContentType;
@@ -47,12 +51,14 @@ namespace DoubanFM.Core
 		/// 是否抛出异常
 		/// </summary>
 		public bool ThrowException;
+		/// <summary>
+		/// 数据保存文件夹
+		/// </summary>
 		private static string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
 
 		static ConnectionBase()
 		{
-			if (!LoadCookies())
-				cc = new CookieContainer(10000, 10000, 100000);
+			if (!LoadCookies()) cc = DefaultCookie;
 		}
 
 		internal ConnectionBase(bool throwException, string userAgent, string accept, string contentType, Encoding encoding)
