@@ -102,6 +102,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="HotKey.cs" />
+    <Compile Include="HotKeys.cs" />
+    <Compile Include="HotKeyWindow.xaml.cs">
+      <DependentUpon>HotKeyWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Style.xaml.cs">
       <DependentUpon>Style.xaml</DependentUpon>
     </Compile>
@@ -125,6 +130,10 @@
       <DependentUpon>DoubanFMWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="HotKeyWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Style.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

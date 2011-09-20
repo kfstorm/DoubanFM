@@ -20,8 +20,10 @@ namespace DoubanFM.Core
 		/// </summary>
 		/// <param name="artist">表演者</param>
 		/// <param name="title">标题</param>
-		public static LyricsParser GetLyrics(string artist, string title)
+		public static Lyrics GetLyrics(string artist, string title)
 		{
+			if (string.IsNullOrEmpty(artist) && string.IsNullOrEmpty(title)) return null;
+
 			//获取所有可能的歌词
 			Parameters parameters = new Parameters();
 			parameters.Add("Artist", Encode(artist));
@@ -47,10 +49,37 @@ namespace DoubanFM.Core
 			catch { }
 			if (result == null || result.Count == 0) return null;
 
-			//获取XML文件中第一个歌词文件
+			//选出最合适的歌词文件
+			LyricsItem selected = result[0];
+			double dist = double.MaxValue;
+			string lArtist = artist.ToLower();
+			string lTitle = title.ToLower();
+			foreach (var item in result)
+			{
+				string iArtist = item.Artist.ToLower();
+				string iTitle = item.Title.ToLower();
+				if (lArtist == iArtist && lTitle == iTitle)
+				{
+					selected = item;
+					break;
+				}
+				else if (lArtist.Length < 100 && lTitle.Length < 100 && iArtist.Length < 100 && iTitle.Length < 100)
+				{
+					int dist1 = Distance(lArtist, iArtist);
+					int dist2 = Distance(lTitle, iTitle);
+					double temp = ((double)(dist1 + dist2)) / (lArtist.Length + lTitle.Length);
+					if (temp < dist)
+					{
+						dist = temp;
+						selected = item;
+					}
+				}
+			}
+
+			//下载歌词文件
 			Parameters parameters2 = new Parameters();
-			parameters2.Add("Id", result[0].Id.ToString());
-			parameters2.Add("Code", VerifyCode(result[0].Artist, result[0].Title, result[0].Id));
+			parameters2.Add("Id", selected.Id.ToString());
+			parameters2.Add("Code", VerifyCode(selected.Artist, selected.Title, selected.Id));
 			string url2 = ConnectionBase.ConstructUrlWithParameters("http://ttlrcct2.qianqian.com/dll/lyricsvr.dll?dl", parameters2);
 			string file2 = new ConnectionBase().Get(url2);
 
@@ -58,11 +87,11 @@ namespace DoubanFM.Core
 			if (string.IsNullOrEmpty(file2)) return null;
 			try
 			{
-				return new LyricsParser(file2);
+				return new Lyrics(file2);
 			}
-			catch
+			catch (Exception ex)
 			{
-				return null;
+				throw ex;
 			}
 		}
 
@@ -141,6 +170,33 @@ namespace DoubanFM.Core
 			intVal5 = intVal5 * (intVal1 | intVal3);
 			intVal5 = intVal5 * (intVal2 ^ lrcId);
 			return intVal5.ToString();
+		}
+
+		/// <summary>
+		/// Levenshtein Distance算法，计算两个字符串之间的差异
+		/// </summary>
+		static int Distance(string a, string b)
+		{
+			if (a == string.Empty) return b.Length;
+			if (b == string.Empty) return a.Length;
+			int[][] d = new int[a.Length + 1][];
+			for (int i = 0; i < d.Length; ++i)
+				d[i] = new int[b.Length + 1];
+
+			for (int i = 0; i <= a.Length; ++i)
+				d[i][0] = i;
+			for (int j = 0; j <= b.Length; ++j)
+				d[0][j] = j;
+			for (int i = 1; i <= a.Length; ++i)
+				for (int j = 1; j <= b.Length; ++j)
+				{
+					d[i][j] = int.MaxValue;
+					if (d[i - 1][j] + 1 < d[i][j]) d[i][j] = d[i - 1][j] + 1;
+					if (d[i][j - 1] + 1 < d[i][j]) d[i][j] = d[i][j - 1] + 1;
+					if (d[i - 1][j - 1] + (a[i - 1] == b[j - 1] ? 0 : 1) < d[i][j])
+						d[i][j] = d[i - 1][j - 1] + (a[i - 1] == b[j - 1] ? 0 : 1);
+				}
+			return d[a.Length][b.Length];
 		}
 	}
 }

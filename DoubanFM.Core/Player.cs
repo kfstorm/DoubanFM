@@ -142,7 +142,11 @@ namespace DoubanFM.Core
 		public bool IsLiked
 		{
 			get { return (bool)GetValue(IsLikedProperty); }
-			set { SetValue(IsLikedProperty, value); }
+			set
+			{
+				if (!IsLikedEnabled) return;
+				SetValue(IsLikedProperty, value);
+			}
 		}
 		/// <summary>
 		/// 获取一个值，该值指示红心是否启用
@@ -452,6 +456,7 @@ namespace DoubanFM.Core
 		/// </summary>
 		public void CurrentSongFinishedPlaying()
 		{
+			RaiseStopedEvent();
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
 					PlayerState ps = GetPlayerState();

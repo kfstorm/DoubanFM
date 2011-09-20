@@ -15,6 +15,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO.MemoryMappedFiles;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace DoubanFM
 {
@@ -100,8 +102,19 @@ namespace DoubanFM
 		/// <summary>
 		/// 歌词分析器
 		/// </summary>
-		private LyricsParser _lyricsParser;
+		private Lyrics _lyricsParser;
+		/// <summary>
+		/// 当前歌词所在位置
+		/// </summary>
 		private int _lyricsCurrentIndex = int.MinValue;
+		/// <summary>
+		/// 命令
+		/// </summary>
+		public enum Commands { LikeUnlike, Never, PlayPause, Next }
+		/// <summary>
+		/// 热键
+		/// </summary>
+		private HotKeys _hotKeys;
 
 		#endregion
 
@@ -458,23 +471,58 @@ namespace DoubanFM
 		#endregion
 
 		#region 其他
+
+		/// <summary>
+		/// 给热键添加逻辑
+		/// </summary>
+		void AddLogicToHotKeys(HotKeys hotKeys)
+		{
+			foreach (var keyValue in hotKeys)
+			{
+				switch (keyValue.Key)
+				{
+					case Commands.LikeUnlike:
+						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
+						{
+							if (_player.IsLikedEnabled) _player.IsLiked = !_player.IsLiked;
+						});
+						break;
+					case Commands.Never:
+						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
+						{
+							if (_player.IsNeverEnabled) _player.Never();
+						});
+						break;
+					case Commands.Next:
+						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
+						{
+							_player.Skip();
+						});
+						break;
+					case Commands.PlayPause:
+						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
+						{
+							_player.IsPlaying = !_player.IsPlaying;
+						});
+						break;
+				}
+			}
+		}
 		/// <summary>
 		/// 下载歌词
 		/// </summary>
 		void DownloadLyrics()
 		{
-			if (_lyricsParser == null && _player != null && _player.CurrentSong != null)
+			if (_player == null || _player.CurrentSong == null) return;
+			Song song = _player.CurrentSong;
+			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
 			{
-				Song song = _player.CurrentSong;
-				ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+				Lyrics lyrics = LyricsAssistant.GetLyrics(song.Artist, song.Title);
+				Dispatcher.Invoke(new Action(() =>
 				{
-					LyricsParser parser = LyricsAssistant.GetLyrics(song.Artist, song.Title);
-					Dispatcher.Invoke(new Action(() =>
-					{
-						if (_player.CurrentSong == song) _lyricsParser = parser;
-					}));
+					if (_player.CurrentSong == song) _lyricsParser = lyrics;
 				}));
-			}
+			}));
 		}
 		/// <summary>
 		/// 显示更新窗口
@@ -589,6 +637,7 @@ namespace DoubanFM
 		private void Update()
 		{
 			ChangeCover();
+			_lyricsParser = null;
 			if (_player.Settings.ShowLyrics) DownloadLyrics();
 			try
 			{
@@ -771,7 +820,7 @@ namespace DoubanFM
 			Slider.Value = Audio.Position.TotalSeconds;
 			if (_lyricsParser != null)
 			{
-				_lyricsParser.Refresh(Audio.Position.TotalSeconds + ((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[1]).KeyFrames[0].KeyTime.TimeSpan.TotalSeconds);
+				_lyricsParser.Refresh(Audio.Position + ((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[1]).KeyFrames[0].KeyTime.TimeSpan);
 				if (_lyricsParser.CurrentIndex != _lyricsCurrentIndex)
 				{
 					((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[1]).KeyFrames[0].Value = _lyricsParser.CurrentLyrics;
@@ -823,6 +872,11 @@ namespace DoubanFM
 		{
 			if (Audio != null)
 				Audio.Close();
+			if (_hotKeys != null)
+			{
+				_hotKeys.UnRegister();
+				_hotKeys.Save();
+			}
 			if (_notifyIcon != null)
 				_notifyIcon.Dispose();
 			if (_player != null)
@@ -1118,10 +1172,43 @@ namespace DoubanFM
 		private void CheckBoxShowLyrics_Checked(object sender, System.Windows.RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			DownloadLyrics();
+			if (_lyricsParser == null) DownloadLyrics();
+		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			_hotKeys = HotKeys.Load();
+			HotKeys.RegisterError += new EventHandler<HotKeys.RegisterErrorEventArgs>((oo, ee) =>
+			{
+				System.Text.StringBuilder sb = new System.Text.StringBuilder();
+				foreach (var exception in ee.Exceptions)
+				{
+					sb.AppendLine(exception.Message);
+				}
+				MessageBox.Show(sb.ToString());
+			});
+
+			AddLogicToHotKeys(_hotKeys);
+			_hotKeys.Register(this);
+		}
+
+		private void ButtonHotKeySettings_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			ButtonHotKeySettings.IsEnabled = false;
+			_hotKeys.UnRegister();
+			HotKeyWindow hotKeyWindow = new HotKeyWindow(this, _hotKeys);
+			hotKeyWindow.Closed += new EventHandler((o, ee) =>
+			{
+				ButtonHotKeySettings.IsEnabled = true;
+				_hotKeys = hotKeyWindow.HotKeys;
+				AddLogicToHotKeys(_hotKeys);
+				_hotKeys.Register(this);
+			});
+			hotKeyWindow.Show();
 		}
 
 		#endregion
-	
+
 	}
 }
