@@ -280,11 +280,26 @@ namespace DoubanFM.Core
 	class Parameters : List<UrlParameter>
 	{
 		/// <summary>
+		/// 是否添加空参数
+		/// </summary>
+		public bool AddEmptyParameter { get; set; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Parameters"/> class.
+		/// </summary>
+		/// <param name="addEmptyParameter">是否添加空参数</param>
+		internal Parameters(bool addEmptyParameter = false)
+			:base()
+		{
+			AddEmptyParameter = addEmptyParameter;
+		}
+
+		/// <summary>
 		/// 添加参数
 		/// </summary>
 		internal void Add(string key, string value)
 		{
-			if (string.IsNullOrEmpty(value)) return;
+			if (!AddEmptyParameter && string.IsNullOrEmpty(value)) return;
 			Add(new UrlParameter(key, value));
 		}
 

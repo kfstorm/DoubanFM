@@ -32,6 +32,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty OpenAlbumInfoWhenClickCoverProperty = DependencyProperty.Register("OpenAlbumInfoWhenClickCover", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty IsSearchFilterEnabledProperty = DependencyProperty.Register("IsSearchFilterEnabled", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty ShowLyricsProperty = DependencyProperty.Register("ShowLyrics", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty TopMostProperty = DependencyProperty.Register("TopMost", typeof(bool), typeof(Settings));
 		
 		#endregion
 
@@ -154,6 +155,14 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(ShowLyricsProperty); }
 			set { SetValue(ShowLyricsProperty, value); }
+		}
+		/// <summary>
+		/// 总在最前
+		/// </summary>
+		public bool TopMost
+		{
+			get { return (bool)GetValue(TopMostProperty); }
+			set { SetValue(TopMostProperty, value); }
 		}
 		/// <summary>
 		/// 数据保存文件夹
@@ -292,6 +301,14 @@ namespace DoubanFM.Core
 			{
 				ShowLyrics = def.ShowLyrics;
 			}
+			try
+			{
+				TopMost = info.GetBoolean("TopMost");
+			}
+			catch
+			{
+				TopMost = def.TopMost;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -311,6 +328,7 @@ namespace DoubanFM.Core
 			info.AddValue("OpenAlbumInfoWhenClickCover", OpenAlbumInfoWhenClickCover);
 			info.AddValue("IsSearchFilterEnabled", IsSearchFilterEnabled);
 			info.AddValue("ShowLyrics", ShowLyrics);
+			info.AddValue("TopMost", TopMost);
 		}
 
 		/// <summary>

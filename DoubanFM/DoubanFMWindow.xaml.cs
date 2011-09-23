@@ -115,6 +115,18 @@ namespace DoubanFM
 		/// 热键
 		/// </summary>
 		private HotKeys _hotKeys;
+		/// <summary>
+		/// 临时文件夹
+		/// </summary>
+		private string _tempPath = Path.GetTempPath() + "DoubanFM";
+		/// <summary>
+		/// 预加载用
+		/// </summary>
+		private System.Net.WebClient _preloadClient = new System.Net.WebClient();
+		/// <summary>
+		/// 是否已完成预加载
+		/// </summary>
+		private bool _preloadFinished;
 
 		#endregion
 
@@ -132,91 +144,146 @@ namespace DoubanFM
 			}
 
 			InitializeComponent();
-			/*
-			ThreadPool.QueueUserWorkItem(new WaitCallback((o) =>
-				{
-					System.Threading.Thread.Sleep(5000);
-					Dispatcher.Invoke(new Action(() =>
-						{
-							ChangeBackground(new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png")));
-						}));
-				}));
-			*/
-			_player = (Player)FindResource("Player");
-			BackgroundColorStoryboard = (Storyboard)FindResource("BackgroundColorStoryboard");
-			ShowCover1Storyboard = (Storyboard)FindResource("ShowCover1Storyboard");
-			ShowCover2Storyboard = (Storyboard)FindResource("ShowCover2Storyboard");
-			SlideCoverRightStoryboard = (Storyboard)FindResource("SlideCoverRightStoryboard");
-			SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
-			ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
-			DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
-			ChangeLyricsStoryboard = (Storyboard)FindResource("ChangeLyricsStoryboard");
-			HideLyricsStoryboard = (Storyboard)FindResource("HideLyricsStoryboard");
 
-			InitNotifyIcon();
+			InitMemberVariables();
 
 			PbPassword.Password = _player.Settings.User.Password;
 			if (!_player.Settings.IsShadowEnabled)
 				MainPanel.Margin = new Thickness(1);
-			_cover = Cover1;
-			_progressRefreshTimer = new DispatcherTimer();
-			_progressRefreshTimer.Interval = new TimeSpan(1000000);
-			_progressRefreshTimer.Tick += new EventHandler(timer_Tick);
-			_progressRefreshTimer.Start();
-			_forceNextTimer = new DispatcherTimer();
-			_forceNextTimer.Interval = new TimeSpan(600000000);
-			_forceNextTimer.Tick += new EventHandler(_forceNextTimer_Tick);
-			_forceNextTimer.Start();
-			_slideCoverRightTimer = new DispatcherTimer();
-			_slideCoverRightTimer.Interval = new TimeSpan(5000000);
-			_slideCoverRightTimer.Tick += new EventHandler(SlideCoverRightTimer_Tick);
-			_slideCoverLeftTimer = new DispatcherTimer();
-			_slideCoverLeftTimer.Interval = new TimeSpan(5000000);
-			_slideCoverLeftTimer.Tick += new EventHandler(SlideCoverLeftTimer_Tick);
+			if (channel != null) _player.Settings.LastChannel = channel;
 
+			ClearOldTempFiles();
+			AddPlayerEventListener();
+			InitNotifyIcon();
+			InitTimers();
+			CheckMappedFile();
+			PreloadMusic();
+			CheckUpdateOnStartup();
+
+			_player.Initialize();
+		}
+
+		/// <summary>
+		/// 初始化托盘图标
+		/// </summary>
+		private void InitNotifyIcon()
+		{
+			_notifyIcon.Visible = _player.Settings.AlwaysShowNotifyIcon;
+			_notifyIcon.Icon = Properties.Resources.NotifyIcon;
+			_notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler((s, e) =>
+			{
+				if (e.Button == System.Windows.Forms.MouseButtons.Left)
+				{
+					if (this.IsVisible == false)
+					{
+						this.Visibility = Visibility.Visible;
+						Dispatcher.BeginInvoke(new Action(() =>
+							{
+								this.WindowState = WindowState.Normal;
+								this.Activate();
+							}));
+					}
+					else this.Visibility = Visibility.Hidden;
+				}
+			});
+			System.Windows.Forms.ContextMenuStrip notifyIconMenu = new System.Windows.Forms.ContextMenuStrip();
+			_notifyIcon.Text = "豆瓣电台";
+			_notifyIcon.ContextMenuStrip = notifyIconMenu;
+
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("显示窗口"));
+			_notifyIcon_ShowWindow = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_ShowWindow.Image = _notifyIconImage_ShowWindow;
+			_notifyIcon_ShowWindow.Click += new EventHandler((s, e) =>
+			{
+				this.Visibility = Visibility.Visible;
+				Dispatcher.BeginInvoke(new Action(() =>
+				{
+					this.WindowState = WindowState.Normal;
+					this.Activate();
+				}));
+			});
+			notifyIconMenu.Items.Add("-");
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("喜欢"));
+			_notifyIcon_Heart = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_Heart.Image = _notifyIconImage_Like_Unlike;
+			_notifyIcon_Heart.Click += new EventHandler((o, e) =>
+			{
+				if (_notifyIcon_Heart.Image == _notifyIconImage_Like_Unlike)
+					_player.IsLiked = true;
+				else _player.IsLiked = false;
+			});
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("不再播放"));
+			_notifyIcon_Never = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_Never.Image = _notifyIconImage_Never;
+			_notifyIcon_Never.Enabled = false;
+			_notifyIcon_Never.Click += new EventHandler((s, e) => { _player.Never(); });
+			notifyIconMenu.Items.Add("-");
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("暂停"));
+			_notifyIcon_PlayPause = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_PlayPause.Image = _notifyIconImage_Pause;
+			_notifyIcon_PlayPause.Click += new EventHandler((s, e) =>
+			{
+				System.Windows.Forms.ToolStripItem sender = (System.Windows.Forms.ToolStripItem)s;
+				if (sender.Text == "播放") _player.IsPlaying = true;
+				else _player.IsPlaying = false;
+			});
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("下一首"));
+			_notifyIcon_Next = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_Next.Image = _notifyIconImage_Next;
+			_notifyIcon_Next.Click += new EventHandler((s, e) => { _player.Skip(); });
+			notifyIconMenu.Items.Add("-");
+			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("退出"));
+			_notifyIcon_Exit = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
+			_notifyIcon_Exit.Image = _notifyIconImage_Exit;
+			_notifyIcon_Exit.Click += new EventHandler((s, e) => { this.Close(); });
+		}
+
+		/// <summary>
+		/// 给播放器的各种事件添加处理代码
+		/// </summary>
+		void AddPlayerEventListener()
+		{
 			_player.Initialized += new EventHandler((o, e) => { ShowChannels(); });
 			_player.CurrentChannelChanged += new EventHandler((o, e) =>
+			{
+				if (!_player.CurrentChannel.IsPersonal || _player.CurrentChannel.IsSpecial)
+					PersonalChannels.SelectedItem = null;
+				if (!_player.CurrentChannel.IsPublic)
+					PublicChannels.SelectedItem = null;
+				if (!_player.CurrentChannel.IsDj)
 				{
-					if (!_player.CurrentChannel.IsPersonal || _player.CurrentChannel.IsSpecial)
-						PersonalChannels.SelectedItem = null;
-					if (!_player.CurrentChannel.IsPublic)
-						PublicChannels.SelectedItem = null;
-					if (!_player.CurrentChannel.IsDj)
+					DjCates.SelectedItem = null;
+					DjChannels.SelectedItem = null;
+				}
+				if (!_player.CurrentChannel.IsSpecial)
+					SearchResultList.SelectedItem = null;
+				if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != (Channel)PersonalChannels.SelectedItem)
+				{
+					PersonalChannels.SelectedItem = _player.CurrentChannel;
+					PersonalClickStoryboard.Begin();
+				}
+				if (_player.CurrentChannel.IsPublic && _player.CurrentChannel != (Channel)PublicChannels.SelectedItem)
+				{
+					PublicChannels.SelectedItem = _player.CurrentChannel;
+					PublicClickStoryboard.Begin();
+				}
+				if (_player.CurrentChannel.IsDj && DjCates.Items.Contains(_player.CurrentDjCate))
+				{
+					DjCates.SelectedItem = _player.CurrentDjCate;
+					if (DjChannels.Items.Contains(_player.CurrentChannel) && (Channel)DjChannels.SelectedItem != _player.CurrentChannel)
 					{
-						DjCates.SelectedItem = null;
-						DjChannels.SelectedItem = null;
+						DjChannels.SelectedItem = _player.CurrentChannel;
+						DjChannelClickStoryboard.Begin();
 					}
-					if (!_player.CurrentChannel.IsSpecial)
-						SearchResultList.SelectedItem = null;
-					if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != (Channel)PersonalChannels.SelectedItem)
-					{
-						PersonalChannels.SelectedItem = _player.CurrentChannel;
-						PersonalClickStoryboard.Begin();
-					}
-					if (_player.CurrentChannel.IsPublic && _player.CurrentChannel != (Channel)PublicChannels.SelectedItem)
-					{
-						PublicChannels.SelectedItem = _player.CurrentChannel;
-						PublicClickStoryboard.Begin();
-					}
-					if (_player.CurrentChannel.IsDj && DjCates.Items.Contains(_player.CurrentDjCate))
-					{
-						DjCates.SelectedItem = _player.CurrentDjCate;
-						if (DjChannels.Items.Contains(_player.CurrentChannel) && (Channel)DjChannels.SelectedItem != _player.CurrentChannel)
-						{
-							DjChannels.SelectedItem = _player.CurrentChannel;
-							DjChannelClickStoryboard.Begin();
-						}
-					}
-					if (!_player.CurrentChannel.IsDj)
-						AddChannelToJumpList(_player.CurrentChannel);
-				});
+				}
+				if (!_player.CurrentChannel.IsDj)
+					AddChannelToJumpList(_player.CurrentChannel);
+			});
 			_player.CurrentSongChanged += new EventHandler((o, e) =>
 			{
 				Update();
-				if (_player.CurrentSong.IsAd)
-					_player.Skip();
-				if (_player.IsPlaying) Audio.Play();
-				else Audio.Pause();
+				_player.IsPlaying = true;
+				Audio.Play();
 			});
 			_player.Paused += new EventHandler((o, e) =>
 			{
@@ -302,10 +369,51 @@ namespace DoubanFM
 				MessageBox.Show(this, e.GetException().Message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
 				this.Close();
 			});
+		}
 
-			if (channel != null) _player.Settings.LastChannel = channel;
+		/// <summary>
+		/// 初始化成员变量
+		/// </summary>
+		void InitMemberVariables()
+		{
+			_player = (Player)FindResource("Player");
+			_cover = Cover1;
+			BackgroundColorStoryboard = (Storyboard)FindResource("BackgroundColorStoryboard");
+			ShowCover1Storyboard = (Storyboard)FindResource("ShowCover1Storyboard");
+			ShowCover2Storyboard = (Storyboard)FindResource("ShowCover2Storyboard");
+			SlideCoverRightStoryboard = (Storyboard)FindResource("SlideCoverRightStoryboard");
+			SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
+			ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
+			DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
+			ChangeLyricsStoryboard = (Storyboard)FindResource("ChangeLyricsStoryboard");
+			HideLyricsStoryboard = (Storyboard)FindResource("HideLyricsStoryboard");
+		}
 
-			//定时检查内存映射文件，看是否需要更换频道
+		/// <summary>
+		/// 初始化计时器
+		/// </summary>
+		void InitTimers()
+		{
+			_progressRefreshTimer = new DispatcherTimer();
+			_progressRefreshTimer.Interval = new TimeSpan(1000000);
+			_progressRefreshTimer.Tick += new EventHandler(timer_Tick);
+			_progressRefreshTimer.Start();
+			_forceNextTimer = new DispatcherTimer();
+			_forceNextTimer.Interval = new TimeSpan(600000000);
+			_forceNextTimer.Tick += new EventHandler(_forceNextTimer_Tick);
+			_forceNextTimer.Start();
+			_slideCoverRightTimer = new DispatcherTimer();
+			_slideCoverRightTimer.Interval = new TimeSpan(5000000);
+			_slideCoverRightTimer.Tick += new EventHandler(SlideCoverRightTimer_Tick);
+			_slideCoverLeftTimer = new DispatcherTimer();
+			_slideCoverLeftTimer.Interval = new TimeSpan(5000000);
+			_slideCoverLeftTimer.Tick += new EventHandler(SlideCoverLeftTimer_Tick);
+		}
+		/// <summary>
+		/// 定时检查内存映射文件，看是否需要更换频道
+		/// </summary>
+		void CheckMappedFile()
+		{
 			DispatcherTimer checkMappedFileTimer = new DispatcherTimer();
 			checkMappedFileTimer.Interval = new TimeSpan(500000);
 			checkMappedFileTimer.Tick += new EventHandler((o, e) =>
@@ -320,57 +428,71 @@ namespace DoubanFM
 			});
 			_mappedFile = MemoryMappedFile.CreateOrOpen(_mappedFileName, 10240);
 			checkMappedFileTimer.Start();
-
-			//音乐预加载
-			System.Net.WebClient client = new System.Net.WebClient();
-			string currentSongUrl = null;
-			string nextSongUrl = null;
-			bool downloaded = false;
-			string filepath = null;
-			client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler((oo, e) =>
+		}
+		/// <summary>
+		/// 音乐预加载
+		/// </summary>
+		void PreloadMusic()
+		{
+			_preloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler((oo, e) =>
 			{
 				if (!e.Cancelled && e.Error == null)
 				{
-					downloaded = true;
+					var userState = e.UserState as string[];
+					_preloadFinished = true;
 					Dispatcher.Invoke(new Action(() =>
 					{
-						if (_player.GetNextSongUrl() == nextSongUrl)
-							_player.ChangeNextSongUrl(filepath);
+						if (_player.GetNextSongUrl() == userState[0])
+							_player.ChangeNextSongUrl(userState[1]);
 					}));
 				}
 			});
-			DispatcherTimer checkMusicDownloadProgressTimer = new DispatcherTimer();
-			checkMusicDownloadProgressTimer.Interval = new TimeSpan(10000000);
-			checkMusicDownloadProgressTimer.Tick += new System.EventHandler((o, e) =>
+			DispatcherTimer preloadTimer = new DispatcherTimer();
+			preloadTimer.Interval = new TimeSpan(0, 0, 1);
+			preloadTimer.Tick += new System.EventHandler((o, e) =>
 			{
-				if (_player.CurrentSong != null && _player.CurrentSong.FileUrl != currentSongUrl)
+				if (Audio.DownloadProgress > 0.999 && !_preloadClient.IsBusy && !_preloadFinished)
 				{
-					currentSongUrl = _player.CurrentSong.FileUrl;
-					downloaded = false;
-					if (client.IsBusy) client.CancelAsync();
-				}
-				else
-				{
-					if (Audio.DownloadProgress > 0.999 && !client.IsBusy && !downloaded)
+					string nextSongUrl = _player.GetNextSongUrl();
+					if (!string.IsNullOrEmpty(nextSongUrl))
 					{
-						nextSongUrl = _player.GetNextSongUrl();
-						if (!string.IsNullOrEmpty(nextSongUrl))
+						Match mc = Regex.Match(nextSongUrl, @".*/(.*)");
+						try
 						{
-							Match mc = Regex.Match(nextSongUrl, @".*/(.*)");
-							filepath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.InternetCache) + "/" + mc.Groups[1].Value;
-							try
-							{
-								client.DownloadFileAsync(new Uri(nextSongUrl), filepath);
-							}
-							catch { }
+							if (!Directory.Exists(_tempPath))
+								Directory.CreateDirectory(_tempPath);
+							string filepath = _tempPath + @"\" + mc.Groups[1].Value;
+							_preloadClient.DownloadFileAsync(new Uri(nextSongUrl), filepath,
+								new string[] { nextSongUrl, filepath });
 						}
+						catch { }
 					}
 				}
 			});
-			checkMusicDownloadProgressTimer.Start();
-			_player.Initialize();
-
-			//启动时检查更新
+			preloadTimer.Start();
+		}
+		/// <summary>
+		/// 清除预加载的音乐文件
+		/// </summary>
+		void ClearPreloadMusicFiles(string except = null)
+		{
+			if (!Directory.Exists(_tempPath)) return;
+			string[] musicFiles = Directory.GetFiles(_tempPath, @"*.mp3");
+			foreach (var file in musicFiles)
+				if (file != except)
+				{
+					try
+					{
+						File.Delete(file);
+					}
+					catch { }
+				}
+		}
+		/// <summary>
+		/// 启动时检查更新
+		/// </summary>
+		void CheckUpdateOnStartup()
+		{
 			if (_player.Settings.AutoUpdate && (DateTime.Now - _player.Settings.LastTimeCheckUpdate).TotalDays > 1)
 			{
 				Updater updater = new Updater(_player.Settings);
@@ -392,80 +514,31 @@ namespace DoubanFM
 				updater.Start();
 			}
 		}
-
 		/// <summary>
-		/// 初始化托盘图标
+		/// 清理从1.3.0版本至1.4.0版本以来的临时文件
+		/// 这些临时文件存放的位置不对，系统似乎不会自动删除，使得占用空间不断增大
 		/// </summary>
-		private void InitNotifyIcon()
+		void ClearOldTempFiles()
 		{
-			_notifyIcon.Visible = _player.Settings.AlwaysShowNotifyIcon;
-			_notifyIcon.Icon = Properties.Resources.NotifyIcon;
-			_notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler((s, e) =>
+			string fileFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.InternetCache);
+			string[] musicFiles = Directory.GetFiles(fileFolder, @"*.mp3");
+			foreach (var file in musicFiles)
 			{
-				if (e.Button == System.Windows.Forms.MouseButtons.Left)
+				try
 				{
-					if (this.IsVisible == false)
-					{
-						this.Visibility = Visibility.Visible;
-						Dispatcher.BeginInvoke(new Action(() =>
-							{
-								this.WindowState = WindowState.Normal;
-								this.Activate();
-							}));
-					}
-					else this.Visibility = Visibility.Hidden;
+					File.Delete(file);
 				}
-			});
-			System.Windows.Forms.ContextMenuStrip notifyIconMenu = new System.Windows.Forms.ContextMenuStrip();
-			_notifyIcon.Text = "豆瓣电台";
-			_notifyIcon.ContextMenuStrip = notifyIconMenu;
-
-			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("显示窗口"));
-			_notifyIcon_ShowWindow = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			_notifyIcon_ShowWindow.Image = _notifyIconImage_ShowWindow;
-			_notifyIcon_ShowWindow.Click += new EventHandler((s, e) =>
+				catch { }
+			}
+			string[] exeFiles = Directory.GetFiles(fileFolder, @"DoubanFMSetup*.exe");
+			foreach (var file in exeFiles)
 			{
-				this.Visibility = Visibility.Visible;
-				Dispatcher.BeginInvoke(new Action(() =>
+				try
 				{
-					this.WindowState = WindowState.Normal;
-					this.Activate();
-				}));
-			});
-			notifyIconMenu.Items.Add("-");
-			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("喜欢"));
-			_notifyIcon_Heart = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			_notifyIcon_Heart.Image = _notifyIconImage_Like_Unlike;
-			_notifyIcon_Heart.Click += new EventHandler((o, e) =>
-			{
-				if (_notifyIcon_Heart.Image == _notifyIconImage_Like_Unlike)
-					_player.IsLiked = true;
-				else _player.IsLiked = false;
-			});
-			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("不再播放"));
-			_notifyIcon_Never = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			_notifyIcon_Never.Image = _notifyIconImage_Never;
-			_notifyIcon_Never.Enabled = false;
-			_notifyIcon_Never.Click += new EventHandler((s, e) => { _player.Never(); });
-			notifyIconMenu.Items.Add("-");
-			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("暂停"));
-			_notifyIcon_PlayPause = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			_notifyIcon_PlayPause.Image = _notifyIconImage_Pause;
-			_notifyIcon_PlayPause.Click += new EventHandler((s, e) =>
-			{
-				System.Windows.Forms.ToolStripItem sender = (System.Windows.Forms.ToolStripItem)s;
-				if (sender.Text == "播放") _player.IsPlaying = true;
-				else _player.IsPlaying = false;
-			});
-			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("下一首"));
-			_notifyIcon_Next = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			_notifyIcon_Next.Image = _notifyIconImage_Next;
-			_notifyIcon_Next.Click += new EventHandler((s, e) => { _player.Skip(); });
-			notifyIconMenu.Items.Add("-");
-			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("退出"));
-			_notifyIcon_Exit = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
-			_notifyIcon_Exit.Image = _notifyIconImage_Exit;
-			_notifyIcon_Exit.Click += new EventHandler((s, e) => { this.Close(); });
+					File.Delete(file);
+				}
+				catch { }
+			}
 		}
 
 		#endregion
@@ -672,6 +745,10 @@ namespace DoubanFM
 			Slider.Minimum = 0;
 			Slider.Maximum = _player.CurrentSong.Length.TotalSeconds;
 			Slider.Value = 0;
+
+			_preloadFinished = false;
+			if (_preloadClient.IsBusy) _preloadClient.CancelAsync();
+			ClearPreloadMusicFiles(_player.CurrentSong.FileUrl);
 		}
 
 		/// <summary>
@@ -681,7 +758,13 @@ namespace DoubanFM
 		{
 			try
 			{
-				BitmapImage bitmap = new BitmapImage(new Uri(_player.CurrentSong.Picture));
+				//似乎豆瓣的图片有问题，所以这里不直接用Uri构造一个BitmapImage
+				BitmapImage bitmap = new BitmapImage();
+				bitmap.BeginInit();
+				bitmap.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+				bitmap.UriSource = new Uri(_player.CurrentSong.Picture);
+				bitmap.EndInit();
+				//BitmapImage bitmap = new BitmapImage(new Uri(_player.CurrentSong.Picture));
 				Debug.WriteLine(_player.CurrentSong.Picture);
 				if (bitmap.IsDownloading)
 				{
@@ -804,12 +887,14 @@ namespace DoubanFM
 		{
 			_player.CurrentSongFinishedPlaying();
 		}
+
 		/// <summary>
 		/// 音乐遇到错误
 		/// </summary>
 		private void Audio_MediaFailed(object sender, ExceptionRoutedEventArgs e)
 		{
-			_player.CurrentSongFinishedPlaying();
+			Debug.WriteLine("MediaFailed!!!!!!!!!!!!!!!!");
+			_player.MediaFailed();
 		}
 		/// <summary>
 		/// 计时器响应函数，用于更新时间信息和歌词
@@ -881,6 +966,7 @@ namespace DoubanFM
 				_notifyIcon.Dispose();
 			if (_player != null)
 				_player.Dispose();
+			ClearPreloadMusicFiles();
 		}
 		/// <summary>
 		/// 更新密码
@@ -1206,6 +1292,41 @@ namespace DoubanFM
 				_hotKeys.Register(this);
 			});
 			hotKeyWindow.Show();
+		}
+
+		private void ShareDouban_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			if (_player.CurrentSong != null)
+				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Douban));
+		}
+
+		private void ShareWeibo_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			if (_player.CurrentSong != null)
+				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Weibo));
+		}
+
+		private void ShareMsn_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			if (_player.CurrentSong != null)
+				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Msn));
+		}
+
+		private void ShareKaixin_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			if (_player.CurrentSong != null)
+				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Kaixin));
+		}
+
+		private void ShareRenren_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			if (_player.CurrentSong != null)
+				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Renren));
 		}
 
 		#endregion

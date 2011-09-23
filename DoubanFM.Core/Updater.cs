@@ -94,6 +94,10 @@ namespace DoubanFM.Core
 		/// 设置
 		/// </summary>
 		public Settings Settings { get; private set; }
+		/// <summary>
+		/// 临时文件夹
+		/// </summary>
+		private string _tempPath = Path.GetTempPath() + "DoubanFM";
 
 		#endregion
 
@@ -279,8 +283,7 @@ namespace DoubanFM.Core
 			DownloadLink = products[0].DownloadLink;
 			Match mc = Regex.Match(DownloadLink, @".*/(.*)");
 			string name = mc.Groups[1].Value;
-			DownloadedFilePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.InternetCache)
-				+ "/" + name;
+			DownloadedFilePath = _tempPath + @"\" + name;
 			Now = State.HasNewVersion;
 		}
 
@@ -300,6 +303,8 @@ namespace DoubanFM.Core
 			Now = State.Downloading;
 			try
 			{
+				if (!Directory.Exists(_tempPath))
+					Directory.CreateDirectory(_tempPath);
 				_client.DownloadFileAsync(new Uri(DownloadLink), DownloadedFilePath);
 			}
 			catch (Exception e)

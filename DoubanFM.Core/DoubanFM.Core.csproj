@@ -93,6 +93,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchItem.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Share.cs" />
+    <Compile Include="ShareSongInfo.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="Updater.cs" />
     <Compile Include="UpdateResult.cs" />

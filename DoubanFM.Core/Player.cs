@@ -207,7 +207,19 @@ namespace DoubanFM.Core
 		/// 上次暂停的时间
 		/// </summary>
 		private DateTime _pauseTime = DateTime.Now;
-		
+		/// <summary>
+		/// 防止同时进行多个任务的锁
+		/// </summary>
+		private object workLock = new object();
+		/// <summary>
+		/// 是否正有一个“下一首”任务正在执行
+		/// </summary>
+		private bool _skipping;
+		/// <summary>
+		/// 是否正有一个“不再播放”任务正在执行
+		/// </summary>
+		private bool _neverring;
+
 		#endregion
 
 		#region 事件
@@ -459,31 +471,64 @@ namespace DoubanFM.Core
 			RaiseStopedEvent();
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
+					lock (workLock)
+					{
+						PlayerState ps = GetPlayerState();
+						AppendPlayedSongs("e");
+						ChangeCurrentSong();
+						Parameters parameters = new Parameters();
+						parameters.Add("sid", ps.CurrentSong.SongId);
+						parameters.Add("channel", ps.CurrentChannel.Id);
+						parameters.Add("type", "e");
+						parameters.Add("pid", ps.CurrentChannel.ProgramId);
+						string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
+						while (true)
+						{
+							string result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
+							if (string.IsNullOrEmpty(result))
+							{
+								TakeABreak();
+								continue;
+							}
+							if (!ps.CurrentChannel.IsDj && result != "\"ok\"")
+								Dispatcher.Invoke(new Action(() =>
+									{
+										RaiseFinishedPlayingReportFailedEvent(new ErrorEventArgs(new Exception("发送播放完成消息时出错，返回内容：" + result)));
+									}));
+							else break;
+						}
+					}
+				}));
+		}
+		/// <summary>
+		/// 媒体加载失败时请调用此方法
+		/// 此方法与Skip()方法唯一的不同是不会触发Stoped事件
+		/// 如果媒体加载失败时调用Skip()，会触发Stoped事件，然后会执行MediaElement的Stop()方法，然后再次失败，于是Skip方法会循环调用
+		/// </summary>
+		public void MediaFailed()
+		{
+			if (CurrentSong == null) return;
+			if (_skipping) return;
+			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+			{
+				lock (workLock)
+				{
+					_skipping = true;
+					AppendPlayedSongs("s");
+					PlayList pl = null;
 					PlayerState ps = GetPlayerState();
-					AppendPlayedSongs("e");
-					Parameters parameters = new Parameters();
-					parameters.Add("sid", ps.CurrentSong.SongId);
-					parameters.Add("channel", ps.CurrentChannel.Id);
-					parameters.Add("type", "e");
-					parameters.Add("pid", ps.CurrentChannel.ProgramId);
-					string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
 					while (true)
 					{
-						string result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
-						if (string.IsNullOrEmpty(result))
-						{
-							TakeABreak();
-							continue;
-						}
-						if (!ps.CurrentChannel.IsDj && result != "\"ok\"")
-							Dispatcher.Invoke(new Action(() =>
-								{
-									RaiseFinishedPlayingReportFailedEvent(new ErrorEventArgs(new Exception("发送播放完成消息时出错，返回内容：" + result)));
-								}));
+						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "s", PlayedSongsToString());
+						if (!ps.CurrentChannel.IsDj && pl.Count == 0) TakeABreak();
 						else break;
 					}
+					if (!ps.CurrentChannel.IsDj)
+						ChangePlayListSongs(pl);
 					ChangeCurrentSong();
-				}));
+					_skipping = false;
+				}
+			}));
 		}
 		/// <summary>
 		/// 跳过当前歌曲
@@ -493,21 +538,27 @@ namespace DoubanFM.Core
 		public void Skip()
 		{
 			if (CurrentSong == null) return;
+			if (_skipping) return;
 			RaiseStopedEvent();
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					AppendPlayedSongs("s");
-					PlayList pl = null;
-					PlayerState ps = GetPlayerState();
-					while(true)
+					lock (workLock)
 					{
-						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "s", PlayedSongsToString());
-						if (!ps.CurrentChannel.IsDj && pl.Count == 0) TakeABreak();
-						else break;
+						_skipping = true;
+						AppendPlayedSongs("s");
+						PlayList pl = null;
+						PlayerState ps = GetPlayerState();
+						while (true)
+						{
+							pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "s", PlayedSongsToString());
+							if (!ps.CurrentChannel.IsDj && pl.Count == 0) TakeABreak();
+							else break;
+						}
+						if (!ps.CurrentChannel.IsDj)
+							ChangePlayListSongs(pl);
+						ChangeCurrentSong();
+						_skipping = false;
 					}
-					if (!ps.CurrentChannel.IsDj)
-						ChangePlayListSongs(pl);
-					ChangeCurrentSong();
 				}));
 		}
 		/// <summary>
@@ -521,15 +572,18 @@ namespace DoubanFM.Core
 			CurrentSong.Like = true;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 			{
-				PlayList pl = null;
-				PlayerState ps = GetPlayerState();
-				while(true)
+				lock (workLock)
 				{
-					pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "r", PlayedSongsToString());
-					if (pl.Count == 0) TakeABreak();
-					else break;
+					PlayList pl = null;
+					PlayerState ps = GetPlayerState();
+					while (true)
+					{
+						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "r", PlayedSongsToString());
+						if (pl.Count == 0) TakeABreak();
+						else break;
+					}
+					ChangePlayListSongs(pl);
 				}
-				ChangePlayListSongs(pl);
 			}));
 		}
 		/// <summary>
@@ -543,15 +597,18 @@ namespace DoubanFM.Core
 			CurrentSong.Like = false;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 			{
-				PlayList pl = null;
-				PlayerState ps = GetPlayerState();
-				while(true)
+				lock (workLock)
 				{
-					pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "u", PlayedSongsToString());
-					if (pl.Count == 0) TakeABreak();
-					else break;
+					PlayList pl = null;
+					PlayerState ps = GetPlayerState();
+					while (true)
+					{
+						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "u", PlayedSongsToString());
+						if (pl.Count == 0) TakeABreak();
+						else break;
+					}
+					ChangePlayListSongs(pl);
 				}
-				ChangePlayListSongs(pl);
 			}));
 		}
 		/// <summary>
@@ -563,20 +620,26 @@ namespace DoubanFM.Core
 		{
 			if (CurrentSong == null) return;
 			if (!CurrentChannel.IsPersonal) return;
+			if (_neverring) return;
 			RaiseStopedEvent();
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 			{
-				AppendPlayedSongs("b");
-				PlayList pl = null;
-				PlayerState ps = GetPlayerState();
-				while (true)
+				lock (workLock)
 				{
-					pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "b", PlayedSongsToString());
-					if (pl.Count == 0) TakeABreak();
-					else break;
+					_neverring = true;
+					AppendPlayedSongs("b");
+					PlayList pl = null;
+					PlayerState ps = GetPlayerState();
+					while (true)
+					{
+						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "b", PlayedSongsToString());
+						if (pl.Count == 0) TakeABreak();
+						else break;
+					}
+					ChangePlayListSongs(pl);
+					ChangeCurrentSong();
+					_neverring = false;
 				}
-				ChangePlayListSongs(pl);
-				ChangeCurrentSong();
 			}));
 		}
 		/// <summary>
@@ -605,15 +668,18 @@ namespace DoubanFM.Core
 			{
 				ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					PlayList pl = null;
-					PlayerState ps = GetPlayerState();
-					while (true)
+					lock (workLock)
 					{
-						pl = PlayList.GetPlayList(ps.CurrentChannel.Context, null, ps.CurrentChannel, "n", PlayedSongsToString());
-						if (pl.Count == 0) TakeABreak();
-						else break;
+						PlayList pl = null;
+						PlayerState ps = GetPlayerState();
+						while (true)
+						{
+							pl = PlayList.GetPlayList(ps.CurrentChannel.Context, null, ps.CurrentChannel, "n", PlayedSongsToString());
+							if (pl.Count == 0) TakeABreak();
+							else break;
+						}
+						ChangePlayListSongs(pl);
 					}
-					ChangePlayListSongs(pl);
 				}));
 			}
 		}
@@ -627,15 +693,12 @@ namespace DoubanFM.Core
 		/// </summary>
 		public void ChangeNextSongUrl(string address)
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
-				{
-					if (string.IsNullOrEmpty(address)) return;
-					lock (_playListSongs)
-					{
-						if (_playListSongs.Count == 0) return;
-						_playListSongs.First().FileUrl = address;
-					}
-				}));
+			if (string.IsNullOrEmpty(address)) return;
+			lock (_playListSongs)
+			{
+				if (_playListSongs.Count == 0) return;
+				_playListSongs.First().FileUrl = address;
+			}
 		}
 		/// <summary>
 		/// 获取下一首音乐的URL
@@ -794,7 +857,7 @@ namespace DoubanFM.Core
 		/// </summary>
 		void TakeABreak()
 		{
-			Thread.Sleep(1000);
+			Thread.Sleep(5000);
 		}
 		/// <summary>
 		/// 获取当前状态，用于向线程池加入任务时传递参数
