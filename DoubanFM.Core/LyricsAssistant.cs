@@ -89,9 +89,9 @@ namespace DoubanFM.Core
 			{
 				return new Lyrics(file2);
 			}
-			catch (Exception ex)
+			catch
 			{
-				throw ex;
+				return null;
 			}
 		}
 
