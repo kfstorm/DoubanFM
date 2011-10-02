@@ -20,24 +20,17 @@ namespace DoubanFM
 	/// <summary>
 	/// UpdateWindow.xaml 的交互逻辑
 	/// </summary>
-	public partial class UpdateWindow : Window
+	public partial class UpdateWindow : ChildWindowBase
 	{
 		/// <summary>
 		/// 更新器
 		/// </summary>
 		public Updater Updater { get; private set; }
 
-		public UpdateWindow(DoubanFMWindow owner, Updater updater = null)
+		public UpdateWindow(Updater updater = null)
 		{
 			InitializeComponent();
 			
-			Owner = owner;
-			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Background");
-			binding.Source = owner.MainPanel;
-			MainPanel.SetBinding(UpdateWindow.BackgroundProperty, binding);
-			AllowsTransparency = owner.AllowsTransparency;
-			MainPanel.Margin = owner.MainPanel.Margin;
-
 			Updater = updater;
 			if (updater == null) Updater = new Updater((FindResource("Player") as Player).Settings);
 			ShowRightPanel();
@@ -116,7 +109,7 @@ namespace DoubanFM
 		/// </summary>
 		void ShowPanel(Panel panel)
 		{
-			foreach (var p in ContentPanel.Children)
+			foreach (var p in (this.Content as Panel).Children)
 			{
 				Panel pp = p as Panel;
 				if (pp != null)
@@ -125,12 +118,6 @@ namespace DoubanFM
 					else pp.Visibility = Visibility.Collapsed;
 				}
 			}
-		}
-
-		private void window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			this.DragMove();
 		}
 
 		private void window_Closed(object sender, EventArgs e)
@@ -174,29 +161,6 @@ namespace DoubanFM
 		{
 			// 在此处添加事件处理程序实现。
 			Updater.Download();
-		}
-
-		private void window_Activated(object sender, EventArgs e)
-		{
-			GradientStopCollection active = (GradientStopCollection)FindResource("ActiveShadowGradientStops");
-			GradientStopCollection now = (GradientStopCollection)FindResource("ShadowGradientStops");
-			now.Clear();
-			foreach (GradientStop g in active)
-				now.Add(g);
-		}
-
-		private void window_Deactivated(object sender, EventArgs e)
-		{
-			GradientStopCollection inactive = (GradientStopCollection)FindResource("InactiveShadowGradientStops");
-			GradientStopCollection now = (GradientStopCollection)FindResource("ShadowGradientStops");
-			now.Clear();
-			foreach (GradientStop g in inactive)
-				now.Add(g);
-		}
-
-		private void window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			Owner.Activate();
 		}
 
 	}

@@ -23,6 +23,7 @@ namespace DoubanFM.Core
 		public static Lyrics GetLyrics(string artist, string title)
 		{
 			if (string.IsNullOrEmpty(artist) && string.IsNullOrEmpty(title)) return null;
+			if (title.ToLower().Contains("instrumental")) return null;
 
 			//获取所有可能的歌词
 			Parameters parameters = new Parameters();

@@ -1,11 +1,16 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
 	x:Class="DoubanFM.Style"
-	xmlns:DoubanFM="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+	mc:Ignorable="d">
 	<!-- 应该在此定义资源字典条目。-->
-	<DoubanFM:SliderThumbWidthConverter x:Key="converter1"/>
-	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter1" />
+	<local:WindowBackgroundToSliderForegroundConverter x:Key="WindowBackgroundToSliderForegroundConverter"/>
+	<PowerEase x:Key="Smooth" Power="3"/>
+	<local:SliderThumbWidthConverter x:Key="converter1"/>
+	<local:BoolReverseConverter x:Key="BoolReverseConverter"/>
+	<local:BoolReverseToVisibilityConverter x:Key="BoolReverseToVisibilityConverter"/>
+	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 	<LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0">
 		<GradientStop Color="#FFE93613" Offset="0"/>
 		<GradientStop Color="#FFFF593A" Offset="1"/>
@@ -703,7 +708,6 @@
 		</Setter>
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
 		<Setter Property="Padding" Value="2"/>
-		<Setter Property="HorizontalAlignment" Value="Left"/>
 	</Style>
 	<Style TargetType="{x:Type TextBox}">
 		<Setter Property="Template">
@@ -975,9 +979,9 @@
 							</Grid.RowDefinitions>
 							<TextBlock Foreground="White" Text="{Binding Title}" MaxHeight="50" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
 							<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
-								<TextBlock Margin="0,0,20,0" Visibility="{Binding IsArtist, Converter={StaticResource BooleanToVisibilityConverter1}}" VerticalAlignment="Center" Foreground="White"><Run Text="艺术家"/></TextBlock>
-								<TextBlock Margin="0,0,20,0" Visibility="{Binding CanContextPlay, Converter={StaticResource BooleanToVisibilityConverter1}}" VerticalAlignment="Center" Foreground="White"><Run Text="收听"/></TextBlock>
-								<Button x:Name="Link" BorderThickness="1" Padding="0" Click="Link_Click" Tag="{Binding Link, Mode=OneWay}">资料</Button>
+								<TextBlock Margin="0,0,20,0" Visibility="{Binding IsArtist, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="White"><Run Text="艺术家"/></TextBlock>
+								<TextBlock Margin="0,0,20,0" Visibility="{Binding CanContextPlay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="White"><Run Text="收听"/></TextBlock>
+								<Button x:Name="Link" BorderThickness="1" Padding="0" Click="Link_Click" Tag="{Binding Link, Mode=OneWay}" Content="资料"/>
 							</StackPanel>
 						</Grid>
 					</Grid>
@@ -1182,7 +1186,7 @@
 							<Grid x:Name="Foreground">
 								<Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}"/>
 								<Grid x:Name="Animation" ClipToBounds="true">
-									<Border x:Name="PART_GlowRect" Background="#80FFFFFF" HorizontalAlignment="Left" Margin="-100,0,0,0" Width="100"/>
+									<Border x:Name="PART_GlowRect" Background="{TemplateBinding Foreground}" HorizontalAlignment="Left" Margin="-100,0,0,0" Width="100"/>
 								</Grid>
 							</Grid>
 						</Decorator>
@@ -1339,6 +1343,417 @@
 			</Trigger>
 			<Trigger Property="IsPressed" Value="True">
 				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="ShareTencentWeiboStyle" TargetType="{x:Type Button}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="分享到腾讯微博"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__ShareTencentWeibo" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="224" Height="224" Canvas.Left="15.9996" Canvas.Top="16.0005" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 56.2497,16.0005L 199.749,16.0005C 221.979,16.0005 240,34.0211 240,56.2506L 240,199.75C 240,221.98 221.979,240 199.749,240L 56.2497,240C 34.0202,240 15.9996,221.98 15.9996,199.75L 15.9996,56.2506C 15.9996,34.0211 34.0202,16.0005 56.2497,16.0005 Z M 52.3497,104.807C 53.4347,108.876 55.8762,124.338 62.1154,124.338C 64.2855,124.338 66.9982,121.897 66.9982,119.726L 66.9982,119.184C 66.9982,117.014 63.2004,111.86 62.9292,108.333L 62.3866,102.908L 62.3866,100.195C 62.3866,83.3763 77.849,67.6427 94.6677,67.6427L 97.3804,67.6427C 104.433,67.6427 114.47,72.2542 119.624,77.4084C 124.779,82.5625 129.661,92.3282 129.661,99.6525L 129.661,102.908C 129.661,105.892 128.034,112.131 126.677,115.115C 123.965,120.54 120.71,124.881 115.555,128.407C 110.673,131.662 103.62,134.646 97.6516,134.646L 93.3113,134.646C 90.5987,134.646 87.886,133.561 85.7158,133.561C 82.7318,133.561 81.3755,136.545 81.3755,139.258C 81.3755,142.784 83.5456,142.784 86.5296,143.327C 89.2423,143.869 92.2262,144.683 94.9389,144.683L 97.9229,144.683C 106.061,144.683 116.641,140.343 122.88,135.189C 131.018,128.678 133.188,124.067 137.257,115.115C 138.342,111.588 139.427,106.705 139.427,103.179L 139.427,99.6525C 139.427,77.6796 119.082,57.877 97.1091,57.877L 94.6677,57.877C 83.8169,57.877 71.0672,63.5736 64.0142,71.983C 55.0623,82.02 52.3497,91.2431 52.3497,104.807 Z M 142.14,113.487C 142.954,118.641 145.124,123.524 148.922,127.322C 152.177,130.306 158.687,133.832 163.299,133.832C 164.384,133.832 167.91,133.832 168.724,133.019C 170.081,131.934 169.809,129.763 168.453,128.95C 167.368,128.136 160.857,127.864 157.602,126.237C 151.634,123.253 147.565,116.2 147.565,109.689L 147.565,109.418C 147.565,99.6525 156.246,90.7005 166.012,90.7005L 166.825,90.7005C 176.591,90.7005 185,99.6525 185,109.418L 185,109.689C 185,112.673 183.644,117.014 182.288,119.726C 181.474,120.54 179.846,122.71 179.575,123.524C 179.575,124.88 181.474,126.508 182.559,126.779C 186.899,127.322 191.24,113.487 190.968,109.689L 190.426,103.721C 188.256,97.7536 186.899,95.0408 182.288,90.7005C 178.49,87.4453 171.979,85.0039 167.097,85.0039L 165.74,85.0039C 154.076,85.0039 141.869,95.8547 141.869,107.519L 141.597,108.062L 142.14,113.487 Z M 158.416,109.961C 158.416,112.402 159.772,115.115 161.943,116.471C 165.74,118.641 165.469,116.471 167.368,121.354C 168.995,125.966 172.251,130.306 175.506,133.832C 181.745,140.343 191.24,147.667 200.192,150.109C 203.447,151.194 204.532,147.125 201.277,145.768C 198.835,144.683 196.394,143.869 194.224,142.513C 189.883,140.343 185.814,137.359 182.016,134.375C 178.761,131.391 174.963,126.779 173.065,122.71C 167.368,111.588 174.15,118.913 174.15,109.418C 174.15,99.3811 158.416,98.8386 158.416,109.961 Z M 78.3915,111.86L 78.1203,112.131L 77.849,112.402L 77.5777,112.673C 77.0352,114.03 74.865,115.929 74.0512,117.285C 73.2374,118.641 71.8811,121.083 70.796,122.439C 68.8971,124.88 66.4557,130.577 65.3706,133.561C 63.743,137.901 62.1154,141.699 61.0303,146.039C 60.4878,148.21 58.3176,157.975 58.3176,159.874L 58.3176,161.502L 58.0463,163.672L 58.0463,163.943L 57.7751,166.385L 57.7751,166.656L 57.7751,166.927L 57.5038,171.268L 57.5038,178.863L 57.5038,182.39L 57.7751,184.56L 57.7751,185.102C 57.7751,189.443 58.8601,190.799 63.2004,190.799L 63.4717,190.528L 64.0143,190.256L 64.2855,189.985L 64.5568,189.714L 64.8281,189.443L 65.0993,189.171L 65.3706,188.9L 66.1844,188.358L 66.1844,187.544L 66.1844,187.001L 65.9131,186.459L 65.9131,185.374L 65.9131,184.831C 65.9131,184.017 65.9131,184.56 65.6419,183.746L 65.3706,178.321L 65.3706,178.049L 65.3706,169.911C 65.6419,169.369 65.6419,169.369 65.6419,168.555L 65.6419,164.486C 65.6419,156.89 69.7109,142.242 72.9661,134.917C 75.1363,130.306 83.2744,115.929 87.6147,113.216C 89.5136,113.487 91.4125,115.657 95.4815,115.657L 96.2953,115.657L 101.178,114.844C 105.79,112.402 110.13,107.79 110.13,102.365L 110.13,100.466C 110.13,93.4132 103.077,87.174 96.2953,87.174L 95.7528,87.174C 88.1572,87.174 81.6468,93.6845 81.6468,101.28C 81.6468,103.721 82.7318,106.163 82.7318,106.977C 82.7318,107.79 79.2053,110.774 78.3915,111.86 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="ShareFanfouStyle" TargetType="{x:Type Button}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="分享到饭否"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="224" Height="224" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 16,16L 240,16L 240,240L 16,240L 16,16 Z M 131.559,231.743C 149.354,221.066 164.183,208.907 176.046,195.264C 188.502,209.5 202.441,221.066 217.863,229.964C 222.015,221.66 226.464,216.025 231.209,213.059C 216.38,206.534 201.848,196.154 187.612,181.918C 195.323,168.275 201.255,154.633 205.407,140.99C 209.559,127.348 213.711,110.146 217.863,89.3855L 136.897,89.3855L 136.897,57.355C 151.133,56.7619 179.308,54.0927 221.422,49.3474C 216.677,44.009 212.228,37.7809 208.076,30.663C 205.704,32.4424 196.361,34.8151 180.05,37.7809C 163.738,40.7466 143.719,42.5261 119.992,43.1193C 120.586,54.3893 121.03,64.6212 121.327,73.8152C 121.624,83.0091 121.475,97.0966 120.882,116.078C 120.289,135.059 117.323,153.447 111.985,171.241C 106.646,189.036 97.749,204.458 85.2927,217.508C 91.8174,219.287 97.4524,222.253 102.198,226.405C 109.316,217.508 115.692,207.127 121.327,195.264C 126.962,183.401 130.966,170.352 133.338,156.116C 135.711,141.88 136.897,124.085 136.897,102.732L 143.126,102.732C 146.684,134.762 154.099,160.861 165.369,181.028C 149.947,199.416 134.228,211.576 118.213,217.508C 124.144,221.66 128.593,226.405 131.559,231.743 Z M 75.5056,32.4425C 70.1672,30.663 63.6424,27.9938 55.9314,24.4348C 51.7793,40.4501 46.8857,54.6859 41.2507,67.1422C 35.6157,79.5985 28.9427,90.8684 21.2317,100.952C 25.9769,104.511 30.4256,108.96 34.5777,114.298C 42.2888,101.842 48.8135,89.9787 54.1519,78.7087L 90.6311,78.7087C 88.8516,85.2335 86.1824,93.2411 82.6235,102.732C 87.3687,103.918 92.7071,105.697 98.6387,108.07C 103.977,93.8342 108.426,79.5985 111.985,65.3627L 60.3801,65.3627C 62.7527,58.838 67.7945,47.8645 75.5056,32.4425 Z M 103.087,167.682C 99.5284,162.937 95.9695,157.895 92.4106,152.557C 89.4448,157.302 82.6235,166.199 71.9466,179.249L 71.9466,132.093C 71.9466,120.823 72.2432,111.926 72.8364,105.401L 55.0416,105.401C 55.6348,114.298 55.9314,122.899 55.9314,131.203L 55.9314,184.587C 55.3382,191.112 52.9656,196.747 48.8135,201.492C 52.3724,205.051 56.5245,209.796 61.2698,215.728C 66.0151,209.796 72.6881,201.789 81.2889,191.705C 89.8896,181.621 97.1558,173.614 103.087,167.682 Z M 160.03,102.732L 196.51,102.732C 192.951,126.458 186.426,146.922 176.935,164.123C 169.818,152.26 164.183,131.796 160.03,102.732 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="ShareFacebookStyle" TargetType="{x:Type Button}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="分享到Facebook"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="224" Height="230.31" Canvas.Left="16" Canvas.Top="12.8451" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 200.563,243.155L 55.4366,243.155C 33.3521,243.155 16,225.803 16,203.718L 16,47.5493C 16,28.6197 36.507,12.8451 55.4366,12.8451L 200.563,12.8451C 219.493,12.8451 240,28.6197 240,47.5493L 240,200.563C 240,224.225 224.225,243.155 200.563,243.155 Z M 137.115,128L 137.465,216.338L 176.901,216.338L 176.901,128L 203.718,128L 203.718,96.4507L 176.901,96.4507L 176.901,86.9859C 176.901,79.0986 181.634,74.3662 189.521,74.3662L 203.718,74.3662L 203.718,44.3944L 184.789,44.3944C 157.972,44.3944 137.465,55.4366 137.465,80.6761L 137.465,96.4507L 113.803,96.4507L 113.803,128L 137.115,128 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="ShareTwitterStyle" TargetType="{x:Type Button}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="分享到Twitter"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="224" Height="226.818" Canvas.Left="16" Canvas.Top="14.5912" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 20.2264,40.4193C 23.044,27.7401 39.0105,14.5912 54.9769,14.5912L 203.371,14.5912C 216.99,14.5912 236.243,31.9665 236.713,44.6457C 241.409,46.5241 239.53,110.86 239.53,122.13C 239.53,131.052 240.47,199.614 239.061,201.962L 240,203.371C 239.53,204.31 239.061,209.476 238.591,210.885C 237.652,214.172 236.713,215.581 235.774,217.929C 233.895,222.155 231.078,225.912 227.79,229.199C 224.973,232.017 220.746,235.304 216.99,236.713C 214.172,238.122 213.233,238.591 209.945,239.53C 208.537,240 202.901,240.47 201.962,241.409L 200.553,240.47C 198.205,241.878 100.998,240.939 88.7883,240.939C 70.0042,240.939 50.7505,242.818 38.0713,236.243C 27.2704,230.608 16.4696,217.459 16.4696,201.493L 16,56.8553L 18.348,45.1153L 18.8176,44.6457L 18.8176,41.3585L 20.2264,40.4193 Z M 166.273,142.323C 167.212,141.853 170.499,141.384 171.908,140.914C 174.725,139.975 174.256,139.505 176.604,138.566C 179.891,136.688 181.769,135.279 184.117,132.461C 187.405,129.174 193.04,120.252 193.04,114.147L 193.04,107.572C 193.04,105.224 189.283,94.8931 188.344,93.4843C 185.996,89.2579 183.178,86.4403 179.421,83.6227C 170.969,77.5178 162.046,77.9874 147.488,77.9874C 141.853,77.9874 134.34,78.457 128.704,77.9874C 125.887,77.9874 127.296,74.2306 126.826,70.9434C 125.887,66.717 126.826,66.2474 125.417,62.9602C 122.6,57.325 122.13,55.4466 117.904,51.2202C 115.556,48.8721 107.103,44.1761 106.633,43.7065L 96.3019,41.8281L 93.0147,42.2977C 84.0922,42.2977 77.9874,46.9938 72.8218,50.7506C 69.5346,53.5682 62.4906,64.369 62.4906,69.5346L 62.4906,161.577C 62.4906,175.195 72.3522,187.874 79.3962,194.918C 86.9099,202.432 100.998,207.597 116.025,207.597L 158.759,207.597C 170.969,207.597 176.134,204.78 182.239,199.145C 186.465,195.857 193.04,185.526 193.04,178.482L 193.04,175.665C 193.04,166.273 189.753,158.759 185.057,153.593C 182.709,151.245 179.891,148.897 176.604,147.019C 174.256,145.61 167.681,144.201 166.273,142.323 Z M 76.5786,74.7003C 76.5786,65.3082 85.0314,56.8554 93.4843,56.8554L 97.7107,56.8554C 105.694,56.8554 112.738,66.2474 112.738,74.7003C 113.677,93.0147 107.572,92.5451 126.356,92.5451L 159.228,92.5451C 165.803,92.5451 168.62,93.4843 171.908,96.3019C 174.725,98.1803 173.786,98.1803 175.665,100.528C 178.013,102.876 177.073,103.346 178.482,105.694C 178.482,113.677 179.891,117.434 174.256,121.66C 168.62,125.417 169.56,127.765 159.698,127.765L 112.268,127.765L 112.268,155.941C 112.268,158.289 122.6,157.35 124.948,157.35L 139.036,157.35C 148.897,157.35 157.82,157.82 166.742,157.82C 170.029,159.698 172.377,160.168 174.725,163.455C 176.134,164.864 178.952,170.029 178.952,172.847L 178.952,176.134C 178.952,185.996 170.969,193.04 160.637,193.04L 108.512,193.04C 105.224,193.04 98.1803,189.753 95.3627,188.344C 91.6059,186.465 87.8491,183.648 85.501,180.83C 80.3354,175.195 76.5786,165.333 76.5786,154.533L 76.5786,74.7003 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<ControlTemplate x:Key="WindowBaseTemplate" TargetType="{x:Type Window}">
+		<Grid>
+			<Grid x:Name="ShadowPanel">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{Binding Margin.Left, ElementName=MainPanel}"/>
+					<ColumnDefinition />
+					<ColumnDefinition Width="{Binding Margin.Right, ElementName=MainPanel}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="{Binding Margin.Top, ElementName=MainPanel}"/>
+					<RowDefinition />
+					<RowDefinition Height="{Binding Margin.Bottom, ElementName=MainPanel}"/>
+				</Grid.RowDefinitions>
+				<Border x:Name="TopLeftShadow" Grid.Row="0" Grid.Column="0">
+					<Border.Background>
+						<RadialGradientBrush GradientOrigin="1,1" Center="1,1" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="TopShadow" Grid.Row="0" Grid.Column="1">
+					<Border.Background>
+						<LinearGradientBrush StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="TopRightShadow" Grid.Row="0" Grid.Column="2">
+					<Border.Background>
+						<RadialGradientBrush GradientOrigin="0,1" Center="0,1" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="LeftShadow" Grid.Row="1" Grid.Column="0">
+					<Border.Background>
+						<LinearGradientBrush StartPoint="1,0" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="RightShadow" Grid.Row="1" Grid.Column="2">
+					<Border.Background>
+						<LinearGradientBrush StartPoint="0,0" EndPoint="1,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="BottomLeftShadow" Grid.Row="2" Grid.Column="0">
+					<Border.Background>
+						<RadialGradientBrush GradientOrigin="1,0" Center="1,0" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="BottomShadow" Grid.Row="2" Grid.Column="1">
+					<Border.Background>
+						<LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="BottomRightShadow" Grid.Row="2" Grid.Column="2">
+					<Border.Background>
+						<RadialGradientBrush GradientOrigin="0,0" Center="0,0" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+			</Grid>
+			<Grid x:Name="MainPanel" Background="{TemplateBinding Background}" Margin="12">
+				<ContentPresenter/>
+			</Grid>
+		</Grid>
+	</ControlTemplate>
+	<Style x:Key="WindowBaseStyle" TargetType="{x:Type Window}">
+		<Setter Property="WindowStyle" Value="None"/>
+		<Setter Property="ResizeMode" Value="NoResize"/>
+		<Setter Property="SizeToContent" Value="WidthAndHeight"/>
+		<Setter Property="Background" Value="{x:Null}"/>
+		<Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+		<Setter Property="Template" Value="{StaticResource WindowBaseTemplate}"/>
+		<EventSetter Event="UIElement.MouseLeftButtonDown" Handler="WindowBaseStyle_MouseLeftButtonDown"/>
+	</Style>
+	<ControlTemplate x:Key="ChildWindowBaseTemplate" TargetType="{x:Type Window}">
+		<Grid>
+			<Grid x:Name="ShadowPanel">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{Binding Margin.Left, ElementName=MainPanel}"/>
+					<ColumnDefinition />
+					<ColumnDefinition Width="{Binding Margin.Right, ElementName=MainPanel}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="{Binding Margin.Top, ElementName=MainPanel}"/>
+					<RowDefinition />
+					<RowDefinition Height="{Binding Margin.Bottom, ElementName=MainPanel}"/>
+				</Grid.RowDefinitions>
+				<Border x:Name="TopLeftShadow" Grid.Row="0" Grid.Column="0">
+					<Border.Background>
+						<RadialGradientBrush GradientOrigin="1,1" Center="1,1" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="TopShadow" Grid.Row="0" Grid.Column="1">
+					<Border.Background>
+						<LinearGradientBrush StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="TopRightShadow" Grid.Row="0" Grid.Column="2">
+					<Border.Background>
+						<RadialGradientBrush GradientOrigin="0,1" Center="0,1" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="LeftShadow" Grid.Row="1" Grid.Column="0">
+					<Border.Background>
+						<LinearGradientBrush StartPoint="1,0" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="RightShadow" Grid.Row="1" Grid.Column="2">
+					<Border.Background>
+						<LinearGradientBrush StartPoint="0,0" EndPoint="1,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="BottomLeftShadow" Grid.Row="2" Grid.Column="0">
+					<Border.Background>
+						<RadialGradientBrush GradientOrigin="1,0" Center="1,0" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="BottomShadow" Grid.Row="2" Grid.Column="1">
+					<Border.Background>
+						<LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+				<Border x:Name="BottomRightShadow" Grid.Row="2" Grid.Column="2">
+					<Border.Background>
+						<RadialGradientBrush GradientOrigin="0,0" Center="0,0" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+					</Border.Background>
+				</Border>
+			</Grid>
+			<Grid x:Name="MainPanel" Background="{TemplateBinding Background}" Margin="12">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Grid Height="20" Margin="5">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock FontSize="14" Foreground="White" Text="{TemplateBinding Title}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					<Button x:Name="ButtonClose" HorizontalAlignment="Right" Click="ChildWindowBaseStyle_ButtonClose_Click" Style="{DynamicResource ExitStyle}" ToolTip="关闭"/>
+				</Grid>
+				<ContentPresenter Grid.Row="1"/>
+			</Grid>
+		</Grid>
+	</ControlTemplate>
+	<Style x:Key="ChildWindowBaseStyle" BasedOn="{StaticResource WindowBaseStyle}" TargetType="{x:Type Window}">
+		<Setter Property="ShowInTaskbar" Value="False"/>
+		<Setter Property="Template" Value="{StaticResource ChildWindowBaseTemplate}"/>
+	</Style>
+	<Geometry x:Key="DownArrowGeometry">M 0 0 L 3.5 4 L 7 0 Z</Geometry>
+	<Style x:Key="ComboBoxReadonlyToggleButton" TargetType="{x:Type ToggleButton}">
+		<Setter Property="OverridesDefaultStyle" Value="true"/>
+		<Setter Property="IsTabStop" Value="false"/>
+		<Setter Property="Focusable" Value="false"/>
+		<Setter Property="ClickMode" Value="Press"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+						<Grid HorizontalAlignment="Right" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
+							<Path x:Name="Arrow" Data="{StaticResource DownArrowGeometry}" Fill="Black" HorizontalAlignment="Center" Margin="0,1,0,0" VerticalAlignment="Center"/>
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="false">
+							<Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
+		<Setter Property="AllowDrop" Value="true"/>
+		<Setter Property="MinWidth" Value="0"/>
+		<Setter Property="MinHeight" Value="0"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TextBox}">
+					<ScrollViewer x:Name="PART_ContentHost" Background="Transparent" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="OverridesDefaultStyle" Value="True"/>
+	</Style>
+	<Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+		<Setter Property="OverridesDefaultStyle" Value="true"/>
+		<Setter Property="IsTabStop" Value="false"/>
+		<Setter Property="Focusable" Value="false"/>
+		<Setter Property="ClickMode" Value="Press"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
+						<Path x:Name="Arrow" Data="{StaticResource DownArrowGeometry}" Fill="Black" HorizontalAlignment="Center" Margin="0,1,0,0" VerticalAlignment="Center"/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="false">
+							<Setter Property="Fill" TargetName="Arrow" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style TargetType="{x:Type ComboBox}">
+		<Setter Property="Background" Value="#BFFFFFFF"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ComboBox}">
+					<Grid x:Name="MainGrid" SnapsToDevicePixels="true">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+						</Grid.ColumnDefinitions>
+						<Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
+							<Border x:Name="DropDownBorder" BorderThickness="1" Background="#BF000000" BorderBrush="Black" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=MainGrid}">
+								<ScrollViewer x:Name="DropDownScrollViewer" Foreground="White">
+									<Grid RenderOptions.ClearTypeHint="Enabled">
+										<ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+									</Grid>
+								</ScrollViewer>
+							</Border>
+						</Popup>
+						<ToggleButton BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxReadonlyToggleButton}"/>
+						<ContentPresenter ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Content="{TemplateBinding SelectionBoxItem}" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="false" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="HasItems" Value="false">
+							<Setter Property="Height" TargetName="DropDownBorder" Value="95"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Background" Value="White"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Background" Value="#7FFFFFFF"/>
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+			</Trigger>
+			<Trigger Property="IsEditable" Value="true">
+				<Setter Property="IsTabStop" Value="false"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ComboBox}">
+							<Grid x:Name="Placement" SnapsToDevicePixels="true">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
+									<Border x:Name="DropDownBorder" BorderBrush="Black" BorderThickness="1" Background="#BF000000" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=Placement}">
+										<ScrollViewer x:Name="DropDownScrollViewer" Foreground="White">
+											<Grid RenderOptions.ClearTypeHint="Enabled">
+												<ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+											</Grid>
+										</ScrollViewer>
+									</Border>
+								</Popup>
+								<Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="2"/>
+								<TextBox x:Name="PART_EditableTextBox" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" Margin="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Style="{StaticResource ComboBoxEditableTextBox}"/>
+								<ToggleButton Grid.Column="1" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}" Background="Transparent"/>
+							</Grid>
+							<ControlTemplate.Triggers>
+								<Trigger Property="HasItems" Value="false">
+									<Setter Property="Height" TargetName="DropDownBorder" Value="95"/>
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="ShowLyricsStyle" TargetType="{x:Type CheckBox}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ToolTip" Value="显示歌词"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+						<Rectangle Width="180" Height="212" Canvas.Left="38" Canvas.Top="22" Stretch="Fill" StrokeThickness="20" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}"/>
+						<Path x:Name="Path_Lyrics" Width="126.5" Height="132" Canvas.Left="64.75" Canvas.Top="62" Stretch="Fill" StrokeThickness="20" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Fill="#FFFFFFFF" Data="M 74.75,72L 180.25,72M 74.75,109.333L 164.75,109.333M 74.75,146.417L 181.25,146.917M 74.75,184L 175.75,184"/>
+					</Canvas>
+					</Viewbox>
+				<ControlTemplate.Triggers>
+					<Trigger Property="IsChecked" Value="False">
+						<Setter Property="Opacity" TargetName="Path_Lyrics" Value="0.25"/>
+					</Trigger>
+				</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+			</Trigger>
+			<Trigger Property="IsChecked" Value="True">
+				<Setter Property="ToolTip" Value="隐藏歌词"/>
 			</Trigger>
 		</Style.Triggers>
 	</Style>

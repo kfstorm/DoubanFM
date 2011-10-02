@@ -34,7 +34,23 @@ namespace DoubanFM.Core
 			/// <summary>
 			/// 人人网
 			/// </summary>
-			Renren
+			Renren,
+			/// <summary>
+			/// 腾讯微博
+			/// </summary>
+			TencentWeibo,
+			/// <summary>
+			/// 饭否
+			/// </summary>
+			Fanfou,
+			/// <summary>
+			/// Facebook
+			/// </summary>
+			Facebook,
+			/// <summary>
+			/// Twitter
+			/// </summary>
+			Twitter
 		}
 
 		/// <summary>
@@ -106,6 +122,29 @@ namespace DoubanFM.Core
 					parameters.Add("vendor", "bshare_renren");
 					parameters.Add("url", tempurl);
 					url = ConnectionBase.ConstructUrlWithParameters("http://www.douban.com/link2", parameters);
+					break;
+				case Sites.TencentWeibo:
+					parameters.Add("url", songInfo.Url);
+					parameters.Add("title", text);
+					parameters.Add("site", "http://www.kfstorm.com/doubanfm");
+					parameters.Add("pic", songInfo.CoverUrl);
+					url = ConnectionBase.ConstructUrlWithParameters("http://v.t.qq.com/share/share.php", parameters);
+					break;
+				case Sites.Fanfou:
+					string fanfouParameters = "?u=" + Uri.EscapeDataString(songInfo.Url)
+						+ "?t=" + Uri.EscapeDataString(text)
+						+ "?d=" + Uri.EscapeDataString("")
+						+ "?s=bm";
+					url = "http://fanfou.com/share" + "r" + fanfouParameters;
+					break;
+				case Sites.Facebook:
+					parameters.Add("u", songInfo.Url);
+					parameters.Add("t", text);
+					url = ConnectionBase.ConstructUrlWithParameters("http://www.facebook.com/sharer.php", parameters);
+					break;
+				case Sites.Twitter:
+					parameters.Add("status", text + " " + songInfo.Url);
+					url = ConnectionBase.ConstructUrlWithParameters("http://twitter.com/home", parameters);
 					break;
 				default:
 					break;

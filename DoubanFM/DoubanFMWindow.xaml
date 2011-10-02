@@ -1,16 +1,11 @@
-﻿<Window
+﻿<local:WindowBase
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
-		Title="豆瓣电台" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" WindowStyle="None" MouseLeftButtonDown="Window_MouseLeftButtonDown" Activated="Window_Activated" Deactivated="Window_Deactivated" AllowsTransparency="{Binding Source={StaticResource Player}, Path=Settings.IsShadowEnabled}" TextOptions.TextFormattingMode="Display" KeyUp="Window_KeyUp" Background="{x:Null}" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}">
+		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="{Binding Source={StaticResource Player}, Path=Settings.IsShadowEnabled}" KeyUp="Window_KeyUp" Background="#FF1960AF" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}">
 	<Window.Resources>
-		<PowerEase x:Key="Smooth" Power="3"/>
-		<local:WindowBackgroundToSliderForegroundConverter x:Key="WindowBackgroundToSliderForegroundConverter"/>
-		<local:BoolReverseConverter x:Key="BoolReverseConverter"/>
-		<local:BoolReverseToVisibilityConverter x:Key="BoolReverseToVisibilityConverter"/>
-		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 		<Storyboard x:Key="BackgroundColorStoryboard">
-			<ColorAnimation Storyboard.TargetName="MainPanel" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" Duration="0:0:5" EasingFunction="{StaticResource Smooth}"/>
+			<ColorAnimation Storyboard.TargetName="Window" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" Duration="0:0:5" EasingFunction="{StaticResource Smooth}"/>
 		</Storyboard>
 		<Storyboard x:Key="ShowCover1Storyboard">
 			<DoubleAnimation Storyboard.TargetName="Cover1" Storyboard.TargetProperty="Opacity" Duration="0:0:1" To="1"/>
@@ -41,23 +36,6 @@
 				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
 			</StringAnimationUsingKeyFrames>
 		</Storyboard>
-		<Storyboard x:Key="ChangeLyricsStoryboard">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Opacity">
-				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
-				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:0.6" EasingFunction="{StaticResource Smooth}"/>
-			</DoubleAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Text">
-				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
-			</StringAnimationUsingKeyFrames>
-		</Storyboard>
-		<Storyboard x:Key="HideLyricsStoryboard">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Opacity">
-				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
-			</DoubleAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Text">
-				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
-			</StringAnimationUsingKeyFrames>
-		</Storyboard>
 		<Storyboard x:Key="DjChannelClickStoryboard">
 			<BooleanAnimationUsingKeyFrames Storyboard.TargetName="DjCates" Storyboard.TargetProperty="IsEnabled">
 				<DiscreteBooleanKeyFrame KeyTime="0" Value="False"/>
@@ -73,9 +51,6 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 		<BitmapImage x:Key="UnlikeThumbImage">Images/DoubanFM_Like_Unlike.png</BitmapImage>
 		<BitmapImage x:Key="NeverThumbImage">Images/DoubanFM_Never.png</BitmapImage>
 		<BitmapImage x:Key="NeverThumbImage_Disabled">Images/DoubanFM_Never_Disabled.png</BitmapImage>
-		
-		<GradientStopCollection x:Key="ShadowGradientStops">
-		</GradientStopCollection>
 	</Window.Resources>
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="SharePanel"/>
@@ -91,382 +66,337 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 		</TaskbarItemInfo>
 	</Window.TaskbarItemInfo>
 	<Grid>
-		<Grid x:Name="ShadowPanel">
+		<Grid x:Name="grid" Height="300">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="{Binding Margin.Left, ElementName=MainPanel}"/>
-				<ColumnDefinition />
-				<ColumnDefinition Width="{Binding Margin.Right, ElementName=MainPanel}"/>
+				<ColumnDefinition Width="300" />
+				<ColumnDefinition Width="300"/>
 			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="{Binding Margin.Top, ElementName=MainPanel}"/>
-				<RowDefinition />
-				<RowDefinition Height="{Binding Margin.Bottom, ElementName=MainPanel}"/>
-			</Grid.RowDefinitions>
-			<Border x:Name="TopLeftShadow" Grid.Row="0" Grid.Column="0">
-				<Border.Background>
-					<RadialGradientBrush GradientOrigin="1,1" Center="1,1" RadiusX="1" RadiusY="1" GradientStops="{StaticResource ShadowGradientStops}"/>
-				</Border.Background>
-			</Border>
-			<Border x:Name="TopShadow" Grid.Row="0" Grid.Column="1">
-				<Border.Background>
-					<LinearGradientBrush StartPoint="0,1" EndPoint="0,0" GradientStops="{StaticResource ShadowGradientStops}"/>
-				</Border.Background>
-			</Border>
-			<Border x:Name="TopRightShadow" Grid.Row="0" Grid.Column="2">
-				<Border.Background>
-					<RadialGradientBrush GradientOrigin="0,1" Center="0,1" RadiusX="1" RadiusY="1" GradientStops="{StaticResource ShadowGradientStops}"/>
-				</Border.Background>
-			</Border>
-			<Border x:Name="LeftShadow" Grid.Row="1" Grid.Column="0">
-				<Border.Background>
-					<LinearGradientBrush StartPoint="1,0" EndPoint="0,0" GradientStops="{StaticResource ShadowGradientStops}"/>
-				</Border.Background>
-			</Border>
-			<Border x:Name="RightShadow" Grid.Row="1" Grid.Column="2">
-				<Border.Background>
-					<LinearGradientBrush StartPoint="0,0" EndPoint="1,0" GradientStops="{StaticResource ShadowGradientStops}"/>
-				</Border.Background>
-			</Border>
-			<Border x:Name="BottomLeftShadow" Grid.Row="2" Grid.Column="0">
-				<Border.Background>
-					<RadialGradientBrush GradientOrigin="1,0" Center="1,0" RadiusX="1" RadiusY="1" GradientStops="{StaticResource ShadowGradientStops}"/>
-				</Border.Background>
-			</Border>
-			<Border x:Name="BottomShadow" Grid.Row="2" Grid.Column="1">
-				<Border.Background>
-					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{StaticResource ShadowGradientStops}"/>
-				</Border.Background>
-			</Border>
-			<Border x:Name="BottomRightShadow" Grid.Row="2" Grid.Column="2">
-				<Border.Background>
-					<RadialGradientBrush GradientOrigin="0,0" Center="0,0" RadiusX="1" RadiusY="1" GradientStops="{StaticResource ShadowGradientStops}"/>
-				</Border.Background>
-			</Border>
-		</Grid>
-		<Grid x:Name="MainPanel" Background="#FF1960AF" Margin="12">
-			<Grid x:Name="grid" Height="300">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="300" />
-					<ColumnDefinition Width="300"/>
-				</Grid.ColumnDefinitions>
-				<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1">
-					<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPaneStyle}" Foreground="{Binding Background, ElementName=MainPanel}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
-						<TabItem Header="{DynamicResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
-							<Grid x:Name="ChannelsGrid">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="40"/>
-									<RowDefinition/>
-								</Grid.RowDefinitions>
-								<Grid Background="#4E000000">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition/>
-										<ColumnDefinition/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<Button x:Name="ButtonPersonal" Margin="5" Content="私人兆赫" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}">
-										<Button.Triggers>
-											<EventTrigger RoutedEvent="ButtonBase.Click">
-												<BeginStoryboard>
-													<Storyboard x:Name="PersonalClickStoryboard">
-														<ThicknessAnimation
-															Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
-													</Storyboard>
-												</BeginStoryboard>
-											</EventTrigger>
-										</Button.Triggers>
-									</Button>
-									<Button Grid.Column="1" Margin="5" Content="公共兆赫">
-										<Button.Triggers>
-											<EventTrigger RoutedEvent="ButtonBase.Click">
-												<BeginStoryboard>
-													<Storyboard x:Name="PublicClickStoryboard">
-														<ThicknessAnimation
-															Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="-250,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
-													</Storyboard>
-												</BeginStoryboard>
-											</EventTrigger>
-										</Button.Triggers>
-									</Button>
-									<Button x:Name="ButtonDjCates" Grid.Column="2" Margin="5" Content="DJ兆赫" Click="ButtonDjCates_Click">
-										<Button.Triggers>
-											<EventTrigger RoutedEvent="ButtonBase.Click">
-												<BeginStoryboard>
-													<Storyboard x:Name="DjClickStoryboard">
-														<BooleanAnimationUsingKeyFrames Storyboard.TargetName="DjCates" Storyboard.TargetProperty="IsEnabled">
-															<DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
-														</BooleanAnimationUsingKeyFrames>
-														<ThicknessAnimation
-															Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="-500,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
-													</Storyboard>
-												</BeginStoryboard>
-											</EventTrigger>
-										</Button.Triggers>
-									</Button>
-								</Grid>
-								<Grid x:Name="ChannelsContentGrid" Grid.Row="1" Width="1000" d:IsHidden="True">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition/>
-										<ColumnDefinition/>
-										<ColumnDefinition/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
-										<ListBox.ItemTemplate>
-											<DataTemplate>
-												<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>	
-											</DataTemplate>
-										</ListBox.ItemTemplate>
-										<ListBox.ItemsPanel>
-											<ItemsPanelTemplate>
-												<UniformGrid Margin="50"/>
-											</ItemsPanelTemplate>
-										</ListBox.ItemsPanel>
-									</ListBox>
-									<ListBox Grid.Column="1" x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
-										<ListBox.ItemTemplate>
-											<DataTemplate>
-												<TextBlock x:Name="TextBlockDjChannel" Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
-											</DataTemplate>
-										</ListBox.ItemTemplate>
-									</ListBox>
-									<ListBox Grid.Column="2" x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged">
-										<ListBox.ItemTemplate>
-											<DataTemplate>
-												<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
-											</DataTemplate>
-										</ListBox.ItemTemplate>
-									</ListBox>
-									<ListBox Grid.Column="3" x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged">
-										<ListBox.ItemTemplate>
-											<DataTemplate>
-												<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
-											</DataTemplate>
-										</ListBox.ItemTemplate>
-									</ListBox>
-								</Grid>
+			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1">
+				<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPaneStyle}" Foreground="{Binding Background, ElementName=Window}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
+					<TabItem Header="{DynamicResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
+						<Grid x:Name="ChannelsGrid">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="40"/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+							<Grid Background="#4E000000">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+								</Grid.ColumnDefinitions>
+								<Button x:Name="ButtonPersonal" Margin="5" Content="私人兆赫" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}">
+									<Button.Triggers>
+										<EventTrigger RoutedEvent="ButtonBase.Click">
+											<BeginStoryboard>
+												<Storyboard x:Name="PersonalClickStoryboard">
+													<ThicknessAnimation
+														Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
+												</Storyboard>
+											</BeginStoryboard>
+										</EventTrigger>
+									</Button.Triggers>
+								</Button>
+								<Button Grid.Column="1" Margin="5" Content="公共兆赫">
+									<Button.Triggers>
+										<EventTrigger RoutedEvent="ButtonBase.Click">
+											<BeginStoryboard>
+												<Storyboard x:Name="PublicClickStoryboard">
+													<ThicknessAnimation
+														Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="-250,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
+												</Storyboard>
+											</BeginStoryboard>
+										</EventTrigger>
+									</Button.Triggers>
+								</Button>
+								<Button x:Name="ButtonDjCates" Grid.Column="2" Margin="5" Content="DJ兆赫" Click="ButtonDjCates_Click">
+									<Button.Triggers>
+										<EventTrigger RoutedEvent="ButtonBase.Click">
+											<BeginStoryboard>
+												<Storyboard x:Name="DjClickStoryboard">
+													<BooleanAnimationUsingKeyFrames Storyboard.TargetName="DjCates" Storyboard.TargetProperty="IsEnabled">
+														<DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
+													</BooleanAnimationUsingKeyFrames>
+													<ThicknessAnimation
+														Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="-500,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
+												</Storyboard>
+											</BeginStoryboard>
+										</EventTrigger>
+									</Button.Triggers>
+								</Button>
 							</Grid>
-						</TabItem>
-						<TabItem Header="{DynamicResource TabItemSearch}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
-							<Grid>
+							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" Width="1000" d:IsHidden="True">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+								</Grid.ColumnDefinitions>
+								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>	
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<UniformGrid Margin="50"/>
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+								</ListBox>
+								<ListBox Grid.Column="1" x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock x:Name="TextBlockDjChannel" Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+								<ListBox Grid.Column="2" x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged">
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+								<ListBox Grid.Column="3" x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged">
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</Grid>
+						</Grid>
+					</TabItem>
+					<TabItem Header="{DynamicResource TabItemSearch}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition/>
+								<RowDefinition Height="40"/>
+							</Grid.RowDefinitions>
+							<Grid Margin="10" Height="30">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<TextBox x:Name="SearchText" Height="20" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}"/>
+								<Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsDefault="True" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" Style="{DynamicResource SearchStyle}"/>
+							</Grid>
+							<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{DynamicResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=MusicSearch.SearchResult}" />
+							<Label Grid.Row="1" Visibility="{Binding Converter={StaticResource BoolReverseToVisibilityConverter}, Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" HorizontalAlignment="Center" VerticalAlignment="Center">正在搜索...</Label>
+							<Grid Grid.Row="1" Visibility="{Binding Path=MusicSearch.ShowNoResultHint, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}" Height="Auto" VerticalAlignment="Center">
 								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
 									<RowDefinition/>
-									<RowDefinition Height="40"/>
+									<RowDefinition/>
 								</Grid.RowDefinitions>
-								<Grid Margin="10" Height="30">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition/>
-										<ColumnDefinition Width="Auto"/>
-									</Grid.ColumnDefinitions>
-									<TextBox x:Name="SearchText" Height="20" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}"/>
-									<Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsDefault="True" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" Style="{DynamicResource SearchStyle}"/>
-								</Grid>
-								<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{DynamicResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=MusicSearch.SearchResult}" />
-								<Label Grid.Row="1" Visibility="{Binding Converter={StaticResource BoolReverseToVisibilityConverter}, Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" HorizontalAlignment="Center" VerticalAlignment="Center">正在搜索...</Label>
-								<Grid Grid.Row="1" Visibility="{Binding Path=MusicSearch.ShowNoResultHint, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}" Height="Auto" VerticalAlignment="Center">
+								<Label HorizontalAlignment="Center" VerticalAlignment="Center">没有任何搜索结果</Label>
+								<Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">请不要输入过短或过长的内容</Label>
+							</Grid>
+							<StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Height="30">
+								<Button x:Name="PreviousPage" Click="PreviousPage_Click" IsEnabled="{Binding Path=MusicSearch.IsPreviousPageEnabled, Source={StaticResource Player}}" Style="{DynamicResource PreviousPageStyle}"/>
+								<Border Width="20"/>
+								<Button x:Name="NextPage" Click="NextPage_Click" IsEnabled="{Binding Path=MusicSearch.IsNextPageEnabled, Source={StaticResource Player}}" Style="{DynamicResource NextPageStyle}"/>
+							</StackPanel>
+						</Grid>
+					</TabItem>
+					<TabItem x:Name="Account" Header="{DynamicResource TabItemAccount}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
+						<Grid>
+							<Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
+								<Grid Margin="20">
 									<Grid.RowDefinitions>
-										<RowDefinition/>
+										<RowDefinition Height="Auto"/>
+										<RowDefinition Height="Auto"/>
 										<RowDefinition/>
 									</Grid.RowDefinitions>
-									<Label HorizontalAlignment="Center" VerticalAlignment="Center">没有任何搜索结果</Label>
-									<Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">请不要输入过短或过长的内容</Label>
-								</Grid>
-								<StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Height="30">
-									<Button x:Name="PreviousPage" Click="PreviousPage_Click" IsEnabled="{Binding Path=MusicSearch.IsPreviousPageEnabled, Source={StaticResource Player}}" Style="{DynamicResource PreviousPageStyle}"/>
-									<Border Width="20"/>
-									<Button x:Name="NextPage" Click="NextPage_Click" IsEnabled="{Binding Path=MusicSearch.IsNextPageEnabled, Source={StaticResource Player}}" Style="{DynamicResource NextPageStyle}"/>
-								</StackPanel>
-							</Grid>
-						</TabItem>
-						<TabItem x:Name="Account" Header="{DynamicResource TabItemAccount}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
-							<Grid>
-								<Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
-									<Grid Margin="20">
+									<Grid>
 										<Grid.RowDefinitions>
-											<RowDefinition Height="Auto"/>
-											<RowDefinition Height="Auto"/>
-											<RowDefinition/>
-										</Grid.RowDefinitions>
-										<Grid>
-											<Grid.RowDefinitions>
-												<RowDefinition/> 					
-												<RowDefinition/> 					
-												<RowDefinition Height="Auto"/> 					
-												<RowDefinition Height="Auto"/> 					
-											</Grid.RowDefinitions> 
+											<RowDefinition/> 					
+											<RowDefinition/> 					
+											<RowDefinition Height="Auto"/> 					
+											<RowDefinition Height="Auto"/> 					
+										</Grid.RowDefinitions> 
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto"/>
+											<ColumnDefinition/>
+										</Grid.ColumnDefinitions>
+										<Label HorizontalAlignment="Right" VerticalAlignment="Center" Content="邮箱"/>
+										<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Content="密码"/>
+										<TextBox x:Name="TbUsername" Grid.Column="1" Margin="4" Text="{Binding Path=Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}"/>
+										<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="4" PasswordChanged="PbPassword_PasswordChanged" />
+										<Grid x:Name="CaptchaGrid" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.HasCaptcha, Source={StaticResource Player}}">
 											<Grid.ColumnDefinitions>
 												<ColumnDefinition Width="Auto"/>
 												<ColumnDefinition/>
 											</Grid.ColumnDefinitions>
-											<Label HorizontalAlignment="Right" VerticalAlignment="Center" Content="邮箱"/>
-											<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Content="密码"/>
-											<TextBox x:Name="TbUsername" Grid.Column="1" Margin="4" Text="{Binding Path=Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}"/>
-											<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="4" PasswordChanged="PbPassword_PasswordChanged" />
-											<Grid x:Name="CaptchaGrid" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.HasCaptcha, Source={StaticResource Player}}">
-												<Grid.ColumnDefinitions>
-													<ColumnDefinition Width="Auto"/>
-													<ColumnDefinition/>
-												</Grid.ColumnDefinitions>
-												<Grid.RowDefinitions>
-													<RowDefinition Height="Auto"/>
-													<RowDefinition/>
-												</Grid.RowDefinitions>
-												<Button x:Name="ButtonRefreshCaptcha" Grid.ColumnSpan="2" Click="ButtonRefreshCaptcha_Click" Padding="0" MinHeight="40" MaxHeight="40" BorderThickness="0">
-													<Image x:Name="Captcha" Stretch="Fill"/>
-												</Button>
-												<Label Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Content="验证码"/>
-												<TextBox x:Name="CaptchaText" Grid.Row="1" Grid.Column="1" Margin="4"/>
-											</Grid>
-										</Grid>
-										<Grid Grid.Row="1">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition/>
-												<ColumnDefinition/>
-											</Grid.ColumnDefinitions>
-											<Label x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.ShowLogOnFailedHint, Source={StaticResource Player}}" Content="登录失败！"/>
-											<Button Grid.Column="1" x:Name="ButtonLogOn" Margin="10" Click="ButtonLogOn_Click" IsDefault="True" Content="登录"/>
-										</Grid>
-										<Grid Grid.Row="2" Margin="0,20">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition/>
-												<ColumnDefinition/>
-											</Grid.ColumnDefinitions>
-											<CheckBox x:Name="CheckBoxRememberPassword" VerticalAlignment="Center" HorizontalAlignment="Center" Content="记住密码" IsChecked="{Binding Path=Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}" />
-											<CheckBox Grid.Column="1" x:Name="CheckBoxAutoLogOnNextTime" VerticalAlignment="Center" HorizontalAlignment="Center" Content="下次自动登录" IsChecked="{Binding Path=Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}" />
+											<Grid.RowDefinitions>
+												<RowDefinition Height="Auto"/>
+												<RowDefinition/>
+											</Grid.RowDefinitions>
+											<Button x:Name="ButtonRefreshCaptcha" Grid.ColumnSpan="2" Click="ButtonRefreshCaptcha_Click" Padding="0" MinHeight="40" MaxHeight="40" BorderThickness="0">
+												<Image x:Name="Captcha" Stretch="Fill"/>
+											</Button>
+											<Label Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Content="验证码"/>
+											<TextBox x:Name="CaptchaText" Grid.Row="1" Grid.Column="1" Margin="4"/>
 										</Grid>
 									</Grid>
-								</Grid>
-								<Grid x:Name="LogOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOn, Source={StaticResource Player}}">
-									<Grid.RowDefinitions>
-										<RowDefinition/>
-										<RowDefinition/>
-										<RowDefinition/>
-									</Grid.RowDefinitions>
-									<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Text, ElementName=TbUsername}"/>
-									<Label Grid.Row="1" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="已登录"/>
-									<Button Grid.Row="2" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销"/>
-								</Grid>
-								<Grid x:Name="LoggingOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOn, Source={StaticResource Player}}">
-									<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在登录"/>
-								</Grid>
-								<Grid x:Name="LoggingOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOff, Source={StaticResource Player}}">
-									<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在注销"/>
-								</Grid>
-							</Grid>
-						</TabItem>
-						<TabItem Header="{DynamicResource TabItemSettings}">
-							<Border Padding="20">
-								<Grid>
-									<Grid.RowDefinitions>
-										<RowDefinition Height="Auto"/>
-										<RowDefinition/>
-										<RowDefinition/>
-										<RowDefinition/>
-										<RowDefinition/>
-										<RowDefinition Height="Auto"/>
-										<RowDefinition/>
-										<RowDefinition/>
-										<RowDefinition Height="Auto"/>
-									</Grid.RowDefinitions>
-									<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}"/>
-									<CheckBox Grid.Row="1" x:Name="CheckBoxShowLyrics" Content="显示歌词" IsChecked="{Binding Settings.ShowLyrics, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Checked="CheckBoxShowLyrics_Checked"/>
-									<CheckBox Grid.Row="2" x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
-									<CheckBox Grid.Row="3" x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
-									<CheckBox Grid.Row="4" x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-									<Grid Grid.Row="5" VerticalAlignment="Center">
-										<Grid.RowDefinitions>
-											<RowDefinition/>
-											<RowDefinition/>
-										</Grid.RowDefinitions>
-										<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
-										<TextBlock Grid.Row="1" Foreground="White">（重启后生效，关闭后动画更平滑）</TextBlock>
-									</Grid>
-									<CheckBox Grid.Row="6" x:Name="CheckBoxTopMost" VerticalAlignment="Center" IsChecked="{Binding Settings.TopMost, Mode=TwoWay, Source={StaticResource Player}}">总在最前</CheckBox>
-									<CheckBox Grid.Row="7" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" >总是显示托盘图标</CheckBox>
-									<Grid Grid.Row="8">
-										<Grid.RowDefinitions>
-											<RowDefinition/>                    	
-											<RowDefinition/>                    	
-											<RowDefinition/>                    	
-										</Grid.RowDefinitions>
-										<RadioButton x:Name="RadioButtonSlideCoverWhenMouseMove" Content="当鼠标移动到封面上时滑动封面" IsChecked="{Binding Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-										<CheckBox x:Name="CheckBoxOpenAlbumInfoWhenClickCover" Grid.Row="1" Content="点击封面时打开豆瓣资料页面" IsChecked="{Binding Settings.OpenAlbumInfoWhenClickCover, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=RadioButtonSlideCoverWhenMouseMove}" VerticalAlignment="Center" Margin="20,0,0,3"/>
-										<RadioButton Grid.Row="2" IsChecked="{Binding Converter={StaticResource BoolReverseConverter}, Path=Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" x:Name="RadioButtonSlideCoverWhenClick" Content="当鼠标点击封面时滑动封面" VerticalAlignment="Center"/>
-									</Grid>
-								<Button x:Name="ButtonHotKeySettings" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0" Width="90" Height="30" Click="ButtonHotKeySettings_Click">热键设置</Button>
-								</Grid>			
-							</Border>			
-						</TabItem>
-						<TabItem Header="{DynamicResource TabItemInfo}">
-							<Border Padding="20">
-								<Grid>
-									<Grid.RowDefinitions>
-										<RowDefinition Height="Auto"/>
-										<RowDefinition Height="Auto"/>
-										<RowDefinition/>
-										<RowDefinition/>
-										<RowDefinition Height="Auto"/>
-										<RowDefinition Height="Auto"/>
-									</Grid.RowDefinitions>
-									<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
-									<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.4.1</Label>
-									<Button x:Name="CheckUpdate" Grid.Row="2" FontSize="16" Width="120" Height="40" Click="CheckUpdate_Click">检查更新</Button>
-									<Grid Grid.Row="3">
+									<Grid Grid.Row="1">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition/>
 											<ColumnDefinition/>
 										</Grid.ColumnDefinitions>
-										<Button x:Name="Feedback" Width="90" Height="30" Click="Feedback_Click">意见与反馈</Button>
-										<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Width="90" Height="30" Click="VisitOfficialWebsite_Click">豆瓣电台官网</Button>
+										<Label x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.ShowLogOnFailedHint, Source={StaticResource Player}}" Content="登录失败！"/>
+										<Button Grid.Column="1" x:Name="ButtonLogOn" Margin="10" Click="ButtonLogOn_Click" IsDefault="True" Content="登录"/>
 									</Grid>
-									<Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
-									<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">All rights reserved.</Label>
+									<Grid Grid.Row="2" Margin="0,20">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition/>
+											<ColumnDefinition/>
+										</Grid.ColumnDefinitions>
+										<CheckBox x:Name="CheckBoxRememberPassword" VerticalAlignment="Center" HorizontalAlignment="Center" Content="记住密码" IsChecked="{Binding Path=Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}" />
+										<CheckBox Grid.Column="1" x:Name="CheckBoxAutoLogOnNextTime" VerticalAlignment="Center" HorizontalAlignment="Center" Content="下次自动登录" IsChecked="{Binding Path=Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}" />
+									</Grid>
 								</Grid>
-							</Border>
-						</TabItem>
-					</TabControl>
-				</Grid>
-				<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent">
-					<Grid Margin="10">
+							</Grid>
+							<Grid x:Name="LogOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOn, Source={StaticResource Player}}">
+								<Grid.RowDefinitions>
+									<RowDefinition/>
+									<RowDefinition/>
+									<RowDefinition/>
+								</Grid.RowDefinitions>
+								<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Text, ElementName=TbUsername}"/>
+								<Label Grid.Row="1" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="已登录"/>
+								<Button Grid.Row="2" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销"/>
+							</Grid>
+							<Grid x:Name="LoggingOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOn, Source={StaticResource Player}}">
+								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在登录"/>
+							</Grid>
+							<Grid x:Name="LoggingOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOff, Source={StaticResource Player}}">
+								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在注销"/>
+							</Grid>
+						</Grid>
+					</TabItem>
+					<TabItem Header="{DynamicResource TabItemSettings}">
+						<Border Padding="20">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition/>
+									<RowDefinition/>
+									<RowDefinition/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition/>
+									<RowDefinition/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}"/>
+								<Grid Grid.Row="1">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition/>
+										<ColumnDefinition Width="20"/>
+										<ColumnDefinition/>
+									</Grid.ColumnDefinitions>
+								<Button x:Name="ButtonLyricsSetting" Content="歌词设置" Click="LyricsSetting_Click" />
+								<Button Grid.Column="2" x:Name="ButtonHotKeySettings" Click="ButtonHotKeySettings_Click" Content="热键设置"/>
+								</Grid>
+								<CheckBox Grid.Row="2" x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
+								<CheckBox Grid.Row="3" x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
+								<CheckBox Grid.Row="4" x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
+								<Grid Grid.Row="5" VerticalAlignment="Center">
+									<Grid.RowDefinitions>
+										<RowDefinition/>
+										<RowDefinition/>
+									</Grid.RowDefinitions>
+									<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
+									<TextBlock Grid.Row="1" Foreground="White">（重启后生效，关闭后动画更平滑）</TextBlock>
+								</Grid>
+								<CheckBox Grid.Row="6" x:Name="CheckBoxTopMost" VerticalAlignment="Center" IsChecked="{Binding Settings.TopMost, Mode=TwoWay, Source={StaticResource Player}}">总在最前</CheckBox>
+								<CheckBox Grid.Row="7" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" >总是显示托盘图标</CheckBox>
+								<Grid Grid.Row="8">
+									<Grid.RowDefinitions>
+										<RowDefinition/>                    	
+										<RowDefinition/>                    	
+										<RowDefinition/>                    	
+									</Grid.RowDefinitions>
+									<RadioButton x:Name="RadioButtonSlideCoverWhenMouseMove" Content="当鼠标移动到封面上时滑动封面" IsChecked="{Binding Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
+									<CheckBox x:Name="CheckBoxOpenAlbumInfoWhenClickCover" Grid.Row="1" Content="点击封面时打开豆瓣资料页面" IsChecked="{Binding Settings.OpenAlbumInfoWhenClickCover, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=RadioButtonSlideCoverWhenMouseMove}" VerticalAlignment="Center" Margin="20,0,0,3"/>
+									<RadioButton Grid.Row="2" IsChecked="{Binding Converter={StaticResource BoolReverseConverter}, Path=Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" x:Name="RadioButtonSlideCoverWhenClick" Content="当鼠标点击封面时滑动封面" VerticalAlignment="Center"/>
+								</Grid>
+							</Grid>			
+						</Border>			
+					</TabItem>
+					<TabItem Header="{DynamicResource TabItemInfo}">
+						<Border Padding="20">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition/>
+									<RowDefinition/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
+								<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.4.1</Label>
+								<Button x:Name="CheckUpdate" Grid.Row="2" FontSize="16" Width="120" Height="40" Click="CheckUpdate_Click">检查更新</Button>
+								<Grid Grid.Row="3">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition/>
+										<ColumnDefinition/>
+									</Grid.ColumnDefinitions>
+									<Button x:Name="Feedback" Width="90" Height="30" Click="Feedback_Click">意见与反馈</Button>
+									<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Width="90" Height="30" Click="VisitOfficialWebsite_Click">豆瓣电台官网</Button>
+								</Grid>
+								<Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
+								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">All rights reserved.</Label>
+							</Grid>
+						</Border>
+					</TabItem>
+				</TabControl>
+			</Grid>
+			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent">
+				<Grid Margin="10">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="3*"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<Grid Height="20">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="2*"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<TextBlock x:Name="ChannelTextBlock" TextTrimming="CharacterEllipsis" Foreground="White" Margin="10,0,0,0" FontSize="14.667" FontStretch="Normal" Text="{Binding Source={StaticResource Player}, Path=CurrentChannel}" />
+						<StackPanel Grid.Column="1" x:Name="WindowStateControls" Orientation="Horizontal" HorizontalAlignment="Right">
+							<Button x:Name="ButtonMinimize" Click="ButtonMinimize_Click" Style="{DynamicResource MinimizeStyle}"/>
+							<Border Width="10"/>
+							<Button x:Name="ButtonToNotifyIcon" Click="ButtonToNotifyIcon_Click" Style="{DynamicResource ToNotifyIconStyle}"/>
+							<Border Width="10"/>
+							<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
+						</StackPanel>
+					</Grid>
+					<Grid Grid.Row="1" x:Name="SongInfoPanel">
 						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="3*"/>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="50"/>
+							<RowDefinition/>
 							<RowDefinition/>
 						</Grid.RowDefinitions>
-						<Grid Height="20">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="2*"/>
-								<ColumnDefinition/>
-							</Grid.ColumnDefinitions>
-							<TextBlock x:Name="ChannelTextBlock" TextTrimming="CharacterEllipsis" Foreground="White" Margin="10,0,0,0" FontSize="14.667" FontStretch="Normal" Text="{Binding Source={StaticResource Player}, Path=CurrentChannel}" />
-							<StackPanel Grid.Column="1" x:Name="WindowStateControls" Orientation="Horizontal" HorizontalAlignment="Right">
-								<Button x:Name="ButtonMinimize" Click="ButtonMinimize_Click" Style="{DynamicResource MinimizeStyle}"/>
-								<Border Width="10"/>
-								<Button x:Name="ButtonToNotifyIcon" Click="ButtonToNotifyIcon_Click" Style="{DynamicResource ToNotifyIconStyle}"/>
-								<Border Width="10"/>
-								<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
-							</StackPanel>
-						</Grid>
-						<Grid Grid.Row="1" x:Name="SongInfoPanel">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="50"/>
-								<RowDefinition/>
-								<RowDefinition/>
-							</Grid.RowDefinitions>
-							<Viewbox HorizontalAlignment="Left" StretchDirection="DownOnly">
-								<Label x:Name="SongTitle" FontSize="31" VerticalContentAlignment="Center" Content="豆瓣电台" Foreground="White"/>
-							</Viewbox>
-							<Viewbox Margin="0,5" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
-								<Label x:Name="Artist" FontSize="22" VerticalContentAlignment="Center" Foreground="White" />
-							</Viewbox>
-							<Viewbox Margin="0,5" Grid.Row="2" HorizontalAlignment="Left" StretchDirection="DownOnly">
-								<Label x:Name="Album" VerticalContentAlignment="Center" FontSize="22" Foreground="White" />
-							</Viewbox>
-						</Grid>
-						<Grid Grid.Row="2" x:Name="SharePanel" HorizontalAlignment="Right" Height="24">
+						<Viewbox HorizontalAlignment="Left" StretchDirection="DownOnly">
+							<Label x:Name="SongTitle" FontSize="31" VerticalContentAlignment="Center" Content="豆瓣电台" Foreground="White"/>
+						</Viewbox>
+						<Viewbox Margin="0,5" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
+							<Label x:Name="Artist" FontSize="22" VerticalContentAlignment="Center" Foreground="White" />
+						</Viewbox>
+						<Viewbox Margin="0,5" Grid.Row="2" HorizontalAlignment="Left" StretchDirection="DownOnly">
+							<Label x:Name="Album" VerticalContentAlignment="Center" FontSize="22" Foreground="White" />
+						</Viewbox>
+					</Grid>
+					<StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal" Height="24">
+						<Grid x:Name="SharePanel">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto"/>
 								<ColumnDefinition Width="Auto"/>
@@ -475,7 +405,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 								<EventTrigger RoutedEvent="UIElement.MouseEnter">
 									<BeginStoryboard>
 										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width" To="128" EasingFunction="{StaticResource Smooth}" BeginTime="0:0:0.5" Duration="0:0:0.5"/>
+											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width" To="224" EasingFunction="{StaticResource Smooth}" BeginTime="0:0:0.5" Duration="0:0:0.5"/>
 											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="1" EasingFunction="{StaticResource Smooth}" BeginTime="0:0:0.5" Duration="0:0:0.5"/>
 										</Storyboard>
 									</BeginStoryboard>
@@ -495,53 +425,46 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 								<Button x:Name="ShareMsn" Click="ShareMsn_Click" Style="{DynamicResource ShareMsnStyle}"/>
 								<Button x:Name="ShareKaixin" Click="ShareKaixin_Click" Style="{DynamicResource ShareKaixinStyle}"/>
 								<Button x:Name="ShareRenren" Click="ShareRenren_Click" Style="{DynamicResource ShareRenenStyle}"/>
+								<Button x:Name="ShareTencentWeibo" Click="ShareTencentWeibo_Click" Style="{DynamicResource ShareTencentWeiboStyle}"/>
+								<Button x:Name="ShareFanfou" Click="ShareFanfou_Click" Style="{DynamicResource ShareFanfouStyle}"/>
+								<Button x:Name="ShareFacebook" Click="ShareFacebook_Click" Style="{DynamicResource ShareFacebookStyle}"/>
+								<Button x:Name="ShareTwitter" Click="ShareTwitter_Click" Style="{DynamicResource ShareTwitterStyle}"/>
 							</StackPanel>
 							<Border Grid.Column="1" Child="{StaticResource ShareStyle}"/>
 						</Grid>
-						<Grid Grid.Row="3" VerticalAlignment="Bottom">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition/>
-								<ColumnDefinition/>
-							</Grid.ColumnDefinitions>
-							<Label x:Name="CurrentTime" FontSize="18" Foreground="White" Content="00:00"/>
-							<Label Grid.Column="1" x:Name="TotalTime" FontSize="18" HorizontalAlignment="Right" Foreground="White" Content="00:00"/>
-						</Grid>
-						<Slider x:Name="Slider" Grid.Row="4" Margin="5,5" Style="{DynamicResource SliderStyleForProgress}" Background="#7F000000" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=MainPanel}"/>
-						<Grid Grid.Row="5" HorizontalAlignment="Center" Height="50" VerticalAlignment="Bottom">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="38" />
-								<ColumnDefinition Width="20"/>
-								<ColumnDefinition Width="38" />
-								<ColumnDefinition Width="20"/>
-								<ColumnDefinition Width="32" />
-								<ColumnDefinition Width="20"/>
-								<ColumnDefinition Width="38"/>
-							</Grid.ColumnDefinitions>
-							<CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{DynamicResource LikeStyle}" IsChecked="{Binding Path=IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsLikedEnabled}" />
-							<Button Grid.Column="2" x:Name="ButtonNever" Style="{DynamicResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding Source={StaticResource Player}, Path=IsNeverEnabled}" />
-							<CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{DynamicResource PauseStyle}" IsChecked="{Binding Path=IsPlaying, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" />
-							<Button Grid.Column="6" x:Name="ButtonNext" Click="ButtonNext_Click" Style="{DynamicResource NextStyle}"/>
-						</Grid>
+						<CheckBox x:Name="CheckBoxShowLyrics" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
+					</StackPanel>
+					<Grid Grid.Row="3" VerticalAlignment="Bottom">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Label x:Name="CurrentTime" FontSize="18" Foreground="White" Content="00:00"/>
+						<Label Grid.Column="1" x:Name="TotalTime" FontSize="18" HorizontalAlignment="Right" Foreground="White" Content="00:00"/>
+					</Grid>
+					<Slider x:Name="Slider" Grid.Row="4" Margin="5,5" Style="{DynamicResource SliderStyleForProgress}" Background="#7F000000" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=Window}"/>
+					<Grid Grid.Row="5" HorizontalAlignment="Center" Height="50" VerticalAlignment="Bottom">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="38" />
+							<ColumnDefinition Width="20"/>
+							<ColumnDefinition Width="38" />
+							<ColumnDefinition Width="20"/>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition Width="20"/>
+							<ColumnDefinition Width="38"/>
+						</Grid.ColumnDefinitions>
+						<CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{DynamicResource LikeStyle}" IsChecked="{Binding Path=IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsLikedEnabled}" />
+						<Button Grid.Column="2" x:Name="ButtonNever" Style="{DynamicResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding Source={StaticResource Player}, Path=IsNeverEnabled}" />
+						<CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{DynamicResource PauseStyle}" IsChecked="{Binding Path=IsPlaying, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" />
+						<Button Grid.Column="6" x:Name="ButtonNext" Click="ButtonNext_Click" Style="{DynamicResource NextStyle}"/>
 					</Grid>
 				</Grid>
 			</Grid>
-			<Grid x:Name="CoverGrid" MouseLeftButtonDown="CoverGrid_MouseLeftButtonDown" Width="{Binding ActualWidth, ElementName=LeftPanel}" Height="{Binding ActualHeight, ElementName=LeftPanel}" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment, GridBox" MouseMove="CoverGrid_MouseMove" MouseLeave="CoverGrid_MouseLeave" d:IsHidden="True">
-				<MediaElement x:Name="Audio" LoadedBehavior="Manual" MediaEnded="Audio_MediaEnded" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" MediaFailed="Audio_MediaFailed" MediaOpened="Audio_MediaOpened" UnloadedBehavior="Manual" d:IsHidden="True" />
-				<Image x:Name="Cover2" Stretch="UniformToFill"/>
-				<Image x:Name="Cover1" Stretch="UniformToFill" Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" />
-				<Grid x:Name="LyricsPanel" Height="70" VerticalAlignment="Bottom" Visibility="{Binding Path=Settings.ShowLyrics, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
-					<Border Background="{Binding Background, ElementName=MainPanel}">
-						<Border.OpacityMask>
-							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-								<GradientStop Offset="0"/>
-								<GradientStop Color="#CC38FFA8" Offset="0.815"/>
-								<GradientStop Color="#9047FFAE" Offset="0.422"/>
-							</LinearGradientBrush>
-						</Border.OpacityMask>
-					</Border>
-					<TextBlock x:Name="CurrentLyrics" Foreground="White" Margin="7" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" TextTrimming="WordEllipsis"/>
-				</Grid>
-			</Grid>
+		</Grid>
+		<Grid x:Name="CoverGrid" MouseLeftButtonDown="CoverGrid_MouseLeftButtonDown" Width="{Binding ActualWidth, ElementName=LeftPanel}" Height="{Binding ActualHeight, ElementName=LeftPanel}" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment, GridBox" MouseMove="CoverGrid_MouseMove" MouseLeave="CoverGrid_MouseLeave" d:IsHidden="True">
+			<MediaElement x:Name="Audio" LoadedBehavior="Manual" MediaEnded="Audio_MediaEnded" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" MediaFailed="Audio_MediaFailed" MediaOpened="Audio_MediaOpened" UnloadedBehavior="Manual" d:IsHidden="True" />
+			<Image x:Name="Cover2" Stretch="UniformToFill"/>
+			<Image x:Name="Cover1" Stretch="UniformToFill" Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" />
 		</Grid>
 	</Grid>
-</Window>
+</local:WindowBase>

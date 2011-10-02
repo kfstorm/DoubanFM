@@ -79,6 +79,7 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -102,10 +103,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ChildWindowBase.cs" />
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeys.cs" />
     <Compile Include="HotKeyWindow.xaml.cs">
       <DependentUpon>HotKeyWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LyricsSetting.cs" />
+    <Compile Include="LyricsSettingWindow.xaml.cs">
+      <DependentUpon>LyricsSettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LyricsWindow.xaml.cs">
+      <DependentUpon>LyricsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Style.xaml.cs">
       <DependentUpon>Style.xaml</DependentUpon>
@@ -116,6 +125,7 @@
     <Compile Include="VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowBase.cs" />
     <Page Include="DoubanFMWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -133,6 +143,14 @@
     <Page Include="HotKeyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LyricsSettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LyricsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Style.xaml">
       <SubType>Designer</SubType>

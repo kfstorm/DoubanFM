@@ -1,0 +1,24 @@
+﻿<local:ChildWindowBase x:Class="DoubanFM.LyricsSettingWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:DoubanFM"
+		x:Name="Window"
+		Title="歌词设置">
+	<Grid Width="300" Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Label VerticalAlignment="Center">字体</Label>
+		<ComboBox x:Name="CbFontFamily" Grid.Column="1" IsEditable="True" Margin="10" Height="24" SelectionChanged="CbFontFamily_SelectionChanged" />
+		<Label Grid.Row="1" VerticalAlignment="Center">大小</Label>
+		<Slider x:Name="SliderFontSize" Grid.Row="1" Grid.Column="1" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="10"/>
+		<Label Grid.Row="2" VerticalAlignment="Center">粗细</Label>
+		<ComboBox x:Name="CbFontWeight" Grid.Row="2" Grid.Column="1" SelectedItem="{Binding ElementName=Window, Path=LyricsSetting.FontWeight, Mode=TwoWay}" Margin="10" Height="24"/>
+	</Grid>
+</local:ChildWindowBase>

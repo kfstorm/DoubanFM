@@ -16,16 +16,16 @@ namespace DoubanFM
 	/// <summary>
 	/// HotKeyWindow.xaml 的交互逻辑
 	/// </summary>
-	public partial class HotKeyWindow : Window
+	public partial class HotKeyWindow : ChildWindowBase
 	{
 		/// <summary>
 		/// 热键设置，关闭窗口前为默认设置，关闭窗口后更新为新设置
 		/// </summary>
 		internal HotKeys HotKeys { get; private set; }
 		/// <summary>
-		/// 四个热键
+		/// 热键
 		/// </summary>
-		private HotKey _likeUnlike, _never, _playPause, _next;
+		private HotKey _likeUnlike, _never, _playPause, _next, _showMinimize, _showHide;
 
 		internal HotKeyWindow(DoubanFMWindow owner, HotKeys hotKeys)
 		{
@@ -56,48 +56,18 @@ namespace DoubanFM
 				_next = hotKeys[DoubanFMWindow.Commands.Next];
 				Next.Text = _next.ToString();
 			}
-
-			Owner = owner;
-			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Background");
-			binding.Source = owner.MainPanel;
-			MainPanel.SetBinding(UpdateWindow.BackgroundProperty, binding);
-			AllowsTransparency = owner.AllowsTransparency;
-			MainPanel.Margin = owner.MainPanel.Margin;
-		}
-
-		private void window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			this.DragMove();
-		}
-
-		private void Close(object sender, System.Windows.RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			this.Close();
-		}
-
-		private void window_Activated(object sender, EventArgs e)
-		{
-			GradientStopCollection active = (GradientStopCollection)FindResource("ActiveShadowGradientStops");
-			GradientStopCollection now = (GradientStopCollection)FindResource("ShadowGradientStops");
-			now.Clear();
-			foreach (GradientStop g in active)
-				now.Add(g);
-		}
-
-		private void window_Deactivated(object sender, EventArgs e)
-		{
-			GradientStopCollection inactive = (GradientStopCollection)FindResource("InactiveShadowGradientStops");
-			GradientStopCollection now = (GradientStopCollection)FindResource("ShadowGradientStops");
-			now.Clear();
-			foreach (GradientStop g in inactive)
-				now.Add(g);
-		}
-
-		private void window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			Owner.Activate();
+			ShowMinimize.IsEnabled = hotKeys.ContainsKey(DoubanFMWindow.Commands.ShowMinimize);
+			if (ShowMinimize.IsEnabled)
+			{
+				_showMinimize = hotKeys[DoubanFMWindow.Commands.ShowMinimize];
+				ShowMinimize.Text = _showMinimize.ToString();
+			}
+			ShowHide.IsEnabled = hotKeys.ContainsKey(DoubanFMWindow.Commands.ShowHide);
+			if (ShowHide.IsEnabled)
+			{
+				_showHide = hotKeys[DoubanFMWindow.Commands.ShowHide];
+				ShowHide.Text = _showHide.ToString();
+			}
 		}
 
 		/// <summary>
@@ -145,6 +115,16 @@ namespace DoubanFM
 				_next = new HotKey(control, key);
 				Next.Text = _next.ToString();
 			}
+			if (sender == ShowMinimize)
+			{
+				_showMinimize = new HotKey(control, key);
+				ShowMinimize.Text = _showMinimize.ToString();
+			}
+			if (sender == ShowHide)
+			{
+				_showHide = new HotKey(control, key);
+				ShowHide.Text = _showHide.ToString();
+			}
 			e.Handled = true;
 		}
 
@@ -155,6 +135,13 @@ namespace DoubanFM
 			if (Never.IsEnabled && _never != null) HotKeys.AddHotKey(DoubanFMWindow.Commands.Never, _never);
 			if (PlayPause.IsEnabled && _playPause != null) HotKeys.AddHotKey(DoubanFMWindow.Commands.PlayPause, _playPause);
 			if (Next.IsEnabled && _next != null) HotKeys.AddHotKey(DoubanFMWindow.Commands.Next, _next);
+			if (ShowMinimize.IsEnabled && _showMinimize != null) HotKeys.AddHotKey(DoubanFMWindow.Commands.ShowMinimize, _showMinimize);
+			if (ShowHide.IsEnabled && _showHide != null) HotKeys.AddHotKey(DoubanFMWindow.Commands.ShowHide, _showHide);
+			this.Close();
+		}
+
+		private void Cancel_Click(object sender, RoutedEventArgs e)
+		{
 			this.Close();
 		}
 	}
