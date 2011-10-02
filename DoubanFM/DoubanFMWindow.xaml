@@ -338,7 +338,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 									<RowDefinition Height="Auto"/>
 								</Grid.RowDefinitions>
 								<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
-								<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.4.1</Label>
+								<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.5.0 Beta</Label>
 								<Button x:Name="CheckUpdate" Grid.Row="2" FontSize="16" Width="120" Height="40" Click="CheckUpdate_Click">检查更新</Button>
 								<Grid Grid.Row="3">
 									<Grid.ColumnDefinitions>
