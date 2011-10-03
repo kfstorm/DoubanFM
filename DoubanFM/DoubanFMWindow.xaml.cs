@@ -284,6 +284,7 @@ namespace DoubanFM
 				Audio.Pause();
 				_notifyIcon_PlayPause.Text = "播放";
 				_notifyIcon_PlayPause.Image = _notifyIconImage_Play;
+				if (_lyricsWindow != null) _lyricsWindow.Hide();
 			});
 			_player.Played += new EventHandler((o, e) =>
 			{
@@ -293,6 +294,7 @@ namespace DoubanFM
 				Audio.Play();
 				_notifyIcon_PlayPause.Text = "暂停";
 				_notifyIcon_PlayPause.Image = _notifyIconImage_Pause;
+				if (_lyricsWindow != null && _player.Settings.ShowLyrics) _lyricsWindow.Show();
 			});
 			_player.Stoped += new EventHandler((o, e) =>
 			{
@@ -925,7 +927,7 @@ namespace DoubanFM
 		{
 			CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.Position);
 			Slider.Value = Audio.Position.TotalSeconds;
-			if (_lyricsWindow != null && _lyricsWindow.IsVisible) _lyricsWindow.Refresh(Audio.Position);
+			if (_lyricsWindow != null) _lyricsWindow.Refresh(Audio.Position);
 		}
 		/// <summary>
 		/// 当已播放时间超过总时间时，报告音乐已播放完毕。防止网络不好时播放完毕但不换歌
@@ -1256,17 +1258,15 @@ namespace DoubanFM
 				binding.Source = this.Background;
 				binding.Converter = (System.Windows.Data.IValueConverter)FindResource("WindowBackgroundToSliderForegroundConverter");
 				_lyricsWindow.SetBinding(ForegroundProperty, binding);
-				_lyricsWindow.Show();
 			}
-			else _lyricsWindow.Visibility = Visibility.Visible;
+			_lyricsWindow.Show();
 
 			if (_lyricsWindow.Lyrics == null) DownloadLyrics();
 		}
 
 		private void CheckBoxShowLyrics_Unchecked(object sender, RoutedEventArgs e)
 		{
-			if (_lyricsWindow != null)
-				_lyricsWindow.Visibility = Visibility.Collapsed;
+			if (_lyricsWindow != null) _lyricsWindow.Hide();
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
