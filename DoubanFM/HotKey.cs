@@ -92,6 +92,9 @@ namespace DoubanFM
 			Key = key;
 			KeyId = (int)ControlKey + (int)Key * 100;
 		}
+		public HotKey(HotKey.ControlKeys control, System.Windows.Input.Key key)
+			: this(control, (System.Windows.Forms.Keys)System.Windows.Input.KeyInterop.VirtualKeyFromKey(key))
+		{ }
 		//析构函数,解除热键
 		~HotKey()
 		{

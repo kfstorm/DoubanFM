@@ -106,6 +106,7 @@
     <Compile Include="ChildWindowBase.cs" />
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeys.cs" />
+    <Compile Include="HotKeySettingControl.cs" />
     <Compile Include="HotKeyWindow.xaml.cs">
       <DependentUpon>HotKeyWindow.xaml</DependentUpon>
     </Compile>
@@ -155,6 +156,10 @@
     <Page Include="Style.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UpdateWindow.xaml">
       <SubType>Designer</SubType>

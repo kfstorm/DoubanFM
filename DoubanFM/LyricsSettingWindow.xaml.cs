@@ -21,6 +21,7 @@ namespace DoubanFM
 	public partial class LyricsSettingWindow : ChildWindowBase
 	{
 		public static readonly DependencyProperty LyricsSettingProperty = DependencyProperty.Register("LyricsSetting", typeof(LyricsSetting), typeof(LyricsSettingWindow));
+		
 		public LyricsSetting LyricsSetting
 		{
 			get { return (LyricsSetting)GetValue(LyricsSettingProperty); }
@@ -32,7 +33,7 @@ namespace DoubanFM
 			InitializeComponent();
 
 			LyricsSetting = setting;
-			
+
 			var fontFamilies = Fonts.SystemFontFamilies;
 			List<string> names = new List<string>();
 			string selectedName = null;
@@ -45,19 +46,8 @@ namespace DoubanFM
 			}
 			names.Sort();
 			CbFontFamily.ItemsSource = names;
-			CbFontFamily.SelectedItem = selectedName;
-			
-			List<FontWeight> weights = new List<FontWeight>();
-			var properties = typeof(FontWeights).GetProperties();
-			foreach (var property in properties)
-			{
-
-				if (property.PropertyType == typeof(FontWeight))
-				{
-					weights.Add((FontWeight)property.GetValue(null, null));
-				}
-			}
-			CbFontWeight.ItemsSource = weights.Distinct();
+			if (LyricsSetting.FontFamily != null)
+				CbFontFamily.Text = LyricsSetting.FontFamily.ToString();
 		}
 
 		/// <summary>
@@ -75,9 +65,61 @@ namespace DoubanFM
 
 		private void CbFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (CbFontFamily.SelectedItem != null)
-				LyricsSetting.FontFamily = new FontFamily(CbFontFamily.SelectedItem as string);
-			else LyricsSetting.FontFamily = null;
+			try
+			{
+				LyricsSetting.FontFamily = new FontFamily(CbFontFamily.Text);
+			}
+			catch
+			{
+				LyricsSetting.FontFamily = null;
+			}
 		}
+		private void CbFontFamily_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+		{
+			try
+			{
+				LyricsSetting.FontFamily = new FontFamily(CbFontFamily.Text);
+			}
+			catch
+			{
+				LyricsSetting.FontFamily = null;
+			}
+		}
+
+		private void SliderStrokeWeight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			(Owner as DoubanFMWindow)._lyricsWindow.Update();
+		}
+
+		private void CbShowLyrics_Checked(object sender, RoutedEventArgs e)
+		{
+			(Owner as DoubanFMWindow).ShowLyrics();
+		}
+
+		private void CbShowLyrics_Unchecked(object sender, RoutedEventArgs e)
+		{
+			(Owner as DoubanFMWindow).HideLyrics();
+		}
+
+		private void CbEnableDesktopLyrics_Checked(object sender, RoutedEventArgs e)
+		{
+			(Owner as DoubanFMWindow).ShowDesktopLyrics();
+		}
+
+		private void CbEnableDesktopLyrics_Unchecked(object sender, RoutedEventArgs e)
+		{
+			(Owner as DoubanFMWindow).HideDesktopLyrics();
+		}
+
+		private void CbEnableEmbeddedLyrics_Checked(object sender, RoutedEventArgs e)
+		{
+			(Owner as DoubanFMWindow).ShowEmbeddedLyrics();
+		}
+
+		private void CbEnableEmbeddedLyrics_Unchecked(object sender, RoutedEventArgs e)
+		{
+			(Owner as DoubanFMWindow).HideEmbeddedLyrics();
+		}
+
 	}
 }

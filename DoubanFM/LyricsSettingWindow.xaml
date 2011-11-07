@@ -3,22 +3,56 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:DoubanFM"
 		x:Name="Window"
-		Title="歌词设置">
+		Title="歌词设置" Background="#FF813131">
+	<Window.Resources>
+		<local:OpacityToTransparencyConverter x:Key="OpacityToTransparencyConverter"/>
+	</Window.Resources>
 	<Grid Width="300" Margin="10">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition/>
-		</Grid.ColumnDefinitions>
-		<Label VerticalAlignment="Center">字体</Label>
-		<ComboBox x:Name="CbFontFamily" Grid.Column="1" IsEditable="True" Margin="10" Height="24" SelectionChanged="CbFontFamily_SelectionChanged" />
-		<Label Grid.Row="1" VerticalAlignment="Center">大小</Label>
-		<Slider x:Name="SliderFontSize" Grid.Row="1" Grid.Column="1" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="10"/>
-		<Label Grid.Row="2" VerticalAlignment="Center">粗细</Label>
-		<ComboBox x:Name="CbFontWeight" Grid.Row="2" Grid.Column="1" SelectedItem="{Binding ElementName=Window, Path=LyricsSetting.FontWeight, Mode=TwoWay}" Margin="10" Height="24"/>
+		<Grid Margin="10">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition Height="10"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<CheckBox Grid.ColumnSpan="2" x:Name="CbShowLyrics" Checked="CbShowLyrics_Checked" Unchecked="CbShowLyrics_Unchecked">显示歌词</CheckBox>
+			<CheckBox Grid.Row="2" x:Name="CbEnableDesktopLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableDesktopLyrics, ElementName=Window}" Checked="CbEnableDesktopLyrics_Checked" Unchecked="CbEnableDesktopLyrics_Unchecked">桌面歌词</CheckBox>
+			<CheckBox Grid.Row="2" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked">内嵌歌词</CheckBox>
+		</Grid>
+		<Grid Grid.Row="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="10"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="10"/>
+			</Grid.ColumnDefinitions>
+			<Label VerticalAlignment="Center">字体</Label>
+			<ComboBox x:Name="CbFontFamily" Grid.Column="2" IsEditable="True" Margin="0,5" Height="24" SelectionChanged="CbFontFamily_SelectionChanged" KeyUp="CbFontFamily_KeyUp" />
+			<Label Grid.Row="1" VerticalAlignment="Center">大小</Label>
+			<Slider x:Name="SliderFontSize" Grid.Row="1" Grid.Column="2" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="0,5" SmallChange="0.2" LargeChange="5"/>
+			<Label Grid.Row="2" VerticalAlignment="Center">底部间距</Label>
+			<Slider x:Name="SliderBottomMargin" Grid.Row="2" Grid.Column="2" Value="{Binding LyricsSetting.BottomMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,5" SmallChange="0.001" LargeChange="0.1"/>
+			<Label Grid.Row="3" VerticalAlignment="Center">粗细</Label>
+			<Slider x:Name="SliderFontWeight" Grid.Row="3" Grid.Column="2" Value="{Binding LyricsSetting.FontWeight, ElementName=Window}" Maximum="900" Minimum="100" Margin="0,5" SmallChange="5" LargeChange="50"/>
+			<Label Grid.Row="4" VerticalAlignment="Center">描边粗细</Label>
+			<Slider x:Name="SliderStrokeWeight" Grid.Row="4" Grid.Column="2" Value="{Binding LyricsSetting.StrokeWeight, ElementName=Window}" Maximum="3" Minimum="0" Margin="0,5" ValueChanged="SliderStrokeWeight_ValueChanged" SmallChange="0.05" LargeChange="0.3"/>
+			<Label Grid.Row="5" VerticalAlignment="Center">透明度</Label>
+			<Slider x:Name="SliderOpacity" Grid.Row="5" Grid.Column="2" Value="{Binding LyricsSetting.Opacity, ElementName=Window, Converter={StaticResource OpacityToTransparencyConverter}}" Maximum="1" Minimum="0" Margin="0,5" SmallChange="0.01" LargeChange="0.1" RenderTransformOrigin="0.5,0.5"/>
+		</Grid>
 	</Grid>
 </local:ChildWindowBase>

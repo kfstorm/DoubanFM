@@ -9,7 +9,7 @@
 	Title="检查更新"
 	Closed="window_Closed">
 	<Grid Width="300" Margin="10">
-		<Grid x:Name="CheckUpdatePanel" Height="200">
+		<Grid x:Name="CheckUpdatePanel" Height="200" d:IsHidden="True">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>
@@ -17,7 +17,7 @@
 			</Grid.RowDefinitions>
 			<Label FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在检查更新"/>
 			<ProgressBar Grid.Row="1" IsIndeterminate="True" Height="20" Margin="10" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=window}"/>
-			<Button Grid.Row="2" Height="40" Width="100" Margin="10" Click="Close" Content="取消"/>
+			<Button Grid.Row="2" Margin="10" Click="Close" Style="{DynamicResource CancelButtonStyle}"/>
 		</Grid>
 		<Grid x:Name="CheckUpdateFailedPanel" Height="200" d:IsHidden="True">
 			<Grid.RowDefinitions>
@@ -32,8 +32,8 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<Button Width="100" Height="40" Margin="10" Click="ReCheck" Content="重试"/>
-				<Button Grid.Column="1" Width="100" Height="40" Margin="10" Click="Close" Content="取消"/>
+				<Button Margin="10" Click="ReCheck" Style="{DynamicResource RetryStyle}"/>
+				<Button Grid.Column="1" Margin="10" Click="Close" Style="{DynamicResource CancelButtonStyle}"/>
 			</Grid>
 		</Grid>
 		<Grid x:Name="HasNewVersionPanel" Height="300" d:IsHidden="True">
@@ -54,7 +54,7 @@
 				<Label Content="发布日期："/>
 				<Label x:Name="PublishTime"/>
 			</StackPanel>
-			<Button Grid.Row="2" Margin="10" Width="100" Height="40" Click="AutoDownload" FontSize="18.667" Content="更新"/>
+			<Button Grid.Row="2" Margin="10" Click="AutoDownload" FontSize="18.667" Style="{DynamicResource UpdateStyle}"/>
 			<Label Grid.Row="3" Margin="5,0" Content="更新说明："/>
 			<TextBox x:Name="UpdateDetail" Grid.Row="4" Margin="5" Style="{DynamicResource UpdateDetailStyle}"/>
 			<Grid Grid.Row="5">
@@ -75,7 +75,7 @@
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 			<Label FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Content="已经是最新版本"/>
-			<Button Grid.Row="1" Width="100" Height="50" Click="Close" Content="确定"/>
+			<Button Grid.Row="1" Click="Close" Style="{DynamicResource OKButtonStyle}"/>
 		</Grid>
 		<Grid x:Name="DownloadingPanel" Height="200" d:IsHidden="True">
 			<Grid.RowDefinitions>
@@ -85,7 +85,7 @@
 			</Grid.RowDefinitions>
 			<Label FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在下载"/>
 			<ProgressBar x:Name="DownloadProgress" Grid.Row="1" Height="20" Margin="10" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=window}"/>
-			<Button Grid.Row="2" Height="40" Width="100" Click="Close" Content="取消"/>
+			<Button Grid.Row="2" Click="Close" Style="{DynamicResource CancelButtonStyle}"/>
 		</Grid>
 		<Grid x:Name="DownloadCompletedPanel" Height="200" d:IsHidden="True">
 			<Grid.RowDefinitions>
@@ -95,7 +95,7 @@
 			</Grid.RowDefinitions>
 			<Label FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Content="下载完成"/>
 			<ProgressBar Grid.Row="1" Height="20" Margin="10" Value="100" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=window}"/>
-			<Button Grid.Row="2" Height="40" Width="100" Click="Close" d:IsHidden="True" Content="确定"/>
+			<Button Grid.Row="2" Click="Close" Style="{DynamicResource OKButtonStyle}"/>
 		</Grid>
 		<Grid x:Name="DownloadFailedPanel" Height="200" d:IsHidden="True">
 			<Grid.RowDefinitions>
@@ -110,8 +110,8 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<Button Height="40" Width="100" Margin="10" Click="ReDownload" Content="重试"/>
-				<Button Grid.Column="1" Width="100" Height="40" Margin="10" Click="Close" Content="取消"/>
+				<Button Margin="10" Click="ReDownload" Style="{DynamicResource RetryStyle}"/>
+				<Button Grid.Column="1" Margin="10" Click="Close" Style="{DynamicResource CancelButtonStyle}"/>
 			</Grid>
 		</Grid>
 	</Grid>

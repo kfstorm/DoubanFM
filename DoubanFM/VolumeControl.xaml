@@ -14,55 +14,7 @@
 			<ColumnDefinition />
 			<ColumnDefinition Width="10"/>
 		</Grid.ColumnDefinitions>
-		<CheckBox x:Name="Loudspeaker" IsChecked="{Binding IsMuted, ElementName=UserControl, Mode=TwoWay}">
-			<CheckBox.Style>
-				<Style TargetType="{x:Type CheckBox}">
-					<Setter Property="Foreground" Value="White"/>
-					<Setter Property="Template">
-						<Setter.Value>
-							<ControlTemplate TargetType="{x:Type CheckBox}">
-								<Border Background="Transparent">
-									<Viewbox>
-										<Canvas x:Name="DoubanFM__VolumeControl__Loudspeaker" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
-											<Canvas x:Name="Waves" Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
-												<Viewbox x:Name="Group" Width="424" Height="448" Canvas.Left="-168" Canvas.Top="-96">
-													<Canvas Width="424" Height="448">
-														<Canvas Width="256" Height="256" x:Name="Clip" Clip="F1 M 280,224L 424,448L 424,0L 280,224 Z ">
-															<Ellipse x:Name="Ellipse" Width="400" Height="400" Canvas.Left="0" Canvas.Top="24" Stretch="Fill" StrokeThickness="16" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}"/>
-															<Ellipse x:Name="Ellipse_0" Width="336" Height="336" Canvas.Left="32" Canvas.Top="56" Stretch="Fill" StrokeThickness="16" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}"/>
-															<Ellipse x:Name="Ellipse_1" Width="272" Height="272" Canvas.Left="64" Canvas.Top="88" Stretch="Fill" StrokeThickness="16" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}"/>
-														</Canvas>
-														<Path x:Name="Path" Width="144" Height="448" Canvas.Left="280" Canvas.Top="0" Stretch="Fill" StrokeThickness="0" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Data="F1 M 280,224L 424,448L 424,0L 280,224 Z "/>
-													</Canvas>
-												</Viewbox>
-											</Canvas>
-											<Canvas x:Name="层_2" Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
-												<Rectangle x:Name="Rectangle" Width="32" Height="96" Canvas.Left="32" Canvas.Top="80" Stretch="Fill" StrokeThickness="1" StrokeLineJoin="Round" Fill="{TemplateBinding Foreground}"/>
-												<Path x:Name="Path_2" Width="48" Height="192" Canvas.Left="80" Canvas.Top="32" Stretch="Fill" StrokeThickness="1" StrokeLineJoin="Round" Fill="{TemplateBinding Foreground}" Data="F1 M 80,80L 128,32L 128,224L 80,176L 80,80 Z "/>
-											</Canvas>
-										</Canvas>
-									</Viewbox>
-								</Border>
-								<ControlTemplate.Triggers>
-									<Trigger Property="IsChecked" Value="True">
-										<Setter Property="Visibility" TargetName="Waves" Value="Hidden"/>
-									</Trigger>
-								</ControlTemplate.Triggers>
-								
-							</ControlTemplate>
-						</Setter.Value>
-					</Setter>
-					<Style.Triggers>
-						<Trigger Property="IsMouseOver" Value="True">
-							<Setter Property="Foreground" Value="#7F000000"/>
-						</Trigger>
-						<Trigger Property="IsPressed" Value="True">
-							<Setter Property="Foreground" Value="White"/>
-						</Trigger>
-					</Style.Triggers>
-				</Style>
-			</CheckBox.Style>
-		</CheckBox>
+		<CheckBox x:Name="Loudspeaker" IsChecked="{Binding IsMuted, ElementName=UserControl, Mode=TwoWay}" Style="{DynamicResource LoudspeakerStyle}"/>
 		<Slider x:Name="slider" Grid.Column="2" Maximum="1" LargeChange="0.1" SmallChange="0.01" Value="{Binding Volume, ElementName=UserControl, Mode=TwoWay}"/>
 	</Grid>
 </UserControl>

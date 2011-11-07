@@ -64,6 +64,7 @@ namespace DoubanFM
 		private FontStyle _lastFontStyle;
 		private FontWeight _lastFontWeight;
 		private FontStretch _lastFontStretch;
+		private double _lastStrokeWeight;
 
 		[DllImport("user32.dll")]
 		static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
@@ -132,6 +133,30 @@ namespace DoubanFM
 		}
 
 		/// <summary>
+		/// 重绘歌词
+		/// </summary>
+		public void Update()
+		{
+			if (_formattedText == null || _formattedText.Text != CurrentLyrics.Text
+				|| _lastFontFamily != CurrentLyrics.FontFamily
+				|| _lastFontSize != CurrentLyrics.FontSize
+				|| _lastFontStretch != CurrentLyrics.FontStretch
+				|| _lastFontStyle != CurrentLyrics.FontStyle
+				|| _lastFontWeight != CurrentLyrics.FontWeight
+				|| _lastStrokeWeight != LyricsSetting.StrokeWeight)
+			{
+				CreateText(CurrentLyrics.Text);
+				PathText.Data = _textGeometry;
+				PathText.StrokeThickness = LyricsSetting.StrokeWeight / 48.0 * CurrentLyrics.FontSize;
+				ShadowEffect.ShadowDepth = PathText.StrokeThickness;
+				if (ShadowEffect.ShadowDepth == 0)
+					ShadowEffect.Opacity = 0;
+				else
+					ShadowEffect.Opacity = 1;
+			}
+		}
+
+		/// <summary>
 		/// Create the outline geometry based on the formatted text.
 		/// </summary>
 		public void CreateText(string text)
@@ -141,7 +166,8 @@ namespace DoubanFM
 			_lastFontStretch = CurrentLyrics.FontStretch;
 			_lastFontStyle = CurrentLyrics.FontStyle;
 			_lastFontWeight = CurrentLyrics.FontWeight;
-			
+			_lastStrokeWeight = LyricsSetting.StrokeWeight;
+
 			// Create the formatted text based on the properties set.
 			_formattedText = new FormattedText(
 				text == null ? "" : text,
@@ -158,18 +184,7 @@ namespace DoubanFM
 
 		private void CurrentLyrics_LayoutUpdated(object sender, EventArgs e)
 		{
-			if (_formattedText == null || _formattedText.Text != CurrentLyrics.Text
-				|| _lastFontFamily != CurrentLyrics.FontFamily
-				|| _lastFontSize != CurrentLyrics.FontSize
-				|| _lastFontStretch != CurrentLyrics.FontStretch
-				|| _lastFontStyle != CurrentLyrics.FontStyle
-				|| _lastFontWeight != CurrentLyrics.FontWeight)
-			{
-				CreateText(CurrentLyrics.Text);
-				PathText.Data = _textGeometry;
-				PathText.StrokeThickness = 1.0 / 48.0 * CurrentLyrics.FontSize;
-				ShadowEffect.ShadowDepth = PathText.StrokeThickness;
-			}
+			Update();
 		}
 	}
 }

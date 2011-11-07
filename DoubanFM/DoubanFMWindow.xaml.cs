@@ -17,6 +17,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Windows.Input;
 
 namespace DoubanFM
 {
@@ -102,7 +103,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 命令
 		/// </summary>
-		public enum Commands { LikeUnlike, Never, PlayPause, Next, ShowMinimize, ShowHide }
+		public enum Commands { None, Like, Unlike, LikeUnlike, Never, PlayPause, Next, ShowMinimize, ShowHide, ShowLyrics, HideLyrics, ShowHideLyrics }
 		/// <summary>
 		/// 热键
 		/// </summary>
@@ -122,7 +123,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 桌面歌词窗口
 		/// </summary>
-		private LyricsWindow _lyricsWindow;
+		internal LyricsWindow _lyricsWindow;
 		/// <summary>
 		/// 歌词设置
 		/// </summary>
@@ -157,6 +158,7 @@ namespace DoubanFM
 			CheckMappedFile();
 			PreloadMusic();
 			CheckUpdateOnStartup();
+			InitLyrics();
 
 			_player.Initialize();
 		}
@@ -173,13 +175,9 @@ namespace DoubanFM
 				if (e.Button == System.Windows.Forms.MouseButtons.Left)
 				{
 					if (this.IsVisible == false)
-					{
-						this.ShowFront();
-					}
+						ShowFront();
 					else
-					{
-						this.Hide();
-					}
+						Hide();
 				}
 			});
 			System.Windows.Forms.ContextMenuStrip notifyIconMenu = new System.Windows.Forms.ContextMenuStrip();
@@ -189,44 +187,31 @@ namespace DoubanFM
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("显示窗口"));
 			_notifyIcon_ShowWindow = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			_notifyIcon_ShowWindow.Image = _notifyIconImage_ShowWindow;
-			_notifyIcon_ShowWindow.Click += new EventHandler((s, e) =>
-			{
-				this.ShowFront();
-			});
+			_notifyIcon_ShowWindow.Click += new EventHandler((s, e) => { ShowFront(); });
 			notifyIconMenu.Items.Add("-");
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("喜欢"));
 			_notifyIcon_Heart = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			_notifyIcon_Heart.Image = _notifyIconImage_Like_Unlike;
-			_notifyIcon_Heart.Click += new EventHandler((o, e) =>
-			{
-				if (_notifyIcon_Heart.Image == _notifyIconImage_Like_Unlike)
-					_player.IsLiked = true;
-				else _player.IsLiked = false;
-			});
+			_notifyIcon_Heart.Click += new EventHandler((o, e) => { LikeUnlike(); });
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("不再播放"));
 			_notifyIcon_Never = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			_notifyIcon_Never.Image = _notifyIconImage_Never;
 			_notifyIcon_Never.Enabled = false;
-			_notifyIcon_Never.Click += new EventHandler((s, e) => { _player.Never(); });
+			_notifyIcon_Never.Click += new EventHandler((s, e) => { Never(); });
 			notifyIconMenu.Items.Add("-");
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("暂停"));
 			_notifyIcon_PlayPause = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			_notifyIcon_PlayPause.Image = _notifyIconImage_Pause;
-			_notifyIcon_PlayPause.Click += new EventHandler((s, e) =>
-			{
-				System.Windows.Forms.ToolStripItem sender = (System.Windows.Forms.ToolStripItem)s;
-				if (sender.Text == "播放") _player.IsPlaying = true;
-				else _player.IsPlaying = false;
-			});
+			_notifyIcon_PlayPause.Click += new EventHandler((s, e) => { PlayPause(); });
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("下一首"));
 			_notifyIcon_Next = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			_notifyIcon_Next.Image = _notifyIconImage_Next;
-			_notifyIcon_Next.Click += new EventHandler((s, e) => { _player.Skip(); });
+			_notifyIcon_Next.Click += new EventHandler((s, e) => { Next(); });
 			notifyIconMenu.Items.Add("-");
 			notifyIconMenu.Items.Add(new System.Windows.Forms.ToolStripMenuItem("退出"));
 			_notifyIcon_Exit = (System.Windows.Forms.ToolStripMenuItem)notifyIconMenu.Items[notifyIconMenu.Items.Count - 1];
 			_notifyIcon_Exit.Image = _notifyIconImage_Exit;
-			_notifyIcon_Exit.Click += new EventHandler((s, e) => { this.Close(); });
+			_notifyIcon_Exit.Click += new EventHandler((s, e) => { Close(); });
 		}
 
 		/// <summary>
@@ -251,12 +236,14 @@ namespace DoubanFM
 				if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != (Channel)PersonalChannels.SelectedItem)
 				{
 					PersonalChannels.SelectedItem = _player.CurrentChannel;
-					PersonalClickStoryboard.Begin();
+					ButtonPersonal.IsChecked = true;
+					//PersonalClickStoryboard.Begin();
 				}
 				if (_player.CurrentChannel.IsPublic && _player.CurrentChannel != (Channel)PublicChannels.SelectedItem)
 				{
 					PublicChannels.SelectedItem = _player.CurrentChannel;
-					PublicClickStoryboard.Begin();
+					ButtonPublic.IsChecked = true;
+					//PublicClickStoryboard.Begin();
 				}
 				if (_player.CurrentChannel.IsDj && DjCates.Items.Contains(_player.CurrentDjCate))
 				{
@@ -264,6 +251,9 @@ namespace DoubanFM
 					if (DjChannels.Items.Contains(_player.CurrentChannel) && (Channel)DjChannels.SelectedItem != _player.CurrentChannel)
 					{
 						DjChannels.SelectedItem = _player.CurrentChannel;
+						ButtonPersonal.IsChecked = false;
+						ButtonPublic.IsChecked = false;
+						ButtonDjCates.IsChecked = false;
 						DjChannelClickStoryboard.Begin();
 					}
 				}
@@ -273,7 +263,7 @@ namespace DoubanFM
 			_player.CurrentSongChanged += new EventHandler((o, e) =>
 			{
 				Update();
-				_player.IsPlaying = true;
+				Play();			//在暂停时按下一首，加载歌曲后会结束暂停，开始播放
 				Audio.Play();
 			});
 			_player.Paused += new EventHandler((o, e) =>
@@ -284,7 +274,7 @@ namespace DoubanFM
 				Audio.Pause();
 				_notifyIcon_PlayPause.Text = "播放";
 				_notifyIcon_PlayPause.Image = _notifyIconImage_Play;
-				if (_lyricsWindow != null) _lyricsWindow.Hide();
+				//HideLyrics();
 			});
 			_player.Played += new EventHandler((o, e) =>
 			{
@@ -294,7 +284,7 @@ namespace DoubanFM
 				Audio.Play();
 				_notifyIcon_PlayPause.Text = "暂停";
 				_notifyIcon_PlayPause.Image = _notifyIconImage_Pause;
-				if (_lyricsWindow != null && _player.Settings.ShowLyrics) _lyricsWindow.Show();
+				//if (_player.Settings.ShowLyrics) ShowLyrics();
 			});
 			_player.Stoped += new EventHandler((o, e) =>
 			{
@@ -531,9 +521,186 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 初始化歌词
+		/// </summary>
+		void InitLyrics()
+		{
+			_lyricsSetting = LyricsSetting.Load();
+			_lyricsWindow = new LyricsWindow(_lyricsSetting);
+			{
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Background");
+				binding.Source = this;
+				binding.Converter = new BackgroundToLyricsForegroundConverter();
+				_lyricsWindow.SetBinding(ForegroundProperty, binding);
+			}
+			{
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Text");
+				binding.Source = _lyricsWindow.CurrentLyrics;
+				CurrentLyrics.SetBinding(TextBlock.TextProperty, binding);
+			}
+			{
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Opacity");
+				binding.Source = _lyricsWindow.LayoutRoot;
+				CurrentLyrics.SetBinding(TextBlock.OpacityProperty, binding);
+			}
+		}
+
+		#endregion
+
+		#region 操作
+
+		/// <summary>
+		/// 播放
+		/// </summary>
+		public void Play()
+		{
+			_player.IsPlaying = true;
+		}
+
+		/// <summary>
+		/// 暂停
+		/// </summary>
+		public void Pause()
+		{
+			_player.IsPlaying = false;
+		}
+
+		/// <summary>
+		/// 播放/暂停
+		/// </summary>
+		public void PlayPause()
+		{
+			_player.IsPlaying = !_player.IsPlaying;
+		}
+
+		/// <summary>
+		/// 将这首歌标记为喜欢
+		/// </summary>
+		public void Like()
+		{
+			if (_player.IsLikedEnabled)
+				_player.IsLiked = true;
+		}
+
+		/// <summary>
+		/// 不将这首歌标记为喜欢
+		/// </summary>
+		public void Unlike()
+		{
+			if (_player.IsLikedEnabled)
+				_player.IsLiked = false;
+		}
+
+		/// <summary>
+		/// 改变这首歌的“喜欢”标记
+		/// </summary>
+		public void LikeUnlike()
+		{
+			if (_player.IsLikedEnabled)
+				_player.IsLiked = !_player.IsLiked;
+		}
+
+		/// <summary>
+		/// 将这首歌标记为不再播放
+		/// </summary>
+		public void Never()
+		{
+			_player.Never();
+		}
+
+		/// <summary>
+		/// 下一首
+		/// </summary>
+		public void Next()
+		{
+			_player.Skip();
+		}
+
+		/// <summary>
+		/// 显示/最小化 窗口
+		/// </summary>
+		public void ShowMinimize()
+		{
+			if (this.IsVisible && this.IsActive && this.WindowState == WindowState.Normal)
+				this.WindowState = WindowState.Minimized;
+			else this.ShowFront();
+		}
+
+		/// <summary>
+		/// 显示/隐藏 窗口
+		/// </summary>
+		public void ShowHide()
+		{
+			if (this.IsVisible && this.IsActive && this.WindowState == WindowState.Normal)
+				this.Hide();
+			else this.ShowFront();
+		}
+
+		/// <summary>
+		/// 显示歌词
+		/// </summary>
+		public void ShowLyrics()
+		{
+			_player.Settings.ShowLyrics = true;
+			if (_lyricsSetting.EnableDesktopLyrics) ShowDesktopLyrics();
+			if (_lyricsSetting.EnableEmbeddedLyrics) ShowEmbeddedLyrics();
+		}
+		/// <summary>
+		/// 隐藏歌词
+		/// </summary>
+		public void HideLyrics()
+		{
+			_player.Settings.ShowLyrics = false;
+			if (_lyricsSetting.EnableDesktopLyrics) HideDesktopLyrics();
+			if (_lyricsSetting.EnableEmbeddedLyrics) HideEmbeddedLyrics();
+		}
+		/// <summary>
+		/// 显示/隐藏 歌词
+		/// </summary>
+		public void ShowHideLyrics()
+		{
+			if (_player.Settings.ShowLyrics)
+				HideLyrics();
+			else
+				ShowLyrics();
+		}
+
 		#endregion
 
 		#region 其他
+
+		/// <summary>
+		/// 显示桌面歌词
+		/// </summary>
+		internal void ShowDesktopLyrics()
+		{
+			_lyricsWindow.Show();
+			if (_lyricsWindow.Lyrics == null) DownloadLyrics();
+		}
+		/// <summary>
+		/// 显示内嵌歌词
+		/// </summary>
+		internal void ShowEmbeddedLyrics()
+		{
+			LyricsPanel.Visibility = Visibility.Visible;
+		}
+
+		/// <summary>
+		/// 隐藏桌面歌词
+		/// </summary>
+		internal void HideDesktopLyrics()
+		{
+			_lyricsWindow.Hide();
+		}
+		/// <summary>
+		/// 隐藏内嵌歌词
+		/// </summary>
+		internal void HideEmbeddedLyrics()
+		{
+			LyricsPanel.Visibility = Visibility.Hidden;
+		}
+
 		/// <summary>
 		/// 显示在最上层
 		/// </summary>
@@ -558,47 +725,43 @@ namespace DoubanFM
 		{
 			foreach (var keyValue in hotKeys)
 			{
+				HotKey hotKey = keyValue.Value;
 				switch (keyValue.Key)
 				{
+					case Commands.None:
+						break;
+					case Commands.Like:
+						hotKey.OnHotKey += delegate { Like(); };
+						break;
+					case Commands.Unlike:
+						hotKey.OnHotKey += delegate { Unlike(); };
+						break;
 					case Commands.LikeUnlike:
-						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
-						{
-							if (_player.IsLikedEnabled) _player.IsLiked = !_player.IsLiked;
-						});
+						hotKey.OnHotKey += delegate { LikeUnlike(); };
 						break;
 					case Commands.Never:
-						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
-						{
-							if (_player.IsNeverEnabled) _player.Never();
-						});
-						break;
-					case Commands.Next:
-						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
-						{
-							_player.Skip();
-						});
+						hotKey.OnHotKey += delegate { Never(); };
 						break;
 					case Commands.PlayPause:
-						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
-						{
-							_player.IsPlaying = !_player.IsPlaying;
-						});
+						hotKey.OnHotKey += delegate { PlayPause(); };
+						break;
+					case Commands.Next:
+						hotKey.OnHotKey += delegate { Next(); };
 						break;
 					case Commands.ShowMinimize:
-						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
-						{
-							if (this.IsVisible && this.IsActive && this.WindowState == WindowState.Normal)
-								this.WindowState = WindowState.Minimized;
-							else this.ShowFront();
-						});
+						hotKey.OnHotKey += delegate { ShowMinimize(); };
 						break;
 					case Commands.ShowHide:
-						keyValue.Value.OnHotKey += new HotKey.OnHotKeyEventHandler(() =>
-						{
-							if (this.IsVisible && this.IsActive && this.WindowState == WindowState.Normal)
-								this.Hide();
-							else this.ShowFront();
-						});
+						hotKey.OnHotKey += delegate { ShowHide(); };
+						break;
+					case Commands.ShowLyrics:
+						hotKey.OnHotKey += delegate { ShowLyrics(); };
+						break;
+					case Commands.HideLyrics:
+						hotKey.OnHotKey += delegate { HideLyrics(); };
+						break;
+					case Commands.ShowHideLyrics:
+						hotKey.OnHotKey += delegate { ShowHideLyrics(); };
 						break;
 					default:
 						break;
@@ -902,7 +1065,7 @@ namespace DoubanFM
 		/// </summary>
 		private void ButtonNext_Click(object sender, RoutedEventArgs e)
 		{
-			_player.Skip();
+			Next();
 		}
 		/// <summary>
 		/// 音乐播放结束
@@ -955,14 +1118,14 @@ namespace DoubanFM
 		/// </summary>
 		private void PauseThumb_Click(object sender, EventArgs e)
 		{
-			_player.IsPlaying = !_player.IsPlaying;
+			PlayPause();
 		}
 		/// <summary>
 		/// 任务栏按下“下一首”按钮
 		/// </summary>
 		private void NextThumb_Click(object sender, EventArgs e)
 		{
-			_player.Skip();
+			Next();
 		}
 		/// <summary>
 		/// 保存各种信息
@@ -1022,21 +1185,21 @@ namespace DoubanFM
 		/// </summary>
 		private void LikeThumb_Click(object sender, EventArgs e)
 		{
-			_player.IsLiked = !_player.IsLiked;
+			LikeUnlike();
 		}
 		/// <summary>
 		/// 主界面点击“不再播放”
 		/// </summary>
 		private void ButtonNever_Click(object sender, RoutedEventArgs e)
 		{
-			_player.Never();
+			Never();
 		}
 		/// <summary>
 		/// 任务栏点击“不再播放”
 		/// </summary>
 		private void NeverThumb_Click(object sender, EventArgs e)
 		{
-			_player.Never();
+			Never();
 		}
 
 		/// <summary>
@@ -1074,6 +1237,9 @@ namespace DoubanFM
 			if (DjCates.SelectedItem != null)
 			{
 				DjChannels.ItemsSource = ((Cate)DjCates.SelectedItem).Channels;
+				ButtonPersonal.IsChecked = false;
+				ButtonPublic.IsChecked = false;
+				ButtonDjCates.IsChecked = false;
 				DjChannelClickStoryboard.Begin();
 			}
 		}
@@ -1233,10 +1399,10 @@ namespace DoubanFM
 			switch (e.Key)
 			{
 				case System.Windows.Input.Key.MediaPlayPause:
-					_player.IsPlaying = !_player.IsPlaying;
+					PlayPause();
 					break;
 				case System.Windows.Input.Key.MediaNextTrack:
-					_player.Skip();
+					Next();
 					break;
 			}
 		}
@@ -1250,23 +1416,12 @@ namespace DoubanFM
 		private void CheckBoxShowLyrics_Checked(object sender, System.Windows.RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			if (_lyricsWindow == null)
-			{
-				if (_lyricsSetting == null) _lyricsSetting = LyricsSetting.Load();
-				_lyricsWindow = new LyricsWindow(_lyricsSetting);
-				System.Windows.Data.Binding binding = new System.Windows.Data.Binding();
-				binding.Source = this.Background;
-				binding.Converter = (System.Windows.Data.IValueConverter)FindResource("WindowBackgroundToSliderForegroundConverter");
-				_lyricsWindow.SetBinding(ForegroundProperty, binding);
-			}
-			_lyricsWindow.Show();
-
-			if (_lyricsWindow.Lyrics == null) DownloadLyrics();
+			if (_player != null) ShowLyrics();
 		}
 
 		private void CheckBoxShowLyrics_Unchecked(object sender, RoutedEventArgs e)
 		{
-			if (_lyricsWindow != null) _lyricsWindow.Hide();
+			if (_player != null) HideLyrics();
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -1285,6 +1440,10 @@ namespace DoubanFM
 
 			AddLogicToHotKeys(_hotKeys);
 			_hotKeys.Register(this);
+
+			//设置歌词显示
+			if (_player.Settings.ShowLyrics)
+				ShowLyrics();
 		}
 
 		private void ButtonHotKeySettings_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -1347,11 +1506,15 @@ namespace DoubanFM
 
 		private void LyricsSetting_Click(object sender, RoutedEventArgs e)
 		{
+			ButtonLyricsSetting.IsEnabled = false;
 			LyricsSettingWindow window = new LyricsSettingWindow(_lyricsSetting);
-			window.Closed += new EventHandler((o, ee) =>
 			{
-			});
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("ShowLyrics");
+				binding.Source = _player.Settings;
+				window.CbShowLyrics.SetBinding(CheckBox.IsCheckedProperty, binding);
+			}
 			window.Show();
+			window.Closed += delegate { ButtonLyricsSetting.IsEnabled = true; };
 		}
 
 		private void ShareFanfou_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -1368,14 +1531,19 @@ namespace DoubanFM
 				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Facebook));
 		}
 
-		#endregion
-
 		private void ShareTwitter_Click(object sender, RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
 			if (_player.CurrentSong != null)
 				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Twitter));
 		}
+
+		private void GoToHomePage_Click(object sender, RoutedEventArgs e)
+		{
+			Process.Start("http://www.kfstorm.com/blog/doubanfm/");
+		}
+
+		#endregion
 
 	}
 }

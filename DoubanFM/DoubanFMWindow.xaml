@@ -85,9 +85,9 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 									<ColumnDefinition/>
 									<ColumnDefinition/>
 								</Grid.ColumnDefinitions>
-								<Button x:Name="ButtonPersonal" Margin="5" Content="私人兆赫" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}">
-									<Button.Triggers>
-										<EventTrigger RoutedEvent="ButtonBase.Click">
+								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="私人兆赫" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}" Style="{DynamicResource ChannelCategoryStyle}">
+									<RadioButton.Triggers>
+										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard>
 												<Storyboard x:Name="PersonalClickStoryboard">
 													<ThicknessAnimation
@@ -95,11 +95,11 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 												</Storyboard>
 											</BeginStoryboard>
 										</EventTrigger>
-									</Button.Triggers>
-								</Button>
-								<Button Grid.Column="1" Margin="5" Content="公共兆赫">
-									<Button.Triggers>
-										<EventTrigger RoutedEvent="ButtonBase.Click">
+									</RadioButton.Triggers>
+								</RadioButton>
+								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" Content="公共兆赫" Style="{DynamicResource ChannelCategoryStyle}">
+									<RadioButton.Triggers>
+										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard>
 												<Storyboard x:Name="PublicClickStoryboard">
 													<ThicknessAnimation
@@ -107,11 +107,11 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 												</Storyboard>
 											</BeginStoryboard>
 										</EventTrigger>
-									</Button.Triggers>
-								</Button>
-								<Button x:Name="ButtonDjCates" Grid.Column="2" Margin="5" Content="DJ兆赫" Click="ButtonDjCates_Click">
-									<Button.Triggers>
-										<EventTrigger RoutedEvent="ButtonBase.Click">
+									</RadioButton.Triggers>
+								</RadioButton>
+								<RadioButton x:Name="ButtonDjCates" Grid.Column="2" Margin="5" Content="DJ兆赫" Click="ButtonDjCates_Click" Style="{DynamicResource ChannelCategoryStyle}">
+									<RadioButton.Triggers>
+										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard>
 												<Storyboard x:Name="DjClickStoryboard">
 													<BooleanAnimationUsingKeyFrames Storyboard.TargetName="DjCates" Storyboard.TargetProperty="IsEnabled">
@@ -122,8 +122,8 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 												</Storyboard>
 											</BeginStoryboard>
 										</EventTrigger>
-									</Button.Triggers>
-								</Button>
+									</RadioButton.Triggers>
+								</RadioButton>
 							</Grid>
 							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" Width="1000" d:IsHidden="True">
 								<Grid.ColumnDefinitions>
@@ -290,8 +290,8 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 									<RowDefinition/>
 									<RowDefinition Height="Auto"/>
 								</Grid.RowDefinitions>
-								<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}"/>
-								<Grid Grid.Row="1">
+								<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" Margin="5"/>
+								<Grid Grid.Row="1" Margin="5">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition/>
 										<ColumnDefinition Width="20"/>
@@ -337,16 +337,19 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 									<RowDefinition Height="Auto"/>
 									<RowDefinition Height="Auto"/>
 								</Grid.RowDefinitions>
-								<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+									<Button x:Name="GoToHomePage" Height="40" Style="{DynamicResource IconStyle}" Margin="0,0,10,0" Click="GoToHomePage_Click"/>
+									<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
+								</StackPanel>
 								<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.5.0 Beta</Label>
-								<Button x:Name="CheckUpdate" Grid.Row="2" FontSize="16" Width="120" Height="40" Click="CheckUpdate_Click">检查更新</Button>
-								<Grid Grid.Row="3">
+								<Button x:Name="CheckUpdate" Grid.Row="2" Click="CheckUpdate_Click" Style="{DynamicResource CheckUpdateStyle}"/>
+								<Grid Grid.Row="3" Height="40">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition/>
 										<ColumnDefinition/>
 									</Grid.ColumnDefinitions>
-									<Button x:Name="Feedback" Width="90" Height="30" Click="Feedback_Click">意见与反馈</Button>
-									<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Width="90" Height="30" Click="VisitOfficialWebsite_Click">豆瓣电台官网</Button>
+									<Button x:Name="Feedback" Click="Feedback_Click" Style="{DynamicResource FeedbackStyle}"/>
+									<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Click="VisitOfficialWebsite_Click" Style="{DynamicResource DoubanFMOfficialWebsiteStyle}"/>
 								</Grid>
 								<Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
 								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">All rights reserved.</Label>
@@ -405,16 +408,20 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 								<EventTrigger RoutedEvent="UIElement.MouseEnter">
 									<BeginStoryboard>
 										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width" To="224" EasingFunction="{StaticResource Smooth}" BeginTime="0:0:0.5" Duration="0:0:0.5"/>
-											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="1" EasingFunction="{StaticResource Smooth}" BeginTime="0:0:0.5" Duration="0:0:0.5"/>
+											<DoubleAnimationUsingKeyFrames  Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width">
+												<DiscreteDoubleKeyFrame KeyTime="0" Value="NaN"/>
+											</DoubleAnimationUsingKeyFrames>
+											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="1" EasingFunction="{StaticResource Smooth}" Duration="0:0:0.5"/>
 										</Storyboard>
 									</BeginStoryboard>
 								</EventTrigger>
 								<EventTrigger RoutedEvent="UIElement.MouseLeave">
 									<BeginStoryboard>
 										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width" To="0" EasingFunction="{StaticResource Smooth}" BeginTime="0:0:0.5" Duration="0:0:0.5"/>
-											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="0" EasingFunction="{StaticResource Smooth}" BeginTime="0:0:0.5" Duration="0:0:0.5"/>
+											<DoubleAnimationUsingKeyFrames  Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width">
+												<DiscreteDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+											</DoubleAnimationUsingKeyFrames>
+											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="0" EasingFunction="{StaticResource Smooth}" Duration="0:0:1"/>
 										</Storyboard>
 									</BeginStoryboard>
 								</EventTrigger>
@@ -465,6 +472,18 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 			<MediaElement x:Name="Audio" LoadedBehavior="Manual" MediaEnded="Audio_MediaEnded" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" MediaFailed="Audio_MediaFailed" MediaOpened="Audio_MediaOpened" UnloadedBehavior="Manual" d:IsHidden="True" />
 			<Image x:Name="Cover2" Stretch="UniformToFill"/>
 			<Image x:Name="Cover1" Stretch="UniformToFill" Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" />
+			<Grid x:Name="LyricsPanel" Height="70" VerticalAlignment="Bottom" Visibility="Hidden">
+				<Border Background="{Binding Background, ElementName=Window}">
+					<Border.OpacityMask>
+						<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+							<GradientStop Offset="0"/>
+							<GradientStop Color="#CC38FFA8" Offset="0.815"/>
+							<GradientStop Color="#9047FFAE" Offset="0.422"/>
+						</LinearGradientBrush>
+					</Border.OpacityMask>
+				</Border>
+				<TextBlock x:Name="CurrentLyrics" Foreground="White" Margin="7" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" TextTrimming="WordEllipsis"/>
+			</Grid>
 		</Grid>
 	</Grid>
 </local:WindowBase>

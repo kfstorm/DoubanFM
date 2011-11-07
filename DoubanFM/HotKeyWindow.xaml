@@ -6,52 +6,55 @@
 	xmlns:local="clr-namespace:DoubanFM"
 	mc:Ignorable="d" x:Class="DoubanFM.HotKeyWindow"
 	x:Name="window"
-	Title="热键设置">
-	<Grid Width="300">
-		<Grid Margin="20">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="38"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="38"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="38"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="38"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="38"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="38"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="Auto"/>
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<CheckBox x:Name="LikeUnlikeEnabled" VerticalAlignment="Center" HorizontalContentAlignment="Center">
-				<CheckBox Style="{DynamicResource LikeStyle}" Width="24"/>
-			</CheckBox>
-			<CheckBox Grid.Row="2" x:Name="NeverEnabled" VerticalAlignment="Center" HorizontalContentAlignment="Center">
-				<Button Style="{DynamicResource NeverStyle}" Width="24"/>
-			</CheckBox>
-			<CheckBox Grid.Row="4" x:Name="PlayPauseEnabled" VerticalAlignment="Center" HorizontalContentAlignment="Center">
-				<CheckBox Style="{DynamicResource PauseStyle}" Width="24"/>
-			</CheckBox>
-			<CheckBox Grid.Row="6" x:Name="NextEnabled" VerticalAlignment="Center" HorizontalContentAlignment="Center">
-				<Button Style="{DynamicResource NextStyle}" Width="24"/>
-			</CheckBox>
-			<CheckBox Grid.Row="8" x:Name="ShowMinimizeEnabled" VerticalAlignment="Center" Content="显示/最小化"/>
-			<CheckBox Grid.Row="10" x:Name="ShowHideEnabled" VerticalAlignment="Center" Content="显示/隐藏"/>
-			<TextBox x:Name="LikeUnlike" Grid.Column="1" Height="20" Margin="10,0,0,0" IsEnabled="{Binding IsChecked, ElementName=LikeUnlikeEnabled, Mode=TwoWay}" PreviewKeyDown="SetHotKey_PreviewKeyDown" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
-			<TextBox x:Name="Never" Grid.Row="2" Grid.Column="1" Height="20" Margin="10,0,0,0" IsEnabled="{Binding IsChecked, ElementName=NeverEnabled, Mode=TwoWay}" PreviewKeyDown="SetHotKey_PreviewKeyDown" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
-			<TextBox x:Name="PlayPause" Grid.Row="4" Grid.Column="1" Height="20" Margin="10,0,0,0" IsEnabled="{Binding IsChecked, ElementName=PlayPauseEnabled, Mode=TwoWay}" PreviewKeyDown="SetHotKey_PreviewKeyDown" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
-			<TextBox x:Name="Next" Grid.Row="6" Grid.Column="1" Height="20" Margin="10,0,0,0" IsEnabled="{Binding IsChecked, ElementName=NextEnabled, Mode=TwoWay}" PreviewKeyDown="SetHotKey_PreviewKeyDown" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
-			<TextBox x:Name="ShowMinimize" Grid.Row="8" Grid.Column="1" Height="20" Margin="10,0,0,0" IsEnabled="{Binding IsChecked, ElementName=ShowMinimizeEnabled, Mode=TwoWay}" PreviewKeyDown="SetHotKey_PreviewKeyDown" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
-			<TextBox x:Name="ShowHide" Grid.Row="10" Grid.Column="1" Height="20" Margin="10,0,0,0" IsEnabled="{Binding IsChecked, ElementName=ShowHideEnabled, Mode=TwoWay}" PreviewKeyDown="SetHotKey_PreviewKeyDown" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
-			<StackPanel Grid.Row="12" Grid.ColumnSpan="2" HorizontalAlignment="Center" Height="40" Orientation="Horizontal">
-				<Button x:Name="Ok" Width="100" Click="Ok_Click" Content="确定"/>
-				<Button x:Name="Cancel" Width="100" Margin="20,0,0,0" Click="Cancel_Click" Content="取消"/>
-			</StackPanel>
-		</Grid>
+	Title="热键设置" Background="#FF852929">
+	<Window.Resources>
+		<Style TargetType="{x:Type local:HotKeySettingControl}">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+	</Window.Resources>
+	<Grid Width="300" Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<local:HotKeySettingControl Grid.Row="0" Command="Like">
+			<TextBlock Width="100" VerticalAlignment="Center">加红心（不取消）</TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Grid.Row="2" Command="Never">
+			<TextBlock Width="100" VerticalAlignment="Center">不再播放</TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Grid.Row="4" Command="PlayPause">
+			<TextBlock Width="100" VerticalAlignment="Center">播放/暂停</TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Grid.Row="6" Command="Next">
+			<TextBlock Width="100" VerticalAlignment="Center">下一首</TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Grid.Row="8" Command="ShowMinimize">
+			<TextBlock Width="100" VerticalAlignment="Center">显示/最小化</TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Grid.Row="10" Command="ShowHide">
+			<TextBlock Width="100" VerticalAlignment="Center">显示/隐藏 窗口</TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Grid.Row="12" Command="ShowHideLyrics">
+			<TextBlock Width="100" VerticalAlignment="Center">显示/隐藏 歌词</TextBlock>
+		</local:HotKeySettingControl>
+		<StackPanel Grid.Row="14" HorizontalAlignment="Center" Orientation="Horizontal">
+			<Button x:Name="Ok" Click="Ok_Click" Style="{DynamicResource OKButtonStyle}"/>
+			<Button x:Name="Cancel" Margin="20,0,0,0" Click="Cancel_Click" Style="{DynamicResource CancelButtonStyle}"/>
+		</StackPanel>
 	</Grid>
 </local:ChildWindowBase>
