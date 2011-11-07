@@ -341,7 +341,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 									<Button x:Name="GoToHomePage" Height="40" Style="{DynamicResource IconStyle}" Margin="0,0,10,0" Click="GoToHomePage_Click"/>
 									<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
 								</StackPanel>
-								<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.5.0 Beta</Label>
+								<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.5.0 Beta2</Label>
 								<Button x:Name="CheckUpdate" Grid.Row="2" Click="CheckUpdate_Click" Style="{DynamicResource CheckUpdateStyle}"/>
 								<Grid Grid.Row="3" Height="40">
 									<Grid.ColumnDefinitions>

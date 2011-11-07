@@ -665,6 +665,7 @@
 		</Setter>
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
 		<Setter Property="Padding" Value="2"/>
+		<Setter Property="HorizontalAlignment" Value="Left"/>
 	</Style>
 	<Style TargetType="{x:Type TextBox}">
 		<Setter Property="Template">
