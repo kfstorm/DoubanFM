@@ -63,27 +63,29 @@ namespace DoubanFM
 			return fontFamily.FamilyNames.First().Value;
 		}
 
-		private void CbFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		/// <summary>
+		/// 根据填写的字体名称更新字体设置
+		/// </summary>
+		private void UpdateFontFamily()
 		{
 			try
 			{
-				LyricsSetting.FontFamily = new FontFamily(CbFontFamily.Text);
+				LyricsSetting.FontFamily = new FontFamily(CbFontFamily.Text.Replace('，', ','));
 			}
 			catch
 			{
 				LyricsSetting.FontFamily = null;
 			}
 		}
+
+		private void CbFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			//引发SelectionChanged事件时Text属性还未政变，所以要延迟读取Text属性的值
+			Dispatcher.BeginInvoke(new Action(() => { UpdateFontFamily(); }));
+		}
 		private void CbFontFamily_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
 		{
-			try
-			{
-				LyricsSetting.FontFamily = new FontFamily(CbFontFamily.Text);
-			}
-			catch
-			{
-				LyricsSetting.FontFamily = null;
-			}
+			UpdateFontFamily();
 		}
 
 		private void SliderStrokeWeight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -120,6 +122,5 @@ namespace DoubanFM
 		{
 			(Owner as DoubanFMWindow).HideEmbeddedLyrics();
 		}
-
 	}
 }
