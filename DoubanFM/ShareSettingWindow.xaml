@@ -1,0 +1,34 @@
+﻿<local:ChildWindowBase x:Class="DoubanFM.ShareSettingWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:DoubanFM"
+		x:Name="Window"
+		Title="分享设置" Background="#FF813131">
+	<Grid Width="300"  Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Label>显示分享按钮：</Label>
+		<ListBox x:Name="LbDisplayedSites" Grid.Row="1" Style="{StaticResource CheckableListBoxStyle}">
+			<ListBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Columns="2"/>
+				</ItemsPanelTemplate>
+			</ListBox.ItemsPanel>
+		</ListBox>
+		<CheckBox Grid.Row="3" IsChecked="{Binding Path=ShareSetting.EnableOneKeyShare, ElementName=Window}">启用一键分享</CheckBox>
+		<Label Grid.Row="4">一键分享的网站：</Label>
+		<ListBox x:Name="LbOneKeyShareSites" Grid.Row="5" Style="{DynamicResource CheckableListBoxStyle}">
+			<ListBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Columns="2"/>
+				</ItemsPanelTemplate>
+			</ListBox.ItemsPanel>
+		</ListBox>
+	</Grid>
+</local:ChildWindowBase>

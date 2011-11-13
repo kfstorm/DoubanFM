@@ -13,7 +13,7 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// 网络连接基础类
 	/// </summary>
-	class ConnectionBase
+	public class ConnectionBase
 	{
 		/// <summary>
 		/// Cookie
@@ -252,6 +252,24 @@ namespace DoubanFM.Core
 				return baseUrl;
 			return baseUrl + "?" + parameters;
 		}
+
+		/// <summary>
+		/// 设置代理
+		/// </summary>
+		/// <param name="host">主机名</param>
+		/// <param name="port">端口</param>
+		public static void SetProxy(string host, int port)
+		{
+			WebRequest.DefaultWebProxy = new WebProxy(host, port);
+		}
+		/// <summary>
+		/// 使用默认代理
+		/// </summary>
+		public static void ResetProxy()
+		{
+			WebRequest.DefaultWebProxy = WebRequest.GetSystemWebProxy();
+		}
+		
 	}
 
 	/// <summary>

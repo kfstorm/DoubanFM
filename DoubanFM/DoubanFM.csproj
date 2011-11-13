@@ -104,6 +104,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ChildWindowBase.cs" />
+    <Compile Include="UISettingWindow.xaml.cs">
+      <DependentUpon>UISettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GeneralSettingWindow.xaml.cs">
+      <DependentUpon>GeneralSettingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeys.cs" />
     <Compile Include="HotKeySettingControl.cs" />
@@ -117,6 +123,10 @@
     <Compile Include="LyricsWindow.xaml.cs">
       <DependentUpon>LyricsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ShareSetting.cs" />
+    <Compile Include="ShareSettingWindow.xaml.cs">
+      <DependentUpon>ShareSettingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Style.xaml.cs">
       <DependentUpon>Style.xaml</DependentUpon>
     </Compile>
@@ -127,6 +137,10 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowBase.cs" />
+    <Page Include="UISettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DoubanFMWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -141,6 +155,10 @@
       <DependentUpon>DoubanFMWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="GeneralSettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HotKeyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -150,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LyricsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ShareSettingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

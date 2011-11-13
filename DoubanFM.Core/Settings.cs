@@ -33,6 +33,10 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty IsSearchFilterEnabledProperty = DependencyProperty.Register("IsSearchFilterEnabled", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty ShowLyricsProperty = DependencyProperty.Register("ShowLyrics", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty TopMostProperty = DependencyProperty.Register("TopMost", typeof(bool), typeof(Settings));
+		public static readonly DependencyProperty ScaleTransformProperty = DependencyProperty.Register("ScaleTransform", typeof(double), typeof(Settings), new PropertyMetadata(1.0));
+		public static readonly DependencyProperty EnableProxyProperty = DependencyProperty.Register("EnableProxy", typeof(bool), typeof(Settings));
+		public static readonly DependencyProperty ProxyHostProperty = DependencyProperty.Register("ProxyHost", typeof(string), typeof(Settings));
+		public static readonly DependencyProperty ProxyPortProperty = DependencyProperty.Register("ProxyPort", typeof(int), typeof(Settings), new PropertyMetadata(8080));
 		
 		#endregion
 
@@ -164,6 +168,39 @@ namespace DoubanFM.Core
 			get { return (bool)GetValue(TopMostProperty); }
 			set { SetValue(TopMostProperty, value); }
 		}
+		/// <summary>
+		/// 缩放
+		/// </summary>
+		public double ScaleTransform
+		{
+			get { return (double)GetValue(ScaleTransformProperty); }
+			set { SetValue(ScaleTransformProperty, value); }
+		}
+		/// <summary>
+		/// 启用代理
+		/// </summary>
+		public bool EnableProxy
+		{
+			get { return (bool)GetValue(EnableProxyProperty); }
+			set { SetValue(EnableProxyProperty, value); }
+		}
+		/// <summary>
+		/// 代理服务器主机名
+		/// </summary>
+		public string ProxyHost
+		{
+			get { return (string)GetValue(ProxyHostProperty); }
+			set { SetValue(ProxyHostProperty, value); }
+		}
+		/// <summary>
+		/// 代理服务器端口
+		/// </summary>
+		public int ProxyPort
+		{
+			get { return (int)GetValue(ProxyPortProperty); }
+			set { SetValue(ProxyPortProperty, value); }
+		}
+		
 		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
@@ -309,6 +346,38 @@ namespace DoubanFM.Core
 			{
 				TopMost = def.TopMost;
 			}
+			try
+			{
+				ScaleTransform = info.GetDouble("ScaleTransform");
+			}
+			catch
+			{
+				ScaleTransform = def.ScaleTransform;
+			}
+			try
+			{
+				EnableProxy = info.GetBoolean("EnableProxy");
+			}
+			catch
+			{
+				EnableProxy = def.EnableProxy;
+			}
+			try
+			{
+				ProxyHost = info.GetString("ProxyHost");
+			}
+			catch
+			{
+				ProxyHost = def.ProxyHost;
+			}
+			try
+			{
+				ProxyPort = info.GetInt32("ProxyPort");
+			}
+			catch
+			{
+				ProxyPort = def.ProxyPort;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -329,6 +398,10 @@ namespace DoubanFM.Core
 			info.AddValue("IsSearchFilterEnabled", IsSearchFilterEnabled);
 			info.AddValue("ShowLyrics", ShowLyrics);
 			info.AddValue("TopMost", TopMost);
+			info.AddValue("ScaleTransform", ScaleTransform);
+			info.AddValue("EnableProxy", EnableProxy);
+			info.AddValue("ProxyHost", ProxyHost);
+			info.AddValue("ProxyPort", ProxyPort);
 		}
 
 		/// <summary>

@@ -112,6 +112,39 @@ namespace DoubanFM
 		}
 	}
 	/// <summary>
+	/// 将Bool值转换为Visibility的转换器
+	/// </summary>
+	public class BoolToVisibilityConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			if (!(bool)value)
+			{
+				if (parameter != null)
+					return parameter;
+				return System.Windows.Visibility.Hidden;
+			}
+			else
+			{
+				return System.Windows.Visibility.Visible;
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			switch ((System.Windows.Visibility)value)
+			{
+				case System.Windows.Visibility.Collapsed:
+				case System.Windows.Visibility.Hidden:
+					return false;
+				case System.Windows.Visibility.Visible:
+					return true;
+				default:
+					return true;
+			}
+		}
+	}
+	/// <summary>
 	/// 将Bool值反转并转换为Visibility的转换器
 	/// </summary>
 	public class BoolReverseToVisibilityConverter : IValueConverter
@@ -119,14 +152,29 @@ namespace DoubanFM
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			if ((bool)value)
+			{
+				if (parameter != null)
+					return parameter;
 				return System.Windows.Visibility.Hidden;
+			}
 			else
+			{
 				return System.Windows.Visibility.Visible;
+			}
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			throw new NotImplementedException();
+			switch ((System.Windows.Visibility)value)
+			{
+				case System.Windows.Visibility.Collapsed:
+				case System.Windows.Visibility.Hidden:
+					return true;
+				case System.Windows.Visibility.Visible:
+					return false;
+				default:
+					return true;
+			}
 		}
 	}
 

@@ -9,6 +9,7 @@
 	<PowerEase x:Key="Smooth" Power="3"/>
 	<local:SliderThumbWidthConverter x:Key="converter1"/>
 	<local:BoolReverseConverter x:Key="BoolReverseConverter"/>
+	<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 	<local:BoolReverseToVisibilityConverter x:Key="BoolReverseToVisibilityConverter"/>
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 	<LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0">
@@ -664,7 +665,7 @@
 			</Setter.Value>
 		</Setter>
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
-		<Setter Property="Padding" Value="2"/>
+		<Setter Property="Padding" Value="2,0,0,0"/>
 		<Setter Property="HorizontalAlignment" Value="Left"/>
 	</Style>
 	<Style TargetType="{x:Type TextBox}">
@@ -835,6 +836,7 @@
 			</Setter.Value>
 		</Setter>
 		<Setter Property="HorizontalAlignment" Value="Left"/>
+		<Setter Property="Padding" Value="2,0,0,0"/>
 	</Style>
 	
 	<Style x:Key="MinimizeStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
@@ -1090,13 +1092,20 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Border x:Key="ShareStyle" Background="Transparent" ToolTip="分享">
-		<Viewbox>
-			<Canvas x:Name="DoubanFM__Share" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
-				<Path Width="183.478" Height="221.57" Canvas.Left="22" Canvas.Top="17.215" Stretch="Fill" Fill="White" Data="F1 M 77.7556,124.284C 77.9168,125.5 78,126.74 78,128C 78,129.26 77.9168,130.5 77.7556,131.716L 162.793,186.94C 167.062,184.305 172.093,182.785 177.478,182.785C 192.942,182.785 205.478,195.321 205.478,210.785C 205.478,226.249 192.942,238.785 177.478,238.785C 162.014,238.785 149.478,226.249 149.478,210.785C 149.478,209.525 149.561,208.285 149.722,207.069L 64.6849,151.845C 60.4156,154.48 55.3853,156 50,156C 34.536,156 22,143.464 22,128C 22,112.536 34.536,100 50,100C 55.3853,100 60.4156,101.52 64.6849,104.155L 149.722,48.9313C 149.561,47.7154 149.478,46.4749 149.478,45.215C 149.478,29.751 162.014,17.215 177.478,17.215C 192.942,17.215 205.478,29.751 205.478,45.215C 205.478,60.679 192.942,73.215 177.478,73.215C 172.093,73.215 167.063,71.6947 162.793,69.0598L 77.7556,124.284 Z "/>
-			</Canvas>
-		</Viewbox>
-	</Border>
+	<Style x:Key="ShareStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="ToolTip" Value="分享"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__Share" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="183.478" Height="221.57" Canvas.Left="22" Canvas.Top="17.215" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 77.7556,124.284C 77.9168,125.5 78,126.74 78,128C 78,129.26 77.9168,130.5 77.7556,131.716L 162.793,186.94C 167.062,184.305 172.093,182.785 177.478,182.785C 192.942,182.785 205.478,195.321 205.478,210.785C 205.478,226.249 192.942,238.785 177.478,238.785C 162.014,238.785 149.478,226.249 149.478,210.785C 149.478,209.525 149.561,208.285 149.722,207.069L 64.6849,151.845C 60.4156,154.48 55.3853,156 50,156C 34.536,156 22,143.464 22,128C 22,112.536 34.536,100 50,100C 55.3853,100 60.4156,101.52 64.6849,104.155L 149.722,48.9313C 149.561,47.7154 149.478,46.4749 149.478,45.215C 149.478,29.751 162.014,17.215 177.478,17.215C 192.942,17.215 205.478,29.751 205.478,45.215C 205.478,60.679 192.942,73.215 177.478,73.215C 172.093,73.215 167.063,71.6947 162.793,69.0598L 77.7556,124.284 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 	<Style x:Key="ShareDoubanStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
 		<Setter Property="ToolTip" Value="分享到豆瓣"/>
 		<Setter Property="Template">
@@ -1716,5 +1725,30 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+	</Style>
+	<Style TargetType="{x:Type ListBox}">
+		<Setter Property="Background" Value="#7F000000"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Style.Triggers>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Background" Value="Red"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="CheckableListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBoxItem}">
+					<CheckBox x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected, Mode=TwoWay}" SnapsToDevicePixels="true">
+						<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+					</CheckBox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="CheckableListBoxStyle" BasedOn="{StaticResource {x:Type ListBox}}" TargetType="{x:Type ListBox}">
+		<Setter Property="SelectionMode" Value="Multiple"/>
+		<Setter Property="ItemContainerStyle" Value="{StaticResource CheckableListBoxItemStyle}"/>
 	</Style>
 </ResourceDictionary>

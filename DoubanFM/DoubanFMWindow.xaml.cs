@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows.Input;
+using System.Text;
 
 namespace DoubanFM
 {
@@ -55,7 +56,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 托盘图标
 		/// </summary>
-		private System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
+		internal System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
 		/// <summary>
 		/// 托盘图标右键菜单中的各个菜单项
 		/// </summary>
@@ -103,7 +104,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 命令
 		/// </summary>
-		public enum Commands { None, Like, Unlike, LikeUnlike, Never, PlayPause, Next, ShowMinimize, ShowHide, ShowLyrics, HideLyrics, ShowHideLyrics }
+		public enum Commands { None, Like, Unlike, LikeUnlike, Never, PlayPause, Next, ShowMinimize, ShowHide, ShowLyrics, HideLyrics, ShowHideLyrics, OneKeyShare }
 		/// <summary>
 		/// 热键
 		/// </summary>
@@ -128,6 +129,10 @@ namespace DoubanFM
 		/// 歌词设置
 		/// </summary>
 		internal LyricsSetting _lyricsSetting;
+		/// <summary>
+		/// 分享设置
+		/// </summary>
+		public ShareSetting ShareSetting { get; private set; }
 		
 		#endregion
 
@@ -151,6 +156,7 @@ namespace DoubanFM
 			PbPassword.Password = _player.Settings.User.Password;
 			if (channel != null) _player.Settings.LastChannel = channel;
 
+			InitProxy();
 			ClearOldTempFiles();
 			AddPlayerEventListener();
 			InitNotifyIcon();
@@ -159,10 +165,10 @@ namespace DoubanFM
 			PreloadMusic();
 			CheckUpdateOnStartup();
 			InitLyrics();
+			InitShareSetting();
 
 			_player.Initialize();
 		}
-
 		/// <summary>
 		/// 初始化托盘图标
 		/// </summary>
@@ -546,6 +552,38 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 初始化分享设置
+		/// </summary>
+		void InitShareSetting()
+		{
+			ShareSetting = ShareSetting.Load();
+			ApplyShareSetting();
+
+			{
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("ShareSetting.EnableOneKeyShare");
+				binding.Source = this;
+				binding.Converter = (System.Windows.Data.IValueConverter)FindResource("BoolReverseToVisibilityConverter");
+				binding.ConverterParameter = Visibility.Collapsed;
+				BtnCopyUrl.SetBinding(VisibilityProperty, binding);
+			}
+			{
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("ShareSetting.EnableOneKeyShare");
+				binding.Source = this;
+				binding.Converter = (System.Windows.Data.IValueConverter)FindResource("BoolToVisibilityConverter");
+				binding.ConverterParameter = Visibility.Collapsed;
+				BtnOneKeyShare.SetBinding(VisibilityProperty, binding);
+			}
+		}
+
+		/// <summary>
+		/// 初始化代理设置
+		/// </summary>
+		void InitProxy()
+		{
+			ApplyProxy();
+		}
+
 		#endregion
 
 		#region 操作
@@ -665,11 +703,57 @@ namespace DoubanFM
 			else
 				ShowLyrics();
 		}
+		/// <summary>
+		/// 一键分享
+		/// </summary>
+		public void OneKeyShare()
+		{
+			if (!ShareSetting.EnableOneKeyShare || _player.CurrentSong == null) return;
+			foreach (var site in ShareSetting.OneKeyShareSites)
+			{
+				new Share(_player, site).Go();
+			}
+		}
 
 		#endregion
 
 		#region 其他
-
+		/// <summary>
+		/// 应用当前代理设置
+		/// </summary>
+		internal void ApplyProxy()
+		{
+			try
+			{
+				if (_player.Settings.EnableProxy)
+					ConnectionBase.SetProxy(_player.Settings.ProxyHost == null ? string.Empty : _player.Settings.ProxyHost, _player.Settings.ProxyPort);
+				else
+					ConnectionBase.ResetProxy();
+			}
+			catch (Exception ex)
+			{
+				StringBuilder sb = new StringBuilder();
+				while (ex != null)
+				{
+					sb.AppendLine(ex.Message);
+					ex = ex.InnerException;
+				}
+				MessageBox.Show(this, sb.ToString(), "代理设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+		/// <summary>
+		/// 应用当前分享设置
+		/// </summary>
+		internal void ApplyShareSetting()
+		{
+			foreach (FrameworkElement button in Shares.Children)
+			{
+				if (ShareSetting.DisplayedSites.Contains((Share.Sites)button.Tag))
+					button.Visibility = Visibility.Visible;
+				else
+					button.Visibility = Visibility.Collapsed;
+			}
+		}
 		/// <summary>
 		/// 显示桌面歌词
 		/// </summary>
@@ -762,6 +846,9 @@ namespace DoubanFM
 						break;
 					case Commands.ShowHideLyrics:
 						hotKey.OnHotKey += delegate { ShowHideLyrics(); };
+						break;
+					case Commands.OneKeyShare:
+						hotKey.OnHotKey += delegate { OneKeyShare(); };
 						break;
 					default:
 						break;
@@ -1145,6 +1232,10 @@ namespace DoubanFM
 			{
 				_lyricsSetting.Save();
 			}
+			if (ShareSetting != null)
+			{
+				ShareSetting.Save();
+			}
 			if (_notifyIcon != null)
 				_notifyIcon.Dispose();
 			if (_player != null)
@@ -1353,14 +1444,6 @@ namespace DoubanFM
 				_notifyIcon.Visible = !this.IsVisible;
 		}
 
-
-		private void CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged(object sender, RoutedEventArgs e)
-		{
-			if (CheckBoxAlwaysShowNotifyIcon.IsChecked == false)
-				_notifyIcon.Visible = !this.IsVisible;
-			else _notifyIcon.Visible = true;
-		}
-
 		private void CheckUpdate_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			CheckUpdate.IsEnabled = false;
@@ -1446,6 +1529,43 @@ namespace DoubanFM
 				ShowLyrics();
 		}
 
+		private void ButtonGeneralSetting_Click(object sender, RoutedEventArgs e)
+		{
+			ButtonGeneralSetting.IsEnabled = false;
+			GeneralSettingWindow window = new GeneralSettingWindow();
+			window.Show();
+			window.Closed += delegate { ButtonGeneralSetting.IsEnabled = true; };
+		}
+
+		private void ButtonUISetting_Click(object sender, RoutedEventArgs e)
+		{
+			ButtonUISetting.IsEnabled = false;
+			UISettingWindow window = new UISettingWindow();
+			window.Show();
+			window.Closed += delegate { ButtonUISetting.IsEnabled = true; };
+		}
+
+		private void LyricsSetting_Click(object sender, RoutedEventArgs e)
+		{
+			ButtonLyricsSetting.IsEnabled = false;
+			LyricsSettingWindow window = new LyricsSettingWindow(_lyricsSetting);
+			{
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("ShowLyrics");
+				binding.Source = _player.Settings;
+				window.CbShowLyrics.SetBinding(CheckBox.IsCheckedProperty, binding);
+			}
+			window.Show();
+			window.Closed += delegate { ButtonLyricsSetting.IsEnabled = true; };
+		}
+
+		private void ButtonShareSetting_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			ButtonShareSetting.IsEnabled = false;
+			ShareSettingWindow window = new ShareSettingWindow(ShareSetting);
+			window.Show();
+			window.Closed += delegate { ButtonShareSetting.IsEnabled = true; };
+		}
+
 		private void ButtonHotKeySettings_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
@@ -1462,85 +1582,30 @@ namespace DoubanFM
 			hotKeyWindow.Show();
 		}
 
-		private void ShareDouban_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void ShareButton_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
 			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Douban));
-		}
-
-		private void ShareWeibo_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Weibo));
-		}
-
-		private void ShareMsn_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Msn));
-		}
-
-		private void ShareKaixin_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Kaixin));
-		}
-
-		private void ShareRenren_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Renren));
-		}
-
-		private void ShareTencentWeibo_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.TencentWeibo));
-		}
-
-		private void LyricsSetting_Click(object sender, RoutedEventArgs e)
-		{
-			ButtonLyricsSetting.IsEnabled = false;
-			LyricsSettingWindow window = new LyricsSettingWindow(_lyricsSetting);
-			{
-				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("ShowLyrics");
-				binding.Source = _player.Settings;
-				window.CbShowLyrics.SetBinding(CheckBox.IsCheckedProperty, binding);
-			}
-			window.Show();
-			window.Closed += delegate { ButtonLyricsSetting.IsEnabled = true; };
-		}
-
-		private void ShareFanfou_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Fanfou));
-		}
-
-		private void ShareFacebook_Click(object sender, RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Facebook));
-		}
-
-		private void ShareTwitter_Click(object sender, RoutedEventArgs e)
-		{
-			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				Process.Start(Share.GetShareLink(_player.CurrentSong, _player.CurrentChannel, _player.CurrentDjCate, Share.Sites.Twitter));
+				new Share(_player, (Share.Sites)((FrameworkElement)sender).Tag).Go();
 		}
 
 		private void GoToHomePage_Click(object sender, RoutedEventArgs e)
 		{
 			Process.Start("http://www.kfstorm.com/blog/doubanfm/");
+		}
+
+		private void BtnCopyUrl_Click(object sender, RoutedEventArgs e)
+		{
+			if (_player.CurrentSong != null)
+			{
+				new Share(_player).Go();
+				MessageBox.Show(this, "地址已复制到剪贴板", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
+		}
+
+		private void BtnOneKeyShare_Click(object sender, RoutedEventArgs e)
+		{
+			OneKeyShare();
 		}
 
 		#endregion

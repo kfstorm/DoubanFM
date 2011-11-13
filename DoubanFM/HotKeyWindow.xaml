@@ -29,6 +29,8 @@
 			<RowDefinition Height="10"/>
 			<RowDefinition Height="20"/>
 			<RowDefinition Height="10"/>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<local:HotKeySettingControl Grid.Row="0" Command="Like">
@@ -52,7 +54,10 @@
 		<local:HotKeySettingControl Grid.Row="12" Command="ShowHideLyrics">
 			<TextBlock Width="100" VerticalAlignment="Center">显示/隐藏 歌词</TextBlock>
 		</local:HotKeySettingControl>
-		<StackPanel Grid.Row="14" HorizontalAlignment="Center" Orientation="Horizontal">
+		<local:HotKeySettingControl Grid.Row="14" Command="OneKeyShare">
+			<TextBlock Width="100" VerticalAlignment="Center">一键分享</TextBlock>
+		</local:HotKeySettingControl>
+		<StackPanel Grid.Row="16" HorizontalAlignment="Center" Orientation="Horizontal">
 			<Button x:Name="Ok" Click="Ok_Click" Style="{DynamicResource OKButtonStyle}"/>
 			<Button x:Name="Cancel" Margin="20,0,0,0" Click="Cancel_Click" Style="{DynamicResource CancelButtonStyle}"/>
 		</StackPanel>
