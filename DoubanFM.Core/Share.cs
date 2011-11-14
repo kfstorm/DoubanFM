@@ -226,7 +226,12 @@ namespace DoubanFM.Core
 		{
 			if (Site == Sites.None)
 			{
-				System.Windows.Forms.Clipboard.SetText(Url);
+				try
+				{
+					System.Windows.Clipboard.Clear();
+					System.Windows.Clipboard.SetText(Url);
+				}
+				catch { }
 			}
 			else
 			{
