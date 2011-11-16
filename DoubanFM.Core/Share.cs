@@ -143,7 +143,7 @@ namespace DoubanFM.Core
 					parameters.Add("href", _songInfo.Url);
 					parameters.Add("image", _songInfo.CoverUrl);
 					parameters.Add("text", "");
-					parameters.Add("desc", "(来自豆瓣电台客户端 - " + _songInfo.ChannelName + ")");
+					parameters.Add("desc", "（来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - " + _songInfo.ChannelName + "）");
 					parameters.Add("apikey", "079055d6a0d5ddf816b10183e28199e8");
 					url = ConnectionBase.ConstructUrlWithParameters("http://shuo.douban.com/!service/share", parameters);
 					break;
@@ -247,13 +247,13 @@ namespace DoubanFM.Core
 			switch (type)
 			{
 				case "movie-ost":
-					return "我正在收听《" + artistName + "》的电影原声 “" + songName + "” （来自豆瓣电台客户端（http://kfstorm.com/doubanfm） - " + channelName + "）";
+					return "我正在收听《" + artistName + "》的电影原声 “" + songName + "” （来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - " + channelName + "）";
 				case "easy":
-					return "我正在收听 " + artistName + " 的乐曲《" + songName + "》（来自豆瓣电台客户端（http://kfstorm.com/doubanfm） - " + channelName + "）";
+					return "我正在收听 " + artistName + " 的乐曲《" + songName + "》（来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - " + channelName + "）";
 				case "dj":
-					return "我正在收听节目 《" + songName + "》- " + channelName + "（来自豆瓣电台客户端（http://kfstorm.com/doubanfm） - DJ兆赫 ）";
+					return "我正在收听节目 《" + songName + "》- " + channelName + "（来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - DJ兆赫 ）";
 				default:
-					return "我正在收听 " + artistName + " 的单曲《" + songName + "》（来自豆瓣电台客户端（http://kfstorm.com/doubanfm） - " + channelName + "）";
+					return "我正在收听 " + artistName + " 的单曲《" + songName + "》（来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - " + channelName + "）";
 			}
 		}
 	}

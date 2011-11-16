@@ -39,7 +39,7 @@
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<Label VerticalAlignment="Center">主界面缩放</Label>
-			<Slider Grid.Column="1" Value="{Binding Settings.ScaleTransform, Source={StaticResource Player}, Mode=TwoWay}" Minimum="0.5" Maximum="1.5" SmallChange="0.01" LargeChange="0.1" Margin="10"/>
+			<Slider Grid.Column="1" Value="{Binding Settings.ScaleTransform, Source={StaticResource Player}, Mode=TwoWay}" Minimum="0.5" Maximum="1.5" SmallChange="0.01" LargeChange="0.1" Margin="10" ValueChanged="Slider_ValueChanged" />
 			<Button Grid.Column="2" x:Name="BtnScaleTransformReset" Click="BtnScaleTransformReset_Click" Height="30" Width="80">重置</Button>
 		</Grid>
 	</Grid>

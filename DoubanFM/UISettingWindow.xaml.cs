@@ -34,5 +34,13 @@ namespace DoubanFM
 		{
 			(FindResource("Player") as DoubanFM.Core.Player).Settings.ScaleTransform = 1.0;
 		}
+
+		private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			if (e.OldValue == 1.0 && e.NewValue != 1.0)
+				TextOptions.SetTextFormattingMode(this.Owner, TextFormattingMode.Ideal);
+			else if (e.OldValue != 1.0 && e.NewValue == 1.0)
+				TextOptions.SetTextFormattingMode(this.Owner, TextFormattingMode.Display);
+		}
 	}
 }

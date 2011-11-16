@@ -155,6 +155,8 @@ namespace DoubanFM
 
 			PbPassword.Password = _player.Settings.User.Password;
 			if (channel != null) _player.Settings.LastChannel = channel;
+			if (_player.Settings.ScaleTransform != 1.0)
+				TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
 
 			InitProxy();
 			ClearOldTempFiles();
