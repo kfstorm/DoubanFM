@@ -138,24 +138,18 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 									<ColumnDefinition/>
 								</Grid.ColumnDefinitions>
 								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
-									<ListBox.ItemTemplate>
-										<DataTemplate>
-											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>	
-										</DataTemplate>
-									</ListBox.ItemTemplate>
+									<ListBox.ItemContainerStyle>
+										<Style BasedOn="{StaticResource ChannelStyle}" TargetType="{x:Type ListBoxItem}">
+											<Setter Property="Width" Value="Auto"/>
+										</Style>
+									</ListBox.ItemContainerStyle>
 									<ListBox.ItemsPanel>
 										<ItemsPanelTemplate>
 											<UniformGrid Margin="50"/>
 										</ItemsPanelTemplate>
 									</ListBox.ItemsPanel>
 								</ListBox>
-								<ListBox Grid.Column="1" x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
-									<ListBox.ItemTemplate>
-										<DataTemplate>
-											<TextBlock x:Name="TextBlockDjChannel" Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
-										</DataTemplate>
-									</ListBox.ItemTemplate>
-								</ListBox>
+								<ListBox Grid.Column="1" x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}"/>
 								<ListBox Grid.Column="2" x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged">
 									<ListBox.ItemTemplate>
 										<DataTemplate>
@@ -163,13 +157,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										</DataTemplate>
 									</ListBox.ItemTemplate>
 								</ListBox>
-								<ListBox Grid.Column="3" x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged">
-									<ListBox.ItemTemplate>
-										<DataTemplate>
-											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
-										</DataTemplate>
-									</ListBox.ItemTemplate>
-								</ListBox>
+								<ListBox Grid.Column="3" x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged"/>
 							</Grid>
 						</Grid>
 					</TabItem>

@@ -236,6 +236,8 @@
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Width" Value="110"/>
+		<Setter Property="MinHeight" Value="70"/>
 		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 		<Setter Property="Template">
@@ -318,8 +320,16 @@
 		<Setter Property="ItemsPanel">
 			<Setter.Value>
 				<ItemsPanelTemplate>
-					<UniformGrid Columns="2"/>
+					<WrapPanel>
+					</WrapPanel>
 				</ItemsPanelTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10" TextTrimming="CharacterEllipsis"/>
+				</DataTemplate>
 			</Setter.Value>
 		</Setter>
 		<Setter Property="Template">
