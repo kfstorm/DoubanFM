@@ -770,6 +770,7 @@ namespace DoubanFM
 		internal void ShowEmbeddedLyrics()
 		{
 			LyricsPanel.Visibility = Visibility.Visible;
+			if (_lyricsWindow.Lyrics == null) DownloadLyrics();
 		}
 
 		/// <summary>
