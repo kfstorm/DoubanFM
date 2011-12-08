@@ -22,6 +22,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty IsLoggingOffProperty = DependencyProperty.Register("IsLoggingOff", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty HasCaptchaProperty = DependencyProperty.Register("HasCaptcha", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty ShowLogOnFailedHintProperty = DependencyProperty.Register("ShowLogOnFailedHint", typeof(bool), typeof(UserAssistant));
+		public static readonly DependencyProperty NicknameProperty = DependencyProperty.Register("Nickname", typeof(string), typeof(UserAssistant));
 
 		#endregion
 
@@ -31,6 +32,14 @@ namespace DoubanFM.Core
 		/// 用户
 		/// </summary>
 		public Settings Settings { get; internal set; }
+		/// <summary>
+		/// 昵称
+		/// </summary>
+		public string Nickname
+		{
+			get { return (string)GetValue(NicknameProperty); }
+			protected set { SetValue(NicknameProperty, value); }
+		}
 		/// <summary>
 		///  状态枚举
 		/// </summary>
@@ -191,10 +200,21 @@ namespace DoubanFM.Core
 			{
 				Match match = Regex.Match(html, @"var\s*globalConfig\s*=\s*{\s*uid\s*:\s*'(\d*)'", RegexOptions.IgnoreCase);
 				s = match.Groups[1].Value;
+				Match match2 = Regex.Match(html, @"id=""fm-user"">(?!{{)(.*)<i></i></a>", RegexOptions.None);
+				string nickname = match2.Groups[1].Value;
 				Dispatcher.Invoke(new Action(() =>
 				{
-					if (!string.IsNullOrEmpty(s)) CurrentState = State.LoggedOn;
-					else CurrentState = State.LoggedOff;
+
+					if (!string.IsNullOrEmpty(s))
+					{
+						Nickname = nickname;
+						CurrentState = State.LoggedOn;
+					}
+					else
+					{
+						Nickname = null;
+						CurrentState = State.LoggedOff;
+					}
 				}));
 			}
 			else

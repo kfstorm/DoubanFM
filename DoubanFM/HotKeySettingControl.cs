@@ -71,9 +71,21 @@ namespace DoubanFM
 			}
 		}
 
+		private static Dictionary<Key, HotKey.ControlKeys> keyMap;
+
 		static HotKeySettingControl()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(HotKeySettingControl), new FrameworkPropertyMetadata(typeof(HotKeySettingControl)));
+
+			keyMap = new Dictionary<Key, HotKey.ControlKeys>();
+			keyMap.Add(Key.LeftCtrl, HotKey.ControlKeys.Ctrl);
+			keyMap.Add(Key.RightCtrl, HotKey.ControlKeys.Ctrl);
+			keyMap.Add(Key.LeftAlt, HotKey.ControlKeys.Alt);
+			keyMap.Add(Key.RightAlt, HotKey.ControlKeys.Alt);
+			keyMap.Add(Key.LeftShift, HotKey.ControlKeys.Shift);
+			keyMap.Add(Key.RightShift, HotKey.ControlKeys.Shift);
+			keyMap.Add(Key.LWin, HotKey.ControlKeys.Win);
+			keyMap.Add(Key.RWin, HotKey.ControlKeys.Win);
 		}
 
 		public override void OnApplyTemplate()
@@ -84,27 +96,21 @@ namespace DoubanFM
 			if (hotKeyText != null)
 			{
 				hotKeyText.Text = HotKeyText;
+				
 				hotKeyText.PreviewKeyDown += new KeyEventHandler((sender, e) =>
 				{
 					HotKey.ControlKeys control = HotKey.ControlKeys.None;
 					Key key = Key.None;
-					foreach (Key kkey in Enum.GetValues(typeof(Key)))
-						try
-						{
-							if (Keyboard.IsKeyDown(kkey))
-							{
-								if (kkey == Key.LeftCtrl || kkey == Key.RightCtrl)
-									control |= HotKey.ControlKeys.Ctrl;
-								else if (kkey == Key.LeftShift || kkey == Key.RightShift)
-									control |= HotKey.ControlKeys.Shift;
-								else if (kkey == Key.LeftAlt || kkey == Key.RightAlt)
-									control |= HotKey.ControlKeys.Alt;
-								else if (kkey == Key.LWin || kkey == Key.RWin)
-									control |= HotKey.ControlKeys.Win;
-								else key = kkey;
-							}
-						}
-						catch { }
+					
+					foreach (Key kkey in keyMap.Keys)
+					{
+						if (Keyboard.IsKeyDown(kkey))
+							control |= keyMap[kkey];
+					}
+					if (!keyMap.ContainsKey(e.Key))
+					{
+						key = e.Key;
+					}
 					HotKey = new HotKey(control, key);
 					e.Handled = true;
 				});

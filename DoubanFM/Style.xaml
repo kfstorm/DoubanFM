@@ -232,6 +232,8 @@
 		</Setter>
 	</Style>
 	<Style x:Key="ChannelStyle" TargetType="{x:Type ListBoxItem}">
+		<EventSetter Event="Loaded" Handler="ChannelStyle_Loaded"/>
+		<Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
 		<!--<Setter Property="FontSize" Value="20"/>-->
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -522,7 +524,13 @@
 		</Setter>
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
 	</Style>
-	<Style x:Key="ControlPaneStyle" TargetType="{x:Type TabControl}">
+	<Style x:Key="ControlPanelStyle" TargetType="{x:Type TabControl}">
+		<Style.Resources>
+			<Storyboard x:Key="ControlPanelStoryboard">
+				<DoubleAnimation Duration="0:0:0.5" From="0" To="1" Storyboard.TargetProperty="SelectedItem.Content.Opacity"/>
+			</Storyboard>
+		</Style.Resources>
+		<EventSetter Event="SelectionChanged" Handler="ControlPanelStyle_SelectionChanged"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TabControl}">
@@ -537,7 +545,7 @@
 						<Border x:Name="ContentPanel" Background="{TemplateBinding Background}" Grid.Column="1">
 							<ContentPresenter x:Name="SelectedContentHost" ContentSource="SelectedContent"/>
 						</Border>
-					</Grid>
+					</Grid>	
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

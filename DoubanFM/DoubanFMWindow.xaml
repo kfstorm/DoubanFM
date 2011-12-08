@@ -23,18 +23,27 @@
 		</Storyboard>
 		<Storyboard x:Key="ChangeSongInfoStoryboard">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="SongInfoPanel" Storyboard.TargetProperty="Opacity">
-				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
-				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:0.6" EasingFunction="{StaticResource Smooth}"/>
+				<EasingDoubleKeyFrame Value="0" KeyTime="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
+				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:2" EasingFunction="{StaticResource Smooth}"/>
 			</DoubleAnimationUsingKeyFrames>
 			<StringAnimationUsingKeyFrames Storyboard.TargetName="SongTitle" Storyboard.TargetProperty="Content">
-				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
+				<DiscreteStringKeyFrame KeyTime="0:0:0.5"/>
 			</StringAnimationUsingKeyFrames>
 			<StringAnimationUsingKeyFrames Storyboard.TargetName="Artist" Storyboard.TargetProperty="Content">
-				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
+				<DiscreteStringKeyFrame KeyTime="0:0:0.5"/>
 			</StringAnimationUsingKeyFrames>
 			<StringAnimationUsingKeyFrames Storyboard.TargetName="Album" Storyboard.TargetProperty="Content">
-				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
+				<DiscreteStringKeyFrame KeyTime="0:0:0.5"/>
 			</StringAnimationUsingKeyFrames>
+			<ThicknessAnimationUsingKeyFrames Storyboard.TargetName="SongInfoPanel" Storyboard.TargetProperty="Margin">
+				<LinearThicknessKeyFrame Value="50,0,-50,0" KeyTime="0:0:0.5"/>
+				<DiscreteThicknessKeyFrame Value="-10,0,10,0" KeyTime="0:0:0.5"/>
+				<EasingThicknessKeyFrame Value="0" KeyTime="0:0:2">
+					<EasingThicknessKeyFrame.EasingFunction>
+						<CircleEase/>
+					</EasingThicknessKeyFrame.EasingFunction>
+				</EasingThicknessKeyFrame>
+			</ThicknessAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="DjChannelClickStoryboard">
 			<BooleanAnimationUsingKeyFrames Storyboard.TargetName="DjCates" Storyboard.TargetProperty="IsEnabled">
@@ -76,8 +85,8 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 				<ColumnDefinition Width="300" />
 				<ColumnDefinition Width="300"/>
 			</Grid.ColumnDefinitions>
-			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1">
-				<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPaneStyle}" Foreground="{Binding Background, ElementName=Window}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
+			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1" ClipToBounds="True">
+				<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPanelStyle}" Foreground="{Binding Background, ElementName=Window}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
 					<TabItem Header="{DynamicResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
 						<Grid x:Name="ChannelsGrid">
 							<Grid.RowDefinitions>
@@ -257,7 +266,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 									<RowDefinition/>
 									<RowDefinition/>
 								</Grid.RowDefinitions>
-								<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Text, ElementName=TbUsername}"/>
+								<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding UserAssistant.Nickname, Source={StaticResource Player}}" FontSize="24"/>
 								<Label Grid.Row="1" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="已登录"/>
 								<Button Grid.Row="2" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销"/>
 							</Grid>
@@ -328,7 +337,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 					</TabItem>
 				</TabControl>
 			</Grid>
-			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent">
+			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent" ClipToBounds="True">
 				<Grid Margin="10">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>
@@ -352,7 +361,7 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 							<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
 						</StackPanel>
 					</Grid>
-					<Grid Grid.Row="1" x:Name="SongInfoPanel">
+					<Grid Grid.Row="1" x:Name="SongInfoPanel" TextOptions.TextFormattingMode="Ideal">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="50"/>
 							<RowDefinition/>
