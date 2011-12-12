@@ -37,7 +37,7 @@
 			</StringAnimationUsingKeyFrames>
 			<ThicknessAnimationUsingKeyFrames Storyboard.TargetName="SongInfoPanel" Storyboard.TargetProperty="Margin">
 				<LinearThicknessKeyFrame Value="50,0,-50,0" KeyTime="0:0:0.5"/>
-				<DiscreteThicknessKeyFrame Value="-10,0,10,0" KeyTime="0:0:0.5"/>
+				<DiscreteThicknessKeyFrame Value="-20,0,20,0" KeyTime="0:0:0.5"/>
 				<EasingThicknessKeyFrame Value="0" KeyTime="0:0:2">
 					<EasingThicknessKeyFrame.EasingFunction>
 						<CircleEase/>
@@ -45,12 +45,84 @@
 				</EasingThicknessKeyFrame>
 			</ThicknessAnimationUsingKeyFrames>
 		</Storyboard>
+		<Storyboard x:Key="HideChannelList">
+			<Int32Animation Duration="0" Storyboard.TargetProperty="(Panel.ZIndex)" To="0"/>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+				<EasingDoubleKeyFrame Value="0" KeyTime="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
+			</DoubleAnimationUsingKeyFrames>
+			<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin">
+				<LinearThicknessKeyFrame Value="50,0,-50,0" KeyTime="0:0:0.5"/>
+			</ThicknessAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="ShowChannelList">
+			<Int32Animation Duration="0" Storyboard.TargetProperty="(Panel.ZIndex)" To="1"/>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:1.5" EasingFunction="{StaticResource Smooth}"/>			
+			</DoubleAnimationUsingKeyFrames>
+			<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin">
+				<DiscreteThicknessKeyFrame Value="-20,0,20,0" KeyTime="0"/>
+				<EasingThicknessKeyFrame Value="0" KeyTime="0:0:1.5">
+					<EasingThicknessKeyFrame.EasingFunction>
+						<CircleEase/>
+					</EasingThicknessKeyFrame.EasingFunction>
+				</EasingThicknessKeyFrame>
+			</ThicknessAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="PersonalClickStoryboard">
+			<Storyboard Storyboard.TargetName="PersonalChannels">
+				<StaticResource ResourceKey="ShowChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="PublicChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="DjCates">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="DjChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+		</Storyboard>
+		<Storyboard x:Key="PublicClickStoryboard">
+			<Storyboard Storyboard.TargetName="PersonalChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="PublicChannels">
+				<StaticResource ResourceKey="ShowChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="DjCates">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="DjChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+		</Storyboard>
+		<Storyboard x:Key="DjClickStoryboard">
+			<Storyboard Storyboard.TargetName="PersonalChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="PublicChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="DjCates">
+				<StaticResource ResourceKey="ShowChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="DjChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+		</Storyboard>
 		<Storyboard x:Key="DjChannelClickStoryboard">
-			<BooleanAnimationUsingKeyFrames Storyboard.TargetName="DjCates" Storyboard.TargetProperty="IsEnabled">
-				<DiscreteBooleanKeyFrame KeyTime="0" Value="False"/>
-			</BooleanAnimationUsingKeyFrames>
-			<ThicknessAnimation
-Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="-750,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
+			<Storyboard Storyboard.TargetName="PersonalChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="PublicChannels">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="DjCates">
+				<StaticResource ResourceKey="HideChannelList"/>
+			</Storyboard>
+			<Storyboard Storyboard.TargetName="DjChannels">
+				<StaticResource ResourceKey="ShowChannelList"/>
+			</Storyboard>
 		</Storyboard>
 		<BitmapImage x:Key="PauseThumbImage">Images/DoubanFM_Pause.png</BitmapImage>
 		<BitmapImage x:Key="PlayThumbImage">Images/DoubanFM_Play.png</BitmapImage>
@@ -102,50 +174,25 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="私人兆赫" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}" Style="{DynamicResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
-											<BeginStoryboard>
-												<Storyboard x:Name="PersonalClickStoryboard">
-													<ThicknessAnimation
-														Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
-												</Storyboard>
-											</BeginStoryboard>
+											<BeginStoryboard Storyboard="{StaticResource PersonalClickStoryboard}"/>
 										</EventTrigger>
 									</RadioButton.Triggers>
 								</RadioButton>
 								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" Content="公共兆赫" Style="{DynamicResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
-											<BeginStoryboard>
-												<Storyboard x:Name="PublicClickStoryboard">
-													<ThicknessAnimation
-														Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="-250,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
-												</Storyboard>
-											</BeginStoryboard>
+											<BeginStoryboard Storyboard="{StaticResource PublicClickStoryboard}"/>
 										</EventTrigger>
 									</RadioButton.Triggers>
 								</RadioButton>
 								<RadioButton x:Name="ButtonDjCates" Grid.Column="2" Margin="5" Content="DJ兆赫" Click="ButtonDjCates_Click" Style="{DynamicResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
-											<BeginStoryboard>
-												<Storyboard x:Name="DjClickStoryboard">
-													<BooleanAnimationUsingKeyFrames Storyboard.TargetName="DjCates" Storyboard.TargetProperty="IsEnabled">
-														<DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
-													</BooleanAnimationUsingKeyFrames>
-													<ThicknessAnimation
-														Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" To="-500,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
-												</Storyboard>
-											</BeginStoryboard>
-										</EventTrigger>
+											<BeginStoryboard Storyboard="{StaticResource DjClickStoryboard}"/>																	</EventTrigger>
 									</RadioButton.Triggers>
 								</RadioButton>
 							</Grid>
-							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" Width="1000" d:IsHidden="True">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
+							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" d:IsHidden="True">
 								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
 									<ListBox.ItemContainerStyle>
 										<Style BasedOn="{StaticResource ChannelStyle}" TargetType="{x:Type ListBoxItem}">
@@ -158,15 +205,15 @@ Storyboard.TargetName="ChannelsContentGrid" Storyboard.TargetProperty="Margin" T
 										</ItemsPanelTemplate>
 									</ListBox.ItemsPanel>
 								</ListBox>
-								<ListBox Grid.Column="1" x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}"/>
-								<ListBox Grid.Column="2" x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged">
+								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}"/>
+								<ListBox x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged">
 									<ListBox.ItemTemplate>
 										<DataTemplate>
 											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
 										</DataTemplate>
 									</ListBox.ItemTemplate>
 								</ListBox>
-								<ListBox Grid.Column="3" x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged"/>
+								<ListBox x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged"/>
 							</Grid>
 						</Grid>
 					</TabItem>

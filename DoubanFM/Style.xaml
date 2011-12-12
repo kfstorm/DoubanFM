@@ -232,7 +232,6 @@
 		</Setter>
 	</Style>
 	<Style x:Key="ChannelStyle" TargetType="{x:Type ListBoxItem}">
-		<EventSetter Event="Loaded" Handler="ChannelStyle_Loaded"/>
 		<Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
 		<!--<Setter Property="FontSize" Value="20"/>-->
 		<Setter Property="Foreground" Value="White"/>
@@ -362,7 +361,7 @@
 		<Setter Property="Background" Value="{StaticResource BackColor}"/>
 	</Style>
 	<Style x:Key="stRepeatBtn" TargetType="{x:Type RepeatButton}">
-		<Setter Property="SnapsToDevicePixels" Value="True"/>
+		<!--<Setter Property="SnapsToDevicePixels" Value="True"/>-->
 		<Setter Property="OverridesDefaultStyle" Value="true"/>
 		<Setter Property="Focusable" Value="false"/>
 		<Setter Property="Template">
@@ -384,7 +383,7 @@
 		</Setter>
 	</Style>
 	<Style x:Key="stScrollBtn" TargetType="{x:Type RepeatButton}">
-		<Setter Property="SnapsToDevicePixels" Value="True"/>
+		<!--<Setter Property="SnapsToDevicePixels" Value="True"/>-->
 		<Setter Property="OverridesDefaultStyle" Value="true"/>
 		<Setter Property="IsTabStop" Value="false"/>
 		<Setter Property="Focusable" Value="false"/>
@@ -398,7 +397,7 @@
 		</Setter>
 	</Style>
 	<Style x:Key="stThumb" TargetType="{x:Type Thumb}">
-		<Setter Property="SnapsToDevicePixels" Value="True"/>
+		<!--<Setter Property="SnapsToDevicePixels" Value="True"/>-->
 		<Setter Property="OverridesDefaultStyle" Value="true"/>
 		<Setter Property="IsTabStop" Value="false"/>
 		<Setter Property="Focusable" Value="false"/>
@@ -777,11 +776,16 @@
 		<Setter Property="BorderThickness" Value="3"/>
 	</Style>
 	<Style TargetType="{x:Type Slider}">
-		<Setter Property="Template" Value="{DynamicResource SliderControlTemplate1}"/>
+		<Setter Property="Template" Value="{DynamicResource HorizontalSliderControlTemplate}"/>
+		<Style.Triggers>
+			<Trigger Property="Orientation" Value="Vertical">
+				<Setter Property="Template" Value="{DynamicResource VerticalSliderControlTemplate}"/>
+			</Trigger>
+		</Style.Triggers>
 	</Style>
-	<ControlTemplate x:Key="SliderControlTemplate1" TargetType="{x:Type Slider}">
+	<ControlTemplate x:Key="HorizontalSliderControlTemplate" TargetType="{x:Type Slider}">
 		<Grid>
-			<Border Grid.Row="1" x:Name="TrackBackground" Background="{TemplateBinding Background}">
+			<Border x:Name="TrackBackground" Background="{TemplateBinding Background}">
 					<Rectangle x:Name="PART_SelectionRange" Visibility="Hidden"/>
 			</Border>
 			<Track x:Name="PART_Track">
@@ -793,6 +797,32 @@
 				</Track.IncreaseRepeatButton>
 				<Track.Thumb>
 					<Thumb x:Name="Thumb" Width="15" Height="30" Style="{DynamicResource stThumb}"/>
+				</Track.Thumb>
+			</Track>
+		</Grid>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsSelectionRangeEnabled" Value="True">
+				<Setter Property="Visibility" TargetName="PART_SelectionRange" Value="Visible"/>
+			</Trigger>
+			<Trigger Property="IsKeyboardFocused" Value="True">
+				<Setter Property="Foreground" TargetName="Thumb" Value="Blue"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+	<ControlTemplate x:Key="VerticalSliderControlTemplate" TargetType="{x:Type Slider}">
+		<Grid>
+			<Border x:Name="TrackBackground" Background="{TemplateBinding Background}">
+					<Rectangle x:Name="PART_SelectionRange" Visibility="Hidden"/>
+			</Border>
+			<Track x:Name="PART_Track" Orientation="Vertical">
+				<Track.DecreaseRepeatButton>
+					<RepeatButton Command="Slider.DecreaseLarge" Width="10" Style="{DynamicResource stScrollBtn}" Background="#7FFFFFFF"/>
+				</Track.DecreaseRepeatButton>
+				<Track.IncreaseRepeatButton>
+					<RepeatButton Command="Slider.IncreaseLarge" Width="10" Style="{DynamicResource stScrollBtn}" Background="#7F000000"/>
+				</Track.IncreaseRepeatButton>
+				<Track.Thumb>
+					<Thumb x:Name="Thumb" Height="15" Width="30" Style="{DynamicResource stThumb}"/>
 				</Track.Thumb>
 			</Track>
 		</Grid>
