@@ -35,10 +35,14 @@
 			</Grid.RowDefinitions>
 			<Viewbox x:Name="viewbox" StretchDirection="DownOnly" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20,0">
 				<Viewbox.Effect>
-					<DropShadowEffect x:Name="ShadowEffect"/>
+					<DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
 				</Viewbox.Effect>
 				<Grid>
-					<Path x:Name="PathText" Stroke="Black" Fill="{Binding Foreground, ElementName=CurrentLyrics}"/>
+					<Path x:Name="PathText" Fill="{Binding Foreground, ElementName=CurrentLyrics}">
+						<Path.Stroke>
+							<SolidColorBrush Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
+						</Path.Stroke>
+					</Path>
 					<TextBlock x:Name="CurrentLyrics" FontFamily="{Binding ElementName=Window, Path=LyricsSetting.FontFamily}" FontSize="{Binding ElementName=Window, Path=LyricsSetting.FontSize}" FontWeight="{Binding ElementName=Window, Path=LyricsSetting.FontWeight, Converter={StaticResource OpenTypeWeightToFontWeightConverter}}" LayoutUpdated="CurrentLyrics_LayoutUpdated" Visibility="Hidden" />
 				</Grid>
 			</Viewbox>

@@ -90,12 +90,47 @@ namespace DoubanFM
 				int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 				SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
 			});
+
+			UpdateForegroundSetting();
 		}
 
-		private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		/// <summary>
+		/// 根据当前设置应用歌词颜色
+		/// </summary>
+		public void UpdateForegroundSetting()
 		{
-			// 在此处添加事件处理程序实现。
-			this.DragMove();
+			if (LyricsSetting.AutoForeground)
+			{
+				SetAutoForeground();
+			}
+			else
+			{
+				SetManualForeground();
+			}
+		}
+
+		/// <summary>
+		/// 设置自动变换歌词颜色
+		/// </summary>
+		protected void SetAutoForeground()
+		{
+			Binding binding = new Binding();
+			binding.Source = Application.Current.MainWindow;
+			binding.Path = new PropertyPath(System.Windows.Window.BackgroundProperty);
+			binding.Converter = new BackgroundToLyricsForegroundConverter();
+			PathText.SetBinding(Path.FillProperty, binding);
+		}
+
+		/// <summary>
+		/// 设置手动更换歌词颜色
+		/// </summary>
+		protected void SetManualForeground()
+		{
+			PathText.Fill = new SolidColorBrush();
+			Binding binding = new Binding();
+			binding.Source = LyricsSetting;
+			binding.Path = new PropertyPath(DoubanFM.LyricsSetting.ForegroundProperty);
+			BindingExpressionBase expression = BindingOperations.SetBinding(PathText.Fill, SolidColorBrush.ColorProperty, binding);
 		}
 
 		/// <summary>

@@ -139,7 +139,7 @@ namespace DoubanFM
         /// <summary>
         /// 颜色饱和度是否太低
         /// </summary>
-        /// <param name="color">颜色</param>
+        /// <param name="hsvColor">颜色</param>
         /// <returns>Boolean值</returns>
         public static bool IsNotSaturateEnough(HSLColor color)
         {
@@ -148,7 +148,7 @@ namespace DoubanFM
         /// <summary>
         /// 颜色饱和度是否接近0
         /// </summary>
-        /// <param name="color">颜色</param>
+        /// <param name="hsvColor">颜色</param>
         /// <returns>Boolean值</returns>
         public static bool IsAlmostZeroSaturation(HSLColor color)
         {
@@ -157,7 +157,7 @@ namespace DoubanFM
         /// <summary>
         /// 颜色是否太暗
         /// </summary>
-        /// <param name="color">颜色</param>
+        /// <param name="hsvColor">颜色</param>
         /// <returns>Boolean值</returns>
         public static bool IsTooDark(HSLColor color)
         {
@@ -166,7 +166,7 @@ namespace DoubanFM
         /// <summary>
         /// 颜色是否太亮
         /// </summary>
-        /// <param name="color">颜色</param>
+        /// <param name="hsvColor">颜色</param>
         /// <returns>Boolean值</returns>
         public static bool IsTooBright(HSLColor color)
         {
@@ -175,13 +175,13 @@ namespace DoubanFM
         /// <summary>
         /// 反色
         /// </summary>
-        /// <param name="color">原色</param>
+        /// <param name="hsvColor">原色</param>
         /// <returns>反色</returns>
         public static HSLColor Reverse(HSLColor color)
         {
             Color RGB = color.ToRGB();
             return new HSLColor(Color.FromArgb(RGB.A, (byte)(255 - RGB.R), (byte)(255 - RGB.G), (byte)(255 - RGB.B)));
-            //return new HSLColor(color.Alpha, color.Hue + 180, 1 - color.Saturation, 1 - color.Lightness);
+            //return new HSLColor(hsvColor.Alpha, hsvColor.Hue + 180, 1 - hsvColor.Saturation, 1 - hsvColor.Lightness);
         }
         /// <summary>
         /// 颜色修正
@@ -209,7 +209,7 @@ namespace DoubanFM
         /// <summary>
         /// 无参照色时的颜色修正
         /// </summary>
-        /// <param name="color">待修正色</param>
+        /// <param name="hsvColor">待修正色</param>
         /// <returns>修正色</returns>
         public static HSLColor Revise(HSLColor color)
         {
@@ -227,7 +227,7 @@ namespace DoubanFM
         /// <summary>
         /// 将颜色调整到能够接受的最高亮度
         /// </summary>
-        /// <param name="color">待修正色</param>
+        /// <param name="hsvColor">待修正色</param>
         /// <returns>修正色</returns>
         public static HSLColor ReviseVeryBright(HSLColor color)
         {
@@ -236,7 +236,7 @@ namespace DoubanFM
         /// <summary>
         /// 将颜色调整到能够接受的最低亮度
         /// </summary>
-        /// <param name="color">待修正色</param>
+        /// <param name="hsvColor">待修正色</param>
         /// <returns>修正色</returns>
         public static HSLColor ReviseVeryDark(HSLColor color)
         {
@@ -245,18 +245,18 @@ namespace DoubanFM
         /// <summary>
         /// 将颜色调亮特定亮度
         /// </summary>
-        /// <param name="color">待修正色</param>
+        /// <param name="hsvColor">待修正色</param>
         /// <param name="brigher">调整的亮度</param>
         /// <returns>修正色</returns>
         public static HSLColor ReviseBrighter(HSLColor color, double brigher)
         {
             return new HSLColor(color.Alpha, color.Hue, color.Saturation, color.Lightness + brigher);
-            //return Color.FromRgb(ReviseByteBigger(color.R), ReviseByteBigger(color.G), ReviseByteBigger(color.B));
+            //return Color.FromRgb(ReviseByteBigger(hsvColor.R), ReviseByteBigger(hsvColor.G), ReviseByteBigger(hsvColor.B));
         }
         /// <summary>
         /// 将颜色调亮一些
         /// </summary>
-        /// <param name="color">待修正色</param>
+        /// <param name="hsvColor">待修正色</param>
         /// <returns>修正色</returns>
         public static HSLColor ReviseBrighter(HSLColor color)
         {
@@ -265,7 +265,7 @@ namespace DoubanFM
         /// <summary>
         /// 将颜色调暗特定亮度
         /// </summary>
-        /// <param name="color">待修正色</param>
+        /// <param name="hsvColor">待修正色</param>
         /// <param name="darker">调整的亮度</param>
         /// <returns>修正色</returns>
         public static HSLColor ReviseDarker(HSLColor color, double darker)
@@ -275,7 +275,7 @@ namespace DoubanFM
         /// <summary>
         /// 将颜色调暗一些
         /// </summary>
-        /// <param name="color">待修正色</param>
+        /// <param name="hsvColor">待修正色</param>
         /// <returns>修正色</returns>
         public static HSLColor ReviseDarker(HSLColor color)
         {
@@ -399,7 +399,7 @@ namespace DoubanFM
         /// <summary>
         /// 由RGB颜色类Color构造一个HSLColor的实例
         /// </summary>
-        /// <param name="color">RGB颜色</param>
+        /// <param name="hsvColor">RGB颜色</param>
         public HSLColor(Color color)
         {
             this.FromRGB(color);
@@ -407,7 +407,7 @@ namespace DoubanFM
         /// <summary>
         /// RGB色彩空间转换
         /// </summary>
-        /// <param name="color">RGB颜色</param>
+        /// <param name="hsvColor">RGB颜色</param>
         public void FromRGB(Color color)
         {
             a = (double)color.A / 255;

@@ -29,7 +29,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty AlwaysShowNotifyIconProperty = DependencyProperty.Register("AlwaysShowNotifyIcon", typeof(bool), typeof(Settings));
 		public static readonly DependencyProperty AutoUpdateProperty = DependencyProperty.Register("AutoUpdate", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty LastTimeCheckUpdateProperty = DependencyProperty.Register("LastTimeCheckUpdate", typeof(DateTime), typeof(Settings), new PropertyMetadata(DateTime.MinValue));
-		public static readonly DependencyProperty OpenAlbumInfoWhenClickCoverProperty = DependencyProperty.Register("OpenAlbumInfoWhenClickCover", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty OpenAlbumInfoWhenClickCoverProperty = DependencyProperty.Register("OpenAlbumInfoWhenClickCover", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 		public static readonly DependencyProperty IsSearchFilterEnabledProperty = DependencyProperty.Register("IsSearchFilterEnabled", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty ShowLyricsProperty = DependencyProperty.Register("ShowLyrics", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty TopMostProperty = DependencyProperty.Register("TopMost", typeof(bool), typeof(Settings));
@@ -37,6 +37,8 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty EnableProxyProperty = DependencyProperty.Register("EnableProxy", typeof(bool), typeof(Settings));
 		public static readonly DependencyProperty ProxyHostProperty = DependencyProperty.Register("ProxyHost", typeof(string), typeof(Settings));
 		public static readonly DependencyProperty ProxyPortProperty = DependencyProperty.Register("ProxyPort", typeof(int), typeof(Settings), new PropertyMetadata(8080));
+		public static readonly DependencyProperty AutoBackgroundProperty = DependencyProperty.Register("AutoBackground", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(System.Windows.Media.Color), typeof(Settings), new PropertyMetadata(System.Windows.Media.ColorConverter.ConvertFromString("#FF1960AF")));
 		
 		#endregion
 
@@ -200,7 +202,22 @@ namespace DoubanFM.Core
 			get { return (int)GetValue(ProxyPortProperty); }
 			set { SetValue(ProxyPortProperty, value); }
 		}
-		
+		/// <summary>
+		/// 自动更换窗口背景
+		/// </summary>
+		public bool AutoBackground
+		{
+			get { return (bool)GetValue(AutoBackgroundProperty); }
+			set { SetValue(AutoBackgroundProperty, value); }
+		}
+		/// <summary>
+		/// 指定的窗口背景色
+		/// </summary>
+		public System.Windows.Media.Color Background
+		{
+			get { return ( System.Windows.Media.Color)GetValue(BackgroundProperty); }
+			set { SetValue(BackgroundProperty, value); }
+		}
 		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
@@ -378,6 +395,22 @@ namespace DoubanFM.Core
 			{
 				ProxyPort = def.ProxyPort;
 			}
+			try
+			{
+				AutoBackground = info.GetBoolean("AutoBackground");
+			}
+			catch
+			{
+				AutoBackground = def.AutoBackground;
+			}
+			try
+			{
+				Background = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(info.GetString("Background"));
+			}
+			catch
+			{
+				Background = def.Background;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -402,6 +435,8 @@ namespace DoubanFM.Core
 			info.AddValue("EnableProxy", EnableProxy);
 			info.AddValue("ProxyHost", ProxyHost);
 			info.AddValue("ProxyPort", ProxyPort);
+			info.AddValue("AutoBackground", AutoBackground);
+			info.AddValue("Background", Background.ToString());
 		}
 
 		/// <summary>

@@ -124,5 +124,10 @@ namespace DoubanFM
 		{
 			(Owner as DoubanFMWindow).HideEmbeddedLyrics();
 		}
+
+		private void CbAutoForeground_Click(object sender, RoutedEventArgs e)
+		{
+			(Owner as DoubanFMWindow)._lyricsWindow.UpdateForegroundSetting();
+		}
 	}
 }

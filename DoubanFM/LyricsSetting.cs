@@ -24,7 +24,11 @@ namespace DoubanFM
 		public static readonly DependencyProperty EnableDesktopLyricsProperty = DependencyProperty.Register("EnableDesktopLyrics", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(true));
 		public static readonly DependencyProperty EnableEmbeddedLyricsProperty = DependencyProperty.Register("EnableEmbeddedLyrics", typeof(bool), typeof(LyricsSetting));
 		public static readonly DependencyProperty OpacityProperty = DependencyProperty.Register("Opacity", typeof(double), typeof(LyricsSetting), new PropertyMetadata(1.0));
-
+		public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register("Foreground", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Colors.White));
+		public static readonly DependencyProperty StrokeColorProperty = DependencyProperty.Register("StrokeColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Colors.Black));
+		public static readonly DependencyProperty ShadowColorProperty = DependencyProperty.Register("ShadowColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Colors.Black));
+		public static readonly DependencyProperty AutoForegroundProperty = DependencyProperty.Register("AutoForeground", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(true));
+		
 		/// <summary>
 		/// 字体
 		/// </summary>
@@ -89,6 +93,39 @@ namespace DoubanFM
 			get { return (double)GetValue(OpacityProperty); }
 			set { SetValue(OpacityProperty, value); }
 		}
+		/// <summary>
+		/// 前景色
+		/// </summary>
+		public Color Foreground
+		{
+			get { return (Color)GetValue(ForegroundProperty); }
+			set { SetValue(ForegroundProperty, value); }
+		}
+		/// <summary>
+		/// 描边色 
+		/// </summary>
+		public Color StrokeColor
+		{
+			get { return (Color)GetValue(StrokeColorProperty); }
+			set { SetValue(StrokeColorProperty, value); }
+		}
+		/// <summary>
+		/// 阴影色
+		/// </summary>
+		public Color ShadowColor
+		{
+			get { return (Color)GetValue(ShadowColorProperty); }
+			set { SetValue(ShadowColorProperty, value); }
+		}
+		/// <summary>
+		/// 自动前景
+		/// </summary>
+		public bool AutoForeground
+		{
+			get { return (bool)GetValue(AutoForegroundProperty); }
+			set { SetValue(AutoForegroundProperty, value); }
+		}
+		
 
 		/// <summary>
 		/// 数据保存文件夹
@@ -203,6 +240,38 @@ namespace DoubanFM
 			{
 				Opacity = def.Opacity;
 			}
+			try
+			{
+				Foreground = (Color)ColorConverter.ConvertFromString(info.GetString("Foreground"));
+			}
+			catch
+			{
+				Foreground = def.Foreground;
+			}
+			try
+			{
+				StrokeColor = (Color)ColorConverter.ConvertFromString(info.GetString("StrokeColor"));
+			}
+			catch
+			{
+				StrokeColor = def.StrokeColor;
+			}
+			try
+			{
+				ShadowColor = (Color)ColorConverter.ConvertFromString(info.GetString("ShadowColor"));
+			}
+			catch
+			{
+				ShadowColor = def.ShadowColor;
+			}
+			try
+			{
+				AutoForeground = info.GetBoolean("AutoForeground");
+			}
+			catch
+			{
+				AutoForeground = def.AutoForeground;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -218,6 +287,10 @@ namespace DoubanFM
 			info.AddValue("EnableDesktopLyrics", EnableDesktopLyrics);
 			info.AddValue("EnableEmbeddedLyrics", EnableEmbeddedLyrics);
 			info.AddValue("Opacity", Opacity);
+			info.AddValue("Foreground", Foreground.ToString());
+			info.AddValue("StrokeColor", StrokeColor.ToString());
+			info.AddValue("ShadowColor", ShadowColor.ToString());
+			info.AddValue("AutoForeground", AutoForeground);
 		}
 	}
 }

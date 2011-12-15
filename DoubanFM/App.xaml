@@ -6,6 +6,7 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Theme.xaml"/>
 				<ResourceDictionary Source="Style.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 			<DoubanFM_Core:Player x:Key="Player"/>

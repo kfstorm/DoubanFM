@@ -168,9 +168,32 @@ namespace DoubanFM
 			CheckUpdateOnStartup();
 			InitLyrics();
 			InitShareSetting();
+			UpdateBackground();
 
 			_player.Initialize();
 		}
+		/// <summary>
+		/// 根据设置更新窗口背景
+		/// </summary>
+		public void UpdateBackground()
+		{
+			if (!_player.Settings.AutoBackground)
+			{
+				this.Background = new SolidColorBrush();
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding();
+				binding.Source = _player.Settings;
+				binding.Path = new PropertyPath(Settings.BackgroundProperty);
+				System.Windows.Data.BindingOperations.SetBinding(this.Background, SolidColorBrush.ColorProperty, binding);
+			}
+			else
+			{
+				if (_cover.Source is BitmapImage)
+				{
+					ChangeBackground(_cover.Source as BitmapImage);
+				}
+			}
+		}
+
 		/// <summary>
 		/// 初始化托盘图标
 		/// </summary>
@@ -536,22 +559,9 @@ namespace DoubanFM
 		{
 			_lyricsSetting = LyricsSetting.Load();
 			_lyricsWindow = new LyricsWindow(_lyricsSetting);
-			{
-				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Background");
-				binding.Source = this;
-				binding.Converter = new BackgroundToLyricsForegroundConverter();
-				_lyricsWindow.SetBinding(ForegroundProperty, binding);
-			}
-			{
-				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Text");
-				binding.Source = _lyricsWindow.CurrentLyrics;
-				CurrentLyrics.SetBinding(TextBlock.TextProperty, binding);
-			}
-			{
-				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Opacity");
-				binding.Source = _lyricsWindow.LayoutRoot;
-				CurrentLyrics.SetBinding(TextBlock.OpacityProperty, binding);
-			}
+			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Text");
+			binding.Source = _lyricsWindow.CurrentLyrics;
+			CurrentLyrics.SetBinding(TextBlock.TextProperty, binding);
 		}
 
 		/// <summary>
@@ -986,6 +996,10 @@ namespace DoubanFM
 		/// </summary>
 		private void Update()
 		{
+			Debug.WriteLine(DateTime.Now + " 获取到新的歌曲信息");
+			Debug.Indent();
+			Debug.WriteLine(_player.CurrentSong.ToString());
+			Debug.Unindent();
 			ChangeCover();
 			SetLyrics(null);
 			if (_player.Settings.ShowLyrics) DownloadLyrics();
@@ -994,11 +1008,18 @@ namespace DoubanFM
 				Audio.Source = new Uri(_player.CurrentSong.FileUrl);
 
 				Audio.IsMuted = !Audio.IsMuted;     //防止无敌静音
-				Thread.Sleep(50);
+				Thread.Sleep(10);
 				Audio.IsMuted = !Audio.IsMuted;
 				Audio.Volume = _player.Settings.Volume;
 			}
-			catch { }
+			catch (Exception ex)
+			{
+				Debug.WriteLine("设置MediaElement的Source属性时出错，错误信息为");
+				Debug.Indent();
+				Debug.WriteLine(ex.ToString());
+				Debug.Unindent();
+				MessageBox.Show(ex.ToString());
+			}
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = _player.CurrentSong.Title;
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[2]).KeyFrames[0].Value = _player.CurrentSong.Artist;
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = _player.CurrentSong.Album;
@@ -1047,13 +1068,17 @@ namespace DoubanFM
 				{
 					bitmap.DownloadCompleted += new EventHandler((o, e) =>
 					{
+						Debug.WriteLine(DateTime.Now + " 封面下载成功");
 						Dispatcher.Invoke(new Action(() =>
 						{
 							try
 							{
 								if (((BitmapImage)o).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
 								{
-									ChangeBackground((BitmapImage)o);
+									if (_player.Settings.AutoBackground)
+									{
+										ChangeBackground((BitmapImage)o);
+									}
 									SwitchCover((BitmapImage)o);
 								}
 							}
@@ -1062,6 +1087,7 @@ namespace DoubanFM
 					});
 					bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
 					{
+						Debug.WriteLine(DateTime.Now + " 封面下载失败");
 						Dispatcher.Invoke(new Action(() =>
 						{
 							try
@@ -1069,7 +1095,10 @@ namespace DoubanFM
 								if (((BitmapImage)o).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
 								{
 									BitmapImage bitmapDefault = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
-									ChangeBackground(bitmapDefault);
+									if (_player.Settings.AutoBackground)
+									{
+										ChangeBackground(bitmapDefault);
+									}
 									SwitchCover(bitmapDefault);
 								}
 							}
@@ -1079,7 +1108,10 @@ namespace DoubanFM
 				}
 				else
 				{
-					ChangeBackground(bitmap);
+					if (_player.Settings.AutoBackground)
+					{
+						ChangeBackground(bitmap);
+					}
 					SwitchCover(bitmap);
 				}
 			}
@@ -1091,19 +1123,25 @@ namespace DoubanFM
 			}
 		}
 		/// <summary>
+		/// 将窗口背景更换为指定的颜色
+		/// </summary>
+		void ChangeBackground(Color color)
+		{
+			((ColorAnimation)BackgroundColorStoryboard.Children[0]).To = color;
+			BackgroundColorStoryboard.Begin();
+		}
+		/// <summary>
 		/// 根据封面颜色更换背景。封面加载成功时自动调用
 		/// </summary>
 		/// <param name="NewCover">新封面</param>
 		void ChangeBackground(BitmapImage NewCover)
 		{
-			ColorAnimation animation = (ColorAnimation)BackgroundColorStoryboard.Children[0];
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					Color to = ColorFunctions.GetImageColorForBackground(NewCover);
+					Color color = ColorFunctions.GetImageColorForBackground(NewCover);
 					Dispatcher.Invoke(new Action(() =>
 						{
-							animation.To = to;
-							BackgroundColorStoryboard.Begin();
+							ChangeBackground(color);
 						}));
 				}));
 		}
@@ -1162,6 +1200,7 @@ namespace DoubanFM
 		/// </summary>
 		private void Audio_MediaEnded(object sender, RoutedEventArgs e)
 		{
+			Debug.WriteLine(DateTime.Now + " 歌曲播放完毕");
 			_player.CurrentSongFinishedPlaying();
 		}
 
@@ -1170,7 +1209,10 @@ namespace DoubanFM
 		/// </summary>
 		private void Audio_MediaFailed(object sender, ExceptionRoutedEventArgs e)
 		{
-			Debug.WriteLine("MediaFailed!!!!!!!!!!!!!!!!");
+			Debug.WriteLine(DateTime.Now+ " MediaElement发生错误，错误信息为");
+			Debug.Indent();
+			Debug.WriteLine(e.ErrorException.ToString());
+			Debug.Unindent();
 			_player.MediaFailed();
 		}
 		/// <summary>
@@ -1189,13 +1231,17 @@ namespace DoubanFM
 		{
 			if (Audio.NaturalDuration.HasTimeSpan)
 				if ((Audio.Position - Audio.NaturalDuration.TimeSpan).TotalSeconds > 5)
+				{
+					Debug.WriteLine(DateTime.Now + " 网络不好吧，显示的时间已经超过总时间了。是不是没声音啊？我换下一首了……");
 					_player.CurrentSongFinishedPlaying();
+				}
 		}
 		/// <summary>
 		/// 修正音乐总时间。音乐加载完成时调用。
 		/// </summary>
 		void Audio_MediaOpened(object sender, RoutedEventArgs e)
 		{
+			Debug.WriteLine(DateTime.Now + " 音乐加载成功");
 			if (Audio.NaturalDuration.HasTimeSpan)
 			{
 				if (Math.Abs((TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Content) - Audio.NaturalDuration.TimeSpan).TotalSeconds) > 2)
@@ -1353,20 +1399,20 @@ namespace DoubanFM
 			if (!_player.Settings.SlideCoverWhenMouseMove || !_player.Settings.OpenAlbumInfoWhenClickCover)
 			{
 				Point leftLocation = e.GetPosition(LeftPanel);
-				Debug.WriteLine("LeftPanel:" + leftLocation);
+				//Debug.WriteLine("LeftPanel:" + leftLocation);
 				HitTestResult leftResult = VisualTreeHelper.HitTest(LeftPanel, leftLocation);
 				if (leftResult != null)
 				{
-					Debug.WriteLine("SlideRight");
+					//Debug.WriteLine("SlideRight");
 					SlideCoverRightStoryboard.Begin();
 					return;
 				}
 				Point rightLocation = e.GetPosition(RightPanel);
-				Debug.WriteLine("RightPanel:" + rightLocation);
+				//Debug.WriteLine("RightPanel:" + rightLocation);
 				HitTestResult rightResult = VisualTreeHelper.HitTest(RightPanel, rightLocation);
 				if (rightResult != null)
 				{
-					Debug.WriteLine("SlideLeft");
+					//Debug.WriteLine("SlideLeft");
 					SlideCoverLeftStoryboard.Begin();
 				}
 			}
@@ -1399,21 +1445,21 @@ namespace DoubanFM
 			if (_player.Settings.SlideCoverWhenMouseMove)
 			{
 				Point leftLocation = e.GetPosition(LeftPanel);
-				Debug.WriteLine("LeftPanel:" + leftLocation);
+				//Debug.WriteLine("LeftPanel:" + leftLocation);
 				HitTestResult leftResult = VisualTreeHelper.HitTest(LeftPanel, leftLocation);
 				if (leftResult != null)
 				{
-					Debug.WriteLine("SlideRight");
+					//Debug.WriteLine("SlideRight");
 					_slideCoverRightTimer.Start();
 					_slideCoverLeftTimer.Stop();
 					return;
 				}
 				Point rightLocation = e.GetPosition(RightPanel);
-				Debug.WriteLine("RightPanel:" + rightLocation);
+				//Debug.WriteLine("RightPanel:" + rightLocation);
 				HitTestResult rightResult = VisualTreeHelper.HitTest(RightPanel, rightLocation);
 				if (rightResult != null)
 				{
-					Debug.WriteLine("SlideLeft");
+					//Debug.WriteLine("SlideLeft");
 					_slideCoverLeftTimer.Start();
 					_slideCoverRightTimer.Stop();
 				}

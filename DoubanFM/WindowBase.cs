@@ -13,32 +13,20 @@ namespace DoubanFM
 	/// </summary>
 	public class WindowBase : Window
 	{
-		public WindowBase()
+		static WindowBase()
 		{
-			this.Resources.Add("ShadowGradientStops", new GradientStopCollection());
-			this.Style = FindResource("WindowBaseStyle") as System.Windows.Style;
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(WindowBase), new FrameworkPropertyMetadata(typeof(WindowBase)));
+		}
 
-			this.Loaded += new RoutedEventHandler((o, e) =>
+		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+		{
+			try
 			{
-				Panel mainPanel = this.Template.FindName("MainPanel", this) as Panel;
-				if (!AllowsTransparency) mainPanel.Margin = new Thickness(1);
-			});
-			this.Activated += new EventHandler((o, e) =>
-			{
-				GradientStopCollection active = this.FindResource("ActiveShadowGradientStops") as GradientStopCollection;
-				GradientStopCollection now = this.FindResource("ShadowGradientStops") as GradientStopCollection;
-				now.Clear();
-				foreach (var g in active)
-					now.Add(g);
-			});
-			this.Deactivated += new EventHandler((o, e) =>
-			{
-				GradientStopCollection inactive = this.FindResource("InactiveShadowGradientStops") as GradientStopCollection;
-				GradientStopCollection now = this.FindResource("ShadowGradientStops") as GradientStopCollection;
-				now.Clear();
-				foreach (var g in inactive)
-					now.Add(g);
-			});
+				this.DragMove();
+			}
+			catch { }
+
+			base.OnMouseLeftButtonDown(e);
 		}
 	}
 }

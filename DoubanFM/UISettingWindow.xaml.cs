@@ -42,5 +42,10 @@ namespace DoubanFM
 			else if (e.OldValue != 1.0 && e.NewValue == 1.0)
 				TextOptions.SetTextFormattingMode(this.Owner, TextFormattingMode.Display);
 		}
+
+		private void CbAutoBackground_Click(object sender, RoutedEventArgs e)
+		{
+			(Owner as DoubanFMWindow).UpdateBackground();
+		}
 	}
 }
