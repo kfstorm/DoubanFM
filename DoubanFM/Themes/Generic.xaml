@@ -415,4 +415,14 @@
 		</Setter>
 		<Setter Property="Foreground" Value="White"/>
 	</Style>
+
+	<Style TargetType="{x:Type local:FontPicker}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:FontPicker}">
+					<ComboBox x:Name="PART_FontComboBox" IsEditable="True"/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 </ResourceDictionary>

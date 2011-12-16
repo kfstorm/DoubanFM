@@ -110,6 +110,7 @@
     <Compile Include="ColorPicker\PopupableColorPicker.xaml.cs">
       <DependentUpon>PopupableColorPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FontPicker.cs" />
     <Compile Include="UISettingWindow.xaml.cs">
       <DependentUpon>UISettingWindow.xaml</DependentUpon>
     </Compile>

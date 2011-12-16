@@ -45,7 +45,7 @@
 				<ColumnDefinition Width="10"/>
 			</Grid.ColumnDefinitions>
 			<Label VerticalAlignment="Center">字体</Label>
-			<ComboBox x:Name="CbFontFamily" Grid.Column="2" IsEditable="True" Margin="0,5" Height="24" SelectionChanged="CbFontFamily_SelectionChanged" KeyUp="CbFontFamily_KeyUp" />
+			<local:FontPicker x:Name="FpFontPicker" Grid.Column="2" Margin="0,5" Height="24" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
 			<Label Grid.Row="1" VerticalAlignment="Center">大小</Label>
 			<Slider x:Name="SliderFontSize" Grid.Row="1" Grid.Column="2" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="0,5" SmallChange="0.2" LargeChange="5"/>
 			<Label Grid.Row="2" VerticalAlignment="Center">底部间距</Label>

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Media;
 
 namespace DoubanFM.Core
 {
@@ -40,6 +41,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty AutoBackgroundProperty = DependencyProperty.Register("AutoBackground", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(System.Windows.Media.Color), typeof(Settings), new PropertyMetadata(System.Windows.Media.ColorConverter.ConvertFromString("#FF1960AF")));
 		public static readonly DependencyProperty FirstTimeProperty = DependencyProperty.Register("FirstTime", typeof(bool), typeof(Settings), new PropertyMetadata(false));
+		public static readonly DependencyProperty MainWindowFontProperty = DependencyProperty.Register("MainWindowFont", typeof(FontFamily), typeof(Settings));
 		
 		#endregion
 
@@ -226,6 +228,14 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(FirstTimeProperty); }
 			set { SetValue(FirstTimeProperty, value); }
+		}
+		/// <summary>
+		/// 主窗口字体
+		/// </summary>
+		public FontFamily MainWindowFont
+		{
+			get { return (FontFamily)GetValue(MainWindowFontProperty); }
+			set { SetValue(MainWindowFontProperty, value); }
 		}
 
 		/// <summary>
@@ -429,6 +439,14 @@ namespace DoubanFM.Core
 			{
 				FirstTime = def.FirstTime;
 			}
+			try
+			{
+				MainWindowFont = new FontFamily(info.GetString("MainWindowFont"));
+			}
+			catch
+			{
+				MainWindowFont = def.MainWindowFont;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -456,6 +474,7 @@ namespace DoubanFM.Core
 			info.AddValue("AutoBackground", AutoBackground);
 			info.AddValue("Background", Background.ToString());
 			info.AddValue("FirstTime", FirstTime);
+			info.AddValue("MainWindowFont", MainWindowFont.ToString());
 		}
 
 		/// <summary>

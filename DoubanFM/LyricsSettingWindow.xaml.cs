@@ -30,62 +30,8 @@ namespace DoubanFM
 
 		public LyricsSettingWindow(LyricsSetting setting)
 		{
-			InitializeComponent();
-
 			LyricsSetting = setting;
-
-			var fontFamilies = Fonts.SystemFontFamilies;
-			List<string> names = new List<string>();
-			string selectedName = null;
-			foreach (var fontFamily in fontFamilies)
-			{
-				string name = GetFontName(fontFamily);
-				names.Add(name);
-				if (name == GetFontName(LyricsSetting.FontFamily))
-					selectedName = name;
-			}
-			names.Sort();
-			CbFontFamily.ItemsSource = names;
-			if (LyricsSetting.FontFamily != null)
-				CbFontFamily.Text = LyricsSetting.FontFamily.ToString();
-		}
-
-		/// <summary>
-		/// 获取字体名称（简体中文字体返回中文名称）
-		/// </summary>
-		public static string GetFontName(FontFamily fontFamily)
-		{
-			if (fontFamily == null) return string.Empty;
-			if (fontFamily.FamilyNames.ContainsKey(System.Windows.Markup.XmlLanguage.GetLanguage("zh-cn")))
-			{
-				return fontFamily.FamilyNames[System.Windows.Markup.XmlLanguage.GetLanguage("zh-cn")];
-			}
-			return fontFamily.FamilyNames.First().Value;
-		}
-
-		/// <summary>
-		/// 根据填写的字体名称更新字体设置
-		/// </summary>
-		private void UpdateFontFamily()
-		{
-			try
-			{
-				LyricsSetting.FontFamily = new FontFamily(CbFontFamily.Text.Replace('，', ','));
-			}
-			catch
-			{
-				LyricsSetting.FontFamily = null;
-			}
-		}
-
-		private void CbFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			//引发SelectionChanged事件时Text属性还未政变，所以要延迟读取Text属性的值
-			Dispatcher.BeginInvoke(new Action(() => { UpdateFontFamily(); }));
-		}
-		private void CbFontFamily_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-		{
-			UpdateFontFamily();
+			InitializeComponent();
 		}
 
 		private void SliderStrokeWeight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
