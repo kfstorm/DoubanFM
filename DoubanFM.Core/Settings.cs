@@ -39,6 +39,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty ProxyPortProperty = DependencyProperty.Register("ProxyPort", typeof(int), typeof(Settings), new PropertyMetadata(8080));
 		public static readonly DependencyProperty AutoBackgroundProperty = DependencyProperty.Register("AutoBackground", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(System.Windows.Media.Color), typeof(Settings), new PropertyMetadata(System.Windows.Media.ColorConverter.ConvertFromString("#FF1960AF")));
+		public static readonly DependencyProperty FirstTimeProperty = DependencyProperty.Register("FirstTime", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 		
 		#endregion
 
@@ -218,6 +219,15 @@ namespace DoubanFM.Core
 			get { return ( System.Windows.Media.Color)GetValue(BackgroundProperty); }
 			set { SetValue(BackgroundProperty, value); }
 		}
+		/// <summary>
+		/// 第一次运行
+		/// </summary>
+		public bool FirstTime
+		{
+			get { return (bool)GetValue(FirstTimeProperty); }
+			set { SetValue(FirstTimeProperty, value); }
+		}
+
 		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
@@ -411,6 +421,14 @@ namespace DoubanFM.Core
 			{
 				Background = def.Background;
 			}
+			try
+			{
+				FirstTime = info.GetBoolean("FirstTime");
+			}
+			catch
+			{
+				FirstTime = def.FirstTime;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -437,6 +455,7 @@ namespace DoubanFM.Core
 			info.AddValue("ProxyPort", ProxyPort);
 			info.AddValue("AutoBackground", AutoBackground);
 			info.AddValue("Background", Background.ToString());
+			info.AddValue("FirstTime", FirstTime);
 		}
 
 		/// <summary>
@@ -454,9 +473,13 @@ namespace DoubanFM.Core
 				}
 				settings.User.Password = Encryption.Decrypt(settings.User.Password);
 			}
-			catch
+			catch (Exception ex)
 			{
 				settings = new Settings();
+				if (ex is FileNotFoundException || ex is DirectoryNotFoundException)
+				{
+					settings.FirstTime = true;
+				}
 			}
 			return settings;
 		}

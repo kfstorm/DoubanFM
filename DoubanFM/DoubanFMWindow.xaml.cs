@@ -157,6 +157,10 @@ namespace DoubanFM
 			if (channel != null) _player.Settings.LastChannel = channel;
 			if (_player.Settings.ScaleTransform != 1.0)
 				TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
+			if (!_player.Settings.FirstTime)
+			{
+				FirstTimePanel.Visibility = Visibility.Collapsed;
+			}
 
 			InitProxy();
 			ClearOldTempFiles();

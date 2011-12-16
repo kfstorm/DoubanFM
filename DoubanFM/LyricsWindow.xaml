@@ -4,7 +4,7 @@
 	xmlns:local="clr-namespace:DoubanFM"
 	x:Class="DoubanFM.LyricsWindow"
 	x:Name="Window"
-	Title="LyricsWindow" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" Left="{Binding Path=Left, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Top="{Binding Path=Top, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Width="{Binding Path=Width, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Height="{Binding Path=Height, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}">
+	Title="" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" Left="{Binding Path=Left, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Top="{Binding Path=Top, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Width="{Binding Path=Width, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Height="{Binding Path=Height, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}">
 	<Window.Resources>
 		<Storyboard x:Key="ChangeLyricsStoryboard">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="Opacity">

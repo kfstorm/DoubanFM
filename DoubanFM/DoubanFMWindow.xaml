@@ -1,6 +1,7 @@
 ﻿<local:WindowBase
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
 		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="{Binding Source={StaticResource Player}, Path=Settings.IsShadowEnabled}" KeyUp="Window_KeyUp" Background="#FF1960AF" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}">
 	<Window.Resources>
@@ -16,6 +17,16 @@
 		<Storyboard x:Key="SlideCoverRightStoryboard">
 			<ThicknessAnimation Storyboard.TargetName="CoverGrid" Storyboard.TargetProperty="Margin"
 			 To="300,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetName="FirstTimePanel" Storyboard.TargetProperty="Visibility">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+			</ObjectAnimationUsingKeyFrames>
+			 <ObjectAnimationUsingKeyFrames Storyboard.Target="{Binding Settings, Source={StaticResource Player}}" Storyboard.TargetProperty="FirstTime">
+				<DiscreteObjectKeyFrame KeyTime="0">
+					<DiscreteObjectKeyFrame.Value>
+						<sys:Boolean>False</sys:Boolean>
+					</DiscreteObjectKeyFrame.Value>
+				</DiscreteObjectKeyFrame>
+			</ObjectAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="SlideCoverLeftStoryboard">
 			<ThicknessAnimation Storyboard.TargetName="CoverGrid" Storyboard.TargetProperty="Margin"
@@ -519,6 +530,12 @@
 					</Border.OpacityMask>
 				</Border>
 				<TextBlock x:Name="CurrentLyrics" Foreground="White" Margin="7" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" TextTrimming="WordEllipsis"/>
+			</Grid>
+			<Grid x:Name="FirstTimePanel" Background="#7F000000">
+				<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" Foreground="White" TextAlignment="Center">
+					将鼠标移动到封面上<LineBreak/>
+					有惊喜哦！
+				</TextBlock>
 			</Grid>
 		</Grid>
 	</Grid>
