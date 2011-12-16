@@ -34,6 +34,10 @@ namespace DoubanFM
 		/// </summary>
 		private Player _player;
 		/// <summary>
+		/// 多媒体控件
+		/// </summary>
+		public MediaPlayer Audio;
+		/// <summary>
 		/// 进度更新计时器
 		/// </summary>
 		private DispatcherTimer _progressRefreshTimer;
@@ -402,6 +406,19 @@ namespace DoubanFM
 			SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
 			ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
 			DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
+
+			Audio = new MediaPlayer();
+			Audio.MediaEnded += new EventHandler(Audio_MediaEnded);
+			Audio.MediaOpened += new EventHandler(Audio_MediaOpened);
+			Audio.MediaFailed += new EventHandler<ExceptionEventArgs>(Audio_MediaFailed);
+			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Volume");
+			binding.Source = Audio;
+			binding.Mode = System.Windows.Data.BindingMode.OneWayToSource;
+			System.Windows.Data.BindingOperations.SetBinding(_player.Settings, Settings.VolumeProperty, binding);
+			System.Windows.Data.Binding binding2 = new System.Windows.Data.Binding("IsMuted");
+			binding2.Source = Audio;
+			binding2.Mode = System.Windows.Data.BindingMode.OneWayToSource;
+			System.Windows.Data.BindingOperations.SetBinding(_player.Settings, Settings.IsMutedProperty, binding2);
 		}
 
 		/// <summary>
@@ -1009,16 +1026,18 @@ namespace DoubanFM
 			if (_player.Settings.ShowLyrics) DownloadLyrics();
 			try
 			{
-				Audio.Source = new Uri(_player.CurrentSong.FileUrl);
-
+				//Audio.Source = new Uri(_player.CurrentSong.FileUrl);
+				Audio.Open(new Uri(_player.CurrentSong.FileUrl));
+				/*
 				Audio.IsMuted = !Audio.IsMuted;     //防止无敌静音
 				Thread.Sleep(10);
 				Audio.IsMuted = !Audio.IsMuted;
-				Audio.Volume = _player.Settings.Volume;
+				Audio.Volume = _player.Settings.Volume;*/
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine("设置MediaElement的Source属性时出错，错误信息为");
+				//Debug.WriteLine("设置MediaElement的Source属性时出错，错误信息为");
+				Debug.WriteLine("调用MediaPlayer.Open方法时出错，错误信息为");
 				Debug.Indent();
 				Debug.WriteLine(ex.ToString());
 				Debug.Unindent();
@@ -1202,7 +1221,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 音乐播放结束
 		/// </summary>
-		private void Audio_MediaEnded(object sender, RoutedEventArgs e)
+		private void Audio_MediaEnded(object sender, EventArgs e)
 		{
 			Debug.WriteLine(DateTime.Now + " 歌曲播放完毕");
 			_player.CurrentSongFinishedPlaying();
@@ -1211,7 +1230,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 音乐遇到错误
 		/// </summary>
-		private void Audio_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+		private void Audio_MediaFailed(object sender, ExceptionEventArgs e)
 		{
 			Debug.WriteLine(DateTime.Now+ " MediaElement发生错误，错误信息为");
 			Debug.Indent();
@@ -1243,7 +1262,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 修正音乐总时间。音乐加载完成时调用。
 		/// </summary>
-		void Audio_MediaOpened(object sender, RoutedEventArgs e)
+		void Audio_MediaOpened(object sender, EventArgs e)
 		{
 			Debug.WriteLine(DateTime.Now + " 音乐加载成功");
 			if (Audio.NaturalDuration.HasTimeSpan)

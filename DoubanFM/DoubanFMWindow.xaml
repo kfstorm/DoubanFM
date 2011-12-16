@@ -516,7 +516,6 @@
 			</Grid>
 		</Grid>
 		<Grid x:Name="CoverGrid" MouseLeftButtonDown="CoverGrid_MouseLeftButtonDown" Width="{Binding ActualWidth, ElementName=LeftPanel}" Height="{Binding ActualHeight, ElementName=LeftPanel}" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment, GridBox" MouseMove="CoverGrid_MouseMove" MouseLeave="CoverGrid_MouseLeave" d:IsHidden="True">
-			<MediaElement x:Name="Audio" LoadedBehavior="Manual" MediaEnded="Audio_MediaEnded" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" MediaFailed="Audio_MediaFailed" MediaOpened="Audio_MediaOpened" UnloadedBehavior="Manual" d:IsHidden="True" />
 			<Image x:Name="Cover2" Stretch="UniformToFill"/>
 			<Image x:Name="Cover1" Stretch="UniformToFill" Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" />
 			<Grid x:Name="LyricsPanel" Height="70" VerticalAlignment="Bottom" Visibility="Hidden">
