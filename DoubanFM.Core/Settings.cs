@@ -472,9 +472,15 @@ namespace DoubanFM.Core
 			info.AddValue("ProxyHost", ProxyHost);
 			info.AddValue("ProxyPort", ProxyPort);
 			info.AddValue("AutoBackground", AutoBackground);
-			info.AddValue("Background", Background.ToString());
+			if (Background != null)
+			{
+				info.AddValue("Background", Background.ToString());
+			}
 			info.AddValue("FirstTime", FirstTime);
-			info.AddValue("MainWindowFont", MainWindowFont.ToString());
+			if (MainWindowFont != null)
+			{
+				info.AddValue("MainWindowFont", MainWindowFont.ToString());
+			}
 		}
 
 		/// <summary>
