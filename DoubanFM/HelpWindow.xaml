@@ -194,6 +194,11 @@
 						软件主页：
 						<Hyperlink Tag="http://www.kfstorm.com/blog/doubanfm" Click="Hyperlink_Click">http://www.kfstorm.com/blog/doubanfm</Hyperlink>
 						<LineBreak/>
+						网页版FAQ：
+						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Click="Hyperlink_Click">http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/</Hyperlink>
+						<LineBreak/>
+						QQ群：190056088
+						<LineBreak/>
 						豆瓣FM官方网站：
 						<Hyperlink Tag="http://douban.fm" Click="Hyperlink_Click">http://douban.fm</Hyperlink>
 						<LineBreak/>
