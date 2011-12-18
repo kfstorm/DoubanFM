@@ -38,7 +38,7 @@
 				</Rectangle.Fill>
 			</Rectangle>
 		</Button>
-		<Popup x:Name="popup" Placement="Top" StaysOpen="False">
+		<Popup x:Name="popup" Placement="Top" StaysOpen="False" AllowsTransparency="{Binding MainWindow.AllowsTransparency, Source={x:Static Application.Current}}">
 			<local:ColorPicker Color="{Binding Color, ElementName=UserControl, Mode=TwoWay}" Background="{Binding Background, ElementName=UserControl}"/>
 		</Popup>
 	</Grid>

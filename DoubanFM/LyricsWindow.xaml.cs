@@ -57,7 +57,7 @@ namespace DoubanFM
 		/// 歌词笔画
 		/// </summary>
 		private Geometry _textGeometry;
-		
+
 		private FormattedText _formattedText;
 		private FontFamily _lastFontFamily;
 		private double _lastFontSize;
@@ -72,6 +72,7 @@ namespace DoubanFM
 		static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 		static readonly int GWL_EXSTYLE = (-20);
 		static readonly int WS_EX_TRANSPARENT = 0x0020;
+		static readonly int WS_EX_TOOLWINDOW = 0x00000080;
 
 		public LyricsWindow(LyricsSetting lyricsSetting = null)
 		{
@@ -79,16 +80,19 @@ namespace DoubanFM
 
 			// 在此点之下插入创建对象所需的代码。
 			LyricsSetting = lyricsSetting;
-		
+
 			ChangeLyricsStoryboard = (Storyboard)FindResource("ChangeLyricsStoryboard");
 			HideLyricsStoryboard = (Storyboard)FindResource("HideLyricsStoryboard");
 
-			//鼠标穿透
 			this.SourceInitialized += new EventHandler((o, e) =>
 			{
 				var hwnd = new WindowInteropHelper(this).Handle;
 				int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-				SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+				SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle
+					//鼠标穿透
+					| WS_EX_TRANSPARENT
+					//在按下Alt+Tab时不显示
+					| WS_EX_TOOLWINDOW);
 			});
 
 			UpdateForegroundSetting();

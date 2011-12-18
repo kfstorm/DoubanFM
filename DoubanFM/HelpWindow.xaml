@@ -115,7 +115,7 @@
 							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp9}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
 						</InlineUIContainer>
 					</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">设置字体时可以用不同语言的字体名。所有的字体都有英文名字，而非英文字体一般都有非英文的名字。比如宋体的英文名是SimSun，新宋体的英文名是NSimSun，楷体的英文名是KaiTi，微软雅黑的英文名是Microsoft YaHei。台湾地区的Win7中默认字体是微軟正黑體，英文名是Microsoft JhengHei。本软件中选择字体时只把有简体中文名称的字体显示中文名，其他字体显示英文名，所以微软雅黑在下拉列表里叫微软雅黑，而微軟正黑體在下拉列表里叫Microsoft JhengHei，还有比如標楷體的英文叫DFKai-SB</Paragraph>
+					<Paragraph Style="{StaticResource TextStyleKey}">设置字体时可以用不同语言的字体名。所有的字体都有英文名字，而非英文字体一般都有非英文的名字。比如宋体的英文名是SimSun，新宋体的英文名是NSimSun，楷体的英文名是KaiTi，微软雅黑的英文名是Microsoft YaHei。台湾地区的Win7中默认字体是微軟正黑體，英文名是Microsoft JhengHei。本软件中选择字体时只把有简体中文名称的字体显示中文名，其他字体显示英文名，所以微软雅黑在下拉列表里叫微软雅黑，而微軟正黑體在下拉列表里叫Microsoft JhengHei，还有比如標楷體的英文叫DFKai-SB。</Paragraph>
 					<Paragraph>
 						<InlineUIContainer>
 							<local:FontPicker x:Name="Fp10" Font="宋体"/>
@@ -185,6 +185,21 @@
 				<Section>
 					<Paragraph Style="{StaticResource Header1StyleKey}">程序崩溃了……</Paragraph>
 					<Paragraph Style="{StaticResource TextStyleKey}">如果发生了程序崩溃的情况，请<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Click="Hyperlink_Click">向我反应</Hyperlink>，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Click="Hyperlink_Click">查看错误日志的方法</Hyperlink></Paragraph>
+					<Paragraph></Paragraph>
+					<Paragraph TextIndent="0" Style="{StaticResource TextStyleKey}">声明：本软件为第三方客户端，并非豆瓣FM官方客户端。
+						<LineBreak/>
+						软件作者：
+						<Hyperlink Tag="http://www.kfstorm.com/blog/" Click="Hyperlink_Click">K.F.Storm</Hyperlink>
+						<LineBreak/>
+						软件主页：
+						<Hyperlink Tag="http://www.kfstorm.com/blog/doubanfm" Click="Hyperlink_Click">http://www.kfstorm.com/blog/doubanfm</Hyperlink>
+						<LineBreak/>
+						豆瓣FM官方网站：
+						<Hyperlink Tag="http://douban.fm" Click="Hyperlink_Click">http://douban.fm</Hyperlink>
+						<LineBreak/>
+						豆瓣FM使用帮助和支持：
+						<Hyperlink Tag="http://douban.fm/support" Click="Hyperlink_Click">http://douban.fm/support</Hyperlink>
+					</Paragraph>
 				</Section>
 			</FlowDocument>
 		</FlowDocumentReader>

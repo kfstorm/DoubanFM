@@ -324,7 +324,7 @@
 	</Style>
 	<Style TargetType="{x:Type local:ColorPicker}">
 		<Setter Property="BorderBrush" Value="Black"/>
-		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:ColorPicker}">
