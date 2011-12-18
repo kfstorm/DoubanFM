@@ -87,6 +87,7 @@
 		<Setter Property="ResizeMode" Value="NoResize"/>
 		<Setter Property="SizeToContent" Value="WidthAndHeight"/>
 		<Setter Property="Background" Value="{x:Null}"/>
+		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
 		<Setter Property="Template" Value="{StaticResource WindowBaseTemplate}"/>
 	</Style>
@@ -420,7 +421,18 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:FontPicker}">
-					<ComboBox x:Name="PART_FontComboBox" IsEditable="True"/>
+					<ComboBox x:Name="PART_FontComboBox" IsEditable="True" MinWidth="200"  FontFamily="{TemplateBinding Font}">
+						<ComboBox.ItemsPanel>
+							<ItemsPanelTemplate>
+								<VirtualizingStackPanel/>
+							</ItemsPanelTemplate>
+						</ComboBox.ItemsPanel>
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}" FontFamily="{Binding}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

@@ -41,7 +41,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty AutoBackgroundProperty = DependencyProperty.Register("AutoBackground", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(System.Windows.Media.Color), typeof(Settings), new PropertyMetadata(System.Windows.Media.ColorConverter.ConvertFromString("#FF1960AF")));
 		public static readonly DependencyProperty FirstTimeProperty = DependencyProperty.Register("FirstTime", typeof(bool), typeof(Settings), new PropertyMetadata(false));
-		public static readonly DependencyProperty MainWindowFontProperty = DependencyProperty.Register("MainWindowFont", typeof(FontFamily), typeof(Settings));
+		public static readonly DependencyProperty MainWindowFontProperty = DependencyProperty.Register("MainWindowFont", typeof(FontFamily), typeof(Settings), new PropertyMetadata(System.Windows.SystemFonts.MessageFontFamily));
 		
 		#endregion
 

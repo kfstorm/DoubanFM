@@ -3,7 +3,7 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
-		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="{Binding Source={StaticResource Player}, Path=Settings.IsShadowEnabled}" KeyUp="Window_KeyUp" Background="#FF1960AF" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" >
+		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="{Binding Source={StaticResource Player}, Path=Settings.IsShadowEnabled}" KeyUp="Window_KeyUp" Background="#FF1960AF" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}">
 	<Window.Resources>
 		<Storyboard x:Key="BackgroundColorStoryboard">
 			<ColorAnimation Storyboard.TargetName="Window" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" Duration="0:0:5" EasingFunction="{StaticResource Smooth}"/>
@@ -169,7 +169,7 @@
 				<ColumnDefinition Width="300"/>
 			</Grid.ColumnDefinitions>
 			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1" ClipToBounds="True">
-				<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPanelStyle}" Foreground="{Binding Background, ElementName=Window}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
+				<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
 					<TabItem Header="{DynamicResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
 						<Grid x:Name="ChannelsGrid">
 							<Grid.RowDefinitions>
@@ -369,6 +369,7 @@
 								<Grid.RowDefinitions>
 									<RowDefinition Height="Auto"/>
 									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
 									<RowDefinition/>
 									<RowDefinition/>
 									<RowDefinition Height="Auto"/>
@@ -377,10 +378,12 @@
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 									<Button x:Name="GoToHomePage" Height="40" Style="{DynamicResource IconStyle}" Margin="0,0,10,0" Click="GoToHomePage_Click"/>
 									<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
+									<Button x:Name="BtnHelp" Height="40" Click="BtnHelp_Click" Style="{DynamicResource HelpStyle}"/>
 								</StackPanel>
-								<Label Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,10">1.5.1</Label>
-								<Button x:Name="CheckUpdate" Grid.Row="2" Click="CheckUpdate_Click" Style="{DynamicResource CheckUpdateStyle}"/>
-								<Grid Grid.Row="3" Height="40">
+								<TextBlock Grid.Row="1" HorizontalAlignment="Center">第三方客户端</TextBlock>
+								<Label Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">1.5.1</Label>
+								<Button x:Name="CheckUpdate" Grid.Row="3" Click="CheckUpdate_Click" Style="{DynamicResource CheckUpdateStyle}"/>
+								<Grid Grid.Row="4" Height="40">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition/>
 										<ColumnDefinition/>
@@ -388,8 +391,8 @@
 									<Button x:Name="Feedback" Click="Feedback_Click" Style="{DynamicResource FeedbackStyle}"/>
 									<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Click="VisitOfficialWebsite_Click" Style="{DynamicResource DoubanFMOfficialWebsiteStyle}"/>
 								</Grid>
-								<Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
-								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">All rights reserved.</Label>
+								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
+								<Label Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center">All rights reserved.</Label>
 							</Grid>
 						</Border>
 					</TabItem>

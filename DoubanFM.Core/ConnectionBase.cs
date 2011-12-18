@@ -54,7 +54,7 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
-		private static string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
+		public static readonly string DataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
 
 		static ConnectionBase()
 		{
@@ -204,7 +204,7 @@ namespace DoubanFM.Core
 		{
 			try
 			{
-				using (FileStream stream = File.OpenRead(_dataFolder + "cookies.dat"))
+				using (FileStream stream = File.OpenRead(DataFolder + "cookies.dat"))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					cc = (CookieContainer)formatter.Deserialize(stream);
@@ -224,9 +224,9 @@ namespace DoubanFM.Core
 		{
 			try
 			{
-				if (!Directory.Exists(_dataFolder))
-					Directory.CreateDirectory(_dataFolder);
-				using (FileStream stream = File.OpenWrite(_dataFolder + @"cookies.dat"))
+				if (!Directory.Exists(DataFolder))
+					Directory.CreateDirectory(DataFolder);
+				using (FileStream stream = File.OpenWrite(DataFolder + @"cookies.dat"))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					formatter.Serialize(stream, cc);

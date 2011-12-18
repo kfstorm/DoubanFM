@@ -137,7 +137,11 @@ namespace DoubanFM
 		/// 分享设置
 		/// </summary>
 		public ShareSetting ShareSetting { get; private set; }
-		
+		/// <summary>
+		/// 记录最后一次切歌的时间
+		/// </summary>
+		private DateTime _lastTimeChangeSong = DateTime.MaxValue;
+
 		#endregion
 
 		#region 构造和初始化
@@ -1028,8 +1032,9 @@ namespace DoubanFM
 			{
 				//Audio.Source = new Uri(_player.CurrentSong.FileUrl);
 				Audio.Open(new Uri(_player.CurrentSong.FileUrl));
+				_lastTimeChangeSong = DateTime.Now;
 				/*
-				Audio.IsMuted = !Audio.IsMuted;     //防止无敌静音
+				Audio.IsMuted = !Audio.IsMuted;     //防止无故静音
 				Thread.Sleep(10);
 				Audio.IsMuted = !Audio.IsMuted;
 				Audio.Volume = _player.Settings.Volume;*/
@@ -1248,7 +1253,7 @@ namespace DoubanFM
 			if (_lyricsWindow != null) _lyricsWindow.Refresh(Audio.Position);
 		}
 		/// <summary>
-		/// 当已播放时间超过总时间时，报告音乐已播放完毕。防止网络不好时播放完毕但不换歌
+		/// 在网络不好时有用
 		/// </summary>
 		void _forceNextTimer_Tick(object sender, EventArgs e)
 		{
@@ -1257,7 +1262,14 @@ namespace DoubanFM
 				{
 					Debug.WriteLine(DateTime.Now + " 网络不好吧，显示的时间已经超过总时间了。是不是没声音啊？我换下一首了……");
 					_player.CurrentSongFinishedPlaying();
+					return;
 				}
+			if (Audio.Position == TimeSpan.Zero && DateTime.Now - _lastTimeChangeSong > TimeSpan.FromSeconds(30))
+			{
+				Debug.WriteLine(DateTime.Now + "网络太慢了，加载很久都不能播放……");
+				_player.CurrentSongFinishedPlaying();
+				return;
+			}
 		}
 		/// <summary>
 		/// 修正音乐总时间。音乐加载完成时调用。
@@ -1678,6 +1690,14 @@ namespace DoubanFM
 		private void BtnOneKeyShare_Click(object sender, RoutedEventArgs e)
 		{
 			OneKeyShare();
+		}
+
+		private void BtnHelp_Click(object sender, RoutedEventArgs e)
+		{
+			BtnHelp.IsEnabled = false;
+			HelpWindow window = new HelpWindow();
+			window.Closed += delegate { BtnHelp.IsEnabled = true; };
+			window.Show();
 		}
 
 		#endregion

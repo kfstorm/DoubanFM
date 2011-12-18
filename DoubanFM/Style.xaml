@@ -349,15 +349,15 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TabControl}">
-					<Grid Background="{TemplateBinding Foreground}">
+					<Grid Background="{TemplateBinding Background}">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="50"/>
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
-						<Border Background="{TemplateBinding Foreground}" Panel.ZIndex="1">
+						<Border Panel.ZIndex="1">
 							<StackPanel x:Name="HeaderPanel" IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
 						</Border>
-						<Border x:Name="ContentPanel" Background="{TemplateBinding Background}" Grid.Column="1">
+						<Border x:Name="ContentPanel" Background="#7F000000" Grid.Column="1">
 							<ContentPresenter x:Name="SelectedContentHost" ContentSource="SelectedContent"/>
 						</Border>
 					</Grid>	
@@ -366,8 +366,6 @@
 		</Setter>
 		<Setter Property="ItemContainerStyle" Value="{StaticResource ControlPanelTabItemStyle}"/>
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
-		<Setter Property="Background" Value="#7F000000"/>
-		<Setter Property="Foreground" Value="Transparent"/>
 	</Style>
 	<Border x:Key="TabItemChannels" Background="Transparent" ToolTip="频道列表">
 		<Viewbox>
@@ -1143,5 +1141,19 @@
 	<Style x:Key="CheckableListBoxStyle" BasedOn="{StaticResource {x:Type ListBox}}" TargetType="{x:Type ListBox}">
 		<Setter Property="SelectionMode" Value="Multiple"/>
 		<Setter Property="ItemContainerStyle" Value="{StaticResource CheckableListBoxItemStyle}"/>
+	</Style>
+	<Style x:Key="HelpStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="ToolTip" Value="帮助"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="192" Height="192" Canvas.Left="32" Canvas.Top="32" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 128,32C 181.493,32 224,74.0339 224,128C 224,181.966 181.493,224 128,224C 74.5073,224 32,181.966 32,128C 32,74.0339 74.5073,32 128,32 Z M 141.091,165.818C 140.909,157.848 141.538,152.333 142.977,149.273C 144.417,146.212 148.121,142.136 154.091,137.045C 165.576,127.167 173.068,119.402 176.568,113.75C 180.068,108.098 181.818,102.061 181.818,95.6364C 181.818,84.1212 176.932,74.0303 167.159,65.3636C 157.386,56.697 144.258,52.3636 127.773,52.3636C 112.045,52.3636 99.3712,56.5682 89.75,64.9773C 80.1288,73.3864 74.9394,83.6212 74.1818,95.6818L 100.364,98.9091C 102.152,90.0303 105.462,83.447 110.295,79.1591C 115.129,74.8712 121.152,72.7273 128.364,72.7273C 135.788,72.7273 141.705,74.9015 146.114,79.25C 150.523,83.5985 152.727,88.7727 152.727,94.7727C 152.727,98.8939 151.5,102.636 149.045,106C 147.5,108.091 142.742,112.568 134.773,119.432C 126.803,126.295 121.477,132.485 118.795,138C 116.114,143.515 114.773,150.485 114.773,158.909L 114.909,165.818L 141.091,165.818 Z M 114.909,203.636L 144,203.636L 144,174.545L 114.909,174.545L 114.909,203.636 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 </ResourceDictionary>
