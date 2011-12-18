@@ -1033,11 +1033,11 @@ namespace DoubanFM
 				//Audio.Source = new Uri(_player.CurrentSong.FileUrl);
 				Audio.Open(new Uri(_player.CurrentSong.FileUrl));
 				_lastTimeChangeSong = DateTime.Now;
-				/*
+
 				Audio.IsMuted = !Audio.IsMuted;     //防止无故静音
 				Thread.Sleep(10);
 				Audio.IsMuted = !Audio.IsMuted;
-				Audio.Volume = _player.Settings.Volume;*/
+				Audio.Volume = _player.Settings.Volume;
 			}
 			catch (Exception ex)
 			{

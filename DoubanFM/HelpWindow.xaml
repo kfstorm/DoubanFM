@@ -184,7 +184,16 @@
 				</Section>
 				<Section>
 					<Paragraph Style="{StaticResource Header1StyleKey}">程序崩溃了……</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">如果发生了程序崩溃的情况，请<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Click="Hyperlink_Click">向我反应</Hyperlink>，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Click="Hyperlink_Click">查看错误日志的方法</Hyperlink></Paragraph>
+					<Paragraph Style="{StaticResource TextStyleKey}">如果发生了程序崩溃的情况，请
+						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Click="Hyperlink_Click">向我反应</Hyperlink> ，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。
+						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Click="Hyperlink_Click">查看错误日志的方法</Hyperlink>
+					</Paragraph>
+				</Section>
+				<Section>
+					<Paragraph Style="{StaticResource Header1StyleKey}">为什么给窗口设置半透明颜色背景时不是变半透明，而是变黑？</Paragraph>
+					<Paragraph Style="{StaticResource TextStyleKey}">窗口半透明只有在开启窗口阴影时才有效，先开启窗口阴影（重启软件生效），然后就能设置成半透明窗口背景了。</Paragraph>
+				</Section>
+				<Section>
 					<Paragraph></Paragraph>
 					<Paragraph TextIndent="0" Style="{StaticResource TextStyleKey}">声明：本软件为第三方客户端，并非豆瓣FM官方客户端。
 						<LineBreak/>
