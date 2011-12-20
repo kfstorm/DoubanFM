@@ -7,19 +7,19 @@
 	Title="" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" Left="{Binding Path=Left, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Top="{Binding Path=Top, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Width="{Binding Path=Width, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Height="{Binding Path=Height, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}">
 	<Window.Resources>
 		<Storyboard x:Key="ChangeLyricsStoryboard">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="Opacity">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LyricsRoot" Storyboard.TargetProperty="Opacity">
 				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
 				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:0.6" EasingFunction="{StaticResource Smooth}"/>
 			</DoubleAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Text">
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
 			</StringAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="HideLyricsStoryboard">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="Opacity">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LyricsRoot" Storyboard.TargetProperty="Opacity">
 				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
 			</DoubleAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="CurrentLyrics" Storyboard.TargetProperty="Text">
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
 			</StringAnimationUsingKeyFrames>
 		</Storyboard>
@@ -33,18 +33,15 @@
 				<RowDefinition/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-			<Viewbox x:Name="viewbox" StretchDirection="DownOnly" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20,0">
+			<Viewbox x:Name="LyricsRoot" VerticalAlignment="Bottom" Margin="20,0" StretchDirection="DownOnly">
 				<Viewbox.Effect>
 					<DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
 				</Viewbox.Effect>
-				<Grid>
-					<Path x:Name="PathText" Fill="{Binding Foreground, ElementName=CurrentLyrics}">
-						<Path.Stroke>
-							<SolidColorBrush Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
-						</Path.Stroke>
-					</Path>
-					<TextBlock x:Name="CurrentLyrics" FontFamily="{Binding ElementName=Window, Path=LyricsSetting.FontFamily}" FontSize="{Binding ElementName=Window, Path=LyricsSetting.FontSize}" FontWeight="{Binding ElementName=Window, Path=LyricsSetting.FontWeight, Converter={StaticResource OpenTypeWeightToFontWeightConverter}}" LayoutUpdated="CurrentLyrics_LayoutUpdated" Visibility="Hidden" />
-				</Grid>
+				<Path x:Name="PathText" Fill="{Binding Foreground, ElementName=CurrentLyrics}">
+					<Path.Stroke>
+						<SolidColorBrush Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
+					</Path.Stroke>
+				</Path>
 			</Viewbox>
 			<Border Grid.Row="1">
 				<Border.Height>

@@ -34,11 +34,6 @@ namespace DoubanFM
 			InitializeComponent();
 		}
 
-		private void SliderStrokeWeight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-		{
-			(Owner as DoubanFMWindow)._lyricsWindow.Update();
-		}
-
 		private void CbShowLyrics_Checked(object sender, RoutedEventArgs e)
 		{
 			(Owner as DoubanFMWindow).ShowLyrics();

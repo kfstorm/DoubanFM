@@ -59,13 +59,7 @@ namespace DoubanFM
 		private Geometry _textGeometry;
 
 		private FormattedText _formattedText;
-		private FontFamily _lastFontFamily;
-		private double _lastFontSize;
-		private FontStyle _lastFontStyle;
-		private FontWeight _lastFontWeight;
-		private FontStretch _lastFontStretch;
-		private double _lastStrokeWeight;
-
+		
 		[DllImport("user32.dll")]
 		static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 		[DllImport("user32.dll", SetLastError = true)]
@@ -96,6 +90,27 @@ namespace DoubanFM
 			});
 
 			UpdateForegroundSetting();
+
+			Binding binding = new Binding();
+			binding.Source = LyricsSetting;
+			binding.Path = new PropertyPath(DoubanFM.LyricsSetting.FontFamilyProperty);
+			this.SetBinding(LyricsFontFamilyProperty, binding);
+
+			Binding binding2 = new Binding();
+			binding2.Source = LyricsSetting;
+			binding2.Path = new PropertyPath(DoubanFM.LyricsSetting.FontSizeProperty);
+			this.SetBinding(LyricsFontSizeProperty, binding2);
+
+			Binding binding3 = new Binding();
+			binding3.Source = LyricsSetting;
+			binding3.Path = new PropertyPath(DoubanFM.LyricsSetting.FontWeightProperty);
+			binding3.Converter = new OpenTypeWeightToFontWeightConverter();
+			this.SetBinding(LyricsFontWeightProperty, binding3);
+
+			Binding binding4 = new Binding();
+			binding4.Source = LyricsSetting;
+			binding4.Path = new PropertyPath(DoubanFM.LyricsSetting.StrokeWeightProperty);
+			this.SetBinding(LyricsStrokeWeightProperty, binding4);
 		}
 
 		/// <summary>
@@ -171,28 +186,96 @@ namespace DoubanFM
 			else HideLyrics();
 		}
 
+		#region 绘制歌词
+
+		public FontFamily LyricsFontFamily
+		{
+			get { return (FontFamily)GetValue(LyricsFontFamilyProperty); }
+			set { SetValue(LyricsFontFamilyProperty, value); }
+		}
+
+		public static readonly DependencyProperty LyricsFontFamilyProperty =
+			DependencyProperty.Register("LyricsFontFamily", typeof(FontFamily), typeof(LyricsWindow), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, new PropertyChangedCallback(OnLyricsFontFamilyChanged)));
+
+		static void OnLyricsFontFamilyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as LyricsWindow).UpdateText();
+		}
+
+		public double LyricsFontSize
+		{
+			get { return (double)GetValue(LyricsFontSizeProperty); }
+			set { SetValue(LyricsFontSizeProperty, value); }
+		}
+
+		public static readonly DependencyProperty LyricsFontSizeProperty =
+			DependencyProperty.Register("LyricsFontSize", typeof(double), typeof(LyricsWindow), new FrameworkPropertyMetadata(SystemFonts.MessageFontSize, new PropertyChangedCallback(OnLyricsFontSizeChanged)));
+
+		static void OnLyricsFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as LyricsWindow).UpdateText();
+			(d as LyricsWindow).UpdateStrokeAndShadow();
+		}
+
+		public FontWeight LyricsFontWeight
+		{
+			get { return (FontWeight)GetValue(LyricsFontWeightProperty); }
+			set { SetValue(LyricsFontWeightProperty, value); }
+		}
+
+		public static readonly DependencyProperty LyricsFontWeightProperty =
+			DependencyProperty.Register("LyricsFontWeight", typeof(FontWeight), typeof(LyricsWindow), new FrameworkPropertyMetadata(SystemFonts.MessageFontWeight, new PropertyChangedCallback(OnLyricsFontWeightChanged)));
+
+		static void OnLyricsFontWeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as LyricsWindow).UpdateText();
+		}
+
+		public double LyricsStrokeWeight
+		{
+			get { return (double)GetValue(LyricsStrokeWeightProperty); }
+			set { SetValue(LyricsStrokeWeightProperty, value); }
+		}
+
+		public static readonly DependencyProperty LyricsStrokeWeightProperty =
+			DependencyProperty.Register("LyricsStrokeWeight", typeof(double), typeof(LyricsWindow), new FrameworkPropertyMetadata(new PropertyChangedCallback(OnLyricsStrokeWeightChanged)));
+
+		static void OnLyricsStrokeWeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as LyricsWindow).UpdateStrokeAndShadow();
+		}
+
+		public string LyricsText
+		{
+			get { return (string)GetValue(LyricsTextProperty); }
+			set { SetValue(LyricsTextProperty, value); }
+		}
+
+		public static readonly DependencyProperty LyricsTextProperty =
+			DependencyProperty.Register("LyricsText", typeof(string), typeof(LyricsWindow), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnLyricsTextChanged)));
+
+		static void OnLyricsTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as LyricsWindow).UpdateText();
+		}
+
 		/// <summary>
 		/// 重绘歌词
 		/// </summary>
-		public void Update()
+		public void UpdateStrokeAndShadow()
 		{
-			if (_formattedText == null || _formattedText.Text != CurrentLyrics.Text
-				|| _lastFontFamily != CurrentLyrics.FontFamily
-				|| _lastFontSize != CurrentLyrics.FontSize
-				|| _lastFontStretch != CurrentLyrics.FontStretch
-				|| _lastFontStyle != CurrentLyrics.FontStyle
-				|| _lastFontWeight != CurrentLyrics.FontWeight
-				|| _lastStrokeWeight != LyricsSetting.StrokeWeight)
-			{
-				CreateText(CurrentLyrics.Text);
-				PathText.Data = _textGeometry;
-				PathText.StrokeThickness = LyricsSetting.StrokeWeight / 48.0 * CurrentLyrics.FontSize;
-				ShadowEffect.ShadowDepth = PathText.StrokeThickness;
-				if (ShadowEffect.ShadowDepth == 0)
-					ShadowEffect.Opacity = 0;
-				else
-					ShadowEffect.Opacity = 1;
-			}
+			PathText.StrokeThickness = LyricsStrokeWeight / 48.0 * LyricsFontSize;
+			ShadowEffect.ShadowDepth = PathText.StrokeThickness;
+			if (ShadowEffect.ShadowDepth == 0)
+				ShadowEffect.Opacity = 0;
+			else
+				ShadowEffect.Opacity = 1;
+		}
+
+		public void UpdateText()
+		{
+			CreateText(LyricsText);
+			PathText.Data = _textGeometry;
 		}
 
 		/// <summary>
@@ -200,30 +283,20 @@ namespace DoubanFM
 		/// </summary>
 		public void CreateText(string text)
 		{
-			_lastFontFamily = CurrentLyrics.FontFamily;
-			_lastFontSize = CurrentLyrics.FontSize;
-			_lastFontStretch = CurrentLyrics.FontStretch;
-			_lastFontStyle = CurrentLyrics.FontStyle;
-			_lastFontWeight = CurrentLyrics.FontWeight;
-			_lastStrokeWeight = LyricsSetting.StrokeWeight;
-
 			// Create the formatted text based on the properties set.
 			_formattedText = new FormattedText(
 				text == null ? "" : text,
 				CultureInfo.GetCultureInfo("zh-cn"),
 				FlowDirection.LeftToRight,
-				new Typeface(_lastFontFamily, _lastFontStyle, _lastFontWeight, _lastFontStretch),
-				_lastFontSize,
+				new Typeface(LyricsFontFamily, FontStyles.Normal, LyricsFontWeight, FontStretches.Normal),
+				LyricsFontSize,
 				System.Windows.Media.Brushes.Black // This brush does not matter since we use the geometry of the text. 
 				);
-
+			
 			// Build the geometry object that represents the text.
 			_textGeometry = _formattedText.BuildGeometry(new System.Windows.Point(0, 0));
 		}
 
-		private void CurrentLyrics_LayoutUpdated(object sender, EventArgs e)
-		{
-			Update();
-		}
+		#endregion
 	}
 }

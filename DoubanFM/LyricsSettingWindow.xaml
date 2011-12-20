@@ -53,7 +53,7 @@
 			<Label Grid.Row="3" VerticalAlignment="Center">粗细</Label>
 			<Slider x:Name="SliderFontWeight" Grid.Row="3" Grid.Column="2" Value="{Binding LyricsSetting.FontWeight, ElementName=Window}" Maximum="900" Minimum="100" Margin="0,5" SmallChange="5" LargeChange="50"/>
 			<Label Grid.Row="4" VerticalAlignment="Center">描边粗细</Label>
-			<Slider x:Name="SliderStrokeWeight" Grid.Row="4" Grid.Column="2" Value="{Binding LyricsSetting.StrokeWeight, ElementName=Window}" Maximum="3" Minimum="0" Margin="0,5" ValueChanged="SliderStrokeWeight_ValueChanged" SmallChange="0.05" LargeChange="0.3"/>
+			<Slider x:Name="SliderStrokeWeight" Grid.Row="4" Grid.Column="2" Value="{Binding LyricsSetting.StrokeWeight, ElementName=Window}" Maximum="3" Minimum="0" Margin="0,5" SmallChange="0.05" LargeChange="0.3"/>
 			<Label Grid.Row="5" VerticalAlignment="Center">透明度</Label>
 			<Slider x:Name="SliderOpacity" Grid.Row="5" Grid.Column="2" Value="{Binding LyricsSetting.Opacity, ElementName=Window, Converter={StaticResource OpacityToTransparencyConverter}}" Maximum="1" Minimum="0" Margin="0,5" SmallChange="0.01" LargeChange="0.1" RenderTransformOrigin="0.5,0.5"/>
 			<Label Grid.Row="6" VerticalAlignment="Center">前景色</Label>

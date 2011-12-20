@@ -415,13 +415,17 @@ namespace DoubanFM
 			Audio.MediaEnded += new EventHandler(Audio_MediaEnded);
 			Audio.MediaOpened += new EventHandler(Audio_MediaOpened);
 			Audio.MediaFailed += new EventHandler<ExceptionEventArgs>(Audio_MediaFailed);
+
+			Audio.Volume = _player.Settings.Volume;
+			Audio.IsMuted = _player.Settings.IsMuted;
+
 			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Volume");
 			binding.Source = Audio;
-			binding.Mode = System.Windows.Data.BindingMode.OneWayToSource;
+			binding.Mode = System.Windows.Data.BindingMode.TwoWay;
 			System.Windows.Data.BindingOperations.SetBinding(_player.Settings, Settings.VolumeProperty, binding);
 			System.Windows.Data.Binding binding2 = new System.Windows.Data.Binding("IsMuted");
 			binding2.Source = Audio;
-			binding2.Mode = System.Windows.Data.BindingMode.OneWayToSource;
+			binding2.Mode = System.Windows.Data.BindingMode.TwoWay;
 			System.Windows.Data.BindingOperations.SetBinding(_player.Settings, Settings.IsMutedProperty, binding2);
 		}
 
@@ -584,9 +588,14 @@ namespace DoubanFM
 		{
 			_lyricsSetting = LyricsSetting.Load();
 			_lyricsWindow = new LyricsWindow(_lyricsSetting);
-			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Text");
-			binding.Source = _lyricsWindow.CurrentLyrics;
+			
+			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("LyricsText");
+			binding.Source = _lyricsWindow;
 			CurrentLyrics.SetBinding(TextBlock.TextProperty, binding);
+
+			System.Windows.Data.Binding binding2 = new System.Windows.Data.Binding("Opacity");
+			binding2.Source = _lyricsWindow.LyricsRoot;
+			CurrentLyrics.SetBinding(TextBlock.OpacityProperty, binding2);
 		}
 
 		/// <summary>
