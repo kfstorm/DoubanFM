@@ -1,4 +1,10 @@
-﻿using System.Windows.Media;
+﻿/*
+ * Author : K.F.Storm
+ * Email : yk000123 at sina.com
+ * Website : http://www.kfstorm.com
+ * */
+
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System;

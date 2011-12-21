@@ -1,6 +1,10 @@
-﻿/**
- * 参考链接：http://www.iscripts.org/forum.php?mod=viewthread&action=printable&tid=85
+﻿/*
+ * Author : K.F.Storm
+ * Email : yk000123 at sina.com
+ * Website : http://www.kfstorm.com
+ * Reference : http://www.iscripts.org/forum.php?mod=viewthread&action=printable&tid=85
  * */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,8 @@
-﻿/**
- * 参考链接：http://equinox1993.blog.163.com/blog/static/32205137201031141228418/
+﻿/*
+ * Author : K.F.Storm
+ * Email : yk000123 at sina.com
+ * Website : http://www.kfstorm.com
+ * Reference : http://equinox1993.blog.163.com/blog/static/32205137201031141228418/
  * */
 
 using System;

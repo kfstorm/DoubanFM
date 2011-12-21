@@ -1,6 +1,10 @@
 ﻿/*
- * 参考：http://www.cnblogs.com/alvinyue/archive/2011/08/03/2126022.html
+ * Author : K.F.Storm
+ * Email : yk000123 at sina.com
+ * Website : http://www.kfstorm.com
+ * Reference : http://www.cnblogs.com/alvinyue/archive/2011/08/03/2126022.html
  * */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
