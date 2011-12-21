@@ -148,9 +148,29 @@ Website : http://www.kfstorm.com
 		<BitmapImage x:Key="UnlikeThumbImage">Images/DoubanFM_Like_Unlike.png</BitmapImage>
 		<BitmapImage x:Key="NeverThumbImage">Images/DoubanFM_Never.png</BitmapImage>
 		<BitmapImage x:Key="NeverThumbImage_Disabled">Images/DoubanFM_Never_Disabled.png</BitmapImage>
+		<Storyboard x:Key="OnVolumeControlMouseEnter">
+			<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="BdVolumeControl">
+				<EasingThicknessKeyFrame KeyTime="0:0:0.1" Value="0"/>
+			</ThicknessAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="OnVolumeControlMouseLeave">
+			<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="BdVolumeControl">
+				<EasingThicknessKeyFrame KeyTime="0:0:1" Value="0,0,-65,0">
+					<EasingThicknessKeyFrame.EasingFunction>
+						<CircleEase EasingMode="EaseOut"/>
+					</EasingThicknessKeyFrame.EasingFunction>
+				</EasingThicknessKeyFrame>
+			</ThicknessAnimationUsingKeyFrames>
+		</Storyboard>
 	</Window.Resources>
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="SharePanel"/>
+		<EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="BdVolumeControl">
+			<BeginStoryboard x:Name="OnVolumeControlMouseEnter_BeginStoryboard" Storyboard="{StaticResource OnVolumeControlMouseEnter}"/>
+		</EventTrigger>
+		<EventTrigger RoutedEvent="Mouse.MouseLeave" SourceName="BdVolumeControl">
+			<BeginStoryboard x:Name="OnVolumeControlMouseLeave_BeginStoryboard" Storyboard="{StaticResource OnVolumeControlMouseLeave}"/>
+		</EventTrigger>
 	</Window.Triggers>
 	<Window.TaskbarItemInfo>
 		<TaskbarItemInfo>
@@ -305,15 +325,11 @@ Website : http://www.kfstorm.com
 											<TextBox x:Name="CaptchaText" Grid.Row="1" Grid.Column="1" Margin="4"/>
 										</Grid>
 									</Grid>
-									<Grid Grid.Row="1">
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition/>
-											<ColumnDefinition/>
-										</Grid.ColumnDefinitions>
+									<StackPanel Grid.Row="1" Margin="0,10">
 										<Label x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.ShowLogOnFailedHint, Source={StaticResource Player}}" Content="登录失败！"/>
-										<Button Grid.Column="1" x:Name="ButtonLogOn" Margin="10" Click="ButtonLogOn_Click" IsDefault="True" Content="登录"/>
-									</Grid>
-									<Grid Grid.Row="2" Margin="0,20">
+										<Button Grid.Column="1" x:Name="ButtonLogOn" Margin="10" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Center" Width="100" Height="40"/>
+									</StackPanel>
+									<Grid Grid.Row="2" VerticalAlignment="Bottom" Margin="0,20">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition/>
 											<ColumnDefinition/>
@@ -343,12 +359,7 @@ Website : http://www.kfstorm.com
 					</TabItem>
 					<TabItem Header="{DynamicResource TabItemSettings}">
 						<Grid Margin="20">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
-							<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" Margin="5"/>
-							<Grid Grid.Row="1" Width="100" Margin="10">
+							<Grid Width="100" VerticalAlignment="Center" Margin="10">
 								<Grid.RowDefinitions>
 									<RowDefinition/>
 									<RowDefinition Height="10"/>
@@ -443,7 +454,7 @@ Website : http://www.kfstorm.com
 							<Label x:Name="Album" VerticalContentAlignment="Center" FontSize="22" Foreground="White" />
 						</Viewbox>
 					</Grid>
-					<StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal" Height="24">
+					<StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal" Height="24" ClipToBounds="True">
 						<Grid x:Name="SharePanel">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto"/>
@@ -495,6 +506,11 @@ Website : http://www.kfstorm.com
 							<Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="一键分享" Click="BtnOneKeyShare_Click"/>
 						</Grid>
 						<CheckBox x:Name="CheckBoxShowLyrics" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
+						<Border x:Name="BdVolumeControl" Background="Transparent" Margin="0,0,-65,0">
+							<Viewbox StretchDirection="DownOnly">
+								<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" Width="150"/>
+							</Viewbox>
+						</Border>
 					</StackPanel>
 					<Grid Grid.Row="3" VerticalAlignment="Bottom">
 						<Grid.ColumnDefinitions>
