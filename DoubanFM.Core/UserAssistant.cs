@@ -210,15 +210,23 @@ namespace DoubanFM.Core
 				string nickname = match2.Groups[1].Value;
 				Dispatcher.Invoke(new Action(() =>
 				{
-
+					/*System.Diagnostics.Debug.WriteLine("**********************************************************************");
+					System.Diagnostics.Debug.WriteLine(DateTime.Now + " 以下是本次“登录/注销”返回的结果页面");
+					System.Diagnostics.Debug.Indent();
+					System.Diagnostics.Debug.WriteLine(html);
+					System.Diagnostics.Debug.Unindent();
+					System.Diagnostics.Debug.WriteLine("**********************************************************************");
+					*/
 					if (!string.IsNullOrEmpty(s))
 					{
 						Nickname = nickname;
+						System.Diagnostics.Debug.WriteLine("已登录");
 						CurrentState = State.LoggedOn;
 					}
 					else
 					{
 						Nickname = null;
+						System.Diagnostics.Debug.WriteLine("已注销");
 						CurrentState = State.LoggedOff;
 					}
 				}));

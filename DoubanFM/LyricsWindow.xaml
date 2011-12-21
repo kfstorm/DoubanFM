@@ -39,13 +39,13 @@ Website : http://www.kfstorm.com
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 			<Viewbox x:Name="LyricsRoot" VerticalAlignment="Bottom" Margin="20,0" StretchDirection="DownOnly">
-				<Viewbox.Effect>
-					<DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
-				</Viewbox.Effect>
 				<Path x:Name="PathText" Fill="{Binding Foreground, ElementName=CurrentLyrics}">
 					<Path.Stroke>
 						<SolidColorBrush Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
 					</Path.Stroke>
+					<Path.Effect>
+						<DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
+					</Path.Effect>
 				</Path>
 			</Viewbox>
 			<Border Grid.Row="1">
