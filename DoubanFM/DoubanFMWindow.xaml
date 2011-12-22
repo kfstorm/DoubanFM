@@ -313,7 +313,7 @@ Website : http://www.kfstorm.com
 										<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Content="密码"/>
 										<TextBox x:Name="TbUsername" Grid.Column="1" Margin="4" Text="{Binding Path=Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}"/>
 										<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="4" PasswordChanged="PbPassword_PasswordChanged" />
-										<Grid x:Name="CaptchaGrid" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.HasCaptcha, Source={StaticResource Player}}">
+										<!--<Grid x:Name="CaptchaGrid" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.HasCaptcha, Source={StaticResource Player}}">
 											<Grid.ColumnDefinitions>
 												<ColumnDefinition Width="Auto"/>
 												<ColumnDefinition/>
@@ -327,7 +327,7 @@ Website : http://www.kfstorm.com
 											</Button>
 											<Label Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Content="验证码"/>
 											<TextBox x:Name="CaptchaText" Grid.Row="1" Grid.Column="1" Margin="4"/>
-										</Grid>
+										</Grid>-->
 									</Grid>
 									<StackPanel Grid.Row="1" Margin="0,10">
 										<Label x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.ShowLogOnFailedHint, Source={StaticResource Player}}" Content="登录失败！"/>
@@ -401,7 +401,7 @@ Website : http://www.kfstorm.com
 									<Button x:Name="BtnHelp" Height="40" Click="BtnHelp_Click" Style="{DynamicResource HelpStyle}"/>
 								</StackPanel>
 								<TextBlock Grid.Row="1" HorizontalAlignment="Center">第三方客户端</TextBlock>
-								<Label Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">1.6.2</Label>
+								<Label Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">1.6.3</Label>
 								<Button x:Name="CheckUpdate" Grid.Row="3" Click="CheckUpdate_Click" Style="{DynamicResource CheckUpdateStyle}"/>
 								<Grid Grid.Row="4" Height="40">
 									<Grid.ColumnDefinitions>

@@ -106,24 +106,24 @@ namespace DoubanFM.Core
 			get { return (bool)GetValue(ShowLogOnFailedHintProperty); }
 			private set { SetValue(ShowLogOnFailedHintProperty, value); }
 		}
-		/// <summary>
-		/// 验证码URL
-		/// </summary>
-		public string CaptchaUrl
-		{
-			get
-			{
-				if (HasCaptcha) return "https://www.douban.com/misc/captcha?id=" + _captchaId + "&amp;size=s";
-				else return null;
-			}
-		}
-		/// <summary>
-		/// 是否要求输入验证码
-		/// </summary>
-		public bool HasCaptcha
-		{
-			get { return (bool)GetValue(HasCaptchaProperty); }
-		}
+		///// <summary>
+		///// 验证码URL
+		///// </summary>
+		//public string CaptchaUrl
+		//{
+		//    get
+		//    {
+		//        if (HasCaptcha) return "https://www.douban.com/misc/captcha?id=" + _captchaId + "&amp;size=s";
+		//        else return null;
+		//    }
+		//}
+		///// <summary>
+		///// 是否要求输入验证码
+		///// </summary>
+		//public bool HasCaptcha
+		//{
+		//    get { return (bool)GetValue(HasCaptchaProperty); }
+		//}
 
 		#endregion
 
@@ -170,19 +170,19 @@ namespace DoubanFM.Core
 
 		#region 私用变量
 
-		/// <summary>
-		/// 验证码ID
-		/// </summary>
-		private string _captchaId;
-		private string CaptchaId
-		{
-			get { return _captchaId; }
-			set
-			{
-				_captchaId = value;
-				SetValue(HasCaptchaProperty, !string.IsNullOrEmpty(_captchaId));
-			}
-		}
+		///// <summary>
+		///// 验证码ID
+		///// </summary>
+		//private string _captchaId;
+		//private string CaptchaId
+		//{
+		//    get { return _captchaId; }
+		//    set
+		//    {
+		//        _captchaId = value;
+		//        SetValue(HasCaptchaProperty, !string.IsNullOrEmpty(_captchaId));
+		//    }
+		//}
 		
 		/// <summary>
 		/// 注销链接
@@ -201,6 +201,8 @@ namespace DoubanFM.Core
 		{
 			//_captchaId = GetCaptchaId(html);          //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
 			_logOffLink = GetLogOffLink(html);
+			System.Diagnostics.Debug.WriteLine("注销链接：");
+			System.Diagnostics.Debug.WriteLine(_logOffLink);
 			string s = null;
 			if (!string.IsNullOrEmpty(html))
 			{
@@ -225,7 +227,7 @@ namespace DoubanFM.Core
 					}
 					else
 					{
-						Nickname = null;
+						Nickname = string.Empty;
 						System.Diagnostics.Debug.WriteLine("已注销");
 						CurrentState = State.LoggedOff;
 					}
@@ -241,27 +243,60 @@ namespace DoubanFM.Core
 					}));
 		}
 		/// <summary>
-		/// 刷新登录页面
+		/// 更新
 		/// </summary>
-		public void Refresh()
+		internal void Update(Json.LogOnResult result)
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+			if (result != null && result.r == false && result.user_info != null)
+			{
+				_logOffLink = "http://douban.fm/partner/logout?source=radio&ck=" + result.user_info.ck + "&no_login=y";
+				Dispatcher.Invoke(new Action(() =>
 				{
-					string file = new ConnectionBase().Get("https://www.douban.com/accounts/login");
-					Dispatcher.Invoke(new Action(() => { Update(file); }));
+					System.Diagnostics.Debug.WriteLine("注销链接：");
+					System.Diagnostics.Debug.WriteLine(_logOffLink);
+					/*System.Diagnostics.Debug.WriteLine("**********************************************************************");
+					System.Diagnostics.Debug.WriteLine(DateTime.Now + " 以下是本次“登录/注销”返回的结果");
+					System.Diagnostics.Debug.Indent();
+					System.Diagnostics.Debug.WriteLine(html);
+					System.Diagnostics.Debug.Unindent();
+					System.Diagnostics.Debug.WriteLine("**********************************************************************");
+					*/
+					Nickname = result.user_info.name;
+					System.Diagnostics.Debug.WriteLine("已登录");
+					CurrentState = State.LoggedOn;
+				}));
+			}
+			else
+				Dispatcher.Invoke(new Action(() =>
+				{
+					if (CurrentState == State.LoggingOn) CurrentState = State.LoggedOff;
+					else if (CurrentState == State.LoggingOff) CurrentState = State.LoggedOn;
+					else if (CurrentState == State.Unknown) CurrentState = State.LoggedOff;
+					else CurrentState = State.LoggedOff;
 				}));
 		}
-		/// <summary>
-		/// 获取验证码ID
-		/// </summary>
-		/// <param name="html">HTML文件</param>
-		/// <returns></returns>
-		string GetCaptchaId(string html)
-		{
-			if (html == null) return null;
-			Match match = Regex.Match(html, "<img src=\"http[s]?://www\\.douban\\.com/misc/captcha\\?id=(\\w*)", RegexOptions.IgnoreCase);
-			return match.Groups[1].Value;
-		}
+		///// <summary>
+		///// 刷新登录页面
+		///// </summary>
+		//public void Refresh()
+		//{
+		//    ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+		//        {
+		//            string file = new ConnectionBase().Get("https://www.douban.com/accounts");
+		//            Dispatcher.Invoke(new Action(() => { Update(file); }));
+		//        }));
+		//}
+		///// <summary>
+		///// 获取验证码ID
+		///// </summary>
+		///// <param name="html">HTML文件</param>
+		///// <returns></returns>
+		//string GetCaptchaId(string html)
+		//{
+		//    if (html == null) return null;
+		//    Match match = Regex.Match(html, "<img src=\"http[s]?://www\\.douban\\.com/misc/captcha\\?id=(\\w*)", RegexOptions.IgnoreCase);
+		//    return match.Groups[1].Value;
+		//}
 		/// <summary>
 		/// 获取注销链接
 		/// </summary>
@@ -270,29 +305,31 @@ namespace DoubanFM.Core
 		string GetLogOffLink(string html)
 		{
 			if (html == null) return null;
-			Match match = Regex.Match(html, "\"(http://www\\.douban\\.com/accounts/logout\\?source=radio&[^\\s]*)\"", RegexOptions.IgnoreCase);
+			Match match = Regex.Match(html, "\"(http://.*logout[^\\s]*)\"", RegexOptions.IgnoreCase);
 			return match.Groups[1].Value;
 		}
 		/// <summary>
 		/// 登录
 		/// </summary>
-		/// <param name="Captcha">验证码</param>
-		public void LogOn(string Captcha)
+		public void LogOn()
 		{
 			if (CurrentState != State.LoggedOff) return;
 			CurrentState = State.LoggingOn;
 			Parameters parameters = new Parameters();
 			parameters.Add("source", "radio");
-			parameters.Add("form_email", Settings.User.Username);
+			parameters.Add("alias", Settings.User.Username);
 			parameters.Add("form_password", Settings.User.Password);
-			parameters.Add("captcha-solution", Captcha);
-			parameters.Add("captcha-id", _captchaId);
+			//parameters.Add("captcha-solution", Captcha);
+			//parameters.Add("captcha-id", _captchaId);
 			if (Settings.AutoLogOnNextTime)
 				parameters.Add("remember", "on");
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					string file = new ConnectionBase().Post("https://www.douban.com/accounts/login", Encoding.Default.GetBytes(parameters.ToString()));
-					Dispatcher.Invoke(new Action(() => { Update(file); }));
+					string file = new ConnectionBase().Post("http://douban.fm/j/login", Encoding.Default.GetBytes(parameters.ToString()));
+					System.Diagnostics.Debug.WriteLine("登录结果：");
+					System.Diagnostics.Debug.WriteLine(file);
+					var result = Json.LogOnResult.FromJson(file);
+					Dispatcher.Invoke(new Action(() => { Update(result); }));
 				}));
 		}
 		/// <summary>
@@ -304,8 +341,7 @@ namespace DoubanFM.Core
 			CurrentState = State.LoggingOff;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					new ConnectionBase().Get(_logOffLink);
-					string file = new ConnectionBase().Get("http://douban.fm");
+					string file = new ConnectionBase().Get(_logOffLink);
 					Dispatcher.Invoke(new Action(() => { Update(file); }));
 				}));
 		}

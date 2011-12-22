@@ -154,41 +154,54 @@ namespace DoubanFM
 
 		public DoubanFMWindow()
 		{
-			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
-			//只允许运行一个实例
-			if (HasAnotherInstance())
+#if DEBUG
+			try
 			{
-				if (channel != null) WriteChannelToMappedFile(channel);
-				App.Current.Shutdown(0);
-				return;
+#endif
+				Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
+				//只允许运行一个实例
+				if (HasAnotherInstance())
+				{
+					if (channel != null) WriteChannelToMappedFile(channel);
+					Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
+					App.Current.Shutdown(0);
+					return;
+				}
+
+				InitializeComponent();
+
+				InitMemberVariables();
+
+				PbPassword.Password = _player.Settings.User.Password;
+				if (channel != null) _player.Settings.LastChannel = channel;
+				if (_player.Settings.ScaleTransform != 1.0)
+					TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
+				if (!_player.Settings.FirstTime)
+				{
+					FirstTimePanel.Visibility = Visibility.Collapsed;
+				}
+
+				InitProxy();
+				ClearOldTempFiles();
+				AddPlayerEventListener();
+				InitNotifyIcon();
+				InitTimers();
+				CheckMappedFile();
+				PreloadMusic();
+				CheckUpdateOnStartup();
+				InitLyrics();
+				InitShareSetting();
+				UpdateBackground();
+
+				_player.Initialize();
+#if DEBUG
 			}
-
-			InitializeComponent();
-
-			InitMemberVariables();
-
-			PbPassword.Password = _player.Settings.User.Password;
-			if (channel != null) _player.Settings.LastChannel = channel;
-			if (_player.Settings.ScaleTransform != 1.0)
-				TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
-			if (!_player.Settings.FirstTime)
+			catch (Exception ex)
 			{
-				FirstTimePanel.Visibility = Visibility.Collapsed;
+				Debug.WriteLine(ex.ToString());
+				App.Current.Shutdown();
 			}
-
-			InitProxy();
-			ClearOldTempFiles();
-			AddPlayerEventListener();
-			InitNotifyIcon();
-			InitTimers();
-			CheckMappedFile();
-			PreloadMusic();
-			CheckUpdateOnStartup();
-			InitLyrics();
-			InitShareSetting();
-			UpdateBackground();
-
-			_player.Initialize();
+#endif
 		}
 		/// <summary>
 		/// 根据设置更新窗口背景
@@ -340,16 +353,16 @@ namespace DoubanFM
 				Audio.Stop();
 				SetLyrics(null);
 			});
-			_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
+			/*_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
 			{
 				if (_player.UserAssistant.HasCaptcha)
 					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));
-			});
+			});*/
 			_player.UserAssistant.LogOnSucceed += new EventHandler((o, e) => { ShowChannels(); });
 			_player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
 			{
-				if (_player.UserAssistant.HasCaptcha)
-					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));
+				/*if (_player.UserAssistant.HasCaptcha)
+					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
 				ShowChannels();
 			});
 
@@ -1353,7 +1366,7 @@ namespace DoubanFM
 		/// </summary>
 		private void ButtonLogOn_Click(object sender, RoutedEventArgs e)
 		{
-			_player.UserAssistant.LogOn(CaptchaText.Text);
+			_player.UserAssistant.LogOn();
 		}
 		/// <summary>
 		/// 注销
@@ -1362,13 +1375,13 @@ namespace DoubanFM
 		{
 			_player.UserAssistant.LogOff();
 		}
-		/// <summary>
-		/// 验证码被点击
-		/// </summary>
-		private void ButtonRefreshCaptcha_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			_player.UserAssistant.Refresh();
-		}
+		///// <summary>
+		///// 验证码被点击
+		///// </summary>
+		//private void ButtonRefreshCaptcha_Click(object sender, System.Windows.RoutedEventArgs e)
+		//{
+		//    _player.UserAssistant.Refresh();
+		//}
 
 		/// <summary>
 		/// 任务栏点击“喜欢”

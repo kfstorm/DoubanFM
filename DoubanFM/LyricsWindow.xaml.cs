@@ -294,7 +294,7 @@ namespace DoubanFM
 				text == null ? "" : text,
 				CultureInfo.GetCultureInfo("zh-cn"),
 				FlowDirection.LeftToRight,
-				new Typeface(LyricsFontFamily, FontStyles.Normal, LyricsFontWeight, FontStretches.Normal),
+				new Typeface(LyricsFontFamily == null ? SystemFonts.MessageFontFamily : LyricsFontFamily, FontStyles.Normal, LyricsFontWeight, FontStretches.Normal),
 				LyricsFontSize,
 				System.Windows.Media.Brushes.Black // This brush does not matter since we use the geometry of the text. 
 				);

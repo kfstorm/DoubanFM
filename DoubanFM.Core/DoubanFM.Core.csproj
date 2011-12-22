@@ -79,10 +79,13 @@
     <Compile Include="Json\ChannelInfo.cs" />
     <Compile Include="Json\ChannelInfoDotDj.cs" />
     <Compile Include="Json\DjChannel.cs" />
+    <Compile Include="Json\LogOnResult.cs" />
     <Compile Include="Json\PlayList.cs" />
+    <Compile Include="Json\PlayRecord.cs" />
     <Compile Include="Json\Song.cs" />
     <Compile Include="Json\SubDjCate.cs" />
     <Compile Include="Json\SubDjChannel.cs" />
+    <Compile Include="Json\UserInfo.cs" />
     <Compile Include="Lyrics.cs" />
     <Compile Include="LyricsAssistant.cs" />
     <Compile Include="LyricsItem.cs" />
