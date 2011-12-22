@@ -211,7 +211,7 @@ Website : http://www.kfstorm.com
 									<ColumnDefinition/>
 									<ColumnDefinition/>
 								</Grid.ColumnDefinitions>
-								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="私人兆赫" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}" Style="{DynamicResource ChannelCategoryStyle}">
+								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="我的电台" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}" Style="{DynamicResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard Storyboard="{StaticResource PersonalClickStoryboard}"/>
@@ -234,7 +234,7 @@ Website : http://www.kfstorm.com
 							</Grid>
 							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" d:IsHidden="True">
 								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
-									<ListBox.ItemContainerStyle>
+									<!--<ListBox.ItemContainerStyle>
 										<Style BasedOn="{StaticResource ChannelStyle}" TargetType="{x:Type ListBoxItem}">
 											<Setter Property="Width" Value="Auto"/>
 										</Style>
@@ -243,7 +243,7 @@ Website : http://www.kfstorm.com
 										<ItemsPanelTemplate>
 											<UniformGrid Margin="50"/>
 										</ItemsPanelTemplate>
-									</ListBox.ItemsPanel>
+									</ListBox.ItemsPanel>-->
 								</ListBox>
 								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}"/>
 								<ListBox x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged">

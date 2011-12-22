@@ -123,13 +123,18 @@ namespace DoubanFM.Core.Json
 				Match match = Regex.Match(html, @"var\s*channelInfo\s*=\s*(.*),", RegexOptions.IgnoreCase);
 				ChannelInfo ci = ChannelInfo.FromJson(match.Groups[1].Value);
 				ci.Dj = GetDjCates(html);
+
 				ci.personal = new Cate[1];
 				ci.personal[0] = new Cate();
 				ci.personal[0].cate = "私人兆赫";
-				ci.personal[0].channels = new Channel[1];
+				ci.personal[0].channels = new Channel[2];
+
 				ci.personal[0].channels[0] = new Channel();
 				ci.personal[0].channels[0].channel_id = "0";
 				ci.personal[0].channels[0].name = "私人兆赫";
+				ci.personal[0].channels[1] = new Channel();
+				ci.personal[0].channels[1].channel_id = "-3";
+				ci.personal[0].channels[1].name = "红心兆赫";
 				return ci;
 			}
 			catch
