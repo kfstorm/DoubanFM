@@ -1253,7 +1253,7 @@ namespace DoubanFM
 		/// </summary>
 		private void Audio_MediaFailed(object sender, ExceptionEventArgs e)
 		{
-			Debug.WriteLine(DateTime.Now+ " MediaElement发生错误，错误信息为");
+			Debug.WriteLine(DateTime.Now+ " MediaPlayer发生错误，错误信息为");
 			Debug.Indent();
 			Debug.WriteLine(e.ErrorException.ToString());
 			Debug.Unindent();

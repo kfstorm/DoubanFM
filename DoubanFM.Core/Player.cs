@@ -475,6 +475,10 @@ namespace DoubanFM.Core
 		public void CurrentSongFinishedPlaying()
 		{
 			RaiseStopedEvent();
+			if (UserAssistant.IsLoggedOn && !CurrentChannel.IsDj)
+			{
+				++Settings.User.Played;
+			}
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
 					lock (workLock)
@@ -499,10 +503,6 @@ namespace DoubanFM.Core
 							if (!ps.CurrentChannel.IsDj && result != "\"ok\"")
 								Dispatcher.Invoke(new Action(() =>
 									{
-										if (UserAssistant.IsLoggedOn)
-										{
-											++Settings.User.Played;
-										}
 										RaiseFinishedPlayingReportFailedEvent(new ErrorEventArgs(new Exception("发送播放完成消息时出错，返回内容：" + result)));
 									}));
 							else break;
