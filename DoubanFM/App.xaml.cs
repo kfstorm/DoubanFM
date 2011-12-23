@@ -31,6 +31,21 @@ namespace DoubanFM
 			Debug.WriteLine("**********************************************************************");
 			Debug.WriteLine(string.Empty);
 
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((sender, e) =>
+			{
+				Debug.WriteLine("**********************************************************************");
+				Debug.WriteLine("豆瓣电台出现错误：" + DateTime.Now.ToString());
+				Debug.WriteLine("**********************************************************************");
+				Debug.WriteLine("错误信息：");
+				Exception ex = e.ExceptionObject as Exception;
+				while (ex != null)
+				{
+					Debug.WriteLine(ex.Message);
+					ex = ex.InnerException;
+				}
+				Debug.WriteLine(e.ExceptionObject.ToString());
+			});
+
 			/* 这句话可以使Global User Interface这个默认的组合字体按当前系统的区域信息选择合适的字形。
 			 * 只对FrameworkElement有效。对于FlowDocument，由于是从FrameworkContentElement继承，
 			 * 而且FrameworkContentElement.LanguageProperty.OverrideMetadata()无法再次执行，

@@ -475,10 +475,15 @@ Website : http://www.kfstorm.com
 							<Label x:Name="Album" VerticalContentAlignment="Center" FontSize="22" Foreground="White" />
 						</Viewbox>
 					</Grid>
-					<StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal" Height="24" ClipToBounds="True">
+					<Grid Grid.Row="2" HorizontalAlignment="Right" Height="24" ClipToBounds="True">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
 						<Grid x:Name="SharePanel">
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
 							<Grid.Triggers>
@@ -503,36 +508,38 @@ Website : http://www.kfstorm.com
 									</BeginStoryboard>
 								</EventTrigger>
 							</Grid.Triggers>
-							<StackPanel x:Name="Shares" Width="0" Opacity="0" Orientation="Horizontal">
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareDoubanStyle}"
+							<Viewbox StretchDirection="DownOnly" HorizontalAlignment="Right">
+								<StackPanel x:Name="Shares" Height="24" Opacity="0" Orientation="Horizontal">
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareDoubanStyle}"
 										Tag="{x:Static core:Share+Sites.Douban}"/>
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareWeiboStyle}"
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareWeiboStyle}"
 										Tag="{x:Static core:Share+Sites.Weibo}"/>
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareMsnStyle}"
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareMsnStyle}"
 										Tag="{x:Static core:Share+Sites.Msn}"/>
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareKaixinStyle}"
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareKaixinStyle}"
 										Tag="{x:Static core:Share+Sites.Kaixin}"/>
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareRenenStyle}"
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareRenenStyle}"
 										Tag="{x:Static core:Share+Sites.Renren}"/>
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareTencentWeiboStyle}"
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareTencentWeiboStyle}"
 										Tag="{x:Static core:Share+Sites.TencentWeibo}"/>
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareFanfouStyle}"
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareFanfouStyle}"
 										Tag="{x:Static core:Share+Sites.Fanfou}"/>
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareFacebookStyle}"
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareFacebookStyle}"
 										Tag="{x:Static core:Share+Sites.Facebook}"/>
-								<Button Click="ShareButton_Click" Style="{DynamicResource ShareTwitterStyle}"
+									<Button Click="ShareButton_Click" Style="{DynamicResource ShareTwitterStyle}"
 										Tag="{x:Static core:Share+Sites.Twitter}"/>
-							</StackPanel>
+								</StackPanel>
+							</Viewbox>
 							<Button x:Name="BtnCopyUrl" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="分享（点击直接复制地址）" Click="BtnCopyUrl_Click"/>
 							<Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="一键分享" Click="BtnOneKeyShare_Click"/>
 						</Grid>
-						<CheckBox x:Name="CheckBoxShowLyrics" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
-						<Border x:Name="BdVolumeControl" Background="Transparent" Margin="0,0,-65,0">
+						<CheckBox x:Name="CheckBoxShowLyrics" Grid.Column="1" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
+						<Border x:Name="BdVolumeControl" Grid.Column="2" Background="Transparent" Margin="0,0,-65,0">
 							<Viewbox StretchDirection="DownOnly">
 								<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" Width="150"/>
 							</Viewbox>
 						</Border>
-					</StackPanel>
+					</Grid>
 					<Grid Grid.Row="3" VerticalAlignment="Bottom">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition/>

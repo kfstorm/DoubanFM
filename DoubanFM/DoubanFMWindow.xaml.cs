@@ -154,54 +154,42 @@ namespace DoubanFM
 
 		public DoubanFMWindow()
 		{
-#if DEBUG
-			try
+			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
+			//只允许运行一个实例
+			if (HasAnotherInstance())
 			{
-#endif
-				Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
-				//只允许运行一个实例
-				if (HasAnotherInstance())
-				{
-					if (channel != null) WriteChannelToMappedFile(channel);
-					Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
-					App.Current.Shutdown(0);
-					return;
-				}
-
-				InitializeComponent();
-
-				InitMemberVariables();
-
-				PbPassword.Password = _player.Settings.User.Password;
-				if (channel != null) _player.Settings.LastChannel = channel;
-				if (_player.Settings.ScaleTransform != 1.0)
-					TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
-				if (!_player.Settings.FirstTime)
-				{
-					FirstTimePanel.Visibility = Visibility.Collapsed;
-				}
-
-				InitProxy();
-				ClearOldTempFiles();
-				AddPlayerEventListener();
-				InitNotifyIcon();
-				InitTimers();
-				CheckMappedFile();
-				PreloadMusic();
-				CheckUpdateOnStartup();
-				InitLyrics();
-				InitShareSetting();
-				UpdateBackground();
-
-				_player.Initialize();
-#if DEBUG
+				if (channel != null) WriteChannelToMappedFile(channel);
+				Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
+				App.Current.Shutdown(0);
+				return;
 			}
-			catch (Exception ex)
+
+			InitializeComponent();
+
+			InitMemberVariables();
+
+			PbPassword.Password = _player.Settings.User.Password;
+			if (channel != null) _player.Settings.LastChannel = channel;
+			if (_player.Settings.ScaleTransform != 1.0)
+				TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
+			if (!_player.Settings.FirstTime)
 			{
-				Debug.WriteLine(ex.ToString());
-				App.Current.Shutdown();
+				FirstTimePanel.Visibility = Visibility.Collapsed;
 			}
-#endif
+
+			InitProxy();
+			ClearOldTempFiles();
+			AddPlayerEventListener();
+			InitNotifyIcon();
+			InitTimers();
+			CheckMappedFile();
+			PreloadMusic();
+			CheckUpdateOnStartup();
+			InitLyrics();
+			InitShareSetting();
+			UpdateBackground();
+
+			_player.Initialize();
 		}
 		/// <summary>
 		/// 根据设置更新窗口背景
