@@ -274,14 +274,13 @@ Website : http://www.kfstorm.com
 							</Grid>
 							<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{DynamicResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=MusicSearch.SearchResult}" />
 							<Label Grid.Row="1" Visibility="{Binding Converter={StaticResource BoolReverseToVisibilityConverter}, Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" HorizontalAlignment="Center" VerticalAlignment="Center">正在搜索...</Label>
-							<Grid Grid.Row="1" Visibility="{Binding Path=MusicSearch.ShowNoResultHint, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}" Height="Auto" VerticalAlignment="Center">
-								<Grid.RowDefinitions>
-									<RowDefinition/>
-									<RowDefinition/>
-								</Grid.RowDefinitions>
-								<Label HorizontalAlignment="Center" VerticalAlignment="Center">没有任何搜索结果</Label>
-								<Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">请不要输入过短或过长的内容</Label>
-							</Grid>
+							<StackPanel Grid.Row="1" Visibility="{Binding Path=MusicSearch.ShowNoResultHint, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}" Height="Auto" VerticalAlignment="Center">
+								<Label HorizontalAlignment="Center">搜索结果与music.douban.com保持一致</Label>
+								<StackPanel Visibility="{Binding Converter={StaticResource BoolToVisibilityConverter}, Source={StaticResource Player}, Path=Settings.IsSearchFilterEnabled}">
+									<Label HorizontalAlignment="Center">您开启了自动剔除无法收听的项目</Label>
+									<Label HorizontalAlignment="Center">可能下一页就会有结果哦</Label>
+								</StackPanel>
+							</StackPanel>
 							<StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Height="30">
 								<Button x:Name="PreviousPage" Click="PreviousPage_Click" IsEnabled="{Binding Path=MusicSearch.IsPreviousPageEnabled, Source={StaticResource Player}}" Style="{DynamicResource PreviousPageStyle}"/>
 								<Border Width="20"/>
