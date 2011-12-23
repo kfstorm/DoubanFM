@@ -346,12 +346,30 @@ Website : http://www.kfstorm.com
 							<Grid x:Name="LogOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOn, Source={StaticResource Player}}">
 								<Grid.RowDefinitions>
 									<RowDefinition/>
+									<RowDefinition Height="Auto"/>
 									<RowDefinition/>
 									<RowDefinition/>
 								</Grid.RowDefinitions>
-								<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding UserAssistant.Nickname, Source={StaticResource Player}}" FontSize="24"/>
-								<Label Grid.Row="1" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="已登录"/>
-								<Button Grid.Row="2" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销"/>
+								<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Settings.User.Nickname, Source={StaticResource Player}}" FontSize="24"/>
+								<StackPanel Grid.Row="1" VerticalAlignment="Center" TextElement.FontSize="14">
+									<TextBlock HorizontalAlignment="Center">
+										<Hyperlink x:Name="HlPlayed" Click="HlPlayed_Click" Foreground="White">
+											<Run Text="{Binding Settings.User.Played, Source={StaticResource Player}, StringFormat=累积收听{0}首}"/>
+										</Hyperlink>
+									</TextBlock>
+									<TextBlock HorizontalAlignment="Center">
+										<Hyperlink x:Name="HlLiked" Click="HlLiked_Click" Foreground="White">
+											<Run Text="{Binding Settings.User.Liked, Source={StaticResource Player}, StringFormat=加红心{0}首}"/>
+										</Hyperlink>
+									</TextBlock>
+									<TextBlock HorizontalAlignment="Center">
+										<Hyperlink x:Name="HlBanned" Click="HlBanned_Click" Foreground="White">
+											<Run Text="{Binding Settings.User.Banned, Source={StaticResource Player}, StringFormat={}{0}首不再播放}"/>
+										</Hyperlink>
+									</TextBlock>
+								</StackPanel>
+								<Label Grid.Row="2" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="已登录"/>
+								<Button Grid.Row="3" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销"/>
 							</Grid>
 							<Grid x:Name="LoggingOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOn, Source={StaticResource Player}}">
 								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在登录"/>

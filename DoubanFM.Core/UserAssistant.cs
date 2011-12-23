@@ -28,7 +28,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty IsLoggingOffProperty = DependencyProperty.Register("IsLoggingOff", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty HasCaptchaProperty = DependencyProperty.Register("HasCaptcha", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty ShowLogOnFailedHintProperty = DependencyProperty.Register("ShowLogOnFailedHint", typeof(bool), typeof(UserAssistant));
-		public static readonly DependencyProperty NicknameProperty = DependencyProperty.Register("Nickname", typeof(string), typeof(UserAssistant));
+		//public static readonly DependencyProperty NicknameProperty = DependencyProperty.Register("Nickname", typeof(string), typeof(UserAssistant));
 
 		#endregion
 
@@ -38,14 +38,14 @@ namespace DoubanFM.Core
 		/// 用户
 		/// </summary>
 		public Settings Settings { get; internal set; }
-		/// <summary>
-		/// 昵称
-		/// </summary>
-		public string Nickname
-		{
-			get { return (string)GetValue(NicknameProperty); }
-			protected set { SetValue(NicknameProperty, value); }
-		}
+		///// <summary>
+		///// 昵称
+		///// </summary>
+		//public string Nickname
+		//{
+		//    get { return (string)GetValue(NicknameProperty); }
+		//    protected set { SetValue(NicknameProperty, value); }
+		//}
 		/// <summary>
 		///  状态枚举
 		/// </summary>
@@ -210,6 +210,16 @@ namespace DoubanFM.Core
 				s = match.Groups[1].Value;
 				Match match2 = Regex.Match(html, @"id=""fm-user"">(?!{{)(.*)<i></i></a>", RegexOptions.None);
 				string nickname = match2.Groups[1].Value;
+				Match match3 = Regex.Match(html, @"累积收听.*?(\d+).*?首");
+				int played = 0;
+				int.TryParse(match3.Groups[1].Value, out played);
+				Match match4 = Regex.Match(html, @"加红心.*?(\d+).*?首");
+				int liked = 0;
+				int.TryParse(match4.Groups[1].Value, out liked);
+				Match match5 = Regex.Match(html, @"(\d+).*?首不再播放");
+				int banned = 0;
+				int.TryParse(match5.Groups[1].Value, out banned);
+
 				Dispatcher.Invoke(new Action(() =>
 				{
 					/*System.Diagnostics.Debug.WriteLine("**********************************************************************");
@@ -221,13 +231,16 @@ namespace DoubanFM.Core
 					*/
 					if (!string.IsNullOrEmpty(s))
 					{
-						Nickname = nickname;
+						Settings.User.Nickname = nickname;
+						Settings.User.Played = played;
+						Settings.User.Liked = liked;
+						Settings.User.Banned = banned;
 						System.Diagnostics.Debug.WriteLine("已登录");
 						CurrentState = State.LoggedOn;
 					}
 					else
 					{
-						Nickname = string.Empty;
+						Settings.User.Nickname = string.Empty;
 						System.Diagnostics.Debug.WriteLine("已注销");
 						CurrentState = State.LoggedOff;
 					}
@@ -243,9 +256,9 @@ namespace DoubanFM.Core
 					}));
 		}
 		/// <summary>
-		/// 更新
+		/// 更新登录结果
 		/// </summary>
-		internal void Update(Json.LogOnResult result)
+		internal void UpdateWhenLogOn(Json.LogOnResult result)
 		{
 			if (result != null && result.r == false && result.user_info != null)
 			{
@@ -261,7 +274,10 @@ namespace DoubanFM.Core
 					System.Diagnostics.Debug.Unindent();
 					System.Diagnostics.Debug.WriteLine("**********************************************************************");
 					*/
-					Nickname = result.user_info.name;
+					Settings.User.Nickname = result.user_info.name;
+					Settings.User.Played = result.user_info.play_record.played;
+					Settings.User.Liked = result.user_info.play_record.liked;
+					Settings.User.Banned = result.user_info.play_record.banned;
 					System.Diagnostics.Debug.WriteLine("已登录");
 					CurrentState = State.LoggedOn;
 				}));
@@ -283,7 +299,7 @@ namespace DoubanFM.Core
 		//    ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 		//        {
 		//            string file = new ConnectionBase().Get("https://www.douban.com/accounts");
-		//            Dispatcher.Invoke(new Action(() => { Update(file); }));
+		//            Dispatcher.Invoke(new Action(() => { UpdateWhenLogOn(file); }));
 		//        }));
 		//}
 		///// <summary>
@@ -329,7 +345,7 @@ namespace DoubanFM.Core
 					System.Diagnostics.Debug.WriteLine("登录结果：");
 					System.Diagnostics.Debug.WriteLine(file);
 					var result = Json.LogOnResult.FromJson(file);
-					Dispatcher.Invoke(new Action(() => { Update(result); }));
+					Dispatcher.Invoke(new Action(() => { UpdateWhenLogOn(result); }));
 				}));
 		}
 		/// <summary>

@@ -1728,6 +1728,21 @@ namespace DoubanFM
 			window.Show();
 		}
 
+		private void HlPlayed_Click(object sender, RoutedEventArgs e)
+		{
+			Process.Start("http://douban.fm/mine?type=played");
+		}
+
+		private void HlLiked_Click(object sender, RoutedEventArgs e)
+		{
+			Process.Start("http://douban.fm/mine?type=liked");
+		}
+
+		private void HlBanned_Click(object sender, RoutedEventArgs e)
+		{
+			Process.Start("http://douban.fm/mine?type=banned");
+		}
+
 		#endregion
 
 	}

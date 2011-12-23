@@ -499,6 +499,10 @@ namespace DoubanFM.Core
 							if (!ps.CurrentChannel.IsDj && result != "\"ok\"")
 								Dispatcher.Invoke(new Action(() =>
 									{
+										if (UserAssistant.IsLoggedOn)
+										{
+											++Settings.User.Played;
+										}
 										RaiseFinishedPlayingReportFailedEvent(new ErrorEventArgs(new Exception("发送播放完成消息时出错，返回内容：" + result)));
 									}));
 							else break;
@@ -576,6 +580,10 @@ namespace DoubanFM.Core
 			if (CurrentChannel.IsDj) return;
 			if (CurrentSong.Like) return;
 			CurrentSong.Like = true;
+			if (UserAssistant.IsLoggedOn)
+			{
+				++Settings.User.Liked;
+			}
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 			{
 				lock (workLock)
@@ -601,6 +609,10 @@ namespace DoubanFM.Core
 			if (CurrentChannel.IsDj) return;
 			if (!CurrentSong.Like) return;
 			CurrentSong.Like = false;
+			if (UserAssistant.IsLoggedOn)
+			{
+				--Settings.User.Liked;
+			}
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 			{
 				lock (workLock)
@@ -628,6 +640,10 @@ namespace DoubanFM.Core
 			if (!CurrentChannel.IsPersonal) return;
 			if (_neverring) return;
 			RaiseStopedEvent();
+			if (UserAssistant.IsLoggedOn)
+			{
+				++Settings.User.Banned;
+			}
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 			{
 				lock (workLock)
