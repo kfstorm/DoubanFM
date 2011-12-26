@@ -1482,12 +1482,16 @@ namespace DoubanFM
 
 		private void Window_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
 		{
-			if (!_player.Settings.AlwaysShowNotifyIcon)
+			if (this.IsVisible && !_player.Settings.AlwaysShowNotifyIcon)
+			{
+				NotifyIcon.Visibility = Visibility.Hidden;
+			}
+			else
 			{
 				//窗口关闭时IsVisiblie会自动变为false，而关闭时不应再改变托盘图标的可见性
 				if (this.WindowState == System.Windows.WindowState.Minimized || this.Visibility != Visibility.Visible)
 				{
-					NotifyIcon.Visibility = this.IsVisible ? Visibility.Hidden : Visibility.Visible;
+					NotifyIcon.Visibility = Visibility.Visible;
 				}
 			}
 		}
