@@ -48,6 +48,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(System.Windows.Media.Color), typeof(Settings), new PropertyMetadata(System.Windows.Media.ColorConverter.ConvertFromString("#FF1960AF")));
 		public static readonly DependencyProperty FirstTimeProperty = DependencyProperty.Register("FirstTime", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 		public static readonly DependencyProperty MainWindowFontProperty = DependencyProperty.Register("MainWindowFont", typeof(FontFamily), typeof(Settings), new PropertyMetadata(System.Windows.SystemFonts.MessageFontFamily));
+		public static readonly DependencyProperty ShowBalloonWhenSongChangedProperty = DependencyProperty.Register("ShowBalloonWhenSongChanged", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		
 		#endregion
 
@@ -242,6 +243,14 @@ namespace DoubanFM.Core
 		{
 			get { return (FontFamily)GetValue(MainWindowFontProperty); }
 			set { SetValue(MainWindowFontProperty, value); }
+		}
+		/// <summary>
+		/// 歌曲改变时弹出气泡
+		/// </summary>
+		public bool ShowBalloonWhenSongChanged
+		{
+			get { return (bool)GetValue(ShowBalloonWhenSongChangedProperty); }
+			set { SetValue(ShowBalloonWhenSongChangedProperty, value); }
 		}
 
 		/// <summary>
@@ -453,6 +462,14 @@ namespace DoubanFM.Core
 			{
 				MainWindowFont = def.MainWindowFont;
 			}
+			try
+			{
+				ShowBalloonWhenSongChanged = info.GetBoolean("ShowBalloonWhenSongChanged");
+			}
+			catch
+			{
+				ShowBalloonWhenSongChanged = def.ShowBalloonWhenSongChanged;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -487,6 +504,7 @@ namespace DoubanFM.Core
 			{
 				info.AddValue("MainWindowFont", MainWindowFont.ToString());
 			}
+			info.AddValue("ShowBalloonWhenSongChanged", ShowBalloonWhenSongChanged);
 		}
 
 		/// <summary>

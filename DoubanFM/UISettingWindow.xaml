@@ -10,62 +10,56 @@ Website : http://www.kfstorm.com
 		x:Name="Window"
 		Title="界面设置" Background="#FF813131" Foreground="White">
 	<Grid Width="300" Margin="10">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="40"/>
-			<RowDefinition Height="40"/>
-		</Grid.RowDefinitions>
-		<Grid Margin="0,2"  VerticalAlignment="Center">
-			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
-			<TextBlock Grid.Row="1" Foreground="White"><Run Text="（重启后生效，关闭后动画更平滑）"/></TextBlock>
-		</Grid>
-		<CheckBox Margin="0,2" Grid.Row="1" x:Name="CheckBoxTopMost" VerticalAlignment="Center" IsChecked="{Binding Settings.TopMost, Mode=TwoWay, Source={StaticResource Player}}" Content="总在最前"/>
-		<CheckBox Margin="0,2" Grid.Row="2" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Content="总是显示托盘图标" />
-		<Grid Grid.Row="3">
-			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<RadioButton Margin="0,2" x:Name="RadioButtonSlideCoverWhenMouseMove" Content="当鼠标移动到封面上时滑动封面" IsChecked="{Binding Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-			<CheckBox x:Name="CheckBoxOpenAlbumInfoWhenClickCover" Grid.Row="1" Content="点击封面时打开豆瓣资料页面" IsChecked="{Binding Settings.OpenAlbumInfoWhenClickCover, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=RadioButtonSlideCoverWhenMouseMove}" VerticalAlignment="Center" Margin="20,2,2,3"/>
-			<RadioButton Margin="0,2" Grid.Row="2" IsChecked="{Binding Settings.SlideCoverWhenMouseMove, Converter={StaticResource BoolReverseConverter}, Mode=TwoWay, Source={StaticResource Player}}" x:Name="RadioButtonSlideCoverWhenClick" Content="当鼠标点击封面时滑动封面" VerticalAlignment="Center"/>
-		</Grid>
-		<Grid Grid.Row="4">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="Auto"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock VerticalAlignment="Center">主界面缩放</TextBlock>
-			<Slider Grid.Column="1" Value="{Binding Settings.ScaleTransform, Source={StaticResource Player}, Mode=TwoWay}" Minimum="0.5" Maximum="1.5" SmallChange="0.01" LargeChange="0.1" Margin="0,10, 10, 10" ValueChanged="Slider_ValueChanged" />
-			<Button Grid.Column="2" x:Name="BtnScaleTransformReset" Click="BtnScaleTransformReset_Click" Height="30" Width="80">重置</Button>
-		</Grid>
-		<Grid Grid.Row="5">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<TextBlock VerticalAlignment="Center">主界面字体</TextBlock>
-			<local:FontPicker Grid.Column="1" Font="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Height="24"/>
-		</Grid>
-		<Grid Grid.Row="6">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="80"/>
-				<ColumnDefinition Width="64"/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<TextBlock VerticalAlignment="Center">窗口背景</TextBlock>
-			<CheckBox x:Name="CbAutoBackground" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}}" Click="CbAutoBackground_Click">自动</CheckBox>
-			<local:PopupableColorPicker Grid.Column="2" Margin="0,5" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}"/>
-		</Grid>
+		<StackPanel>
+			<Grid Margin="0,2"  VerticalAlignment="Center">
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
+				<TextBlock Grid.Row="1" Foreground="White"><Run Text="（重启后生效，关闭后动画更平滑）"/></TextBlock>
+			</Grid>
+			<CheckBox Margin="0,2" VerticalAlignment="Center" IsChecked="{Binding Settings.ShowBalloonWhenSongChanged, Mode=TwoWay, Source={StaticResource Player}}" Content="换歌时弹出气泡"/>
+			<CheckBox Margin="0,2" x:Name="CheckBoxTopMost" VerticalAlignment="Center" IsChecked="{Binding Settings.TopMost, Mode=TwoWay, Source={StaticResource Player}}" Content="总在最前"/>
+			<CheckBox Margin="0,2" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Content="总是显示托盘图标" />
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<RadioButton Margin="0,2" x:Name="RadioButtonSlideCoverWhenMouseMove" Content="当鼠标移动到封面上时滑动封面" IsChecked="{Binding Settings.SlideCoverWhenMouseMove, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
+				<CheckBox x:Name="CheckBoxOpenAlbumInfoWhenClickCover" Grid.Row="1" Content="点击封面时打开豆瓣资料页面" IsChecked="{Binding Settings.OpenAlbumInfoWhenClickCover, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=RadioButtonSlideCoverWhenMouseMove}" VerticalAlignment="Center" Margin="20,2,2,3"/>
+				<RadioButton Margin="0,2" Grid.Row="2" IsChecked="{Binding Settings.SlideCoverWhenMouseMove, Converter={StaticResource BoolReverseConverter}, Mode=TwoWay, Source={StaticResource Player}}" x:Name="RadioButtonSlideCoverWhenClick" Content="当鼠标点击封面时滑动封面" VerticalAlignment="Center"/>
+			</Grid>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="80"/>
+					<ColumnDefinition/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock VerticalAlignment="Center">主界面缩放</TextBlock>
+				<Slider Grid.Column="1" Value="{Binding Settings.ScaleTransform, Source={StaticResource Player}, Mode=TwoWay}" Minimum="0.5" Maximum="1.5" SmallChange="0.01" LargeChange="0.1" Margin="0,10, 10, 10" ValueChanged="Slider_ValueChanged" />
+				<Button Grid.Column="2" x:Name="BtnScaleTransformReset" Click="BtnScaleTransformReset_Click" Height="30" Width="80">重置</Button>
+			</Grid>
+			<Grid Height="40">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="80"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<TextBlock VerticalAlignment="Center">主界面字体</TextBlock>
+				<local:FontPicker Grid.Column="1" Font="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Height="24"/>
+			</Grid>
+			<Grid Height="40">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="80"/>
+					<ColumnDefinition Width="64"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<TextBlock VerticalAlignment="Center">窗口背景</TextBlock>
+				<CheckBox x:Name="CbAutoBackground" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}}" Click="CbAutoBackground_Click">自动</CheckBox>
+				<local:PopupableColorPicker Grid.Column="2" Margin="0,5" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}"/>
+			</Grid>
+		</StackPanel>
 	</Grid>
 </local:ChildWindowBase>

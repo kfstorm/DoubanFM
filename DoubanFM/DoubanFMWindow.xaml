@@ -7,6 +7,8 @@ Website : http://www.kfstorm.com
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+		xmlns:tb="http://www.hardcodet.net/taskbar"
+		xmlns:notify="clr-namespace:DoubanFM.NotifyIcon"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
 		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="{Binding Source={StaticResource Player}, Path=Settings.IsShadowEnabled}" KeyUp="Window_KeyUp" Background="#FF1960AF" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}">
 	<Window.Resources>
@@ -166,9 +168,31 @@ Website : http://www.kfstorm.com
 				</EasingThicknessKeyFrame>
 			</ThicknessAnimationUsingKeyFrames>
 		</Storyboard>
+		<notify:ShowHideMainWindowCommand x:Key="ShowHideMainWindowCommand"/>
+		<Grid x:Key="CustomBalloonKey" MinWidth="300" MaxWidth="400" Height="100" TextElement.Foreground="White" Background="{Binding MainWindow.Background, Source={x:Static Application.Current}}">
+			<Grid.Effect>
+				<DropShadowEffect ShadowDepth="0" BlurRadius="10"/>
+			</Grid.Effect>
+			<Grid Margin="10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Rectangle Width="80" Height="80" Margin="0,0,10,0">
+					<Rectangle.Fill>
+						<ImageBrush ImageSource="{Binding CurrentSong.Picture, Source={StaticResource Player}}" Stretch="UniformToFill"/>
+					</Rectangle.Fill>
+				</Rectangle>
+				<StackPanel Grid.Column="1">
+					<TextBlock Text="{Binding CurrentChannel, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" TextWrapping="Wrap"/>
+					<TextBlock FontSize="20" Text="{Binding CurrentSong.Title, Source={StaticResource Player}}" TextWrapping="Wrap"/>
+					<TextBlock FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextWrapping="Wrap"/>
+					<TextBlock FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextWrapping="Wrap"/>
+				</StackPanel>
+			</Grid>
+		</Grid>
 	</Window.Resources>
 	<Window.Triggers>
-		<EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="SharePanel"/>
 		<EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="BdVolumeControl">
 			<BeginStoryboard x:Name="OnVolumeControlMouseEnter_BeginStoryboard" Storyboard="{StaticResource OnVolumeControlMouseEnter}"/>
 		</EventTrigger>
@@ -192,6 +216,14 @@ Website : http://www.kfstorm.com
 				<ScaleTransform ScaleX="{Binding Settings.ScaleTransform, Source={StaticResource Player}}" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
 			</TransformGroup>
 		</Grid.LayoutTransform>
+		<tb:TaskbarIcon x:Name="NotifyIcon" IconSource="icon.ico" PopupActivation="LeftOrRightClick"  ToolTipText="{Binding CurrentSong, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" DoubleClickCommand="{StaticResource ShowHideMainWindowCommand}">
+			<tb:TaskbarIcon.TrayToolTip>
+				<notify:BalloonSongInfo/>
+			</tb:TaskbarIcon.TrayToolTip>
+			<tb:TaskbarIcon.TrayPopup>
+				<notify:PopupControlPanel/>
+			</tb:TaskbarIcon.TrayPopup>
+		</tb:TaskbarIcon>
 		<Grid x:Name="grid" Height="300">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="300" />
@@ -490,9 +522,6 @@ Website : http://www.kfstorm.com
 								<EventTrigger RoutedEvent="UIElement.MouseEnter">
 									<BeginStoryboard>
 										<Storyboard>
-											<DoubleAnimationUsingKeyFrames  Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width">
-												<DiscreteDoubleKeyFrame KeyTime="0" Value="NaN"/>
-											</DoubleAnimationUsingKeyFrames>
 											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="1" EasingFunction="{StaticResource Smooth}" Duration="0:0:0.5"/>
 										</Storyboard>
 									</BeginStoryboard>
@@ -500,38 +529,26 @@ Website : http://www.kfstorm.com
 								<EventTrigger RoutedEvent="UIElement.MouseLeave">
 									<BeginStoryboard>
 										<Storyboard>
-											<DoubleAnimationUsingKeyFrames  Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width">
-												<DiscreteDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
-											</DoubleAnimationUsingKeyFrames>
 											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="0" EasingFunction="{StaticResource Smooth}" Duration="0:0:1"/>
 										</Storyboard>
 									</BeginStoryboard>
 								</EventTrigger>
 							</Grid.Triggers>
 							<Viewbox StretchDirection="DownOnly" HorizontalAlignment="Right">
-								<StackPanel x:Name="Shares" Height="24" Opacity="0" Orientation="Horizontal">
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareDoubanStyle}"
-										Tag="{x:Static core:Share+Sites.Douban}"/>
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareWeiboStyle}"
-										Tag="{x:Static core:Share+Sites.Weibo}"/>
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareMsnStyle}"
-										Tag="{x:Static core:Share+Sites.Msn}"/>
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareKaixinStyle}"
-										Tag="{x:Static core:Share+Sites.Kaixin}"/>
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareRenenStyle}"
-										Tag="{x:Static core:Share+Sites.Renren}"/>
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareTencentWeiboStyle}"
-										Tag="{x:Static core:Share+Sites.TencentWeibo}"/>
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareFanfouStyle}"
-										Tag="{x:Static core:Share+Sites.Fanfou}"/>
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareFacebookStyle}"
-										Tag="{x:Static core:Share+Sites.Facebook}"/>
-									<Button Click="ShareButton_Click" Style="{DynamicResource ShareTwitterStyle}"
-										Tag="{x:Static core:Share+Sites.Twitter}"/>
+								<StackPanel x:Name="Shares" Height="24" Opacity="0" Orientation="Horizontal" ButtonBase.Click="ShareButton_Click">
+									<Button Style="{DynamicResource ShareDoubanStyle}" Tag="{x:Static core:Share+Sites.Douban}"/>
+									<Button Style="{DynamicResource ShareWeiboStyle}" Tag="{x:Static core:Share+Sites.Weibo}"/>
+									<Button Style="{DynamicResource ShareMsnStyle}" Tag="{x:Static core:Share+Sites.Msn}"/>
+									<Button Style="{DynamicResource ShareKaixinStyle}" Tag="{x:Static core:Share+Sites.Kaixin}"/>
+									<Button Style="{DynamicResource ShareRenenStyle}" Tag="{x:Static core:Share+Sites.Renren}"/>
+									<Button Style="{DynamicResource ShareTencentWeiboStyle}" Tag="{x:Static core:Share+Sites.TencentWeibo}"/>
+									<Button Style="{DynamicResource ShareFanfouStyle}" Tag="{x:Static core:Share+Sites.Fanfou}"/>
+									<Button Style="{DynamicResource ShareFacebookStyle}" Tag="{x:Static core:Share+Sites.Facebook}"/>
+									<Button Style="{DynamicResource ShareTwitterStyle}" Tag="{x:Static core:Share+Sites.Twitter}"/>
 								</StackPanel>
 							</Viewbox>
-							<Button x:Name="BtnCopyUrl" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="分享（点击直接复制地址）" Click="BtnCopyUrl_Click"/>
-							<Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="一键分享" Click="BtnOneKeyShare_Click"/>
+							<Button x:Name="BtnCopyUrl" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="分享（点击直接复制地址）" Click="BtnCopyUrl_Click" Visibility="{Binding ShareSetting.EnableOneKeyShare, ElementName=Window, Converter={StaticResource BoolReverseToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+							<Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="一键分享" Click="BtnOneKeyShare_Click" Visibility="{Binding ShareSetting.EnableOneKeyShare, ElementName=Window, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
 						</Grid>
 						<CheckBox x:Name="CheckBoxShowLyrics" Grid.Column="1" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
 						<Border x:Name="BdVolumeControl" Grid.Column="2" Background="Transparent" Margin="0,0,-65,0">
@@ -568,8 +585,10 @@ Website : http://www.kfstorm.com
 			</Grid>
 		</Grid>
 		<Grid x:Name="CoverGrid" MouseLeftButtonDown="CoverGrid_MouseLeftButtonDown" Width="{Binding ActualWidth, ElementName=LeftPanel}" Height="{Binding ActualHeight, ElementName=LeftPanel}" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment, GridBox" MouseMove="CoverGrid_MouseMove" MouseLeave="CoverGrid_MouseLeave" d:IsHidden="True">
-			<Image x:Name="Cover2" Stretch="UniformToFill"/>
-			<Image x:Name="Cover1" Stretch="UniformToFill" Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" />
+			<Grid x:Name="Covers">
+				<Image x:Name="Cover2" Stretch="UniformToFill"/>
+				<Image x:Name="Cover1" Stretch="UniformToFill" Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" />
+			</Grid>
 			<Grid x:Name="LyricsPanel" Height="70" VerticalAlignment="Bottom" Visibility="Hidden">
 				<Border Background="{Binding Background, ElementName=Window}">
 					<Border.OpacityMask>

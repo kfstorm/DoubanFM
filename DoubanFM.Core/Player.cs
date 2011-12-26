@@ -23,6 +23,10 @@ namespace DoubanFM.Core
 
 		public static readonly DependencyProperty IsInitializedProperty = DependencyProperty.Register("IsInitialized", typeof(bool), typeof(Player));
 		public static readonly DependencyProperty CurrentChannelProperty = DependencyProperty.Register("CurrentChannel", typeof(Channel), typeof(Player));
+		public static readonly DependencyProperty CurrentSongProperty = DependencyProperty.Register("CurrentSong", typeof(Song), typeof(Player), new PropertyMetadata(new PropertyChangedCallback((d, e) =>
+	{
+		(d as Player).RaiseCurrentSongChangedEvent();
+	})));
 		public static readonly DependencyProperty CurrentDjCateProperty = DependencyProperty.Register("CurrentDjCate", typeof(Cate), typeof(Player));
 		public static readonly DependencyProperty IsLikedProperty = DependencyProperty.Register("IsLiked", typeof(bool), typeof(Player),
 			new PropertyMetadata(new PropertyChangedCallback((o, e) =>
@@ -93,22 +97,13 @@ namespace DoubanFM.Core
 			get { return (Cate)GetValue(CurrentDjCateProperty); }
 			set { SetValue(CurrentDjCateProperty, value); }
 		}
-		private Song _currentSong;
 		/// <summary>
 		/// 当前歌曲
 		/// </summary>
 		public Song CurrentSong
 		{
-			get { return _currentSong; }
-			private set
-			{
-				if (_currentSong != value)
-				{
-					_currentSong = value;
-					if (_currentSong != null)
-						RaiseCurrentSongChangedEvent();
-				}
-			}
+			get { return (Song)GetValue(CurrentSongProperty); }
+			protected set { SetValue(CurrentSongProperty, value); }
 		}
 		/// <summary>
 		/// 设置
@@ -368,7 +363,10 @@ namespace DoubanFM.Core
 			});
 			CurrentSongChanged += new EventHandler((o, e) =>
 			{
-				IsLiked = CurrentSong.Like;
+				if (CurrentSong != null)
+				{
+					IsLiked = CurrentSong.Like;
+				}
 			});
 			DjChannelFinishedPlaying += new EventHandler((o, e) =>
 			{
@@ -799,8 +797,8 @@ namespace DoubanFM.Core
 			if (ps.CurrentSong == null) return;
 			lock (_playedSongs) lock (_playedSongsString)
 				{
-					_playedSongs.Enqueue(CurrentSong);
-					_playedSongsString.Enqueue("|" + CurrentSong.SongId + ":" + operationType);
+					_playedSongs.Enqueue(ps.CurrentSong);
+					_playedSongsString.Enqueue("|" + ps.CurrentSong.SongId + ":" + operationType);
 					while (_playedSongs.Count > 20)
 					{
 						_playedSongs.Dequeue();

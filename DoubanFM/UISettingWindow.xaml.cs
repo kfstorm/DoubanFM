@@ -32,8 +32,8 @@ namespace DoubanFM
 		private void CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged(object sender, RoutedEventArgs e)
 		{
 			if (CheckBoxAlwaysShowNotifyIcon.IsChecked == false)
-				(Owner as DoubanFMWindow)._notifyIcon.Visible = !this.IsVisible;
-			else (Owner as DoubanFMWindow)._notifyIcon.Visible = true;
+				(Owner as DoubanFMWindow).NotifyIcon.Visibility = Owner.IsVisible ? Visibility.Hidden : Visibility.Visible;
+			else (Owner as DoubanFMWindow).NotifyIcon.Visibility = System.Windows.Visibility.Visible;
 		}
 
 		private void BtnScaleTransformReset_Click(object sender, RoutedEventArgs e)

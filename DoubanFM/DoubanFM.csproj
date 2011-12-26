@@ -115,6 +115,13 @@
     <Compile Include="HelpWindow.xaml.cs">
       <DependentUpon>HelpWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NotifyIcon\PopupControlPanel.xaml.cs">
+      <DependentUpon>PopupControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotifyIcon\ShowHideMainWindowCommand.cs" />
+    <Compile Include="NotifyIcon\BalloonSongInfo.xaml.cs">
+      <DependentUpon>BalloonSongInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UISettingWindow.xaml.cs">
       <DependentUpon>UISettingWindow.xaml</DependentUpon>
     </Compile>
@@ -155,6 +162,14 @@
     <Page Include="HelpWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NotifyIcon\PopupControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NotifyIcon\BalloonSongInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -245,6 +260,10 @@
       <Project>{AA75B5E6-F373-49D7-B2E0-16C3E57321F7}</Project>
       <Name>DoubanFM.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NotifyIconWpf\NotifyIconWpf.csproj">
+      <Project>{7AC63864-7638-41C4-969C-D3197EF2BED9}</Project>
+      <Name>NotifyIconWpf</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\DoubanFM_Next.png" />
@@ -298,26 +317,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\NotifyIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\DoubanFM_NotifyIcon_Like_Like.png" />
-    <Resource Include="Images\DoubanFM_NotifyIcon_Like_Unlike.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\DoubanFM_NotifyIcon_Never.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\DoubanFM_NotifyIcon_ShowWindow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\DoubanFM_NotifyIcon_Pause.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\DoubanFM_NotifyIcon_Next.png" />
-    <Resource Include="Images\DoubanFM_NotifyIcon_Play.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\DoubanFM_NotifyIcon_Exit.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelpContent\" />
