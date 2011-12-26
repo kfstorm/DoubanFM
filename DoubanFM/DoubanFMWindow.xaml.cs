@@ -994,7 +994,7 @@ namespace DoubanFM
 			string stringB = "    豆瓣电台 - " + _player.CurrentChannel.Name;
 			this.Title = stringA + stringB;
 
-			if (_player.Settings.ShowBalloonWhenSongChanged)
+			if (_player.Settings.ShowBalloonWhenSongChanged && !NotifyIcon.TrayPopupResolved.IsOpen && !NotifyIcon.TrayToolTipResolved.IsOpen)
 			{
 				CustomBaloon = new NotifyIcon.BalloonSongInfo();
 				NotifyIcon.ShowCustomBalloon(CustomBaloon, System.Windows.Controls.Primitives.PopupAnimation.Fade, 5000);
@@ -1278,8 +1278,8 @@ namespace DoubanFM
 			{
 				ShareSetting.Save();
 			}
-			//if (NotifyIcon != null)
-			//    NotifyIcon.Dispose();
+			if (NotifyIcon != null)
+			    NotifyIcon.Dispose();
 			if (_player != null)
 				_player.Dispose();
 			ClearPreloadMusicFiles();
