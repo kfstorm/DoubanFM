@@ -442,7 +442,6 @@ Website : http://www.kfstorm.com
 									<RowDefinition/>
 									<RowDefinition/>
 									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
 								</Grid.RowDefinitions>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 									<Button x:Name="GoToHomePage" Height="40" Style="{DynamicResource IconStyle}" Margin="0,0,10,0" Click="GoToHomePage_Click"/>
@@ -460,8 +459,7 @@ Website : http://www.kfstorm.com
 									<Button x:Name="Feedback" Click="Feedback_Click" Style="{DynamicResource FeedbackStyle}"/>
 									<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Click="VisitOfficialWebsite_Click" Style="{DynamicResource DoubanFMOfficialWebsiteStyle}"/>
 								</Grid>
-								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm.</Label>
-								<Label Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center">All rights reserved.</Label>
+								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011 K.F.Storm</Label>
 							</Grid>
 						</Border>
 					</TabItem>

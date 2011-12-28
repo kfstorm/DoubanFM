@@ -163,11 +163,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NotifyIcon\PopupControlPanel.xaml">
+    <Page Include="NotifyIcon\BalloonSongInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="NotifyIcon\BalloonSongInfo.xaml">
+    <Page Include="NotifyIcon\PopupControlPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
