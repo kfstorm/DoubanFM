@@ -11,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Forms;
 using System.Collections;
 using System.Runtime.Serialization;
+using System.Windows.Input;
 
 namespace DoubanFM
 {
@@ -43,7 +43,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 热键主键
 		/// </summary>
-		public Keys Key { get; private set; }
+		public Key Key { get; private set; }
 
 		/// <summary>
 		/// 热键事件委托
@@ -90,15 +90,13 @@ namespace DoubanFM
 		/// </summary>
 		/// <param name="control">控制键</param>
 		/// <param name="key">主键</param>
-		public HotKey(HotKey.ControlKeys control, Keys key)
+		public HotKey(HotKey.ControlKeys control, Key key)
 		{
 			ControlKey = control;
 			Key = key;
 			KeyId = (int)ControlKey + (int)Key * 100;
 		}
-		public HotKey(HotKey.ControlKeys control, System.Windows.Input.Key key)
-			: this(control, (System.Windows.Forms.Keys)System.Windows.Input.KeyInterop.VirtualKeyFromKey(key))
-		{ }
+
 		//析构函数,解除热键
 		~HotKey()
 		{
@@ -113,7 +111,7 @@ namespace DoubanFM
 		public void Register(Window win)
 		{
 			if (IsRegistered) return;
-			if (ControlKey == ControlKeys.None && Key == Keys.None) return;
+			if (ControlKey == ControlKeys.None && Key == Key.None) return;
 			Handle = new WindowInteropHelper(win).Handle;
 			RegisteredWindiow = win;
 			if (HotKey.KeyPair.ContainsKey(KeyId))
@@ -146,7 +144,7 @@ namespace DoubanFM
 		public void UnRegister()
 		{
 			if (!IsRegistered) return;
-			if (ControlKey == ControlKeys.None && Key == Keys.None) return;
+			if (ControlKey == ControlKeys.None && Key == Key.None) return;
 			HotKey.UnregisterHotKey(Handle, KeyId);
 			HotKey.KeyPair.Remove(KeyId);
 			OnHotKey = null;
@@ -197,7 +195,7 @@ namespace DoubanFM
 		public HotKey(SerializationInfo info, StreamingContext context)
 		{
 			ControlKey = (ControlKeys)info.GetValue("ControlKey", typeof(ControlKeys));
-			Key = (Keys)info.GetValue("Key", typeof(Keys));
+			Key = (Key)info.GetValue("Key", typeof(Key));
 			KeyId = (int)ControlKey + (int)Key * 100;
 		}
 
@@ -211,7 +209,7 @@ namespace DoubanFM
 		{
 			StringBuilder sb = new StringBuilder();
 			if (ControlKey != ControlKeys.None) sb.Append(ControlKey);
-			if (Key != Keys.None)
+			if (Key != Key.None)
 			{
 				if (sb.Length > 0) sb.Append(" + ");
 				sb.Append(Key);

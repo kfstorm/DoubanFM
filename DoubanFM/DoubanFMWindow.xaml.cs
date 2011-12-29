@@ -124,6 +124,7 @@ namespace DoubanFM
 
 		public DoubanFMWindow()
 		{
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 进入主窗口构造方法");
 			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
 			//只允许运行一个实例
 			if (HasAnotherInstance())
@@ -134,10 +135,15 @@ namespace DoubanFM
 				return;
 			}
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " InitializeComponent");
 			InitializeComponent();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " InitializeComponent完成");
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化成员变量");
 			InitMemberVariables();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化成员变量完成");
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置");
 			PbPassword.Password = _player.Settings.User.Password;
 			if (channel != null) _player.Settings.LastChannel = channel;
 			if (_player.Settings.ScaleTransform != 1.0)
@@ -146,19 +152,53 @@ namespace DoubanFM
 			{
 				FirstTimePanel.Visibility = Visibility.Collapsed;
 			}
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置完成");
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置");
 			InitProxy();
-			ClearOldTempFiles();
-			AddPlayerEventListener();
-			InitNotifyIcon();
-			InitTimers();
-			CheckMappedFile();
-			PreloadMusic();
-			CheckUpdateOnStartup();
-			InitLyrics();
-			InitShareSetting();
-			UpdateBackground();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置完成");
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除老版本产生的临时文件");
+			ClearOldTempFiles();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除老版本产生的临时文件完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 向播放器添加事件处理程序");
+			AddPlayerEventListener();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 向播放器添加事件处理程序完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化托盘图标");
+			InitNotifyIcon();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化托盘图标完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer");
+			InitTimers();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件");
+			CheckMappedFile();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化预加载音乐");
+			PreloadMusic();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化预加载音乐完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 检查自动更新");
+			CheckUpdateOnStartup();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 检查自动更新完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化歌词");
+			InitLyrics();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化歌词完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化分享设置");
+			InitShareSetting();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化分享设置完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化窗口背景");
+			UpdateBackground();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化窗口背景完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
 			_player.Initialize();
 		}
 		/// <summary>
@@ -176,9 +216,9 @@ namespace DoubanFM
 			}
 			else
 			{
-				if (_cover.Source is BitmapImage)
+				if (_cover.Source is BitmapSource)
 				{
-					ChangeBackground(_cover.Source as BitmapImage);
+					ChangeBackground(_cover.Source as BitmapSource);
 				}
 			}
 		}
@@ -196,9 +236,15 @@ namespace DoubanFM
 		/// </summary>
 		void AddPlayerEventListener()
 		{
-			_player.Initialized += new EventHandler((o, e) => { ShowChannels(); });
+			_player.Initialized += new EventHandler((o, e) => {
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器完成");
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表");
+				ShowChannels();
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表完成");
+			});
 			_player.CurrentChannelChanged += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 频道已改变，当前频道为" + _player.CurrentChannel);
 				if (!_player.CurrentChannel.IsPersonal || _player.CurrentChannel.IsSpecial)
 					PersonalChannels.SelectedItem = null;
 				if (!_player.CurrentChannel.IsPublic)
@@ -239,6 +285,7 @@ namespace DoubanFM
 			});
 			_player.CurrentSongChanged += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲已改变，当前歌曲为" + _player.CurrentSong);
 				if (_player.CurrentSong != null)
 				{
 					Update();
@@ -248,6 +295,7 @@ namespace DoubanFM
 			});
 			_player.Paused += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已暂停");
 				CheckBoxPause.IsChecked = !_player.IsPlaying;
 				PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
 				PauseThumb.Description = "播放";
@@ -258,6 +306,7 @@ namespace DoubanFM
 			});
 			_player.Played += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已播放");
 				CheckBoxPause.IsChecked = !_player.IsPlaying;
 				PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
 				PauseThumb.Description = "暂停";
@@ -268,6 +317,7 @@ namespace DoubanFM
 			});
 			_player.Stoped += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已停止");
 				Audio.Stop();
 				SetLyrics(null);
 			});
@@ -276,9 +326,14 @@ namespace DoubanFM
 				if (_player.UserAssistant.HasCaptcha)
 					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));
 			});*/
-			_player.UserAssistant.LogOnSucceed += new EventHandler((o, e) => { ShowChannels(); });
+			_player.UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
+			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录已成功");
+				ShowChannels();
+			});
 			_player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 注销已成功");
 				/*if (_player.UserAssistant.HasCaptcha)
 					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
 				ShowChannels();
@@ -286,6 +341,7 @@ namespace DoubanFM
 
 			_player.IsLikedChanged += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsLiked ? " 已加红心" : " 已去红心"));
 				CheckBoxLike.IsChecked = _player.IsLiked;
 				if (_player.IsLikedEnabled)
 					if (_player.IsLiked)
@@ -303,6 +359,7 @@ namespace DoubanFM
 			});
 			_player.IsLikedEnabledChanged += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsLikedEnabled ? " 加红心功能已启用" : " 加红心功能已禁用"));
 				if (_player.IsLikedEnabled)
 					if (_player.IsLiked)
 						LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
@@ -314,6 +371,7 @@ namespace DoubanFM
 			});
 			_player.IsNeverEnabledChanged += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsNeverEnabled ? " 垃圾桶功能已启用" : " 垃圾桶功能已禁用")); 
 				if (_player.IsNeverEnabled)
 					NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
 				else
@@ -959,7 +1017,7 @@ namespace DoubanFM
 		/// </summary>
 		private void Update()
 		{
-			Debug.WriteLine(DateTime.Now + " 获取到新的歌曲信息");
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 获取到新的歌曲信息");
 			Debug.Indent();
 			Debug.WriteLine(_player.CurrentSong.ToString());
 			Debug.Unindent();
@@ -1037,7 +1095,7 @@ namespace DoubanFM
 				{
 					bitmap.DownloadCompleted += new EventHandler((o, e) =>
 					{
-						Debug.WriteLine(DateTime.Now + " 封面下载成功");
+						Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 封面下载成功");
 						Dispatcher.Invoke(new Action(() =>
 						{
 							try
@@ -1063,7 +1121,7 @@ namespace DoubanFM
 					});
 					bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
 					{
-						Debug.WriteLine(DateTime.Now + " 封面下载失败");
+						Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 封面下载失败");
 						Dispatcher.Invoke(new Action(() =>
 						{
 							try
@@ -1113,11 +1171,10 @@ namespace DoubanFM
 		/// 根据封面颜色更换背景。封面加载成功时自动调用
 		/// </summary>
 		/// <param name="NewCover">新封面</param>
-		void ChangeBackground(BitmapImage NewCover)
+		void ChangeBackground(BitmapSource NewCover)
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+			ColorFunctions.GetImageColorForBackgroundAsync(NewCover, new ColorFunctions.ComputeCompleteCallback((color) =>
 				{
-					Color color = ColorFunctions.GetImageColorForBackground(NewCover);
 					Dispatcher.Invoke(new Action(() =>
 						{
 							ChangeBackground(color);
@@ -1179,7 +1236,7 @@ namespace DoubanFM
 		/// </summary>
 		private void Audio_MediaEnded(object sender, EventArgs e)
 		{
-			Debug.WriteLine(DateTime.Now + " 歌曲播放完毕");
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲播放完毕");
 			_player.CurrentSongFinishedPlaying();
 		}
 
@@ -1188,7 +1245,7 @@ namespace DoubanFM
 		/// </summary>
 		private void Audio_MediaFailed(object sender, ExceptionEventArgs e)
 		{
-			Debug.WriteLine(DateTime.Now + " MediaPlayer发生错误，错误信息为");
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " MediaPlayer发生错误，错误信息为");
 			Debug.Indent();
 			Debug.WriteLine(e.ErrorException.ToString());
 			Debug.Unindent();
@@ -1218,13 +1275,13 @@ namespace DoubanFM
 			if (Audio.NaturalDuration.HasTimeSpan)
 				if ((Audio.Position - Audio.NaturalDuration.TimeSpan).TotalSeconds > 5)
 				{
-					Debug.WriteLine(DateTime.Now + " 网络不好吧，显示的时间已经超过总时间了。是不是没声音啊？我换下一首了……");
+					Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 网络不好吧，显示的时间已经超过总时间了。是不是没声音啊？我换下一首了……");
 					_player.CurrentSongFinishedPlaying();
 					return;
 				}
 			if (Audio.Position == TimeSpan.Zero && DateTime.Now - _lastTimeChangeSong > TimeSpan.FromSeconds(30))
 			{
-				Debug.WriteLine(DateTime.Now + "网络太慢了，加载很久都不能播放……");
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + "网络太慢了，加载很久都不能播放……");
 				_player.CurrentSongFinishedPlaying();
 				return;
 			}
@@ -1234,7 +1291,7 @@ namespace DoubanFM
 		/// </summary>
 		void Audio_MediaOpened(object sender, EventArgs e)
 		{
-			Debug.WriteLine(DateTime.Now + " 音乐加载成功");
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐加载成功");
 			if (Audio.NaturalDuration.HasTimeSpan)
 			{
 				if (Math.Abs((TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Content) - Audio.NaturalDuration.TimeSpan).TotalSeconds) > 2)
@@ -1261,6 +1318,7 @@ namespace DoubanFM
 		/// </summary>
 		private void Window_Closed(object sender, EventArgs e)
 		{
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 主窗口已关闭，正在保存设置");
 			if (_lyricsWindow != null)
 				_lyricsWindow.Close();
 			if (Audio != null)
@@ -1482,6 +1540,7 @@ namespace DoubanFM
 
 		private void Window_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
 		{
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (this.IsVisible ? " 窗口可视" : " 窗口不可视"));
 			if (this.IsVisible && !_player.Settings.AlwaysShowNotifyIcon)
 			{
 				NotifyIcon.Visibility = Visibility.Hidden;
@@ -1561,6 +1620,9 @@ namespace DoubanFM
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " Window.Loaded事件已触发，主窗口已准备好呈现");
+			
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置");
 			//加载热键设置
 			_hotKeys = HotKeys.Load();
 			HotKeys.RegisterError += new EventHandler<HotKeys.RegisterErrorEventArgs>((oo, ee) =>
@@ -1576,9 +1638,15 @@ namespace DoubanFM
 			AddLogicToHotKeys(_hotKeys);
 			_hotKeys.Register(this);
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置完成");
+			
 			//设置歌词显示
 			if (_player.Settings.ShowLyrics)
+			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示歌词");
 				ShowLyrics();
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示歌词完成");
+			}
 		}
 
 		private void ButtonGeneralSetting_Click(object sender, RoutedEventArgs e)
