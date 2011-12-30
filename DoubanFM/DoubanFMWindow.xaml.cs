@@ -1030,10 +1030,17 @@ namespace DoubanFM
 				Audio.Open(new Uri(_player.CurrentSong.FileUrl));
 				_lastTimeChangeSong = DateTime.Now;
 
-				Audio.IsMuted = !Audio.IsMuted;     //防止无故静音
-				Thread.Sleep(10);
+				//防止无故静音
 				Audio.IsMuted = !Audio.IsMuted;
 				Audio.Volume = _player.Settings.Volume;
+				DispatcherTimer timer = new DispatcherTimer();
+				timer.Interval = TimeSpan.FromMilliseconds(50);
+				timer.Tick += new EventHandler((sender, e) =>
+				{
+					Audio.IsMuted = !Audio.IsMuted;
+					timer.Stop();
+				});
+				timer.Start();
 			}
 			catch (Exception ex)
 			{
