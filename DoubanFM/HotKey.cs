@@ -119,7 +119,7 @@ namespace DoubanFM
 				throw new Exception("热键" + this + "已经被注册!");
 			}
 			//注册热键
-			if (false == HotKey.RegisterHotKey(Handle, KeyId, (uint)ControlKey, (uint)Key))
+			if (false == HotKey.RegisterHotKey(Handle, KeyId, (uint)ControlKey, (uint)KeyInterop.VirtualKeyFromKey(Key)))
 			{
 				throw new Exception("热键" + this + "注册失败!");
 			}
