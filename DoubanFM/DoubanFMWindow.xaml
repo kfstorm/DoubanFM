@@ -168,7 +168,6 @@ Website : http://www.kfstorm.com
 				</EasingThicknessKeyFrame>
 			</ThicknessAnimationUsingKeyFrames>
 		</Storyboard>
-		<notify:ShowHideMainWindowCommand x:Key="ShowHideMainWindowCommand"/>
 		<Grid x:Key="CustomBalloonKey" MinWidth="300" MaxWidth="400" Height="100" TextElement.Foreground="White" Background="{Binding MainWindow.Background, Source={x:Static Application.Current}}">
 			<Grid.Effect>
 				<DropShadowEffect ShadowDepth="0" BlurRadius="10"/>
@@ -216,7 +215,7 @@ Website : http://www.kfstorm.com
 				<ScaleTransform ScaleX="{Binding Settings.ScaleTransform, Source={StaticResource Player}}" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
 			</TransformGroup>
 		</Grid.LayoutTransform>
-		<tb:TaskbarIcon x:Name="NotifyIcon" IconSource="icon.ico" PopupActivation="LeftOrRightClick"  ToolTipText="{Binding CurrentSong, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" DoubleClickCommand="{StaticResource ShowHideMainWindowCommand}">
+		<tb:TaskbarIcon x:Name="NotifyIcon" IconSource="icon.ico" PopupActivation="RightClick"  ToolTipText="{Binding CurrentSong, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" TrayLeftMouseUp="NotifyIcon_TrayLeftMouseUp">
 			<tb:TaskbarIcon.TrayToolTip>
 				<notify:BalloonSongInfo/>
 			</tb:TaskbarIcon.TrayToolTip>

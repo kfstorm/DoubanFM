@@ -58,6 +58,7 @@
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition/>
+						<ColumnDefinition Width="Auto"/>
 					</Grid.ColumnDefinitions>
 					<Grid Width="{Binding ActualHeight, ElementName=SongPanel}" Height="{Binding Width}" Margin="0,0,10,0">
 						<Image Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" Stretch="UniformToFill"/>
@@ -69,6 +70,7 @@
 						<TextBlock FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
 						<TextBlock FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
 					</StackPanel>
+					<Button x:Name="ButtonExit" Grid.Column="2" Width="20" Height="20" Margin="2,0,0,0" VerticalAlignment="Top" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
 				</Grid>
 				<Grid Grid.Row="1">
 					<Grid.RowDefinitions>

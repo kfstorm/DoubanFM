@@ -76,5 +76,10 @@ namespace DoubanFM.NotifyIcon
 		{
 			(App.Current.MainWindow as DoubanFMWindow).OneKeyShare();
 		}
+		
+		private void ButtonExit_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			App.Current.MainWindow.Close();
+		}
 	}
 }

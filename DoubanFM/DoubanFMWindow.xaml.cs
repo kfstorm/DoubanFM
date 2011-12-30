@@ -1716,6 +1716,14 @@ namespace DoubanFM
 			Process.Start("http://douban.fm/mine?type=banned");
 		}
 
+		private void NotifyIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
+		{
+			if (this.IsVisible)
+				this.Hide();
+			else
+				this.ShowFront();
+		}
+
 		#endregion
 
 	}

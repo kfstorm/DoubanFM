@@ -107,7 +107,6 @@
     <Compile Include="NotifyIcon\PopupControlPanel.xaml.cs">
       <DependentUpon>PopupControlPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="NotifyIcon\ShowHideMainWindowCommand.cs" />
     <Compile Include="NotifyIcon\BalloonSongInfo.xaml.cs">
       <DependentUpon>BalloonSongInfo.xaml</DependentUpon>
     </Compile>
