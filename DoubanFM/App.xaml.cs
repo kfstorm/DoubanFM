@@ -13,6 +13,10 @@ using System.Windows;
 using System.Diagnostics;
 using System.Windows.Markup;
 using System.Globalization;
+using System.IO.MemoryMappedFiles;
+using DoubanFM.Core;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace DoubanFM
 {
@@ -60,11 +64,64 @@ namespace DoubanFM
 			 * 这样就能强制Global User Interface在FlowDocument上使用大陆的字形。
 			 * */
 			FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.Name)));
+
+			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
+			//只允许运行一个实例
+			if (HasAnotherInstance())
+			{
+				if (channel != null) WriteChannelToMappedFile(channel);
+				Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
+				App.Current.Shutdown(0);
+				return;
+			}
+			else
+			{
+				new SplashScreen("Images/SplashScreen.png").Show(true);
+			}
 		}
 
 		public static string GetPreciseTime(DateTime time)
 		{
 			return time.ToString() + " " + time.Millisecond + "ms";
+		}
+
+		/// <summary>
+		/// 内存映射文件的文件名
+		/// </summary>
+		public static string _mappedFileName = "{04EFCEB4-F10A-403D-9824-1E685C4B7961}";
+		
+		/// <summary>
+		/// 检测是否有另一个实例正在运行
+		/// </summary>
+		protected bool HasAnotherInstance()
+		{
+			try
+			{
+				MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName);
+				return mappedFile != null;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// 将频道写入内存映射文件
+		/// </summary>
+		protected void WriteChannelToMappedFile(Channel channel)
+		{
+			if (channel != null)
+				try
+				{
+					using (MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName))
+					using (Stream stream = mappedFile.CreateViewStream())
+					{
+						BinaryFormatter formatter = new BinaryFormatter();
+						formatter.Serialize(stream, channel);
+					}
+				}
+				catch { }
 		}
 	}
 }

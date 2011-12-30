@@ -70,10 +70,6 @@ namespace DoubanFM
 		/// </summary>
 		private MemoryMappedFile _mappedFile;
 		/// <summary>
-		/// 内存映射文件的文件名
-		/// </summary>
-		private string _mappedFileName = "{04EFCEB4-F10A-403D-9824-1E685C4B7961}";
-		/// <summary>
 		/// 命令
 		/// </summary>
 		public enum Commands { None, Like, Unlike, LikeUnlike, Never, PlayPause, Next, ShowMinimize, ShowHide, ShowLyrics, HideLyrics, ShowHideLyrics, OneKeyShare }
@@ -125,15 +121,7 @@ namespace DoubanFM
 		public DoubanFMWindow()
 		{
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 进入主窗口构造方法");
-			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
-			//只允许运行一个实例
-			if (HasAnotherInstance())
-			{
-				if (channel != null) WriteChannelToMappedFile(channel);
-				Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
-				App.Current.Shutdown(0);
-				return;
-			}
+			
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " InitializeComponent");
 			InitializeComponent();
@@ -145,6 +133,7 @@ namespace DoubanFM
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置");
 			PbPassword.Password = _player.Settings.User.Password;
+			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
 			if (channel != null) _player.Settings.LastChannel = channel;
 			if (_player.Settings.ScaleTransform != 1.0)
 				TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
@@ -450,7 +439,7 @@ namespace DoubanFM
 		void CheckMappedFile()
 		{
 			DispatcherTimer checkMappedFileTimer = new DispatcherTimer();
-			checkMappedFileTimer.Interval = new TimeSpan(500000);
+			checkMappedFileTimer.Interval = TimeSpan.FromMilliseconds(50);
 			checkMappedFileTimer.Tick += new EventHandler((o, e) =>
 			{
 				Channel ch = LoadChannelFromMappedFile();
@@ -461,7 +450,7 @@ namespace DoubanFM
 					else _player.Settings.LastChannel = ch;
 				}
 			});
-			_mappedFile = MemoryMappedFile.CreateOrOpen(_mappedFileName, 10240);
+			_mappedFile = MemoryMappedFile.CreateOrOpen(App._mappedFileName, 10240);
 			checkMappedFileTimer.Start();
 		}
 		/// <summary>
@@ -926,38 +915,7 @@ namespace DoubanFM
 			});
 			update.Show();
 		}
-		/// <summary>
-		/// 检测是否有另一个实例正在运行
-		/// </summary>
-		bool HasAnotherInstance()
-		{
-			try
-			{
-				MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName);
-				return mappedFile != null;
-			}
-			catch
-			{
-				return false;
-			}
-		}
-		/// <summary>
-		/// 将频道写入内存映射文件
-		/// </summary>
-		void WriteChannelToMappedFile(Channel channel)
-		{
-			if (channel != null)
-				try
-				{
-					using (MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName))
-					using (Stream stream = mappedFile.CreateViewStream())
-					{
-						BinaryFormatter formatter = new BinaryFormatter();
-						formatter.Serialize(stream, channel);
-					}
-				}
-				catch { }
-		}
+		
 		/// <summary>
 		/// 从内存映射文件加载频道
 		/// </summary>
@@ -1029,7 +987,7 @@ namespace DoubanFM
 				//Audio.Source = new Uri(_player.CurrentSong.FileUrl);
 				Audio.Open(new Uri(_player.CurrentSong.FileUrl));
 				_lastTimeChangeSong = DateTime.Now;
-
+				
 				//防止无故静音
 				Audio.IsMuted = !Audio.IsMuted;
 				Audio.Volume = _player.Settings.Volume;
