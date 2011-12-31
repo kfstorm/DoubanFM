@@ -507,6 +507,9 @@ Website : http://www.kfstorm.com
 									<BeginStoryboard>
 										<Storyboard>
 											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="1" EasingFunction="{StaticResource Smooth}" Duration="0:0:0.5"/>
+											<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width">
+												<DiscreteDoubleKeyFrame KeyTime="0" Value="{x:Static sys:Double.NaN}"/>
+											</DoubleAnimationUsingKeyFrames>
 										</Storyboard>
 									</BeginStoryboard>
 								</EventTrigger>
@@ -514,12 +517,15 @@ Website : http://www.kfstorm.com
 									<BeginStoryboard>
 										<Storyboard>
 											<DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="0" EasingFunction="{StaticResource Smooth}" Duration="0:0:1"/>
+											<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Shares" Storyboard.TargetProperty="Width">
+												<DiscreteDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+											</DoubleAnimationUsingKeyFrames>
 										</Storyboard>
 									</BeginStoryboard>
 								</EventTrigger>
 							</Grid.Triggers>
 							<Viewbox StretchDirection="DownOnly" HorizontalAlignment="Right">
-								<StackPanel x:Name="Shares" Height="24" Opacity="0" Orientation="Horizontal" ButtonBase.Click="ShareButton_Click">
+								<StackPanel x:Name="Shares" Height="24" Width="0" Opacity="0" Orientation="Horizontal" ButtonBase.Click="ShareButton_Click">
 									<Button Style="{DynamicResource ShareDoubanStyle}" Tag="{x:Static core:Share+Sites.Douban}"/>
 									<Button Style="{DynamicResource ShareWeiboStyle}" Tag="{x:Static core:Share+Sites.Weibo}"/>
 									<Button Style="{DynamicResource ShareMsnStyle}" Tag="{x:Static core:Share+Sites.Msn}"/>

@@ -56,15 +56,9 @@ namespace DoubanFM
 		/// </summary>
 		private int _lyricsCurrentIndex = int.MinValue;
 		/// <summary>
-		/// 各种无法在XAML里直接启动的Storyboard
+		/// 更换歌词的Storyboard
 		/// </summary>
-		private Storyboard ChangeLyricsStoryboard, HideLyricsStoryboard;
-		/// <summary>
-		/// 歌词笔画
-		/// </summary>
-		private Geometry _textGeometry;
-
-		private FormattedText _formattedText;
+		private Storyboard ChangeLyricsStoryboard;
 		
 		[DllImport("user32.dll")]
 		static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
@@ -82,8 +76,7 @@ namespace DoubanFM
 			LyricsSetting = lyricsSetting;
 
 			ChangeLyricsStoryboard = (Storyboard)FindResource("ChangeLyricsStoryboard");
-			HideLyricsStoryboard = (Storyboard)FindResource("HideLyricsStoryboard");
-
+			
 			this.SourceInitialized += new EventHandler((o, e) =>
 			{
 				var hwnd = new WindowInteropHelper(this).Handle;
@@ -143,7 +136,7 @@ namespace DoubanFM
 			binding.Source = Application.Current.MainWindow;
 			binding.Path = new PropertyPath(System.Windows.Window.BackgroundProperty);
 			binding.Converter = new BackgroundToLyricsForegroundConverter();
-			PathText.SetBinding(Path.FillProperty, binding);
+			PathText1.SetBinding(Path.FillProperty, binding);
 		}
 
 		/// <summary>
@@ -151,28 +144,22 @@ namespace DoubanFM
 		/// </summary>
 		protected void SetManualForeground()
 		{
-			PathText.Fill = new SolidColorBrush();
+			PathText1.Fill = new SolidColorBrush();
 			Binding binding = new Binding();
 			binding.Source = LyricsSetting;
 			binding.Path = new PropertyPath(DoubanFM.LyricsSetting.ForegroundProperty);
-			BindingExpressionBase expression = BindingOperations.SetBinding(PathText.Fill, SolidColorBrush.ColorProperty, binding);
+			BindingExpressionBase expression = BindingOperations.SetBinding(PathText1.Fill, SolidColorBrush.ColorProperty, binding);
 		}
 
 		/// <summary>
 		/// 更换歌词
 		/// </summary>
-		protected void ChangeLyrics(string newLyrics)
+		protected void ChangeLyrics(string newLyrics1, string newLyrics2, string newLyrics3)
 		{
-			((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[1]).KeyFrames[0].Value = newLyrics;
+			((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[2]).KeyFrames[0].Value = newLyrics1;
+			((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[3]).KeyFrames[0].Value = newLyrics2;
+			((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[4]).KeyFrames[0].Value = newLyrics3;
 			ChangeLyricsStoryboard.Begin();
-		}
-
-		/// <summary>
-		/// 隐藏歌词
-		/// </summary>
-		protected void HideLyrics()
-		{
-			HideLyricsStoryboard.Begin();
 		}
 
 		/// <summary>
@@ -182,14 +169,20 @@ namespace DoubanFM
 		{
 			if (_lyrics != null)
 			{
-				_lyrics.Refresh(time + ((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[1]).KeyFrames[0].KeyTime.TimeSpan);
+				_lyrics.Refresh(time + ((DoubleAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[0]).KeyFrames[0].KeyTime.TimeSpan);
 				if (_lyrics.CurrentIndex != _lyricsCurrentIndex)
 				{
 					_lyricsCurrentIndex = _lyrics.CurrentIndex;
-					ChangeLyrics(_lyrics.CurrentLyrics);
+					string next2Lyrics = (_lyrics.CurrentIndex + 2 >= _lyrics.SortedTimes.Count) ? null : _lyrics.TimeAndLyrics[_lyrics.SortedTimes[_lyrics.CurrentIndex + 2]];
+					ChangeLyrics(_lyrics.CurrentLyrics, _lyrics.NextLyrics, next2Lyrics);
 				}
 			}
-			else HideLyrics();
+			else
+			{
+				LyricsText1 = null;
+				LyricsText2 = null;
+				LyricsText3 = null;
+			}
 
 			//防止对歌词窗口设置WS_EX_TOOLWINDOW样式后偶尔置顶会失效，不知道有没有用
 			if (this.Visibility == System.Windows.Visibility.Visible)
@@ -211,7 +204,9 @@ namespace DoubanFM
 
 		static void OnLyricsFontFamilyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			(d as LyricsWindow).UpdateText();
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
 
 		public double LyricsFontSize
@@ -225,7 +220,9 @@ namespace DoubanFM
 
 		static void OnLyricsFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			(d as LyricsWindow).UpdateText();
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 			(d as LyricsWindow).UpdateStrokeAndShadow();
 		}
 
@@ -240,7 +237,9 @@ namespace DoubanFM
 
 		static void OnLyricsFontWeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			(d as LyricsWindow).UpdateText();
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
 
 		public double LyricsStrokeWeight
@@ -257,18 +256,46 @@ namespace DoubanFM
 			(d as LyricsWindow).UpdateStrokeAndShadow();
 		}
 
-		public string LyricsText
+		public string LyricsText1
 		{
-			get { return (string)GetValue(LyricsTextProperty); }
-			set { SetValue(LyricsTextProperty, value); }
+			get { return (string)GetValue(LyricsText1Property); }
+			set { SetValue(LyricsText1Property, value); }
 		}
 
-		public static readonly DependencyProperty LyricsTextProperty =
-			DependencyProperty.Register("LyricsText", typeof(string), typeof(LyricsWindow), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnLyricsTextChanged)));
+		public static readonly DependencyProperty LyricsText1Property =
+			DependencyProperty.Register("LyricsText1", typeof(string), typeof(LyricsWindow), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnLyricsText1Changed)));
 
-		static void OnLyricsTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		static void OnLyricsText1Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			(d as LyricsWindow).UpdateText();
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
+		}
+
+		public string LyricsText2
+		{
+			get { return (string)GetValue(LyricsText2Property); }
+			set { SetValue(LyricsText2Property, value); }
+		}
+
+		public static readonly DependencyProperty LyricsText2Property =
+			DependencyProperty.Register("LyricsText2", typeof(string), typeof(LyricsWindow), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnLyricsText2Changed)));
+
+		static void OnLyricsText2Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
+		}
+
+		public string LyricsText3
+		{
+			get { return (string)GetValue(LyricsText3Property); }
+			set { SetValue(LyricsText3Property, value); }
+		}
+
+		public static readonly DependencyProperty LyricsText3Property =
+			DependencyProperty.Register("LyricsText3", typeof(string), typeof(LyricsWindow), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnLyricsText3Changed)));
+
+		static void OnLyricsText3Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
 
 		/// <summary>
@@ -276,37 +303,40 @@ namespace DoubanFM
 		/// </summary>
 		public void UpdateStrokeAndShadow()
 		{
-			PathText.StrokeThickness = LyricsStrokeWeight / 48.0 * LyricsFontSize;
-			ShadowEffect.ShadowDepth = PathText.StrokeThickness;
+			PathText1.StrokeThickness = LyricsStrokeWeight / 48.0 * LyricsFontSize;
+			ShadowEffect.ShadowDepth = PathText1.StrokeThickness;
 			if (ShadowEffect.ShadowDepth == 0)
 				ShadowEffect.Opacity = 0;
 			else
 				ShadowEffect.Opacity = 1;
 		}
 
-		public void UpdateText()
+		public void UpdateText(Path text)
 		{
-			CreateText(LyricsText);
-			PathText.Data = _textGeometry;
+			if (text == PathText1)
+				text.Data = CreateText(LyricsText1);
+			else if (text == PathText2)
+				text.Data = CreateText(LyricsText2);
+			else if (text == PathText3)
+				text.Data = CreateText(LyricsText3);
 		}
 
 		/// <summary>
 		/// Create the outline geometry based on the formatted text.
 		/// </summary>
-		public void CreateText(string text)
+		public Geometry CreateText(string text)
 		{
 			// Create the formatted text based on the properties set.
-			_formattedText = new FormattedText(
+			Geometry geometry = new FormattedText(
 				text == null ? "" : text,
 				CultureInfo.GetCultureInfo("zh-cn"),
 				FlowDirection.LeftToRight,
 				new Typeface(LyricsFontFamily == null ? SystemFonts.MessageFontFamily : LyricsFontFamily, FontStyles.Normal, LyricsFontWeight, FontStretches.Normal),
 				LyricsFontSize,
 				System.Windows.Media.Brushes.Black // This brush does not matter since we use the geometry of the text. 
-				);
-			
-			// Build the geometry object that represents the text.
-			_textGeometry = _formattedText.BuildGeometry(new System.Windows.Point(0, 0));
+				).BuildGeometry(new System.Windows.Point(0, 0));
+			geometry.Freeze();
+			return geometry;
 		}
 
 		#endregion

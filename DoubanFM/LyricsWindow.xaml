@@ -9,24 +9,34 @@ Website : http://www.kfstorm.com
 	xmlns:local="clr-namespace:DoubanFM"
 	x:Class="DoubanFM.LyricsWindow"
 	x:Name="Window"
-	Title="" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" Left="{Binding Path=Left, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Top="{Binding Path=Top, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Width="{Binding Path=Width, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Height="{Binding Path=Height, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}">
+	Title="" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" Left="{Binding Path=Left, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Top="{Binding Path=Top, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Width="{Binding Path=Width, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Height="{Binding Path=Height, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}" IsHitTestVisible="False">
 	<Window.Resources>
 		<Storyboard x:Key="ChangeLyricsStoryboard">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LyricsRoot" Storyboard.TargetProperty="Opacity">
-				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
-				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:0.6" EasingFunction="{StaticResource Smooth}"/>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Offset" Storyboard.TargetProperty="(TranslateTransform.Y)" FillBehavior="Stop">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<CircleEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="{Binding ActualHeight, ElementName=PathText1}"/>
 			</DoubleAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText">
-				<DiscreteStringKeyFrame KeyTime="0:0:0.3"/>
-			</StringAnimationUsingKeyFrames>
-		</Storyboard>
-		<Storyboard x:Key="HideLyricsStoryboard">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LyricsRoot" Storyboard.TargetProperty="Opacity">
-				<LinearDoubleKeyFrame Value="0" KeyTime="0:0:0.3"/>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="PathText1" Storyboard.TargetProperty="Opacity">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
 			</DoubleAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText">
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText1">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
 			</StringAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText2">
+				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText3">
+				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Lyrics2Root" Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0.75"/>
+			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<local:OpenTypeWeightToFontWeightConverter x:Key="OpenTypeWeightToFontWeightConverter"/>
 		<local:RatioToValueConverter x:Key="RatioToValueConverter"/>
@@ -38,16 +48,51 @@ Website : http://www.kfstorm.com
 				<RowDefinition/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-			<Viewbox x:Name="LyricsRoot" VerticalAlignment="Bottom" Margin="20,0" StretchDirection="DownOnly">
-				<Path x:Name="PathText" Fill="{Binding Foreground, ElementName=CurrentLyrics}">
-					<Path.Stroke>
-						<SolidColorBrush Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
-					</Path.Stroke>
-					<Path.Effect>
-						<DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
-					</Path.Effect>
-				</Path>
-			</Viewbox>
+			<Grid x:Name="LyricsRoot" VerticalAlignment="Bottom" Margin="20,0" ClipToBounds="True">
+				<Grid.Effect>
+					<DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
+				</Grid.Effect>
+				<Grid>
+					<Grid.RenderTransform>
+						<TranslateTransform x:Name="Offset" Y="{Binding ActualHeight, ElementName=Lyrics1Root}"/>
+					</Grid.RenderTransform>
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<Viewbox x:Name="Lyrics1Root" StretchDirection="DownOnly">
+						<Grid>
+							<Path x:Name="PathText1">
+								<Path.Stroke>
+									<SolidColorBrush Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
+								</Path.Stroke>
+							</Path>
+							<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
+						</Grid>
+					</Viewbox>
+					<Viewbox x:Name="Lyrics2Root" Grid.Row="1" StretchDirection="DownOnly" RenderTransformOrigin="0.5, 0.5">
+						<Viewbox.RenderTransform>
+							<ScaleTransform ScaleX="0.75" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
+						</Viewbox.RenderTransform>
+						<Grid>
+							<Path x:Name="PathText2" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
+							</Path>
+							<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
+						</Grid>
+					</Viewbox>
+					<Viewbox x:Name="Lyrics3Root" Grid.Row="2" StretchDirection="DownOnly" RenderTransformOrigin="0.5, 0.5">
+						<Viewbox.RenderTransform>
+							<ScaleTransform ScaleX="0.75" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
+						</Viewbox.RenderTransform>
+						<Grid>
+							<Path x:Name="PathText3" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
+							</Path>
+							<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
+						</Grid>
+					</Viewbox>
+				</Grid>
+			</Grid>
 			<Border Grid.Row="1">
 				<Border.Height>
 					<MultiBinding Converter="{StaticResource RatioToValueConverter}">

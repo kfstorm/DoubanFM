@@ -704,14 +704,15 @@ namespace DoubanFM
 		{
 			_lyricsSetting = LyricsSetting.Load();
 			_lyricsWindow = new LyricsWindow(_lyricsSetting);
-			
-			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("LyricsText");
+
+			Binding binding = new Binding();
 			binding.Source = _lyricsWindow;
+			binding.Path = new PropertyPath(LyricsWindow.LyricsText1Property);
 			CurrentLyrics.SetBinding(TextBlock.TextProperty, binding);
 
-			System.Windows.Data.Binding binding2 = new System.Windows.Data.Binding("Opacity");
-			binding2.Source = _lyricsWindow.LyricsRoot;
-			CurrentLyrics.SetBinding(TextBlock.OpacityProperty, binding2);
+			//System.Windows.Data.Binding binding2 = new System.Windows.Data.Binding("Opacity");
+			//binding2.Source = _lyricsWindow.LyricsRoot;
+			//CurrentLyrics.SetBinding(TextBlock.OpacityProperty, binding2);
 		}
 
 		/// <summary>
