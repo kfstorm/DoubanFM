@@ -56,7 +56,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 各种无法在XAML里直接启动的Storyboard
 		/// </summary>
-		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, DjChannelClickStoryboard;
+		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, DjChannelClickStoryboard, VolumeFadeOut, VolumeFadeIn, VolumeDirectIn;
 		/// <summary>
 		/// 滑动封面的计时器
 		/// </summary>
@@ -154,6 +154,59 @@ namespace DoubanFM
 					DoubanFMWindow window = (DoubanFMWindow)d;
 					window.OnAutoBackgroundChanged((bool)e.OldValue, (bool)e.NewValue);
 				})));
+
+
+
+		/// <summary>
+		/// 音量设置
+		/// </summary>
+		public double Volume
+		{
+			get { return (double)GetValue(VolumeProperty); }
+			set { SetValue(VolumeProperty, value); }
+		}
+
+		public static readonly DependencyProperty VolumeProperty =
+			DependencyProperty.Register("Volume", typeof(double), typeof(DoubanFMWindow), new UIPropertyMetadata(1.0, new PropertyChangedCallback((d, e) =>
+			{
+				DoubanFMWindow window = (DoubanFMWindow)d;
+				if (window.Audio != null)
+				{
+					window.Audio.Volume = window.Volume * window.VolumeFadeParameter;
+				}
+			}))
+			, new ValidateValueCallback((value) =>
+			{
+				double v = (double)value;
+				return v >= 0 && v <= 1;
+			}));
+
+
+
+		/// <summary>
+		/// 音量淡入淡出参数
+		/// </summary>
+		public double VolumeFadeParameter
+		{
+			get { return (double)GetValue(VolumeFadeParameterProperty); }
+			set { SetValue(VolumeFadeParameterProperty, value); }
+		}
+
+		public static readonly DependencyProperty VolumeFadeParameterProperty =
+			DependencyProperty.Register("VolumeFadeParameter", typeof(double), typeof(DoubanFMWindow), new UIPropertyMetadata(1.0, new PropertyChangedCallback((d, e) =>
+			{
+				DoubanFMWindow window = (DoubanFMWindow)d;
+				if (window.Audio != null)
+				{
+					window.Audio.Volume = window.Volume * window.VolumeFadeParameter;
+				}
+			}))
+				, new ValidateValueCallback((value) =>
+				{
+					double v = (double)value;
+					return v >= 0 && v <= 1;
+				}));
+		
 
 		/// <summary>
 		/// 记录最后一次切歌的时间
@@ -346,6 +399,8 @@ namespace DoubanFM
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲已改变，当前歌曲为" + _player.CurrentSong);
 				if (_player.CurrentSong != null)
 				{
+					stoped = false;
+					VolumeDirectIn.Begin();
 					Update();
 					Play();			//在暂停时按下一首，加载歌曲后会结束暂停，开始播放
 					Audio.Play();
@@ -357,7 +412,8 @@ namespace DoubanFM
 				CheckBoxPause.IsChecked = !_player.IsPlaying;
 				PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
 				PauseThumb.Description = "播放";
-				Audio.Pause();
+				VolumeFadeOut.Begin();
+				//Audio.Pause();
 				//NotifyIcon_PlayPause.Text = "播放";
 				//NotifyIcon_PlayPause.Image = NotifyIconImage_Play;
 				//HideLyrics();
@@ -368,6 +424,7 @@ namespace DoubanFM
 				CheckBoxPause.IsChecked = !_player.IsPlaying;
 				PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
 				PauseThumb.Description = "暂停";
+				VolumeFadeIn.Begin();
 				Audio.Play();
 				//NotifyIcon_PlayPause.Text = "暂停";
 				//NotifyIcon_PlayPause.Image = NotifyIconImage_Pause;
@@ -376,7 +433,8 @@ namespace DoubanFM
 			_player.Stoped += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已停止");
-				Audio.Stop();
+				stoped = true;
+				VolumeFadeOut.Begin();
 				SetLyrics(null);
 			});
 			/*_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
@@ -463,6 +521,9 @@ namespace DoubanFM
 			SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
 			ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
 			DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
+			VolumeFadeOut = (Storyboard)FindResource("VolumeFadeOut");
+			VolumeFadeIn = (Storyboard)FindResource("VolumeFadeIn");
+			VolumeDirectIn = (Storyboard)FindResource("VolumeDirectIn");
 
 			Audio = new MediaPlayer();
 			Audio.MediaEnded += new EventHandler(Audio_MediaEnded);
@@ -472,10 +533,12 @@ namespace DoubanFM
 			Audio.Volume = _player.Settings.Volume;
 			Audio.IsMuted = _player.Settings.IsMuted;
 
-			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Volume");
-			binding.Source = Audio;
-			binding.Mode = System.Windows.Data.BindingMode.TwoWay;
-			System.Windows.Data.BindingOperations.SetBinding(_player.Settings, Settings.VolumeProperty, binding);
+			Binding binding = new Binding();
+			binding.Source = _player;
+			binding.Path = new PropertyPath("Settings.Volume");
+			binding.Mode = BindingMode.TwoWay;
+			this.SetBinding(VolumeProperty, binding);
+			
 			System.Windows.Data.Binding binding2 = new System.Windows.Data.Binding("IsMuted");
 			binding2.Source = Audio;
 			binding2.Mode = System.Windows.Data.BindingMode.TwoWay;
@@ -1262,7 +1325,10 @@ namespace DoubanFM
 		private void Audio_MediaEnded(object sender, EventArgs e)
 		{
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲播放完毕");
-			_player.CurrentSongFinishedPlaying();
+			if (!stoped)
+			{
+				_player.CurrentSongFinishedPlaying();
+			}
 		}
 
 		/// <summary>
@@ -1782,6 +1848,20 @@ namespace DoubanFM
 				this.Hide();
 			else
 				this.ShowFront();
+		}
+
+		private bool stoped = false;
+
+		private void VolumeFadeOut_Completed(object sender, EventArgs e)
+		{
+			if (stoped)
+			{
+				Audio.Stop();
+			}
+			else if (!_player.IsPlaying)
+			{
+				Audio.Pause();
+			}
 		}
 
 		#endregion

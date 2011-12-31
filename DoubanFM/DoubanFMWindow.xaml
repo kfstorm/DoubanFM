@@ -168,28 +168,15 @@ Website : http://www.kfstorm.com
 				</EasingThicknessKeyFrame>
 			</ThicknessAnimationUsingKeyFrames>
 		</Storyboard>
-		<Grid x:Key="CustomBalloonKey" MinWidth="300" MaxWidth="400" Height="100" TextElement.Foreground="White" Background="{Binding MainWindow.Background, Source={x:Static Application.Current}}">
-			<Grid.Effect>
-				<DropShadowEffect ShadowDepth="0" BlurRadius="10"/>
-			</Grid.Effect>
-			<Grid Margin="10">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Rectangle Width="80" Height="80" Margin="0,0,10,0">
-					<Rectangle.Fill>
-						<ImageBrush ImageSource="{Binding CurrentSong.Picture, Source={StaticResource Player}}" Stretch="UniformToFill"/>
-					</Rectangle.Fill>
-				</Rectangle>
-				<StackPanel Grid.Column="1">
-					<TextBlock Text="{Binding CurrentChannel, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" TextWrapping="Wrap"/>
-					<TextBlock FontSize="20" Text="{Binding CurrentSong.Title, Source={StaticResource Player}}" TextWrapping="Wrap"/>
-					<TextBlock FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextWrapping="Wrap"/>
-					<TextBlock FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextWrapping="Wrap"/>
-				</StackPanel>
-			</Grid>
-		</Grid>
+		<Storyboard x:Key="VolumeFadeOut" Completed="VolumeFadeOut_Completed">
+			<DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="0" Duration="0:0:1"/>
+		</Storyboard>
+		<Storyboard x:Key="VolumeFadeIn">
+			<DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="1" Duration="0:0:1"/>
+		</Storyboard>
+		<Storyboard x:Key="VolumeDirectIn">
+			<DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="1" Duration="0"/>
+		</Storyboard>
 	</Window.Resources>
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="BdVolumeControl">

@@ -274,6 +274,9 @@ namespace DoubanFM
 		}
 	}
 
+	/// <summary>
+	/// 根据原始背景色和透明度确定最终背景
+	/// </summary>
 	public class OriginalBackgroundColorAndBackgroundTransparencyToBackgroundConverter : IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -289,5 +292,4 @@ namespace DoubanFM
 			throw new NotImplementedException();
 		}
 	}
-
 }
