@@ -11,81 +11,10 @@ Website : http://www.kfstorm.com
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="/DoubanFM;component/Theme.xaml"/>
 	</ResourceDictionary.MergedDictionaries>
-	<GradientStopCollection x:Key="InactiveShadowGradientStops">
-		<GradientStop Color="#5F000000"/>
-		<GradientStop Color="#3F000000" Offset="0.1"/>
-		<GradientStop Color="#19000000" Offset="0.3"/>
-		<GradientStop Color="#07000000" Offset="0.5"/>
-		<GradientStop Color="#00000000" Offset="0.8" />
-	</GradientStopCollection>
-	<GradientStopCollection x:Key="ActiveShadowGradientStops">
-		<GradientStop Color="#5F000000"/>
-		<GradientStop Color="#5F000000" Offset="0.1"/>
-		<GradientStop Color="#3F000000" Offset="0.2"/>
-		<GradientStop Color="#1F000000" Offset="0.5"/>
-		<GradientStop Color="#03000000" Offset="0.8" />
-		<GradientStop Color="#00000000" Offset="1"/>
-	</GradientStopCollection>
-
-	<RadialGradientBrush x:Key="ActiveTopLeftShadowBrush" GradientOrigin="1,1" Center="1,1" RadiusX="1" RadiusY="1" GradientStops="{StaticResource ActiveShadowGradientStops}"/>
-	<LinearGradientBrush x:Key="ActiveTopShadowBrush" StartPoint="0,1" EndPoint="0,0" GradientStops="{StaticResource ActiveShadowGradientStops}"/>
-	<RadialGradientBrush x:Key="ActiveTopRightShadowBrush" GradientOrigin="0,1" Center="0,1" RadiusX="1" RadiusY="1" GradientStops="{StaticResource ActiveShadowGradientStops}"/>
-	<LinearGradientBrush x:Key="ActiveLeftShadowBrush" StartPoint="1,0" EndPoint="0,0" GradientStops="{StaticResource ActiveShadowGradientStops}"/>
-	<LinearGradientBrush x:Key="ActiveRightShadowBrush" StartPoint="0,0" EndPoint="1,0" GradientStops="{StaticResource ActiveShadowGradientStops}"/>
-	<RadialGradientBrush x:Key="ActiveBottomLeftShadowBrush" GradientOrigin="1,0" Center="1,0" RadiusX="1" RadiusY="1" GradientStops="{StaticResource ActiveShadowGradientStops}"/>
-	<LinearGradientBrush x:Key="ActiveBottomShadowBrush" StartPoint="0,0" EndPoint="0,1" GradientStops="{StaticResource ActiveShadowGradientStops}"/>
-	<RadialGradientBrush x:Key="ActiveBottomRightShadowBrush" GradientOrigin="0,0" Center="0,0" RadiusX="1" RadiusY="1" GradientStops="{StaticResource ActiveShadowGradientStops}"/>
-
-	<RadialGradientBrush x:Key="InactiveTopLeftShadowBrush" GradientOrigin="1,1" Center="1,1" RadiusX="1" RadiusY="1" GradientStops="{StaticResource InactiveShadowGradientStops}"/>
-	<LinearGradientBrush x:Key="InactiveTopShadowBrush" StartPoint="0,1" EndPoint="0,0" GradientStops="{StaticResource InactiveShadowGradientStops}"/>
-	<RadialGradientBrush x:Key="InactiveTopRightShadowBrush" GradientOrigin="0,1" Center="0,1" RadiusX="1" RadiusY="1" GradientStops="{StaticResource InactiveShadowGradientStops}"/>
-	<LinearGradientBrush x:Key="InactiveLeftShadowBrush" StartPoint="1,0" EndPoint="0,0" GradientStops="{StaticResource InactiveShadowGradientStops}"/>
-	<LinearGradientBrush x:Key="InactiveRightShadowBrush" StartPoint="0,0" EndPoint="1,0" GradientStops="{StaticResource InactiveShadowGradientStops}"/>
-	<RadialGradientBrush x:Key="InactiveBottomLeftShadowBrush" GradientOrigin="1,0" Center="1,0" RadiusX="1" RadiusY="1" GradientStops="{StaticResource InactiveShadowGradientStops}"/>
-	<LinearGradientBrush x:Key="InactiveBottomShadowBrush" StartPoint="0,0" EndPoint="0,1" GradientStops="{StaticResource InactiveShadowGradientStops}"/>
-	<RadialGradientBrush x:Key="InactiveBottomRightShadowBrush" GradientOrigin="0,0" Center="0,0" RadiusX="1" RadiusY="1" GradientStops="{StaticResource InactiveShadowGradientStops}"/>
-
 	<ControlTemplate x:Key="WindowBaseTemplate" TargetType="{x:Type Window}">
-		<Grid>
-			<Grid x:Name="ShadowPanel">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="{Binding Margin.Left, ElementName=MainPanel}"/>
-					<ColumnDefinition />
-					<ColumnDefinition Width="{Binding Margin.Right, ElementName=MainPanel}"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="{Binding Margin.Top, ElementName=MainPanel}"/>
-					<RowDefinition />
-					<RowDefinition Height="{Binding Margin.Bottom, ElementName=MainPanel}"/>
-				</Grid.RowDefinitions>
-				<Border x:Name="TopLeftShadow" Grid.Row="0" Grid.Column="0" Background="{StaticResource ActiveTopLeftShadowBrush}"/>
-				<Border x:Name="TopShadow" Grid.Row="0" Grid.Column="1" Background="{StaticResource ActiveTopShadowBrush}"/>
-				<Border x:Name="TopRightShadow" Grid.Row="0" Grid.Column="2" Background="{StaticResource ActiveTopRightShadowBrush}"/>
-				<Border x:Name="LeftShadow" Grid.Row="1" Grid.Column="0" Background="{StaticResource ActiveLeftShadowBrush}"/>
-				<Border x:Name="RightShadow" Grid.Row="1" Grid.Column="2" Background="{StaticResource ActiveRightShadowBrush}"/>
-				<Border x:Name="BottomLeftShadow" Grid.Row="2" Grid.Column="0" Background="{StaticResource ActiveBottomLeftShadowBrush}"/>
-				<Border x:Name="BottomShadow" Grid.Row="2" Grid.Column="1" Background="{StaticResource ActiveBottomShadowBrush}"/>
-				<Border x:Name="BottomRightShadow" Grid.Row="2" Grid.Column="2" Background="{StaticResource ActiveBottomRightShadowBrush}"/>
-			</Grid>
-			<Grid x:Name="MainPanel" Background="{TemplateBinding Background}" Margin="12">
-				<ContentPresenter/>
-			</Grid>
+		<Grid x:Name="MainPanel" Background="{TemplateBinding Background}">
+			<ContentPresenter/>
 		</Grid>
-		<ControlTemplate.Triggers>
-			<Trigger Property="IsActive" Value="False">
-				<Setter Property="Background" TargetName="TopLeftShadow"  Value="{StaticResource InactiveTopLeftShadowBrush}"/>
-				<Setter Property="Background" TargetName="TopShadow"  Value="{StaticResource InactiveTopShadowBrush}"/>
-				<Setter Property="Background" TargetName="TopRightShadow"  Value="{StaticResource InactiveTopRightShadowBrush}"/>
-				<Setter Property="Background" TargetName="LeftShadow"  Value="{StaticResource InactiveLeftShadowBrush}"/>
-				<Setter Property="Background" TargetName="RightShadow"  Value="{StaticResource InactiveRightShadowBrush}"/>
-				<Setter Property="Background" TargetName="BottomLeftShadow"  Value="{StaticResource InactiveBottomLeftShadowBrush}"/>
-				<Setter Property="Background" TargetName="BottomShadow"  Value="{StaticResource InactiveBottomShadowBrush}"/>
-				<Setter Property="Background" TargetName="BottomRightShadow"  Value="{StaticResource InactiveBottomRightShadowBrush}"/>
-			</Trigger>
-			<Trigger Property="AllowsTransparency" Value="False">
-				<Setter Property="Margin" TargetName="MainPanel" Value="1"/>
-			</Trigger>
-		</ControlTemplate.Triggers>
 	</ControlTemplate>
 	<Style TargetType="{x:Type local:WindowBase}">
 		<Setter Property="WindowStyle" Value="None"/>
@@ -113,57 +42,21 @@ Website : http://www.kfstorm.com
 	</Style>
 
 	<ControlTemplate x:Key="ChildWindowBaseTemplate" TargetType="{x:Type local:ChildWindowBase}">
-		<Grid>
-			<Grid x:Name="ShadowPanel">
+		<Grid x:Name="MainPanel" Background="{TemplateBinding Background}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid Height="20" Margin="5">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="{Binding Margin.Left, ElementName=MainPanel}"/>
-					<ColumnDefinition />
-					<ColumnDefinition Width="{Binding Margin.Right, ElementName=MainPanel}"/>
+					<ColumnDefinition/>
+					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="{Binding Margin.Top, ElementName=MainPanel}"/>
-					<RowDefinition />
-					<RowDefinition Height="{Binding Margin.Bottom, ElementName=MainPanel}"/>
-				</Grid.RowDefinitions>
-				<Border x:Name="TopLeftShadow" Grid.Row="0" Grid.Column="0" Background="{StaticResource ActiveTopLeftShadowBrush}"/>
-				<Border x:Name="TopShadow" Grid.Row="0" Grid.Column="1" Background="{StaticResource ActiveTopShadowBrush}"/>
-				<Border x:Name="TopRightShadow" Grid.Row="0" Grid.Column="2" Background="{StaticResource ActiveTopRightShadowBrush}"/>
-				<Border x:Name="LeftShadow" Grid.Row="1" Grid.Column="0" Background="{StaticResource ActiveLeftShadowBrush}"/>
-				<Border x:Name="RightShadow" Grid.Row="1" Grid.Column="2" Background="{StaticResource ActiveRightShadowBrush}"/>
-				<Border x:Name="BottomLeftShadow" Grid.Row="2" Grid.Column="0" Background="{StaticResource ActiveBottomLeftShadowBrush}"/>
-				<Border x:Name="BottomShadow" Grid.Row="2" Grid.Column="1" Background="{StaticResource ActiveBottomShadowBrush}"/>
-				<Border x:Name="BottomRightShadow" Grid.Row="2" Grid.Column="2" Background="{StaticResource ActiveBottomRightShadowBrush}"/>
-			</Grid><Grid x:Name="MainPanel" Background="{TemplateBinding Background}" Margin="12">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<Grid Height="20" Margin="5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition Width="Auto"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock FontSize="14" Foreground="White" Text="{TemplateBinding Title}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-					<Button x:Name="PART_Close" HorizontalAlignment="Right" Style="{StaticResource CloseStyle}"/>
-				</Grid>
-				<ContentPresenter Grid.Row="1"/>
+				<TextBlock FontSize="14" Foreground="White" Text="{TemplateBinding Title}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<Button x:Name="PART_Close" HorizontalAlignment="Right" Style="{StaticResource CloseStyle}"/>
 			</Grid>
+			<ContentPresenter Grid.Row="1"/>
 		</Grid>
-		<ControlTemplate.Triggers>
-			<Trigger Property="IsActive" Value="False">
-				<Setter Property="Background" TargetName="TopLeftShadow"  Value="{StaticResource InactiveTopLeftShadowBrush}"/>
-				<Setter Property="Background" TargetName="TopShadow"  Value="{StaticResource InactiveTopShadowBrush}"/>
-				<Setter Property="Background" TargetName="TopRightShadow"  Value="{StaticResource InactiveTopRightShadowBrush}"/>
-				<Setter Property="Background" TargetName="LeftShadow"  Value="{StaticResource InactiveLeftShadowBrush}"/>
-				<Setter Property="Background" TargetName="RightShadow"  Value="{StaticResource InactiveRightShadowBrush}"/>
-				<Setter Property="Background" TargetName="BottomLeftShadow"  Value="{StaticResource InactiveBottomLeftShadowBrush}"/>
-				<Setter Property="Background" TargetName="BottomShadow"  Value="{StaticResource InactiveBottomShadowBrush}"/>
-				<Setter Property="Background" TargetName="BottomRightShadow"  Value="{StaticResource InactiveBottomRightShadowBrush}"/>
-			</Trigger>
-			<Trigger Property="AllowsTransparency" Value="False">
-				<Setter Property="Margin" TargetName="MainPanel" Value="1"/>
-			</Trigger>
-		</ControlTemplate.Triggers>
 	</ControlTemplate>
 	<Style BasedOn="{StaticResource {x:Type local:WindowBase}}" TargetType="{x:Type local:ChildWindowBase}">
 		<Setter Property="Background" Value="{Binding Owner.Background}"/>

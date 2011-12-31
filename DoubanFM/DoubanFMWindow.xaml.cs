@@ -108,7 +108,53 @@ namespace DoubanFM
 
 		public static readonly DependencyProperty ShareSettingProperty =
 			DependencyProperty.Register("ShareSetting", typeof(ShareSetting), typeof(DoubanFMWindow), new UIPropertyMetadata(null));
-		
+
+		/// <summary>
+		/// 原始窗口背景
+		/// </summary>
+		public Color OriginalBackgroundColor
+		{
+			get { return (Color)GetValue(OriginalBackgroundColorProperty); }
+			set { SetValue(OriginalBackgroundColorProperty, value); }
+		}
+
+		public static readonly DependencyProperty OriginalBackgroundColorProperty =
+			DependencyProperty.Register("OriginalBackgroundColor", typeof(Color), typeof(DoubanFMWindow), new UIPropertyMetadata(ColorConverter.ConvertFromString("#FF1960AF")));
+
+		/// <summary>
+		/// 背景透明度
+		/// </summary>
+		public double BackgroundTransparency
+		{
+			get { return (double)GetValue(BackgroundTransparencyProperty); }
+			set { SetValue(BackgroundTransparencyProperty, value); }
+		}
+
+		public static readonly DependencyProperty BackgroundTransparencyProperty =
+			DependencyProperty.Register("BackgroundTransparency", typeof(double), typeof(DoubanFMWindow), new UIPropertyMetadata(0.0), new ValidateValueCallback((value) =>
+			{
+				double v = (double)value;
+				return v >= 0 && v <= 1;
+			}));
+
+
+
+		/// <summary>
+		/// 自动更换背景
+		/// </summary>
+		public bool AutoBackground
+		{
+			get { return (bool)GetValue(AutoBackgroundProperty); }
+			set { SetValue(AutoBackgroundProperty, value); }
+		}
+
+		public static readonly DependencyProperty AutoBackgroundProperty =
+			DependencyProperty.Register("AutoBackground", typeof(bool), typeof(DoubanFMWindow), new UIPropertyMetadata(true, new PropertyChangedCallback((d, e) =>
+				{
+					DoubanFMWindow window = (DoubanFMWindow)d;
+					window.OnAutoBackgroundChanged((bool)e.OldValue, (bool)e.NewValue);
+				})));
+
 		/// <summary>
 		/// 记录最后一次切歌的时间
 		/// </summary>
@@ -184,31 +230,54 @@ namespace DoubanFM
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化分享设置完成");
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化窗口背景");
-			UpdateBackground();
+			InitBackground();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化窗口背景完成");
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
 			_player.Initialize();
 		}
-		/// <summary>
-		/// 根据设置更新窗口背景
-		/// </summary>
-		public void UpdateBackground()
+
+		void InitBackground()
 		{
-			if (!_player.Settings.AutoBackground)
+			Binding binding = new Binding();
+			binding.Source = _player;
+			binding.Path = new PropertyPath("Settings.AutoBackground");
+			this.SetBinding(AutoBackgroundProperty, binding);
+
+			binding = new Binding();
+			binding.Source = _player;
+			binding.Path = new PropertyPath("Settings.BackgroundTransparency");
+			this.SetBinding(BackgroundTransparencyProperty, binding);
+			
+			if (_player.Settings.AutoBackground)
 			{
-				this.Background = new SolidColorBrush();
+				OnAutoBackgroundChanged(!_player.Settings.AutoBackground, _player.Settings.AutoBackground);
+			}
+		}
+
+		protected void OnAutoBackgroundChanged(bool oldValue, bool newValue)
+		{
+			if (!newValue)
+			{
+				Background = new SolidColorBrush();
 				System.Windows.Data.Binding binding = new System.Windows.Data.Binding();
 				binding.Source = _player.Settings;
 				binding.Path = new PropertyPath(Settings.BackgroundProperty);
-				System.Windows.Data.BindingOperations.SetBinding(this.Background, SolidColorBrush.ColorProperty, binding);
+				System.Windows.Data.BindingOperations.SetBinding(Background, SolidColorBrush.ColorProperty, binding);
 			}
 			else
 			{
-				if (_cover.Source is BitmapSource)
-				{
-					ChangeBackground(_cover.Source as BitmapSource);
-				}
+				MultiBinding binding = new MultiBinding();
+				Binding binding1 = new Binding();
+				binding1.Source = this;
+				binding1.Path = new PropertyPath(DoubanFMWindow.OriginalBackgroundColorProperty);
+				Binding binding2 = new Binding();
+				binding2.Source = this;
+				binding2.Path = new PropertyPath(DoubanFMWindow.BackgroundTransparencyProperty);
+				binding.Bindings.Add(binding1);
+				binding.Bindings.Add(binding2);
+				binding.Converter = new OriginalBackgroundColorAndBackgroundTransparencyToBackgroundConverter();
+				this.SetBinding(BackgroundProperty, binding);
 			}
 		}
 
@@ -1067,10 +1136,7 @@ namespace DoubanFM
 							{
 								if (((BitmapImage)o).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
 								{
-									if (_player.Settings.AutoBackground)
-									{
-										ChangeBackground((BitmapImage)o);
-									}
+									ChangeBackground((BitmapImage)o);
 									SwitchCover((BitmapImage)o);
 
 									((NotifyIcon.BalloonSongInfo)NotifyIcon.TrayToolTip).ShowCoverSmooth();
@@ -1094,10 +1160,7 @@ namespace DoubanFM
 								if (((BitmapImage)o).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
 								{
 									BitmapImage bitmapDefault = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
-									if (_player.Settings.AutoBackground)
-									{
-										ChangeBackground(bitmapDefault);
-									}
+									ChangeBackground(bitmapDefault);
 									SwitchCover(bitmapDefault);
 
 									if (CustomBaloon != null)
@@ -1110,10 +1173,7 @@ namespace DoubanFM
 				}
 				else
 				{
-					if (_player.Settings.AutoBackground)
-					{
-						ChangeBackground(bitmap);
-					}
+					ChangeBackground(bitmap);
 					SwitchCover(bitmap);
 				}
 			}

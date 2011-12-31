@@ -200,10 +200,6 @@ Website : http://www.kfstorm.com
 					</Paragraph>
 				</Section>
 				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">为什么给窗口设置半透明颜色背景时不是变半透明，而是变黑？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">窗口半透明只有在开启窗口阴影时才有效，先开启窗口阴影（重启软件生效），然后就能设置成半透明窗口背景了。</Paragraph>
-				</Section>
-				<Section>
 					<Paragraph Style="{StaticResource Header1StyleKey}">修改主界面字体后经常看不清字，怎么办？</Paragraph>
 					<Paragraph Style="{StaticResource TextStyleKey}">可以把主界面缩放调大一点，字会清晰很多。</Paragraph>
 				</Section>

@@ -143,6 +143,7 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowBase.cs" />
+    <Compile Include="WindowShadow.cs" />
     <Page Include="ColorPicker\PopupableColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -311,6 +312,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\SplashScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOM.PNG" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWLEFT.PNG" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWRIGHT.PNG" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWTOP.PNG" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOM.PNG" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWLEFT.PNG" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWRIGHT.PNG" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWTOP.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

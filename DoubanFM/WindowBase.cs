@@ -24,6 +24,16 @@ namespace DoubanFM
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(WindowBase), new FrameworkPropertyMetadata(typeof(WindowBase)));
 		}
 
+		public WindowBase()
+		{
+			this.SourceInitialized += delegate
+			{
+				shadow = new WindowShadow(this);
+			};
+		}
+
+		private WindowShadow shadow;
+
 		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
 		{
 			try

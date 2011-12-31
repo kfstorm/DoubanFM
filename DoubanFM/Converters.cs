@@ -273,4 +273,21 @@ namespace DoubanFM
 			return 1.0 - (double)value;
 		}
 	}
+
+	public class OriginalBackgroundColorAndBackgroundTransparencyToBackgroundConverter : IMultiValueConverter
+	{
+		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			Color color = (Color)values[0];
+			double transparency = (double)values[1];
+			color.A = (byte)(int)(color.A * (1 - transparency));
+			return new SolidColorBrush(color);
+		}
+
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
 }

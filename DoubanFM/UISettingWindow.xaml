@@ -11,14 +11,6 @@ Website : http://www.kfstorm.com
 		Title="界面设置" Background="#FF813131" Foreground="White">
 	<Grid Width="300" Margin="10">
 		<StackPanel>
-			<Grid Margin="0,2"  VerticalAlignment="Center">
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<CheckBox x:Name="CheckBoxIsShadowEnabled" Content="开启窗口阴影" IsChecked="{Binding Settings.IsShadowEnabled, Mode=TwoWay, Source={StaticResource Player}}"/>
-				<TextBlock Grid.Row="1" Foreground="White"><Run Text="（重启后生效，关闭后动画更平滑）"/></TextBlock>
-			</Grid>
 			<CheckBox Margin="0,2" VerticalAlignment="Center" IsChecked="{Binding Settings.ShowBalloonWhenSongChanged, Mode=TwoWay, Source={StaticResource Player}}" Content="换歌时弹出气泡"/>
 			<CheckBox Margin="0,2" x:Name="CheckBoxTopMost" VerticalAlignment="Center" IsChecked="{Binding Settings.TopMost, Mode=TwoWay, Source={StaticResource Player}}" Content="总在最前"/>
 			<CheckBox Margin="0,2" x:Name="CheckBoxAlwaysShowNotifyIcon" VerticalAlignment="Center" IsChecked="{Binding Settings.AlwaysShowNotifyIcon, Mode=TwoWay, Source={StaticResource Player}}" Checked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Unchecked="CheckBoxAlwaysShowNotifyIcon_IsCheckedChanged" Content="总是显示托盘图标" />
@@ -50,15 +42,28 @@ Website : http://www.kfstorm.com
 				<TextBlock VerticalAlignment="Center">主界面字体</TextBlock>
 				<local:FontPicker Grid.Column="1" Font="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Height="24"/>
 			</Grid>
-			<Grid Height="40">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="80"/>
 					<ColumnDefinition Width="64"/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<TextBlock VerticalAlignment="Center">窗口背景</TextBlock>
-				<CheckBox x:Name="CbAutoBackground" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}}" Click="CbAutoBackground_Click">自动</CheckBox>
-				<local:PopupableColorPicker Grid.Column="2" Margin="0,5" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}"/>
+				<TextBlock Grid.RowSpan="2" VerticalAlignment="Center">窗口背景</TextBlock>
+				<RadioButton Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}}">自动</RadioButton>
+				<RadioButton Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}">手动</RadioButton>
+				<Grid Grid.Column="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<TextBlock VerticalAlignment="Center" Margin="5,0">透明度</TextBlock>
+					<Slider Grid.Column="1" Value="{Binding Settings.BackgroundTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="1"/>
+				</Grid>
+				<local:PopupableColorPicker Grid.Row="1" Grid.Column="2" Margin="0,5" Height="24" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}"/>
 			</Grid>
 		</StackPanel>
 	</Grid>

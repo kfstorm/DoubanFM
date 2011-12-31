@@ -30,9 +30,8 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty RememberLastChannelProperty = DependencyProperty.Register("RememberLastChannel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty LastChannelProperty = DependencyProperty.Register("LastChannel", typeof(Channel), typeof(Settings));
 		public static readonly DependencyProperty IsMutedProperty = DependencyProperty.Register("IsMuted", typeof(bool), typeof(Settings));
-		public static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof(double), typeof(Settings),new PropertyMetadata(1.0));
+		public static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof(double), typeof(Settings), new PropertyMetadata(1.0));
 		public static readonly DependencyProperty SlideCoverWhenMouseMoveProperty = DependencyProperty.Register("SlideCoverWhenMouseMove", typeof(bool), typeof(Settings), new PropertyMetadata(true));
-		public static readonly DependencyProperty IsShadowEnabledProperty = DependencyProperty.Register("IsShadowEnabled", typeof(bool), typeof(Settings));
 		public static readonly DependencyProperty AlwaysShowNotifyIconProperty = DependencyProperty.Register("AlwaysShowNotifyIcon", typeof(bool), typeof(Settings));
 		public static readonly DependencyProperty AutoUpdateProperty = DependencyProperty.Register("AutoUpdate", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty LastTimeCheckUpdateProperty = DependencyProperty.Register("LastTimeCheckUpdate", typeof(DateTime), typeof(Settings), new PropertyMetadata(DateTime.MinValue));
@@ -49,7 +48,8 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty FirstTimeProperty = DependencyProperty.Register("FirstTime", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 		public static readonly DependencyProperty MainWindowFontProperty = DependencyProperty.Register("MainWindowFont", typeof(FontFamily), typeof(Settings), new PropertyMetadata(System.Windows.SystemFonts.MessageFontFamily));
 		public static readonly DependencyProperty ShowBalloonWhenSongChangedProperty = DependencyProperty.Register("ShowBalloonWhenSongChanged", typeof(bool), typeof(Settings), new PropertyMetadata(true));
-		
+		public static readonly DependencyProperty BackgroundTransparencyProperty = DependencyProperty.Register("BackgroundTransparency", typeof(double), typeof(Settings), new PropertyMetadata(0.0));
+
 		#endregion
 
 		/// <summary>
@@ -115,14 +115,6 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(SlideCoverWhenMouseMoveProperty); }
 			set { SetValue(SlideCoverWhenMouseMoveProperty, value); }
-		}
-		/// <summary>
-		/// 开启窗口阴影
-		/// </summary>
-		public bool IsShadowEnabled
-		{
-			get { return (bool)GetValue(IsShadowEnabledProperty); }
-			set { SetValue(IsShadowEnabledProperty, value); }
 		}
 		/// <summary>
 		/// 总是显示托盘图标
@@ -225,7 +217,7 @@ namespace DoubanFM.Core
 		/// </summary>
 		public System.Windows.Media.Color Background
 		{
-			get { return ( System.Windows.Media.Color)GetValue(BackgroundProperty); }
+			get { return (System.Windows.Media.Color)GetValue(BackgroundProperty); }
 			set { SetValue(BackgroundProperty, value); }
 		}
 		/// <summary>
@@ -251,6 +243,11 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(ShowBalloonWhenSongChangedProperty); }
 			set { SetValue(ShowBalloonWhenSongChangedProperty, value); }
+		}
+		public double BackgroundTransparency
+		{
+			get { return (double)GetValue(BackgroundTransparencyProperty); }
+			set { SetValue(BackgroundTransparencyProperty, value); }
 		}
 
 		/// <summary>
@@ -333,14 +330,6 @@ namespace DoubanFM.Core
 			catch
 			{
 				SlideCoverWhenMouseMove = def.SlideCoverWhenMouseMove;
-			}
-			try
-			{
-				IsShadowEnabled = info.GetBoolean("IsShadowEnabled");
-			}
-			catch
-			{
-				IsShadowEnabled = def.IsShadowEnabled;
 			}
 			try
 			{
@@ -470,6 +459,14 @@ namespace DoubanFM.Core
 			{
 				ShowBalloonWhenSongChanged = def.ShowBalloonWhenSongChanged;
 			}
+			try
+			{
+				BackgroundTransparency = info.GetDouble("BackgroundTransparency");
+			}
+			catch
+			{
+				BackgroundTransparency = def.BackgroundTransparency;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -482,7 +479,6 @@ namespace DoubanFM.Core
 			info.AddValue("IsMuted", IsMuted);
 			info.AddValue("Volume", Volume);
 			info.AddValue("SlideCoverWhenMouseMove", SlideCoverWhenMouseMove);
-			info.AddValue("IsShadowEnabled", IsShadowEnabled);
 			info.AddValue("AlwaysShowNotifyIcon", AlwaysShowNotifyIcon);
 			info.AddValue("AutoUpdate", AutoUpdate);
 			info.AddValue("LastTimeCheckUpdate", LastTimeCheckUpdate);
@@ -505,6 +501,7 @@ namespace DoubanFM.Core
 				info.AddValue("MainWindowFont", MainWindowFont.ToString());
 			}
 			info.AddValue("ShowBalloonWhenSongChanged", ShowBalloonWhenSongChanged);
+			info.AddValue("BackgroundTransparency", BackgroundTransparency);
 		}
 
 		/// <summary>

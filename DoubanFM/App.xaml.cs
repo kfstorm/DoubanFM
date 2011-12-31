@@ -76,7 +76,8 @@ namespace DoubanFM
 			}
 			else
 			{
-				new SplashScreen("Images/SplashScreen.png").Show(true);
+				SplashScreen splashScreen = new SplashScreen("Images/SplashScreen.png");
+				splashScreen.Show(true, true);
 			}
 		}
 
