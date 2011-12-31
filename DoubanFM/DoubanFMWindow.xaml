@@ -251,7 +251,7 @@ Website : http://www.kfstorm.com
 								</RadioButton>
 							</Grid>
 							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" d:IsHidden="True">
-								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}">
+								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Opacity="0">
 									<!--<ListBox.ItemContainerStyle>
 										<Style BasedOn="{StaticResource ChannelStyle}" TargetType="{x:Type ListBoxItem}">
 											<Setter Property="Width" Value="Auto"/>
@@ -263,15 +263,15 @@ Website : http://www.kfstorm.com
 										</ItemsPanelTemplate>
 									</ListBox.ItemsPanel>-->
 								</ListBox>
-								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}"/>
-								<ListBox x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged">
+								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Opacity="0"/>
+								<ListBox x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged" Opacity="0">
 									<ListBox.ItemTemplate>
 										<DataTemplate>
 											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
 										</DataTemplate>
 									</ListBox.ItemTemplate>
 								</ListBox>
-								<ListBox x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged"/>
+								<ListBox x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0"/>
 							</Grid>
 						</Grid>
 					</TabItem>
