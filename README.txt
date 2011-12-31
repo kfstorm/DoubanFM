@@ -2,6 +2,6 @@
 
 本软件的通知区域图标使用了Philipp Sumi的hardcodet.net NotifyIcon for WPF第三方库（http://www.hardcodet.net/projects/wpf-notifyicon），并对其做了小幅修改。
 
-Copyright (C) 2011 K.F.Storm
+Copyright (C) 2011-2012 K.F.Storm
 
 软件主页：http://www.kfstorm.com/blog/doubanfm
