@@ -311,9 +311,6 @@
     <Folder Include="HelpContent\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\SplashScreen.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOM.PNG" />
     <Resource Include="Images\Shadow\ACTIVESHADOWLEFT.PNG" />
     <Resource Include="Images\Shadow\ACTIVESHADOWRIGHT.PNG" />

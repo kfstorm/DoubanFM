@@ -946,8 +946,8 @@ namespace DoubanFM
 		/// </summary>
 		public void ShowFront()
 		{
-			this.WindowState = WindowState.Normal;
 			this.Show();
+			this.WindowState = WindowState.Normal;
 			this.Activate();
 		}
 		/// <summary>

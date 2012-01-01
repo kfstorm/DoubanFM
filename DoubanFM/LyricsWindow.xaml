@@ -34,7 +34,11 @@ Website : http://www.kfstorm.com
 				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
 			</StringAnimationUsingKeyFrames>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Lyrics2Root" Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<CircleEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
 				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0.75"/>
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>

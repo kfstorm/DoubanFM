@@ -74,11 +74,6 @@ namespace DoubanFM
 				App.Current.Shutdown(0);
 				return;
 			}
-			else
-			{
-				SplashScreen splashScreen = new SplashScreen("Images/SplashScreen.png");
-				splashScreen.Show(true, true);
-			}
 		}
 
 		public static string GetPreciseTime(DateTime time)
