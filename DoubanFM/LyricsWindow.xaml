@@ -42,6 +42,17 @@ Website : http://www.kfstorm.com
 				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0.75"/>
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
+		<Storyboard x:Key="HideLyricsStoryboard">
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText1">
+				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText2">
+				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText3">
+				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			</StringAnimationUsingKeyFrames>
+		</Storyboard>
 		<local:OpenTypeWeightToFontWeightConverter x:Key="OpenTypeWeightToFontWeightConverter"/>
 		<local:RatioToValueConverter x:Key="RatioToValueConverter"/>
 	</Window.Resources>

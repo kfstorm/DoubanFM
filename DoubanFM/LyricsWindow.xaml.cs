@@ -58,7 +58,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 更换歌词的Storyboard
 		/// </summary>
-		private Storyboard ChangeLyricsStoryboard;
+		private Storyboard ChangeLyricsStoryboard, HideLyricsStoryboard;
 		
 		[DllImport("user32.dll")]
 		static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
@@ -76,6 +76,7 @@ namespace DoubanFM
 			LyricsSetting = lyricsSetting;
 
 			ChangeLyricsStoryboard = (Storyboard)FindResource("ChangeLyricsStoryboard");
+			HideLyricsStoryboard = (Storyboard)FindResource("HideLyricsStoryboard");
 			
 			this.SourceInitialized += new EventHandler((o, e) =>
 			{
@@ -179,9 +180,7 @@ namespace DoubanFM
 			}
 			else
 			{
-				LyricsText1 = null;
-				LyricsText2 = null;
-				LyricsText3 = null;
+				HideLyricsStoryboard.Begin();
 			}
 
 			//防止对歌词窗口设置WS_EX_TOOLWINDOW样式后偶尔置顶会失效，不知道有没有用
