@@ -819,7 +819,7 @@ namespace DoubanFM
 		public void ShowHide()
 		{
 			if (this.IsVisible && this.IsActive && this.WindowState == WindowState.Normal)
-				this.Hide();
+				this.HideMinimized();
 			else this.ShowFront();
 		}
 
@@ -949,6 +949,14 @@ namespace DoubanFM
 			this.Show();
 			this.WindowState = WindowState.Normal;
 			this.Activate();
+		}
+		/// <summary>
+		/// 最小化后隐藏
+		/// </summary>
+		public void HideMinimized()
+		{
+			this.WindowState = WindowState.Minimized;
+			this.Hide();
 		}
 		/// <summary>
 		/// 设置歌词
@@ -1622,7 +1630,7 @@ namespace DoubanFM
 
 		private void ButtonToNotifyIcon_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			this.Hide();
+			this.HideMinimized();
 		}
 
 		private void ButtonExit_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -1846,7 +1854,7 @@ namespace DoubanFM
 		private void NotifyIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
 		{
 			if (this.IsVisible)
-				this.Hide();
+				this.HideMinimized();
 			else
 				this.ShowFront();
 		}
