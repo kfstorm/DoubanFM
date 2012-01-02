@@ -6,67 +6,68 @@ Website : http://www.kfstorm.com
 <ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
 	xmlns:local="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	x:Class="DoubanFM.Style"
-	mc:Ignorable="d">
+	mc:Ignorable="d PresentationOptions">
 	<!-- 应该在此定义资源字典条目。-->
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="/DoubanFM;component/Theme.xaml"/>
 	</ResourceDictionary.MergedDictionaries>
 	<local:WindowBackgroundToSliderForegroundConverter x:Key="WindowBackgroundToSliderForegroundConverter"/>
-	<PowerEase x:Key="Smooth" Power="3"/>
+	<PowerEase x:Key="Smooth" Power="3" PresentationOptions:Freeze="True"/>
 	<local:SliderThumbWidthConverter x:Key="converter1"/>
 	<local:BoolReverseConverter x:Key="BoolReverseConverter"/>
 	<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 	<local:BoolReverseToVisibilityConverter x:Key="BoolReverseToVisibilityConverter"/>
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-	<LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FFE93613" Offset="0"/>
-		<GradientStop Color="#FFFF593A" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FFE93613" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFFF593A" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor2" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FF9B1283" Offset="0"/>
-		<GradientStop Color="#FFDC2FBA" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor2" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF9B1283" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFDC2FBA" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor3" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FFF18312" Offset="0"/>
-		<GradientStop Color="#FFFFBD34" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor3" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FFF18312" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFFFBD34" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor4" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FF26ADC6" Offset="0"/>
-		<GradientStop Color="#FF4ED5DE" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor4" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF26ADC6" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF4ED5DE" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor5" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FF98BC3A" Offset="0"/>
-		<GradientStop Color="#FFBBDA49" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor5" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF98BC3A" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFBBDA49" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor6" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FF1B56A7" Offset="0"/>
-		<GradientStop Color="#FF207ED0" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor6" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF1B56A7" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF207ED0" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor7" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FFD2CA00" Offset="0"/>
-		<GradientStop Color="#FFD5E95F" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor7" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FFD2CA00" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFD5E95F" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor8" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FF258122" Offset="0"/>
-		<GradientStop Color="#FF5FC44A" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor8" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF258122" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF5FC44A" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor9" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FF4C25BC" Offset="0"/>
-		<GradientStop Color="#FFA161C6" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor9" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF4C25BC" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFA161C6" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor10" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FF2EC67D" Offset="0"/>
-		<GradientStop Color="#FF69E49D" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor10" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF2EC67D" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF69E49D" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor11" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FFFF6900" Offset="0"/>
-		<GradientStop Color="#FFFF795B" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor11" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FFFF6900" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFFF795B" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
-	<LinearGradientBrush x:Key="MetroColor12" StartPoint="0,1" EndPoint="1,0">
-		<GradientStop Color="#FF709906" Offset="0"/>
-		<GradientStop Color="#FF50C232" Offset="1"/>
+	<LinearGradientBrush x:Key="MetroColor12" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF709906" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF50C232" Offset="1" PresentationOptions:Freeze="True"/>
 	</LinearGradientBrush>
 
 	<AlternationConverter x:Key="AlternationConverter">
@@ -225,7 +226,7 @@ Website : http://www.kfstorm.com
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="CommonStates">
 								<VisualState x:Name="Normal">
-									<Storyboard>
+									<Storyboard PresentationOptions:Freeze="True">
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
 										</DoubleAnimationUsingKeyFrames>
@@ -235,7 +236,7 @@ Website : http://www.kfstorm.com
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
-									<Storyboard>
+									<Storyboard PresentationOptions:Freeze="True">
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.2"/>
 										</DoubleAnimationUsingKeyFrames>
@@ -249,14 +250,14 @@ Website : http://www.kfstorm.com
 							<VisualStateGroup x:Name="SelectionStates">
 								<VisualState x:Name="Unselected"/>
 								<VisualState x:Name="Selected">
-									<Storyboard AutoReverse="True" RepeatBehavior="Forever">
+									<Storyboard AutoReverse="True" RepeatBehavior="Forever" PresentationOptions:Freeze="True">
 										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
 											<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
 										</ColorAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="SelectedUnfocused">
-									<Storyboard AutoReverse="True" RepeatBehavior="Forever">
+									<Storyboard AutoReverse="True" RepeatBehavior="Forever" PresentationOptions:Freeze="True">
 										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
 											<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
 										</ColorAnimationUsingKeyFrames>
@@ -346,7 +347,7 @@ Website : http://www.kfstorm.com
 	</Style>
 	<Style x:Key="ControlPanelStyle" TargetType="{x:Type TabControl}">
 		<Style.Resources>
-			<Storyboard x:Key="ControlPanelStoryboard">
+			<Storyboard x:Key="ControlPanelStoryboard" PresentationOptions:Freeze="True">
 				<DoubleAnimation Duration="0:0:0.5" From="0" To="1" Storyboard.TargetProperty="SelectedItem.Content.Opacity"/>
 			</Storyboard>
 		</Style.Resources>
@@ -478,7 +479,7 @@ Website : http://www.kfstorm.com
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="CommonStates">
 								<VisualState x:Name="Normal">
-									<Storyboard>
+									<Storyboard PresentationOptions:Freeze="True">
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
 										</DoubleAnimationUsingKeyFrames>
@@ -488,7 +489,7 @@ Website : http://www.kfstorm.com
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
-									<Storyboard>
+									<Storyboard PresentationOptions:Freeze="True">
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.1"/>
 										</DoubleAnimationUsingKeyFrames>
@@ -502,14 +503,14 @@ Website : http://www.kfstorm.com
 							<VisualStateGroup x:Name="SelectionStates">
 								<VisualState x:Name="Unselected"/>
 								<VisualState x:Name="Selected">
-									<Storyboard AutoReverse="True" RepeatBehavior="Forever">
+									<Storyboard AutoReverse="True" RepeatBehavior="Forever" PresentationOptions:Freeze="True">
 										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
 											<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
 										</ColorAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="SelectedUnfocused">
-									<Storyboard AutoReverse="True" RepeatBehavior="Forever">
+									<Storyboard AutoReverse="True" RepeatBehavior="Forever" PresentationOptions:Freeze="True">
 										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
 											<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
 										</ColorAnimationUsingKeyFrames>
@@ -539,6 +540,7 @@ Website : http://www.kfstorm.com
 	<Style x:Key="SearchResultListStyle" TargetType="{x:Type ListBox}">
 		<Setter Property="Background" Value="#7F000000"/>
 		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
 		<Setter Property="ItemContainerStyle" Value="{StaticResource SearchItemStyle}"/>
 		<Setter Property="ItemTemplate">
 			<Setter.Value>
@@ -774,149 +776,6 @@ Website : http://www.kfstorm.com
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-	</Style>
-	<ControlTemplate x:Key="WindowBaseTemplate" TargetType="{x:Type Window}">
-		<Grid>
-			<Grid x:Name="ShadowPanel">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="{Binding Margin.Left, ElementName=MainPanel}"/>
-					<ColumnDefinition />
-					<ColumnDefinition Width="{Binding Margin.Right, ElementName=MainPanel}"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="{Binding Margin.Top, ElementName=MainPanel}"/>
-					<RowDefinition />
-					<RowDefinition Height="{Binding Margin.Bottom, ElementName=MainPanel}"/>
-				</Grid.RowDefinitions>
-				<Border x:Name="TopLeftShadow" Grid.Row="0" Grid.Column="0">
-					<Border.Background>
-						<RadialGradientBrush GradientOrigin="1,1" Center="1,1" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="TopShadow" Grid.Row="0" Grid.Column="1">
-					<Border.Background>
-						<LinearGradientBrush StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="TopRightShadow" Grid.Row="0" Grid.Column="2">
-					<Border.Background>
-						<RadialGradientBrush GradientOrigin="0,1" Center="0,1" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="LeftShadow" Grid.Row="1" Grid.Column="0">
-					<Border.Background>
-						<LinearGradientBrush StartPoint="1,0" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="RightShadow" Grid.Row="1" Grid.Column="2">
-					<Border.Background>
-						<LinearGradientBrush StartPoint="0,0" EndPoint="1,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="BottomLeftShadow" Grid.Row="2" Grid.Column="0">
-					<Border.Background>
-						<RadialGradientBrush GradientOrigin="1,0" Center="1,0" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="BottomShadow" Grid.Row="2" Grid.Column="1">
-					<Border.Background>
-						<LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="BottomRightShadow" Grid.Row="2" Grid.Column="2">
-					<Border.Background>
-						<RadialGradientBrush GradientOrigin="0,0" Center="0,0" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-			</Grid>
-			<Grid x:Name="MainPanel" Background="{TemplateBinding Background}" Margin="12">
-				<ContentPresenter/>
-			</Grid>
-		</Grid>
-	</ControlTemplate>
-	<Style x:Key="WindowBaseStyle" TargetType="{x:Type Window}">
-		<Setter Property="WindowStyle" Value="None"/>
-		<Setter Property="ResizeMode" Value="NoResize"/>
-		<Setter Property="SizeToContent" Value="WidthAndHeight"/>
-		<Setter Property="Background" Value="{x:Null}"/>
-		<Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
-		<Setter Property="Template" Value="{StaticResource WindowBaseTemplate}"/>
-		<EventSetter Event="UIElement.MouseLeftButtonDown" Handler="WindowBaseStyle_MouseLeftButtonDown"/>
-	</Style>
-	<ControlTemplate x:Key="ChildWindowBaseTemplate" TargetType="{x:Type Window}">
-		<Grid>
-			<Grid x:Name="ShadowPanel">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="{Binding Margin.Left, ElementName=MainPanel}"/>
-					<ColumnDefinition />
-					<ColumnDefinition Width="{Binding Margin.Right, ElementName=MainPanel}"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="{Binding Margin.Top, ElementName=MainPanel}"/>
-					<RowDefinition />
-					<RowDefinition Height="{Binding Margin.Bottom, ElementName=MainPanel}"/>
-				</Grid.RowDefinitions>
-				<Border x:Name="TopLeftShadow" Grid.Row="0" Grid.Column="0">
-					<Border.Background>
-						<RadialGradientBrush GradientOrigin="1,1" Center="1,1" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="TopShadow" Grid.Row="0" Grid.Column="1">
-					<Border.Background>
-						<LinearGradientBrush StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="TopRightShadow" Grid.Row="0" Grid.Column="2">
-					<Border.Background>
-						<RadialGradientBrush GradientOrigin="0,1" Center="0,1" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="LeftShadow" Grid.Row="1" Grid.Column="0">
-					<Border.Background>
-						<LinearGradientBrush StartPoint="1,0" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="RightShadow" Grid.Row="1" Grid.Column="2">
-					<Border.Background>
-						<LinearGradientBrush StartPoint="0,0" EndPoint="1,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="BottomLeftShadow" Grid.Row="2" Grid.Column="0">
-					<Border.Background>
-						<RadialGradientBrush GradientOrigin="1,0" Center="1,0" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="BottomShadow" Grid.Row="2" Grid.Column="1">
-					<Border.Background>
-						<LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-				<Border x:Name="BottomRightShadow" Grid.Row="2" Grid.Column="2">
-					<Border.Background>
-						<RadialGradientBrush GradientOrigin="0,0" Center="0,0" RadiusX="1" RadiusY="1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-					</Border.Background>
-				</Border>
-			</Grid>
-			<Grid x:Name="MainPanel" Background="{TemplateBinding Background}" Margin="12">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<Grid Height="20" Margin="5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition Width="Auto"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock FontSize="14" Foreground="White" Text="{TemplateBinding Title}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-					<Button x:Name="ButtonClose" HorizontalAlignment="Right" Click="ChildWindowBaseStyle_ButtonClose_Click" Style="{StaticResource ExitStyle}" ToolTip="关闭"/>
-				</Grid>
-				<ContentPresenter Grid.Row="1"/>
-			</Grid>
-		</Grid>
-	</ControlTemplate>
-	<Style x:Key="ChildWindowBaseStyle" BasedOn="{StaticResource WindowBaseStyle}" TargetType="{x:Type Window}">
-		<Setter Property="ShowInTaskbar" Value="False"/>
-		<Setter Property="Template" Value="{StaticResource ChildWindowBaseTemplate}"/>
 	</Style>
 	<Style x:Key="ShowLyricsStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
 		<Setter Property="ToolTip" Value="显示歌词"/>

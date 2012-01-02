@@ -7,22 +7,25 @@ Website : http://www.kfstorm.com
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="clr-namespace:DoubanFM"
+	xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="PresentationOptions"
 	x:Class="DoubanFM.LyricsWindow"
 	x:Name="Window"
 	Title="" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" Left="{Binding Path=Left, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Top="{Binding Path=Top, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Width="{Binding Path=Width, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" Height="{Binding Path=Height, Source={StaticResource {x:Static SystemParameters.WorkAreaKey}}}" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}" IsHitTestVisible="False">
 	<Window.Resources>
-		<Storyboard x:Key="ChangeLyricsStoryboard">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Offset" Storyboard.TargetProperty="(TranslateTransform.Y)" FillBehavior="Stop">
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+		<Storyboard x:Key="ChangeLyricsStoryboard" PresentationOptions:Freeze="True">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Offset" Storyboard.TargetProperty="(TranslateTransform.Y)" FillBehavior="Stop" PresentationOptions:Freeze="True">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0" PresentationOptions:Freeze="True">
 					<EasingDoubleKeyFrame.EasingFunction>
-						<CircleEase EasingMode="EaseOut"/>
+						<CircleEase EasingMode="EaseOut" PresentationOptions:Freeze="True"/>
 					</EasingDoubleKeyFrame.EasingFunction>
 				</EasingDoubleKeyFrame>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="{Binding ActualHeight, ElementName=PathText1}"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="{Binding ActualHeight, ElementName=PathText1}" PresentationOptions:Freeze="True"/>
 			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="PathText1" Storyboard.TargetProperty="Opacity">
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="PathText1" Storyboard.TargetProperty="Opacity" PresentationOptions:Freeze="True">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0" PresentationOptions:Freeze="True"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1" PresentationOptions:Freeze="True"/>
 			</DoubleAnimationUsingKeyFrames>
 			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText1">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
@@ -33,24 +36,24 @@ Website : http://www.kfstorm.com
 			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText3">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
 			</StringAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Lyrics2Root" Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Lyrics2Root" Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)" PresentationOptions:Freeze="True">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1" PresentationOptions:Freeze="True">
 					<EasingDoubleKeyFrame.EasingFunction>
-						<CircleEase EasingMode="EaseOut"/>
+						<CircleEase EasingMode="EaseOut" PresentationOptions:Freeze="True"/>
 					</EasingDoubleKeyFrame.EasingFunction>
 				</EasingDoubleKeyFrame>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0.75"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0.75" PresentationOptions:Freeze="True"/>
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="HideLyricsStoryboard">
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText1">
-				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText1" PresentationOptions:Freeze="True">
+				<DiscreteStringKeyFrame KeyTime="0" Value="" PresentationOptions:Freeze="True"/>
 			</StringAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText2">
-				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText2" PresentationOptions:Freeze="True">
+				<DiscreteStringKeyFrame KeyTime="0" Value="" PresentationOptions:Freeze="True"/>
 			</StringAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText3">
-				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText3" PresentationOptions:Freeze="True">
+				<DiscreteStringKeyFrame KeyTime="0" Value="" PresentationOptions:Freeze="True"/>
 			</StringAnimationUsingKeyFrames>
 		</Storyboard>
 		<local:OpenTypeWeightToFontWeightConverter x:Key="OpenTypeWeightToFontWeightConverter"/>

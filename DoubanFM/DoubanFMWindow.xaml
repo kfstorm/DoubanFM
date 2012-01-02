@@ -236,7 +236,7 @@ Website : http://www.kfstorm.com
 										</EventTrigger>
 									</RadioButton.Triggers>
 								</RadioButton>
-								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" Content="公共兆赫" Style="{DynamicResource ChannelCategoryStyle}">
+								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" IsChecked="True" Content="公共兆赫" Style="{DynamicResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard Storyboard="{StaticResource PublicClickStoryboard}"/>
@@ -263,7 +263,7 @@ Website : http://www.kfstorm.com
 										</ItemsPanelTemplate>
 									</ListBox.ItemsPanel>-->
 								</ListBox>
-								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Opacity="0"/>
+								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Panel.ZIndex="1"/>
 								<ListBox x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged" Opacity="0">
 									<ListBox.ItemTemplate>
 										<DataTemplate>
