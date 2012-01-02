@@ -80,7 +80,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 临时文件夹
 		/// </summary>
-		private string _tempPath = Path.GetTempPath() + "DoubanFM";
+		private string _tempPath = Path.Combine(Path.GetTempPath(), "DoubanFM");
 		/// <summary>
 		/// 预加载用
 		/// </summary>
@@ -612,12 +612,12 @@ namespace DoubanFM
 					string nextSongUrl = _player.GetNextSongUrl();
 					if (!string.IsNullOrEmpty(nextSongUrl))
 					{
-						Match mc = Regex.Match(nextSongUrl, @".*/(.*)");
+
 						try
 						{
 							if (!Directory.Exists(_tempPath))
 								Directory.CreateDirectory(_tempPath);
-							string filepath = _tempPath + @"\" + mc.Groups[1].Value;
+							string filepath = Path.Combine(_tempPath, Path.GetFileName(nextSongUrl));
 							_preloadClient.DownloadFileAsync(new Uri(nextSongUrl), filepath,
 								new string[] { nextSongUrl, filepath });
 						}
@@ -632,17 +632,21 @@ namespace DoubanFM
 		/// </summary>
 		void ClearPreloadMusicFiles(string except = null)
 		{
-			if (!Directory.Exists(_tempPath)) return;
-			string[] musicFiles = Directory.GetFiles(_tempPath, @"*.mp3");
-			foreach (var file in musicFiles)
-				if (file != except)
-				{
-					try
+			try
+			{
+				if (!Directory.Exists(_tempPath)) return;
+				string[] musicFiles = Directory.GetFiles(_tempPath, @"*.mp3");
+				foreach (var file in musicFiles)
+					if (file != except)
 					{
-						File.Delete(file);
+						try
+						{
+							File.Delete(file);
+						}
+						catch { }
 					}
-					catch { }
-				}
+			}
+			catch { }
 		}
 		/// <summary>
 		/// 启动时检查更新
@@ -676,25 +680,29 @@ namespace DoubanFM
 		/// </summary>
 		void ClearOldTempFiles()
 		{
-			string fileFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.InternetCache);
-			string[] musicFiles = Directory.GetFiles(fileFolder, @"*.mp3");
-			foreach (var file in musicFiles)
+			try
 			{
-				try
+				string fileFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.InternetCache);
+				string[] musicFiles = Directory.GetFiles(fileFolder, @"*.mp3");
+				foreach (var file in musicFiles)
 				{
-					File.Delete(file);
+					try
+					{
+						File.Delete(file);
+					}
+					catch { }
 				}
-				catch { }
-			}
-			string[] exeFiles = Directory.GetFiles(fileFolder, @"DoubanFMSetup*.exe");
-			foreach (var file in exeFiles)
-			{
-				try
+				string[] exeFiles = Directory.GetFiles(fileFolder, @"DoubanFMSetup*.exe");
+				foreach (var file in exeFiles)
 				{
-					File.Delete(file);
+					try
+					{
+						File.Delete(file);
+					}
+					catch { }
 				}
-				catch { }
 			}
+			catch { }
 		}
 
 		/// <summary>

@@ -136,7 +136,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
-		private static string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
+		private static string _dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
 		/// <summary>
 		/// 加载设置
 		/// </summary>
@@ -145,7 +145,7 @@ namespace DoubanFM
 			LyricsSetting setting = null;
 			try
 			{
-				using (FileStream stream = File.OpenRead(_dataFolder + "LyricsSetting.dat"))
+				using (FileStream stream = File.OpenRead(Path.Combine(_dataFolder, "LyricsSetting.dat")))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					setting = (LyricsSetting)formatter.Deserialize(stream);
@@ -166,7 +166,7 @@ namespace DoubanFM
 			{
 				if (!Directory.Exists(_dataFolder))
 					Directory.CreateDirectory(_dataFolder);
-				using (FileStream stream = File.OpenWrite(_dataFolder + "LyricsSetting.dat"))
+				using (FileStream stream = File.OpenWrite(Path.Combine(_dataFolder,"LyricsSetting.dat")))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					formatter.Serialize(stream, this);

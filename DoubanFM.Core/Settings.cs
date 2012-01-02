@@ -253,7 +253,7 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
-		private static string _dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\K.F.Storm\豆瓣电台\";
+		private static string _dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
 
 		internal Settings(User user)
 		{
@@ -512,7 +512,7 @@ namespace DoubanFM.Core
 			Settings settings = null;
 			try
 			{
-				using (FileStream stream = File.OpenRead(_dataFolder + "Settings.dat"))
+				using (FileStream stream = File.OpenRead(Path.Combine(_dataFolder, "Settings.dat")))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					settings = (Settings)formatter.Deserialize(stream);
@@ -544,7 +544,7 @@ namespace DoubanFM.Core
 				User.Password = Encryption.Encrypt(User.Password);
 				if (!Directory.Exists(_dataFolder))
 					Directory.CreateDirectory(_dataFolder);
-				using (FileStream stream = File.OpenWrite(_dataFolder + "Settings.dat"))
+				using (FileStream stream = File.OpenWrite(Path.Combine(_dataFolder, "Settings.dat")))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					formatter.Serialize(stream, this);

@@ -103,7 +103,7 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 临时文件夹
 		/// </summary>
-		private string _tempPath = Path.GetTempPath() + "DoubanFM";
+		private string _tempPath = Path.Combine(Path.GetTempPath(), "DoubanFM");
 
 		#endregion
 
@@ -287,9 +287,8 @@ namespace DoubanFM.Core
 			NewVersionName = products[0].VersionName;
 			NewVersionPublishTime = products[0].PublishTime;
 			DownloadLink = products[0].DownloadLink;
-			Match mc = Regex.Match(DownloadLink, @".*/(.*)");
-			string name = mc.Groups[1].Value;
-			DownloadedFilePath = _tempPath + @"\" + name;
+			string name = Path.GetFileName(DownloadLink);
+			DownloadedFilePath = Path.Combine(_tempPath, name);
 			Now = State.HasNewVersion;
 		}
 
