@@ -78,6 +78,7 @@ namespace DoubanFM
 		}
 
 		private static Dictionary<Key, HotKey.ControlKeys> keyMap;
+		private static HashSet<Key> ignoredKeys = new HashSet<Key> { Key.None, Key.KanaMode, Key.HangulMode, Key.JunjaMode, Key.FinalMode, Key.HanjaMode, Key.KanjiMode, Key.ImeConvert, Key.ImeNonConvert, Key.ImeAccept, Key.ImeModeChange, Key.ImeProcessed, Key.System, Key.NoName, Key.DeadCharProcessed };
 
 		static HotKeySettingControl()
 		{
@@ -102,21 +103,30 @@ namespace DoubanFM
 			if (hotKeyText != null)
 			{
 				hotKeyText.Text = HotKeyText;
-				
+
 				hotKeyText.PreviewKeyDown += new KeyEventHandler((sender, e) =>
 				{
 					HotKey.ControlKeys control = HotKey.ControlKeys.None;
 					Key key = Key.None;
-					
-					foreach (Key kkey in keyMap.Keys)
+
+					foreach (Key kkey in Enum.GetValues(typeof(Key)))
 					{
-						if (Keyboard.IsKeyDown(kkey))
-							control |= keyMap[kkey];
+						if (!ignoredKeys.Contains(kkey))
+						{
+							if (Keyboard.IsKeyDown(kkey))
+							{
+								if (keyMap.ContainsKey(kkey))
+								{
+									control |= keyMap[kkey];
+								}
+								else
+								{
+									key = kkey;
+								}
+							}
+						}
 					}
-					if (!keyMap.ContainsKey(e.Key))
-					{
-						key = e.Key;
-					}
+
 					HotKey = new HotKey(control, key);
 					e.Handled = true;
 				});
