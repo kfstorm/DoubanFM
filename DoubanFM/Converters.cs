@@ -92,7 +92,9 @@ namespace DoubanFM
 		{
 			if (value is SolidColorBrush)
 			{
-				return new SolidColorBrush(ColorFunctions.ReviseBrighter(new HSLColor(((SolidColorBrush)value).Color), ColorFunctions.ProgressBarReviseParameter).ToRGB());
+				SolidColorBrush brush = new SolidColorBrush(ColorFunctions.ReviseBrighter(new HSLColor(((SolidColorBrush)value).Color), ColorFunctions.ProgressBarReviseParameter).ToRGB());
+				if (brush.CanFreeze) brush.Freeze();
+				return brush;
 			}
 			return value;
 		}
@@ -199,7 +201,9 @@ namespace DoubanFM
 				HSLColor color = new HSLColor(((SolidColorBrush)value).Color);
 				color.Alpha = 1.0;
 				if (color.Lightness < 0.7) color.Lightness = 0.7;
-				return new SolidColorBrush(color.ToRGB());
+				SolidColorBrush brush = new SolidColorBrush(color.ToRGB());
+				if (brush.CanFreeze) brush.Freeze();
+				return brush;
 			}
 			return value;
 		}
@@ -285,7 +289,9 @@ namespace DoubanFM
 			Color color = (Color)values[0];
 			double transparency = (double)values[1];
 			color.A = (byte)(int)(color.A * (1 - transparency));
-			return new SolidColorBrush(color);
+			SolidColorBrush brush = new SolidColorBrush(color);
+			if (brush.CanFreeze) brush.Freeze();
+			return brush;
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

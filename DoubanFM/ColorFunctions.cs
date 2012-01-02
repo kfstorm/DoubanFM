@@ -63,6 +63,7 @@ namespace DoubanFM
 		public static void GetImageColorForBackgroundAsync(BitmapSource image, ComputeCompleteCallback callback)
 		{
 			FormatConvertedBitmap bitmap = new FormatConvertedBitmap(image, PixelFormats.Rgb24, BitmapPalettes.WebPalette, 0);
+			if (bitmap.CanFreeze) bitmap.Freeze();
 			const int bytesPerPixel = 3;
 			byte[] pixels = new byte[bitmap.PixelHeight * bitmap.PixelWidth * bytesPerPixel];
 			bitmap.CopyPixels(pixels, bitmap.PixelWidth * bytesPerPixel, 0);

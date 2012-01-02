@@ -334,7 +334,7 @@ namespace DoubanFM
 				LyricsFontSize,
 				System.Windows.Media.Brushes.Black // This brush does not matter since we use the geometry of the text. 
 				).BuildGeometry(new System.Windows.Point(0, 0));
-			geometry.Freeze();
+			if (geometry.CanFreeze) geometry.Freeze();
 			return geometry;
 		}
 

@@ -1209,6 +1209,7 @@ namespace DoubanFM
 				{
 					bitmap.DownloadCompleted += new EventHandler((o, e) =>
 					{
+						if (bitmap.CanFreeze) bitmap.Freeze();
 						Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 封面下载成功");
 						Dispatcher.Invoke(new Action(() =>
 						{
@@ -1240,6 +1241,7 @@ namespace DoubanFM
 								if (((BitmapImage)o).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
 								{
 									BitmapImage bitmapDefault = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
+									if (bitmapDefault.CanFreeze) bitmapDefault.Freeze();
 									ChangeBackground(bitmapDefault);
 									SwitchCover(bitmapDefault);
 
@@ -1260,6 +1262,7 @@ namespace DoubanFM
 			catch
 			{
 				BitmapImage bitmap = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
+				if (bitmap.CanFreeze) bitmap.Freeze();
 				ChangeBackground(bitmap);
 				SwitchCover(bitmap);
 			}
