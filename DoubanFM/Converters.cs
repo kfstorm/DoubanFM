@@ -197,6 +197,7 @@ namespace DoubanFM
 			if (value is SolidColorBrush)
 			{
 				HSLColor color = new HSLColor(((SolidColorBrush)value).Color);
+				color.Alpha = 1.0;
 				if (color.Lightness < 0.7) color.Lightness = 0.7;
 				return new SolidColorBrush(color.ToRGB());
 			}
