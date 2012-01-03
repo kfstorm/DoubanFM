@@ -1884,6 +1884,11 @@ namespace DoubanFM
 			}
 		}
 
+		private void ButtonSignUp_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			Process.Start("http://www.douban.com/accounts/register");
+		}
+
 		#endregion
 
 	}

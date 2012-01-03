@@ -10,7 +10,7 @@ Website : http://www.kfstorm.com
 		xmlns:tb="http://www.hardcodet.net/taskbar"
 		xmlns:notify="clr-namespace:DoubanFM.NotifyIcon"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
-		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Background="#FF1960AF">
+		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Background="#FF1960AF" Foreground="White">
 	<Window.Resources>
 		<Storyboard x:Key="BackgroundColorStoryboard">
 			<ColorAnimation Storyboard.TargetName="Window" Storyboard.TargetProperty="(local:DoubanFMWindow.OriginalBackgroundColor)" Duration="0:0:5" EasingFunction="{StaticResource Smooth}"/>
@@ -323,13 +323,13 @@ Website : http://www.kfstorm.com
 											<RowDefinition Height="Auto"/> 					
 										</Grid.RowDefinitions> 
 										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="Auto"/>
+											<ColumnDefinition Width="70"/>
 											<ColumnDefinition/>
 										</Grid.ColumnDefinitions>
-										<Label HorizontalAlignment="Right" VerticalAlignment="Center" Content="邮箱"/>
-										<Label HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Content="密码"/>
-										<TextBox x:Name="TbUsername" Grid.Column="1" Margin="4" Text="{Binding Path=Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}"/>
-										<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="4" PasswordChanged="PbPassword_PasswordChanged" />
+										<TextBlock VerticalAlignment="Center" Text="邮箱/用户名"/>
+										<TextBlock VerticalAlignment="Center" Grid.Row="1" Text="密码"/>
+										<TextBox x:Name="TbUsername" Grid.Column="1" Margin="0,4" Text="{Binding Path=Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}"/>
+										<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="0,4" PasswordChanged="PbPassword_PasswordChanged" />
 										<!--<Grid x:Name="CaptchaGrid" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.HasCaptcha, Source={StaticResource Player}}">
 											<Grid.ColumnDefinitions>
 												<ColumnDefinition Width="Auto"/>
@@ -348,7 +348,14 @@ Website : http://www.kfstorm.com
 									</Grid>
 									<StackPanel Grid.Row="1" Margin="0,10">
 										<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.ShowLogOnFailedHint, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}"/>
-										<Button Grid.Column="1" x:Name="ButtonLogOn" Margin="10" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Center" Width="100" Height="40"/>
+										<Grid Margin="0,10">
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition/>
+												<ColumnDefinition/>
+											</Grid.ColumnDefinitions>
+											<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Center" Width="100" Height="40" FontSize="16"/>
+											<Button x:Name="ButtonSignUp" Content="注册" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Height="30" Click="ButtonSignUp_Click"/>
+										</Grid>
 									</StackPanel>
 									<Grid Grid.Row="2" VerticalAlignment="Bottom" Margin="0,20">
 										<Grid.ColumnDefinitions>
