@@ -204,25 +204,30 @@ namespace DoubanFM
 		/// instance containing the event data.</param>
 		private void target_LocationChanged(Object sender, EventArgs e)
 		{
+			double targetLeft = m_target.Left;
+			double targetTop = m_target.Top;
+			double targetWidth = m_target.ActualWidth;
+			double targetHeight = m_target.ActualHeight;
+
 			m_wndT.Height = c_edgeWndSize;
-			m_wndT.Left = m_target.Left;
-			m_wndT.Top = m_target.Top - m_wndT.Height;
-			m_wndT.Width = m_target.Width;
+			m_wndT.Left = targetLeft;
+			m_wndT.Top = targetTop - m_wndT.Height;
+			m_wndT.Width = targetWidth;
 
 			m_wndL.Width = c_edgeWndSize;
-			m_wndL.Left = m_target.Left - m_wndL.Width;
-			m_wndL.Top = m_target.Top;
-			m_wndL.Height = m_target.Height;
+			m_wndL.Left = targetLeft - m_wndL.Width;
+			m_wndL.Top = targetTop;
+			m_wndL.Height = targetHeight;
 
 			m_wndB.Height = c_edgeWndSize;
-			m_wndB.Left = m_target.Left;
-			m_wndB.Top = m_target.Top + m_target.Height;
-			m_wndB.Width = m_target.Width;
+			m_wndB.Left = targetLeft;
+			m_wndB.Top = targetTop + m_target.Height;
+			m_wndB.Width = targetWidth;
 
-			m_wndR.Left = m_target.Left + m_target.Width;
-			m_wndR.Top = m_target.Top;
+			m_wndR.Left = targetLeft + m_target.Width;
+			m_wndR.Top = targetTop;
 			m_wndR.Width = c_edgeWndSize;
-			m_wndR.Height = m_target.Height;
+			m_wndR.Height = targetHeight;
 		}
 
 		/// <summary>

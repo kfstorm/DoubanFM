@@ -1177,8 +1177,8 @@ namespace DoubanFM
 			}
 			
 			ChannelTextBlock.Text = _player.CurrentChannel.Name;
-			TotalTime.Content = TimeSpanToStringConverter.QuickConvert(_player.CurrentSong.Length);
-			CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
+			TotalTime.Text = TimeSpanToStringConverter.QuickConvert(_player.CurrentSong.Length);
+			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
 			Slider.Minimum = 0;
 			Slider.Maximum = _player.CurrentSong.Length.TotalSeconds;
 			Slider.Value = 0;
@@ -1374,7 +1374,7 @@ namespace DoubanFM
 		/// </summary>
 		void timer_Tick(object sender, EventArgs e)
 		{
-			CurrentTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.Position);
+			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(Audio.Position);
 			Slider.Value = Audio.Position.TotalSeconds;
 			if (_lyricsWindow != null) _lyricsWindow.Refresh(Audio.Position);
 		}
@@ -1405,8 +1405,8 @@ namespace DoubanFM
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐加载成功");
 			if (Audio.NaturalDuration.HasTimeSpan)
 			{
-				if (Math.Abs((TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Content) - Audio.NaturalDuration.TimeSpan).TotalSeconds) > 2)
-					TotalTime.Content = TimeSpanToStringConverter.QuickConvert(Audio.NaturalDuration.TimeSpan);
+				if (Math.Abs((TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Text) - Audio.NaturalDuration.TimeSpan).TotalSeconds) > 2)
+					TotalTime.Text = TimeSpanToStringConverter.QuickConvert(Audio.NaturalDuration.TimeSpan);
 				Slider.Maximum = Audio.NaturalDuration.TimeSpan.TotalSeconds;
 			}
 		}

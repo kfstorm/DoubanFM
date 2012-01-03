@@ -37,8 +37,8 @@ Website : http://www.kfstorm.com
 	<SolidColorBrush x:Key="NormalColor" Color="#BFFFFFFF" PresentationOptions:Freeze="True"/>
 	<SolidColorBrush x:Key="HighlightColor" Color="#FFFFFFFF" PresentationOptions:Freeze="True"/>
 	<SolidColorBrush x:Key="PressedColor" Color="#7FFFFFFF" PresentationOptions:Freeze="True"/>
-	<SolidColorBrush x:Key="BorderColor" PresentationOptions:Freeze="True">Transparent</SolidColorBrush>
-	<SolidColorBrush x:Key="BackColor" PresentationOptions:Freeze="True">Transparent</SolidColorBrush>
+	<SolidColorBrush x:Key="BorderColor" PresentationOptions:Freeze="True" Color="Transparent"/>
+	<SolidColorBrush x:Key="BackColor" PresentationOptions:Freeze="True" Color="Transparent"/>
 	<Style x:Key="stBorder" TargetType="{x:Type Border}">
 		<Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
 		<Setter Property="Background" Value="{StaticResource NormalColor}"/>

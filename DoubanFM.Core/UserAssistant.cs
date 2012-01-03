@@ -29,6 +29,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty HasCaptchaProperty = DependencyProperty.Register("HasCaptcha", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty ShowLogOnFailedHintProperty = DependencyProperty.Register("ShowLogOnFailedHint", typeof(bool), typeof(UserAssistant));
 		//public static readonly DependencyProperty NicknameProperty = DependencyProperty.Register("Nickname", typeof(string), typeof(UserAssistant));
+		public static readonly DependencyProperty LogOnFailedMessageProperty = DependencyProperty.Register("LogOnFailedMessage", typeof(string), typeof(UserAssistant));
 
 		#endregion
 
@@ -105,6 +106,14 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(ShowLogOnFailedHintProperty); }
 			private set { SetValue(ShowLogOnFailedHintProperty, value); }
+		}
+		/// <summary>
+		/// 登录失败的提示消息
+		/// </summary>
+		public string LogOnFailedMessage
+		{
+			get { return (string)GetValue(LogOnFailedMessageProperty); }
+			protected set { SetValue(LogOnFailedMessageProperty, value); }
 		}
 		///// <summary>
 		///// 验证码URL
@@ -278,6 +287,7 @@ namespace DoubanFM.Core
 					Settings.User.Played = result.user_info.play_record.played;
 					Settings.User.Liked = result.user_info.play_record.liked;
 					Settings.User.Banned = result.user_info.play_record.banned;
+					LogOnFailedMessage = null;
 					System.Diagnostics.Debug.WriteLine("已登录");
 					CurrentState = State.LoggedOn;
 				}));
@@ -285,6 +295,14 @@ namespace DoubanFM.Core
 			else
 				Dispatcher.Invoke(new Action(() =>
 				{
+					if (result != null || string.IsNullOrEmpty(result.err_msg))
+					{
+						LogOnFailedMessage = result.err_msg;
+					}
+					else
+					{
+						LogOnFailedMessage = "未知错误";
+					}
 					if (CurrentState == State.LoggingOn) CurrentState = State.LoggedOff;
 					else if (CurrentState == State.LoggingOff) CurrentState = State.LoggedOn;
 					else if (CurrentState == State.Unknown) CurrentState = State.LoggedOff;

@@ -10,7 +10,7 @@ Website : http://www.kfstorm.com
 		xmlns:tb="http://www.hardcodet.net/taskbar"
 		xmlns:notify="clr-namespace:DoubanFM.NotifyIcon"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
-		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}">
+		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Background="#FF1960AF">
 	<Window.Resources>
 		<Storyboard x:Key="BackgroundColorStoryboard">
 			<ColorAnimation Storyboard.TargetName="Window" Storyboard.TargetProperty="(local:DoubanFMWindow.OriginalBackgroundColor)" Duration="0:0:5" EasingFunction="{StaticResource Smooth}"/>
@@ -44,13 +44,13 @@ Website : http://www.kfstorm.com
 				<EasingDoubleKeyFrame Value="0" KeyTime="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
 				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:2" EasingFunction="{StaticResource Smooth}"/>
 			</DoubleAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="SongTitle" Storyboard.TargetProperty="Content">
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="SongTitle" Storyboard.TargetProperty="Text">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.5"/>
 			</StringAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="Artist" Storyboard.TargetProperty="Content">
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Artist" Storyboard.TargetProperty="Text">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.5"/>
 			</StringAnimationUsingKeyFrames>
-			<StringAnimationUsingKeyFrames Storyboard.TargetName="Album" Storyboard.TargetProperty="Content">
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Album" Storyboard.TargetProperty="Text">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.5"/>
 			</StringAnimationUsingKeyFrames>
 			<ThicknessAnimationUsingKeyFrames Storyboard.TargetName="SongInfoPanel" Storyboard.TargetProperty="Margin">
@@ -347,7 +347,7 @@ Website : http://www.kfstorm.com
 										</Grid>-->
 									</Grid>
 									<StackPanel Grid.Row="1" Margin="0,10">
-										<Label x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.ShowLogOnFailedHint, Source={StaticResource Player}}" Content="登录失败！"/>
+										<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.ShowLogOnFailedHint, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}"/>
 										<Button Grid.Column="1" x:Name="ButtonLogOn" Margin="10" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Center" Width="100" Height="40"/>
 									</StackPanel>
 									<Grid Grid.Row="2" VerticalAlignment="Bottom" Margin="0,20">
@@ -452,7 +452,7 @@ Website : http://www.kfstorm.com
 				</TabControl>
 			</Grid>
 			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent" ClipToBounds="True">
-				<Grid Margin="10">
+				<Grid Margin="15,10,10,10">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="3*"/>
@@ -466,7 +466,7 @@ Website : http://www.kfstorm.com
 							<ColumnDefinition Width="2*"/>
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
-						<TextBlock x:Name="ChannelTextBlock" TextTrimming="CharacterEllipsis" Foreground="White" Margin="10,0,0,0" FontSize="14.667" FontStretch="Normal" Text="{Binding Source={StaticResource Player}, Path=CurrentChannel}" />
+						<TextBlock x:Name="ChannelTextBlock" TextTrimming="CharacterEllipsis" Foreground="White" FontSize="14.667" FontStretch="Normal" Text="{Binding Source={StaticResource Player}, Path=CurrentChannel}" />
 						<StackPanel Grid.Column="1" x:Name="WindowStateControls" Orientation="Horizontal" HorizontalAlignment="Right">
 							<Button x:Name="ButtonMinimize" Click="ButtonMinimize_Click" Style="{DynamicResource MinimizeStyle}"/>
 							<Border Width="10"/>
@@ -475,23 +475,23 @@ Website : http://www.kfstorm.com
 							<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
 						</StackPanel>
 					</Grid>
-					<Grid Grid.Row="1" x:Name="SongInfoPanel" TextOptions.TextFormattingMode="Ideal">
+					<Grid Grid.Row="1" x:Name="SongInfoPanel" TextOptions.TextFormattingMode="Ideal" VerticalAlignment="Top" Height="120">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="50"/>
 							<RowDefinition/>
 							<RowDefinition/>
 						</Grid.RowDefinitions>
-						<Viewbox HorizontalAlignment="Left" StretchDirection="DownOnly">
-							<Label x:Name="SongTitle" FontSize="31" VerticalContentAlignment="Center" Content="豆瓣电台" Foreground="White"/>
+						<Viewbox Margin="0,1" HorizontalAlignment="Left" StretchDirection="DownOnly">
+							<TextBlock x:Name="SongTitle" FontSize="50" VerticalAlignment="Center" Text="豆瓣电台" Foreground="White"/>
 						</Viewbox>
-						<Viewbox Margin="0,5" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
-							<Label x:Name="Artist" FontSize="22" VerticalContentAlignment="Center" Foreground="White" />
+						<Viewbox Margin="0,1" Grid.Row="1" HorizontalAlignment="Left" StretchDirection="DownOnly">
+							<TextBlock x:Name="Artist" FontSize="20" VerticalAlignment="Center" Foreground="White"/>
 						</Viewbox>
-						<Viewbox Margin="0,5" Grid.Row="2" HorizontalAlignment="Left" StretchDirection="DownOnly">
-							<Label x:Name="Album" VerticalContentAlignment="Center" FontSize="22" Foreground="White" />
+						<Viewbox Margin="0,1" Grid.Row="2" HorizontalAlignment="Left" StretchDirection="DownOnly">
+							<TextBlock x:Name="Album" VerticalAlignment="Center" FontSize="20" Foreground="White" />
 						</Viewbox>
 					</Grid>
-					<Grid Grid.Row="2" HorizontalAlignment="Right" Height="24" ClipToBounds="True">
+					<Grid Grid.Row="2" Margin="0,5" HorizontalAlignment="Right" Height="24" ClipToBounds="True">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition/>
 							<ColumnDefinition Width="Auto"/>
@@ -547,15 +547,15 @@ Website : http://www.kfstorm.com
 							</Viewbox>
 						</Border>
 					</Grid>
-					<Grid Grid.Row="3" VerticalAlignment="Bottom">
+					<Grid Grid.Row="3" VerticalAlignment="Bottom" Margin="0,2">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition/>
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
-						<Label x:Name="CurrentTime" FontSize="18" Foreground="White" Content="00:00"/>
-						<Label Grid.Column="1" x:Name="TotalTime" FontSize="18" HorizontalAlignment="Right" Foreground="White" Content="00:00"/>
+						<TextBlock x:Name="CurrentTime" FontSize="18" Foreground="White" Text="00:00"/>
+						<TextBlock Grid.Column="1" x:Name="TotalTime" FontSize="18" HorizontalAlignment="Right" Foreground="White" Text="00:00"/>
 					</Grid>
-					<Slider x:Name="Slider" Grid.Row="4" Margin="5,5" Style="{DynamicResource SliderStyleForProgress}" Background="#7F000000" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=Window}"/>
+					<Slider x:Name="Slider" Grid.Row="4" Margin="0,5" Style="{DynamicResource SliderStyleForProgress}" Background="#7F000000" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=Window}"/>
 					<Grid Grid.Row="5" HorizontalAlignment="Center" Height="50" VerticalAlignment="Bottom">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="38" />
