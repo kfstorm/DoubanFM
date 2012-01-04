@@ -867,25 +867,32 @@ namespace Hardcodet.Wpf.TaskbarNotification
 	{
 	  lock (this)
 	  {
-		if (!IsTaskbarIconCreated)
-		{
-		  const IconDataMembers members = IconDataMembers.Message
-										  | IconDataMembers.Icon
-										  | IconDataMembers.Tip;
-
-		  //write initial configuration
-		  var status = Util.WriteIconData(ref iconData, NotifyCommand.Add, members);
-		  if (!status)
+		  //此处的try-catch语句由K.F.Storm添加。当explorer.exe没有启动时，原作者的版本会报错，但豆瓣电台不允许崩溃。
+		  try
 		  {
-			throw new Win32Exception("Could not create icon data");
+			  if (!IsTaskbarIconCreated)
+			  {
+				  const IconDataMembers members = IconDataMembers.Message
+												  | IconDataMembers.Icon
+												  | IconDataMembers.Tip;
+
+				  //write initial configuration
+				  var status = Util.WriteIconData(ref iconData, NotifyCommand.Add, members);
+				  if (!status)
+				  {
+					  throw new Win32Exception("Could not create icon data");
+				  }
+
+				  //set to most recent version
+				  SetVersion();
+				  messageSink.Version = (NotifyIconVersion)iconData.VersionOrTimeout;
+
+				  IsTaskbarIconCreated = true;
+			  }
 		  }
-
-		  //set to most recent version
-		  SetVersion();
-		  messageSink.Version = (NotifyIconVersion) iconData.VersionOrTimeout;
-
-		  IsTaskbarIconCreated = true;
-		}
+		  catch
+		  {
+		  }
 	  }
 	}
 
@@ -897,11 +904,18 @@ namespace Hardcodet.Wpf.TaskbarNotification
 	{
 	  lock (this)
 	  {
-		if (IsTaskbarIconCreated)
-		{
-		  Util.WriteIconData(ref iconData, NotifyCommand.Delete, IconDataMembers.Message);
-		  IsTaskbarIconCreated = false;
-		}
+		  //此处的try-catch语句由K.F.Storm添加。当explorer.exe没有启动时，原作者的版本会报错，但豆瓣电台不允许崩溃。
+		  try
+		  {
+			  if (IsTaskbarIconCreated)
+			  {
+				  Util.WriteIconData(ref iconData, NotifyCommand.Delete, IconDataMembers.Message);
+				  IsTaskbarIconCreated = false;
+			  }
+		  }
+		  catch
+		  {
+		  }
 	  }
 	}
 

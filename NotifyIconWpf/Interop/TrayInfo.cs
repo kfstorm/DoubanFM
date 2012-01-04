@@ -19,7 +19,13 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
     public static Point GetTrayLocation()
     {
       var info = new AppBarInfo();
-      info.GetSystemTaskBarPosition();
+
+	  //此处的try-catch语句由K.F.Storm添加。当explorer.exe没有启动时，原作者的版本会报错，但豆瓣电台不允许崩溃。
+	  try
+	  {
+		  info.GetSystemTaskBarPosition();
+	  }
+	  catch { }
 
       Rectangle rcWorkArea = info.WorkArea;
 
