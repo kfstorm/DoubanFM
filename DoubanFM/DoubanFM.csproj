@@ -104,6 +104,7 @@
     <Compile Include="HelpWindow.xaml.cs">
       <DependentUpon>HelpWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="KeyboardHook.cs" />
     <Compile Include="NotifyIcon\PopupControlPanel.xaml.cs">
       <DependentUpon>PopupControlPanel.xaml</DependentUpon>
     </Compile>

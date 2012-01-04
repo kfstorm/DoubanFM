@@ -286,10 +286,39 @@ namespace DoubanFM
 			InitBackground();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化窗口背景完成");
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化键盘钩子");
+			InitKeyboardHook();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化键盘钩子完成");
+
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
 			_player.Initialize();
 		}
 
+		private KeyboardHook hook;
+		/// <summary>
+		/// 初始化键盘钩子
+		/// </summary>
+		void InitKeyboardHook()
+		{
+			hook = new KeyboardHook();
+			hook.KeyUp += new KeyboardHook.HookEventHandler((sender, e) =>
+			{
+				if (this.IsLoaded)
+				{
+					if (e.Key == Key.MediaPlayPause)
+					{
+						PlayPause();
+					}
+					else if (e.Key == Key.MediaNextTrack)
+					{
+						Next();
+					}
+				}
+			});
+		}
+		/// <summary>
+		/// 初始化窗口背景
+		/// </summary>
 		void InitBackground()
 		{
 			Binding binding = new Binding();
@@ -1699,7 +1728,7 @@ namespace DoubanFM
 			if (channel != null) _player.CurrentChannel = channel;
 		}
 
-		private void Window_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+		/*private void Window_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
 		{
 			switch (e.Key)
 			{
@@ -1710,7 +1739,7 @@ namespace DoubanFM
 					Next();
 					break;
 			}
-		}
+		}*/
 
 		private void Feedback_Click(object sender, System.Windows.RoutedEventArgs e)
 		{

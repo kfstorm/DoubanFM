@@ -10,7 +10,7 @@ Website : http://www.kfstorm.com
 		xmlns:tb="http://www.hardcodet.net/taskbar"
 		xmlns:notify="clr-namespace:DoubanFM.NotifyIcon"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
-		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Background="#FF1960AF" Foreground="White">
+		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Background="#FF1960AF" Foreground="White">
 	<Window.Resources>
 		<Storyboard x:Key="BackgroundColorStoryboard">
 			<ColorAnimation Storyboard.TargetName="Window" Storyboard.TargetProperty="(local:DoubanFMWindow.OriginalBackgroundColor)" Duration="0:0:5" EasingFunction="{StaticResource Smooth}"/>
