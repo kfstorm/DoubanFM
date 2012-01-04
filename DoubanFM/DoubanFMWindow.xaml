@@ -71,11 +71,7 @@ Website : http://www.kfstorm.com
 				<EasingDoubleKeyFrame Value="0" KeyTime="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
 			</DoubleAnimationUsingKeyFrames>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-				<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="50">
-					<EasingDoubleKeyFrame.EasingFunction>
-						<CircleEase/>
-					</EasingDoubleKeyFrame.EasingFunction>
-				</EasingDoubleKeyFrame>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="50"/>
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="ShowChannelList">
