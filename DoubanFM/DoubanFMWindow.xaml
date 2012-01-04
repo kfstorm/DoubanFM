@@ -22,8 +22,6 @@ Website : http://www.kfstorm.com
 			<DoubleAnimation Storyboard.TargetName="Cover1" Storyboard.TargetProperty="Opacity" Duration="0:0:1" To="0"/>
 		</Storyboard>
 		<Storyboard x:Key="SlideCoverRightStoryboard">
-			<ThicknessAnimation Storyboard.TargetName="CoverGrid" Storyboard.TargetProperty="Margin"
-			 To="300,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
 			<ObjectAnimationUsingKeyFrames Storyboard.TargetName="FirstTimePanel" Storyboard.TargetProperty="Visibility">
 				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
 			</ObjectAnimationUsingKeyFrames>
@@ -34,10 +32,14 @@ Website : http://www.kfstorm.com
 					</DiscreteObjectKeyFrame.Value>
 				</DiscreteObjectKeyFrame>
 			</ObjectAnimationUsingKeyFrames>
+			 <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CoverGrid">
+			 	<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="300" EasingFunction="{StaticResource Smooth}"/>
+			 </DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="SlideCoverLeftStoryboard">
-			<ThicknessAnimation Storyboard.TargetName="CoverGrid" Storyboard.TargetProperty="Margin"
-			 To="0,0,0,0" Duration="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CoverGrid">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" EasingFunction="{StaticResource Smooth}"/>
+			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="ChangeSongInfoStoryboard">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="SongInfoPanel" Storyboard.TargetProperty="Opacity">
@@ -53,38 +55,42 @@ Website : http://www.kfstorm.com
 			<StringAnimationUsingKeyFrames Storyboard.TargetName="Album" Storyboard.TargetProperty="Text">
 				<DiscreteStringKeyFrame KeyTime="0:0:0.5"/>
 			</StringAnimationUsingKeyFrames>
-			<ThicknessAnimationUsingKeyFrames Storyboard.TargetName="SongInfoPanel" Storyboard.TargetProperty="Margin">
-				<LinearThicknessKeyFrame Value="50,0,-50,0" KeyTime="0:0:0.5"/>
-				<DiscreteThicknessKeyFrame Value="-20,0,20,0" KeyTime="0:0:0.5"/>
-				<EasingThicknessKeyFrame Value="0" KeyTime="0:0:2">
-					<EasingThicknessKeyFrame.EasingFunction>
-						<CircleEase/>
-					</EasingThicknessKeyFrame.EasingFunction>
-				</EasingThicknessKeyFrame>
-			</ThicknessAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="SongInfoPanel">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="50"/>
+				<DiscreteDoubleKeyFrame KeyTime="0:0:0.5" Value="-20"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:2" Value="0">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<CircleEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="HideChannelList">
 			<Int32Animation Duration="0" Storyboard.TargetProperty="(Panel.ZIndex)" To="0"/>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
 				<EasingDoubleKeyFrame Value="0" KeyTime="0:0:0.5" EasingFunction="{StaticResource Smooth}"/>
 			</DoubleAnimationUsingKeyFrames>
-			<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin">
-				<LinearThicknessKeyFrame Value="50,0,-50,0" KeyTime="0:0:0.5"/>
-			</ThicknessAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+				<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="50">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<CircleEase/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="ShowChannelList">
 			<Int32Animation Duration="0" Storyboard.TargetProperty="(Panel.ZIndex)" To="1"/>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
 				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:1.5" EasingFunction="{StaticResource Smooth}"/>			
 			</DoubleAnimationUsingKeyFrames>
-			<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin">
-				<DiscreteThicknessKeyFrame Value="-20,0,20,0" KeyTime="0"/>
-				<EasingThicknessKeyFrame Value="0" KeyTime="0:0:1.5">
-					<EasingThicknessKeyFrame.EasingFunction>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+				<EasingDoubleKeyFrame KeyTime="0" Value="-20"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="0">
+					<EasingDoubleKeyFrame.EasingFunction>
 						<CircleEase/>
-					</EasingThicknessKeyFrame.EasingFunction>
-				</EasingThicknessKeyFrame>
-			</ThicknessAnimationUsingKeyFrames>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="PersonalClickStoryboard">
 			<Storyboard Storyboard.TargetName="PersonalChannels">
@@ -252,26 +258,50 @@ Website : http://www.kfstorm.com
 							</Grid>
 							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" d:IsHidden="True">
 								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Opacity="0">
-									<!--<ListBox.ItemContainerStyle>
-										<Style BasedOn="{StaticResource ChannelStyle}" TargetType="{x:Type ListBoxItem}">
-											<Setter Property="Width" Value="Auto"/>
-										</Style>
-									</ListBox.ItemContainerStyle>
-									<ListBox.ItemsPanel>
-										<ItemsPanelTemplate>
-											<UniformGrid Margin="50"/>
-										</ItemsPanelTemplate>
-									</ListBox.ItemsPanel>-->
+									<ListBox.RenderTransform>
+										<TransformGroup>
+											<ScaleTransform/>
+											<SkewTransform/>
+											<RotateTransform/>
+											<TranslateTransform/>
+										</TransformGroup>
+									</ListBox.RenderTransform>
 								</ListBox>
-								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Panel.ZIndex="1"/>
+								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Panel.ZIndex="1">
+									<ListBox.RenderTransform>
+										<TransformGroup>
+											<ScaleTransform/>
+											<SkewTransform/>
+											<RotateTransform/>
+											<TranslateTransform/>
+										</TransformGroup>
+									</ListBox.RenderTransform>
+								</ListBox>
 								<ListBox x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged" Opacity="0">
+									<ListBox.RenderTransform>
+										<TransformGroup>
+											<ScaleTransform/>
+											<SkewTransform/>
+											<RotateTransform/>
+											<TranslateTransform/>
+										</TransformGroup>
+									</ListBox.RenderTransform>
 									<ListBox.ItemTemplate>
 										<DataTemplate>
 											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
 										</DataTemplate>
 									</ListBox.ItemTemplate>
 								</ListBox>
-								<ListBox x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0"/>
+								<ListBox x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0">
+									<ListBox.RenderTransform>
+										<TransformGroup>
+											<ScaleTransform/>
+											<SkewTransform/>
+											<RotateTransform/>
+											<TranslateTransform/>
+										</TransformGroup>
+									</ListBox.RenderTransform>
+								</ListBox>
 							</Grid>
 						</Grid>
 					</TabItem>
@@ -393,7 +423,7 @@ Website : http://www.kfstorm.com
 									</TextBlock>
 								</StackPanel>
 								<Label Grid.Row="2" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="已登录"/>
-								<Button Grid.Row="3" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销"/>
+								<Button Grid.Row="3" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销" FontSize="16"/>
 							</Grid>
 							<Grid x:Name="LoggingOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOn, Source={StaticResource Player}}">
 								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在登录"/>
@@ -482,7 +512,15 @@ Website : http://www.kfstorm.com
 							<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
 						</StackPanel>
 					</Grid>
-					<Grid Grid.Row="1" x:Name="SongInfoPanel" TextOptions.TextFormattingMode="Ideal" VerticalAlignment="Top" Height="120">
+					<Grid Grid.Row="1" x:Name="SongInfoPanel" TextOptions.TextFormattingMode="Ideal" VerticalAlignment="Top" Height="120" RenderTransformOrigin="0.5,0.5">
+						<Grid.RenderTransform>
+							<TransformGroup>
+								<ScaleTransform/>
+								<SkewTransform/>
+								<RotateTransform/>
+								<TranslateTransform/>
+							</TransformGroup>
+						</Grid.RenderTransform>
 						<Grid.RowDefinitions>
 							<RowDefinition Height="50"/>
 							<RowDefinition/>
@@ -581,7 +619,15 @@ Website : http://www.kfstorm.com
 				</Grid>
 			</Grid>
 		</Grid>
-		<Grid x:Name="CoverGrid" MouseLeftButtonDown="CoverGrid_MouseLeftButtonDown" Width="{Binding ActualWidth, ElementName=LeftPanel}" Height="{Binding ActualHeight, ElementName=LeftPanel}" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment, GridBox" MouseMove="CoverGrid_MouseMove" MouseLeave="CoverGrid_MouseLeave" d:IsHidden="True">
+		<Grid x:Name="CoverGrid" MouseLeftButtonDown="CoverGrid_MouseLeftButtonDown" Width="{Binding ActualWidth, ElementName=LeftPanel}" Height="{Binding ActualHeight, ElementName=LeftPanel}" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment, GridBox" MouseMove="CoverGrid_MouseMove" MouseLeave="CoverGrid_MouseLeave" d:IsHidden="True" RenderTransformOrigin="0.5,0.5">
+			<Grid.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform/>
+					<SkewTransform/>
+					<RotateTransform/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</Grid.RenderTransform>
 			<Grid x:Name="Covers">
 				<Image x:Name="Cover2" Stretch="UniformToFill"/>
 				<Image x:Name="Cover1" Stretch="UniformToFill" Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" />
