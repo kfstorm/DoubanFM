@@ -755,15 +755,27 @@ namespace DoubanFM.Core
 		{
 			return ConnectionBase.SaveCookies();
 		}
+
+		private bool disposed;
 		/// <summary>
 		/// 执行与释放或重置非托管资源相关的应用程序定义的任务。
 		/// </summary>
+		/// <param name="saveSettings">是否保存设置</param>
+		public void Dispose(bool saveSettings)
+		{
+			if (disposed) return;
+			if (saveSettings)
+			{
+				SaveSettings();
+				if (UserAssistant.IsLoggedOn && !Settings.AutoLogOnNextTime)
+					ConnectionBase.cc = ConnectionBase.DefaultCookie;
+				SaveCookies();
+			}
+			disposed = true;
+		}
 		public void Dispose()
 		{
-			SaveSettings();
-			if (UserAssistant.IsLoggedOn && !Settings.AutoLogOnNextTime)
-				ConnectionBase.cc = ConnectionBase.DefaultCookie;
-			SaveCookies();
+			Dispose(true);
 		}
 		/// <summary>
 		/// 获取全新的播放列表

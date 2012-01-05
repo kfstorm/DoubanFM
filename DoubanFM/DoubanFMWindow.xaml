@@ -431,6 +431,10 @@ Website : http://www.kfstorm.com
 					</TabItem>
 					<TabItem Header="{DynamicResource TabItemSettings}">
 						<Grid Margin="20">
+							<Grid.RowDefinitions>
+								<RowDefinition/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
 							<Grid Width="100" VerticalAlignment="Center" Margin="10">
 								<Grid.RowDefinitions>
 									<RowDefinition/>
@@ -449,6 +453,7 @@ Website : http://www.kfstorm.com
 								<Button Grid.Row="6" x:Name="ButtonHotKeySettings" Click="ButtonHotKeySettings_Click" Content="热键设置"/>
 								<Button Grid.Row="8" x:Name="ButtonShareSetting" Content="分享设置" Click="ButtonShareSetting_Click"/>
 							</Grid>
+							<Button x:Name="BtnResetSettings" Grid.Row="1" Width="100" Content="重置所有设置" Click="BtnResetSettings_Click"/>
 						</Grid>			
 					</TabItem>
 					<TabItem Header="{DynamicResource TabItemInfo}">

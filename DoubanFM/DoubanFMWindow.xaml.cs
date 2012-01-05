@@ -213,6 +213,8 @@ namespace DoubanFM
 		/// </summary>
 		private DateTime _lastTimeChangeSong = DateTime.MaxValue;
 
+		public bool SaveSettings = true;
+
 		#endregion
 
 		#region 构造和初始化
@@ -1466,6 +1468,8 @@ namespace DoubanFM
 		/// </summary>
 		private void Window_Closed(object sender, EventArgs e)
 		{
+			_mappedFile.Dispose();
+
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 主窗口已关闭，正在保存设置");
 			if (_lyricsWindow != null)
 				_lyricsWindow.Close();
@@ -1474,20 +1478,26 @@ namespace DoubanFM
 			if (_hotKeys != null)
 			{
 				_hotKeys.UnRegister();
-				_hotKeys.Save();
+				if (SaveSettings)
+				{
+					_hotKeys.Save();
+				}
 			}
-			if (_lyricsSetting != null)
+			if (SaveSettings)
 			{
-				_lyricsSetting.Save();
-			}
-			if (ShareSetting != null)
-			{
-				ShareSetting.Save();
+				if (_lyricsSetting != null)
+				{
+					_lyricsSetting.Save();
+				}
+				if (ShareSetting != null)
+				{
+					ShareSetting.Save();
+				}
 			}
 			if (NotifyIcon != null)
 			    NotifyIcon.Dispose();
 			if (_player != null)
-				_player.Dispose();
+				_player.Dispose(SaveSettings);
 			ClearPreloadMusicFiles();
 		}
 		/// <summary>
@@ -1924,6 +1934,34 @@ namespace DoubanFM
 		private void ButtonSignUp_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			Process.Start("http://www.douban.com/accounts/register");
+		}
+
+		private void BtnResetSettings_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			if (MessageBox.Show("确定要重置所有设置吗？\n重置后软件将自动重启。", "请注意", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+			{
+				try
+				{
+					string dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
+					if (Directory.Exists(dataFolder))
+					{
+						string[] files = Directory.GetFiles(dataFolder);
+						foreach (var file in files)
+						{
+							File.Delete(file);
+						}
+						Directory.Delete(dataFolder);
+					}
+					SaveSettings = false;
+					_mappedFile.Dispose();
+					App.Current.Shutdown();
+					Process.Start(System.Reflection.Assembly.GetEntryAssembly().GetModules()[0].FullyQualifiedName);
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message, "重置设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+			}
 		}
 
 		#endregion
