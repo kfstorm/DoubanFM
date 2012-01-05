@@ -34,6 +34,7 @@ namespace DoubanFM
 		public static readonly DependencyProperty StrokeColorProperty = DependencyProperty.Register("StrokeColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Colors.Black));
 		public static readonly DependencyProperty ShadowColorProperty = DependencyProperty.Register("ShadowColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Colors.Black));
 		public static readonly DependencyProperty AutoForegroundProperty = DependencyProperty.Register("AutoForeground", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(true));
+		public static readonly DependencyProperty SingleLineLyricsProperty = DependencyProperty.Register("SingleLineLyrics", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
 		
 		/// <summary>
 		/// 字体
@@ -131,7 +132,15 @@ namespace DoubanFM
 			get { return (bool)GetValue(AutoForegroundProperty); }
 			set { SetValue(AutoForegroundProperty, value); }
 		}
-		
+
+		/// <summary>
+		/// 启用单行歌词
+		/// </summary>
+		public bool SingleLineLyrics
+		{
+			get { return (bool)GetValue(SingleLineLyricsProperty); }
+			set { SetValue(SingleLineLyricsProperty, value); }
+		}
 
 		/// <summary>
 		/// 数据保存文件夹
@@ -278,6 +287,14 @@ namespace DoubanFM
 			{
 				AutoForeground = def.AutoForeground;
 			}
+			try
+			{
+				SingleLineLyrics = info.GetBoolean("SingleLineLyrics");
+			}
+			catch
+			{
+				SingleLineLyrics = def.SingleLineLyrics;
+			}
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -297,6 +314,7 @@ namespace DoubanFM
 			info.AddValue("StrokeColor", StrokeColor.ToString());
 			info.AddValue("ShadowColor", ShadowColor.ToString());
 			info.AddValue("AutoForeground", AutoForeground);
+			info.AddValue("SingleLineLyrics", SingleLineLyrics);
 		}
 	}
 }

@@ -313,11 +313,18 @@ namespace DoubanFM
 		public void UpdateText(Path text)
 		{
 			if (text == PathText1)
+			{
 				text.Data = CreateText(LyricsText1);
+				SingleLinePathText1.Data = text.Data.Clone();
+			}
 			else if (text == PathText2)
+			{
 				text.Data = CreateText(LyricsText2);
+			}
 			else if (text == PathText3)
+			{
 				text.Data = CreateText(LyricsText3);
+			}
 		}
 
 		/// <summary>

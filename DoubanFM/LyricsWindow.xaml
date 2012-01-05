@@ -44,6 +44,10 @@ Website : http://www.kfstorm.com
 				</EasingDoubleKeyFrame>
 				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0.75" PresentationOptions:Freeze="True"/>
 			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="SingleLine" Storyboard.TargetProperty="Opacity" PresentationOptions:Freeze="True">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0" PresentationOptions:Freeze="True"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1" PresentationOptions:Freeze="True" EasingFunction="{StaticResource Smooth}"/>
+			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="HideLyricsStoryboard">
 			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText1" PresentationOptions:Freeze="True">
@@ -70,7 +74,7 @@ Website : http://www.kfstorm.com
 				<Grid.Effect>
 					<DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
 				</Grid.Effect>
-				<Grid>
+				<Grid x:Name="DoubleLine" Visibility="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}">
 					<Grid.RenderTransform>
 						<TranslateTransform x:Name="Offset" Y="{Binding ActualHeight, ElementName=Lyrics1Root}"/>
 					</Grid.RenderTransform>
@@ -105,6 +109,15 @@ Website : http://www.kfstorm.com
 						</Viewbox.RenderTransform>
 						<Grid>
 							<Path x:Name="PathText3" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
+							</Path>
+							<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
+						</Grid>
+					</Viewbox>
+				</Grid>
+				<Grid x:Name="SingleLine" Visibility="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}">
+					<Viewbox x:Name="SingleLineLyrics1Root" StretchDirection="DownOnly">
+						<Grid>
+							<Path x:Name="SingleLinePathText1" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
 							</Path>
 							<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
 						</Grid>

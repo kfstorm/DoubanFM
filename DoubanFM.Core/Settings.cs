@@ -244,6 +244,9 @@ namespace DoubanFM.Core
 			get { return (bool)GetValue(ShowBalloonWhenSongChangedProperty); }
 			set { SetValue(ShowBalloonWhenSongChangedProperty, value); }
 		}
+		/// <summary>
+		/// 窗口背景透明度
+		/// </summary>
 		public double BackgroundTransparency
 		{
 			get { return (double)GetValue(BackgroundTransparencyProperty); }

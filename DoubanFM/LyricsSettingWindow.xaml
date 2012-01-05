@@ -22,6 +22,8 @@ Website : http://www.kfstorm.com
 				<RowDefinition/>
 				<RowDefinition Height="10"/>
 				<RowDefinition/>
+				<RowDefinition Height="10"/>
+				<RowDefinition/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
@@ -30,6 +32,8 @@ Website : http://www.kfstorm.com
 			<CheckBox Grid.ColumnSpan="2" x:Name="CbShowLyrics" Checked="CbShowLyrics_Checked" Unchecked="CbShowLyrics_Unchecked">显示歌词</CheckBox>
 			<CheckBox Grid.Row="2" x:Name="CbEnableDesktopLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableDesktopLyrics, ElementName=Window}" Checked="CbEnableDesktopLyrics_Checked" Unchecked="CbEnableDesktopLyrics_Unchecked">桌面歌词</CheckBox>
 			<CheckBox Grid.Row="2" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked">内嵌歌词</CheckBox>
+			<RadioButton Grid.Row="4" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window}" Content="单行歌词"/>
+			<RadioButton Grid.Row="4" Grid.Column="1" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Content="双行歌词"/>
 		</Grid>
 		<Grid Grid.Row="1">
 			<Grid.RowDefinitions>
