@@ -1159,6 +1159,14 @@ namespace DoubanFM
 			Debug.Unindent();
 			ChangeCover();
 			SetLyrics(null);
+
+			//防止对歌词窗口设置WS_EX_TOOLWINDOW样式后偶尔置顶会失效，不知道有没有用
+			if (_player.Settings.ShowLyrics && _lyricsSetting.EnableDesktopLyrics)
+			{
+				_lyricsWindow.Hide();
+				_lyricsWindow.Show();
+			}
+
 			if (_player.Settings.ShowLyrics) DownloadLyrics();
 			try
 			{

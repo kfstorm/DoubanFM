@@ -182,12 +182,6 @@ namespace DoubanFM
 			{
 				HideLyricsStoryboard.Begin();
 			}
-
-			//防止对歌词窗口设置WS_EX_TOOLWINDOW样式后偶尔置顶会失效，不知道有没有用
-			if (this.Visibility == System.Windows.Visibility.Visible)
-			{
-				this.Show();
-			}
 		}
 
 		#region 绘制歌词
