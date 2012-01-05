@@ -373,11 +373,13 @@ namespace DoubanFM.Core
 		{
 			if (CurrentState != State.LoggedOn) return;
 			CurrentState = State.LoggingOff;
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-				{
-					string file = new ConnectionBase().Get(_logOffLink);
-					Dispatcher.Invoke(new Action(() => { Update(file); }));
-				}));
+			ConnectionBase.cc = new System.Net.CookieContainer(1000, 1000, 100000);
+			_logOffLink = string.Empty;
+			Settings.User.Nickname = string.Empty;
+			Settings.User.Played = 0;
+			Settings.User.Liked = 0;
+			Settings.User.Banned = 0;
+			CurrentState = State.LoggedOff;
 		}
 
 		/// <summary>
@@ -385,7 +387,7 @@ namespace DoubanFM.Core
 		/// </summary>
 		internal void ForceLogOff()
 		{
-			new ConnectionBase().Get(_logOffLink);
+			LogOff();
 		}
 		#endregion
 	}
