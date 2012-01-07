@@ -1646,7 +1646,7 @@ namespace DoubanFM
 		private void Feedback_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			Core.Feedback.OpenFeedbackPage();
+			Process.Start("http://www.kfstorm.com/blog/2011/12/01/%E8%B1%86%E7%93%A3%E7%94%B5%E5%8F%B0faq/");
 		}
 
 		private void CheckBoxShowLyrics_Checked(object sender, System.Windows.RoutedEventArgs e)
