@@ -296,6 +296,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DoubanFM.Bass\DoubanFM.Bass.csproj">
+      <Project>{62324CFD-03FF-44B4-9204-66BAE86972B6}</Project>
+      <Name>DoubanFM.Bass</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DoubanFM.Core\DoubanFM.Core.csproj">
       <Project>{AA75B5E6-F373-49D7-B2E0-16C3E57321F7}</Project>
       <Name>DoubanFM.Core</Name>

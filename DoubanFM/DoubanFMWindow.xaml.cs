@@ -27,6 +27,7 @@ using System.Windows.Input;
 using System.Text;
 using DoubanFM.NotifyIcon;
 using System.Windows.Data;
+using DoubanFM.Bass;
 
 namespace DoubanFM
 {
@@ -41,10 +42,6 @@ namespace DoubanFM
 		/// 播放器
 		/// </summary>
 		private Player _player;
-		/// <summary>
-		/// 多媒体控件
-		/// </summary>
-		public MediaPlayer Audio;
 		/// <summary>
 		/// 进度更新计时器
 		/// </summary>
@@ -81,14 +78,6 @@ namespace DoubanFM
 		/// 临时文件夹
 		/// </summary>
 		private string _tempPath = Path.Combine(Path.GetTempPath(), "DoubanFM");
-		/// <summary>
-		/// 预加载用
-		/// </summary>
-		private System.Net.WebClient _preloadClient = new System.Net.WebClient();
-		/// <summary>
-		/// 是否已完成预加载
-		/// </summary>
-		private bool _preloadFinished;
 		/// <summary>
 		/// 桌面歌词窗口
 		/// </summary>
@@ -170,10 +159,7 @@ namespace DoubanFM
 			DependencyProperty.Register("Volume", typeof(double), typeof(DoubanFMWindow), new UIPropertyMetadata(1.0, new PropertyChangedCallback((d, e) =>
 			{
 				DoubanFMWindow window = (DoubanFMWindow)d;
-				if (window.Audio != null)
-				{
-					window.Audio.Volume = window.Volume * window.VolumeFadeParameter;
-				}
+				BassEngine.Instance.Volume = window.Volume * window.VolumeFadeParameter;
 			}))
 			, new ValidateValueCallback((value) =>
 			{
@@ -196,16 +182,13 @@ namespace DoubanFM
 			DependencyProperty.Register("VolumeFadeParameter", typeof(double), typeof(DoubanFMWindow), new UIPropertyMetadata(1.0, new PropertyChangedCallback((d, e) =>
 			{
 				DoubanFMWindow window = (DoubanFMWindow)d;
-				if (window.Audio != null)
-				{
-					window.Audio.Volume = window.Volume * window.VolumeFadeParameter;
-				}
+				BassEngine.Instance.Volume = window.Volume * window.VolumeFadeParameter;
 			}))
-				, new ValidateValueCallback((value) =>
-				{
-					double v = (double)value;
-					return v >= 0 && v <= 1;
-				}));
+			, new ValidateValueCallback((value) =>
+			{
+				double v = (double)value;
+				return v >= 0 && v <= 1;
+			}));
 		
 
 		/// <summary>
@@ -244,6 +227,10 @@ namespace DoubanFM
 			}
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置完成");
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine");
+			InitBassEngine();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine完成");
+
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置");
 			InitProxy();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置完成");
@@ -268,10 +255,6 @@ namespace DoubanFM
 			CheckMappedFile();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件完成");
 
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化预加载音乐");
-			PreloadMusic();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化预加载音乐完成");
-
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 检查自动更新");
 			CheckUpdateOnStartup();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 检查自动更新完成");
@@ -294,6 +277,47 @@ namespace DoubanFM
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
 			_player.Initialize();
+		}
+
+		/// <summary>
+		/// 初始化BassEngine
+		/// </summary>
+		void InitBassEngine()
+		{
+			BassEngine.Instance.TrackEnded += delegate
+			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲播放完毕");
+				if (!stoped)
+				{
+					_player.CurrentSongFinishedPlaying();
+				}
+			};
+			BassEngine.Instance.OpenSucceeded += delegate
+			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐加载成功");
+				if (Math.Abs((TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Text) - BassEngine.Instance.ChannelLength).TotalSeconds) > 2)
+					TotalTime.Text = TimeSpanToStringConverter.QuickConvert(BassEngine.Instance.ChannelLength);
+				Slider.Maximum = BassEngine.Instance.ChannelLength.TotalSeconds;
+			};
+			BassEngine.Instance.OpenFailed += delegate
+			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 打开音乐失败");
+				_player.MediaFailed();
+			};
+
+			BassEngine.Instance.Volume = _player.Settings.Volume;
+			BassEngine.Instance.IsMuted = _player.Settings.IsMuted;
+
+			Binding binding = new Binding();
+			binding.Source = _player;
+			binding.Path = new PropertyPath("Settings.Volume");
+			binding.Mode = BindingMode.TwoWay;
+			this.SetBinding(VolumeProperty, binding);
+
+			System.Windows.Data.Binding binding2 = new System.Windows.Data.Binding("IsMuted");
+			binding2.Source = BassEngine.Instance;
+			binding2.Mode = System.Windows.Data.BindingMode.TwoWay;
+			System.Windows.Data.BindingOperations.SetBinding(_player.Settings, Settings.IsMutedProperty, binding2);
 		}
 
 		private KeyboardHook hook;
@@ -434,7 +458,7 @@ namespace DoubanFM
 					VolumeDirectIn.Begin();
 					Update();
 					Play();			//在暂停时按下一首，加载歌曲后会结束暂停，开始播放
-					Audio.Play();
+					BassEngine.Instance.Play();
 				}
 			});
 			_player.Paused += new EventHandler((o, e) =>
@@ -456,7 +480,7 @@ namespace DoubanFM
 				PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
 				PauseThumb.Description = "暂停";
 				VolumeFadeIn.Begin();
-				Audio.Play();
+				BassEngine.Instance.Play();
 				//NotifyIcon_PlayPause.Text = "暂停";
 				//NotifyIcon_PlayPause.Image = NotifyIconImage_Pause;
 				//if (_player.Settings.ShowLyrics) ShowLyrics();
@@ -555,25 +579,6 @@ namespace DoubanFM
 			VolumeFadeOut = (Storyboard)FindResource("VolumeFadeOut");
 			VolumeFadeIn = (Storyboard)FindResource("VolumeFadeIn");
 			VolumeDirectIn = (Storyboard)FindResource("VolumeDirectIn");
-
-			Audio = new MediaPlayer();
-			Audio.MediaEnded += new EventHandler(Audio_MediaEnded);
-			Audio.MediaOpened += new EventHandler(Audio_MediaOpened);
-			Audio.MediaFailed += new EventHandler<ExceptionEventArgs>(Audio_MediaFailed);
-
-			Audio.Volume = _player.Settings.Volume;
-			Audio.IsMuted = _player.Settings.IsMuted;
-
-			Binding binding = new Binding();
-			binding.Source = _player;
-			binding.Path = new PropertyPath("Settings.Volume");
-			binding.Mode = BindingMode.TwoWay;
-			this.SetBinding(VolumeProperty, binding);
-			
-			System.Windows.Data.Binding binding2 = new System.Windows.Data.Binding("IsMuted");
-			binding2.Source = Audio;
-			binding2.Mode = System.Windows.Data.BindingMode.TwoWay;
-			System.Windows.Data.BindingOperations.SetBinding(_player.Settings, Settings.IsMutedProperty, binding2);
 		}
 
 		/// <summary>
@@ -585,10 +590,10 @@ namespace DoubanFM
 			_progressRefreshTimer.Interval = new TimeSpan(1000000);
 			_progressRefreshTimer.Tick += new EventHandler(timer_Tick);
 			_progressRefreshTimer.Start();
-			_forceNextTimer = new DispatcherTimer();
-			_forceNextTimer.Interval = new TimeSpan(600000000);
-			_forceNextTimer.Tick += new EventHandler(_forceNextTimer_Tick);
-			_forceNextTimer.Start();
+			//_forceNextTimer = new DispatcherTimer();
+			//_forceNextTimer.Interval = new TimeSpan(600000000);
+			//_forceNextTimer.Tick += new EventHandler(_forceNextTimer_Tick);
+			//_forceNextTimer.Start();
 			_slideCoverRightTimer = new DispatcherTimer();
 			_slideCoverRightTimer.Interval = new TimeSpan(5000000);
 			_slideCoverRightTimer.Tick += new EventHandler(SlideCoverRightTimer_Tick);
@@ -615,69 +620,6 @@ namespace DoubanFM
 			});
 			_mappedFile = MemoryMappedFile.CreateOrOpen(App._mappedFileName, 10240);
 			checkMappedFileTimer.Start();
-		}
-		/// <summary>
-		/// 音乐预加载
-		/// </summary>
-		void PreloadMusic()
-		{
-			_preloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler((oo, e) =>
-			{
-				if (!e.Cancelled && e.Error == null)
-				{
-					var userState = e.UserState as string[];
-					_preloadFinished = true;
-					Dispatcher.Invoke(new Action(() =>
-					{
-						if (_player.GetNextSongUrl() == userState[0])
-							_player.ChangeNextSongUrl(userState[1]);
-					}));
-				}
-			});
-			DispatcherTimer preloadTimer = new DispatcherTimer();
-			preloadTimer.Interval = new TimeSpan(0, 0, 1);
-			preloadTimer.Tick += new System.EventHandler((o, e) =>
-			{
-				if (Audio.DownloadProgress > 0.999 && !_preloadClient.IsBusy && !_preloadFinished)
-				{
-					string nextSongUrl = _player.GetNextSongUrl();
-					if (!string.IsNullOrEmpty(nextSongUrl))
-					{
-
-						try
-						{
-							if (!Directory.Exists(_tempPath))
-								Directory.CreateDirectory(_tempPath);
-							string filepath = Path.Combine(_tempPath, Path.GetFileName(nextSongUrl));
-							_preloadClient.DownloadFileAsync(new Uri(nextSongUrl), filepath,
-								new string[] { nextSongUrl, filepath });
-						}
-						catch { }
-					}
-				}
-			});
-			preloadTimer.Start();
-		}
-		/// <summary>
-		/// 清除预加载的音乐文件
-		/// </summary>
-		void ClearPreloadMusicFiles(string except = null)
-		{
-			try
-			{
-				if (!Directory.Exists(_tempPath)) return;
-				string[] musicFiles = Directory.GetFiles(_tempPath, @"*.mp3");
-				foreach (var file in musicFiles)
-					if (file != except)
-					{
-						try
-						{
-							File.Delete(file);
-						}
-						catch { }
-					}
-			}
-			catch { }
 		}
 		/// <summary>
 		/// 启动时检查更新
@@ -1170,33 +1112,6 @@ namespace DoubanFM
 			}
 
 			if (_player.Settings.ShowLyrics) DownloadLyrics();
-			try
-			{
-				//Audio.Source = new Uri(_player.CurrentSong.FileUrl);
-				Audio.Open(new Uri(_player.CurrentSong.FileUrl));
-				_lastTimeChangeSong = DateTime.Now;
-				
-				//防止无故静音
-				Audio.IsMuted = !Audio.IsMuted;
-				Audio.Volume = _player.Settings.Volume;
-				DispatcherTimer timer = new DispatcherTimer();
-				timer.Interval = TimeSpan.FromMilliseconds(50);
-				timer.Tick += new EventHandler((sender, e) =>
-				{
-					Audio.IsMuted = !Audio.IsMuted;
-					timer.Stop();
-				});
-				timer.Start();
-			}
-			catch (Exception ex)
-			{
-				//Debug.WriteLine("设置MediaElement的Source属性时出错，错误信息为");
-				Debug.WriteLine("调用MediaPlayer.Open方法时出错，错误信息为");
-				Debug.Indent();
-				Debug.WriteLine(ex.ToString());
-				Debug.Unindent();
-				MessageBox.Show(ex.ToString());
-			}
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = _player.CurrentSong.Title;
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[2]).KeyFrames[0].Value = _player.CurrentSong.Artist;
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = _player.CurrentSong.Album;
@@ -1214,7 +1129,7 @@ namespace DoubanFM
 			{
 				CustomBaloon = null;
 			}
-			
+
 			ChannelTextBlock.Text = _player.CurrentChannel.Name;
 			TotalTime.Text = TimeSpanToStringConverter.QuickConvert(_player.CurrentSong.Length);
 			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
@@ -1222,9 +1137,20 @@ namespace DoubanFM
 			Slider.Maximum = _player.CurrentSong.Length.TotalSeconds;
 			Slider.Value = 0;
 
-			_preloadFinished = false;
-			if (_preloadClient.IsBusy) _preloadClient.CancelAsync();
-			ClearPreloadMusicFiles(_player.CurrentSong.FileUrl);
+			BassEngine.Instance.OpenUrlAsync(_player.CurrentSong.FileUrl);
+			_lastTimeChangeSong = DateTime.Now;
+
+			////防止无故静音
+			//Audio.IsMuted = !Audio.IsMuted;
+			//Audio.Volume = _player.Settings.Volume;
+			//DispatcherTimer timer = new DispatcherTimer();
+			//timer.Interval = TimeSpan.FromMilliseconds(50);
+			//timer.Tick += new EventHandler((sender, e) =>
+			//{
+			//    Audio.IsMuted = !Audio.IsMuted;
+			//    timer.Stop();
+			//});
+			//timer.Start();			
 		}
 
 		public NotifyIcon.BalloonSongInfo CustomBaloon;
@@ -1379,76 +1305,34 @@ namespace DoubanFM
 			Next();
 		}
 		/// <summary>
-		/// 音乐播放结束
-		/// </summary>
-		private void Audio_MediaEnded(object sender, EventArgs e)
-		{
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲播放完毕");
-			if (!stoped)
-			{
-				_player.CurrentSongFinishedPlaying();
-			}
-		}
-
-		/// <summary>
-		/// 音乐遇到错误
-		/// </summary>
-		private void Audio_MediaFailed(object sender, ExceptionEventArgs e)
-		{
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " MediaPlayer发生错误，错误信息为");
-			Debug.Indent();
-			Debug.WriteLine(e.ErrorException.ToString());
-			Debug.Unindent();
-
-			DispatcherTimer timer = new DispatcherTimer();
-			timer.Interval = TimeSpan.FromSeconds(5);
-			timer.Tick += delegate
-			{
-				timer.Stop();
-				_player.MediaFailed();
-			};
-		}
-		/// <summary>
 		/// 计时器响应函数，用于更新时间信息和歌词
 		/// </summary>
 		void timer_Tick(object sender, EventArgs e)
 		{
-			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(Audio.Position);
-			Slider.Value = Audio.Position.TotalSeconds;
-			if (_lyricsWindow != null) _lyricsWindow.Refresh(Audio.Position);
+
+			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(BassEngine.Instance.ChannelPosition);
+			Slider.Value = BassEngine.Instance.ChannelPosition.TotalSeconds;
+			if (_lyricsWindow != null) _lyricsWindow.Refresh(BassEngine.Instance.ChannelPosition);
 		}
-		/// <summary>
-		/// 在网络不好时有用
-		/// </summary>
-		void _forceNextTimer_Tick(object sender, EventArgs e)
-		{
-			if (Audio.NaturalDuration.HasTimeSpan)
-				if ((Audio.Position - Audio.NaturalDuration.TimeSpan).TotalSeconds > 5)
-				{
-					Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 网络不好吧，显示的时间已经超过总时间了。是不是没声音啊？我换下一首了……");
-					_player.CurrentSongFinishedPlaying();
-					return;
-				}
-			if (Audio.Position == TimeSpan.Zero && DateTime.Now - _lastTimeChangeSong > TimeSpan.FromSeconds(30))
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + "网络太慢了，加载很久都不能播放……");
-				_player.CurrentSongFinishedPlaying();
-				return;
-			}
-		}
-		/// <summary>
-		/// 修正音乐总时间。音乐加载完成时调用。
-		/// </summary>
-		void Audio_MediaOpened(object sender, EventArgs e)
-		{
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐加载成功");
-			if (Audio.NaturalDuration.HasTimeSpan)
-			{
-				if (Math.Abs((TimeSpanToStringConverter.QuickConvertBack((string)TotalTime.Text) - Audio.NaturalDuration.TimeSpan).TotalSeconds) > 2)
-					TotalTime.Text = TimeSpanToStringConverter.QuickConvert(Audio.NaturalDuration.TimeSpan);
-				Slider.Maximum = Audio.NaturalDuration.TimeSpan.TotalSeconds;
-			}
-		}
+		///// <summary>
+		///// 在网络不好时有用
+		///// </summary>
+		//void _forceNextTimer_Tick(object sender, EventArgs e)
+		//{
+		//    if (Audio.NaturalDuration.HasTimeSpan)
+		//        if ((Audio.Position - Audio.NaturalDuration.TimeSpan).TotalSeconds > 5)
+		//        {
+		//            Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 网络不好吧，显示的时间已经超过总时间了。是不是没声音啊？我换下一首了……");
+		//            _player.CurrentSongFinishedPlaying();
+		//            return;
+		//        }
+		//    if (Audio.Position == TimeSpan.Zero && DateTime.Now - _lastTimeChangeSong > TimeSpan.FromSeconds(30))
+		//    {
+		//        Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + "网络太慢了，加载很久都不能播放……");
+		//        _player.CurrentSongFinishedPlaying();
+		//        return;
+		//    }
+		//}
 		/// <summary>
 		/// 任务栏按下“暂停/播放”按钮
 		/// </summary>
@@ -1473,8 +1357,9 @@ namespace DoubanFM
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 主窗口已关闭，正在保存设置");
 			if (_lyricsWindow != null)
 				_lyricsWindow.Close();
-			if (Audio != null)
-				Audio.Close();
+			BassEngine.Instance.Stop();
+			//if (Audio != null)
+			//    Audio.Close();
 			if (_hotKeys != null)
 			{
 				_hotKeys.UnRegister();
@@ -1498,7 +1383,6 @@ namespace DoubanFM
 			    NotifyIcon.Dispose();
 			if (_player != null)
 				_player.Dispose(SaveSettings);
-			ClearPreloadMusicFiles();
 		}
 		/// <summary>
 		/// 更新密码
@@ -1923,11 +1807,11 @@ namespace DoubanFM
 		{
 			if (stoped)
 			{
-				Audio.Stop();
+				BassEngine.Instance.Stop();
 			}
 			else if (!_player.IsPlaying)
 			{
-				Audio.Pause();
+				BassEngine.Instance.Pause();
 			}
 		}
 

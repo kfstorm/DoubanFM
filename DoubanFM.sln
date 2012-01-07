@@ -13,9 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.txt = README.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubanFM.Bass", "DoubanFM.Bass\DoubanFM.Bass.csproj", "{62324CFD-03FF-44B4-9204-66BAE86972B6}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs31
 		SccLocalPath0 = .
@@ -28,6 +30,9 @@ Global
 		SccProjectUniqueName3 = NotifyIconWpf\\NotifyIconWpf.csproj
 		SccProjectName3 = NotifyIconWpf
 		SccLocalPath3 = NotifyIconWpf
+		SccProjectUniqueName4 = DoubanFM.Bass\\DoubanFM.Bass.csproj
+		SccProjectName4 = DoubanFM.Bass
+		SccLocalPath4 = DoubanFM.Bass
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +77,16 @@ Global
 		{7AC63864-7638-41C4-969C-D3197EF2BED9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7AC63864-7638-41C4-969C-D3197EF2BED9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7AC63864-7638-41C4-969C-D3197EF2BED9}.Release|x86.ActiveCfg = Release|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{62324CFD-03FF-44B4-9204-66BAE86972B6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
