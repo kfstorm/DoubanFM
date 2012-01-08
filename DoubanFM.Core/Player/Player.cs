@@ -890,7 +890,7 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 网络发送间歇
 		/// </summary>
-		void TakeABreak()
+		static void TakeABreak()
 		{
 			Thread.Sleep(5000);
 		}

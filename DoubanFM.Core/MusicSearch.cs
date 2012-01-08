@@ -267,7 +267,7 @@ namespace DoubanFM.Core
 		/// 获取上一页的链接
 		/// </summary>
 		/// <returns></returns>
-		private string GetPreviousPageLink(string file)
+		private static string GetPreviousPageLink(string file)
 		{
 			try
 			{
@@ -282,7 +282,7 @@ namespace DoubanFM.Core
 		/// 获取下一页的链接
 		/// </summary>
 		/// <returns></returns>
-		private string GetNextPageLink(string file)
+		private static string GetNextPageLink(string file)
 		{
 			try
 			{

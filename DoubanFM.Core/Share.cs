@@ -143,7 +143,7 @@ namespace DoubanFM.Core
 			{
 				case Sites.None:
 					throw new InvalidOperationException("复制网址模式不能获取分享链接");
-					break;
+					//break;
 				case Sites.Douban:
 					parameters.Add("name", _songInfo.SongName);
 					parameters.Add("href", _songInfo.Url);

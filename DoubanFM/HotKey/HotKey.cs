@@ -48,7 +48,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 热键事件委托
 		/// </summary>
-		public delegate void OnHotKeyEventHandler();
+		public delegate void OnHotKeyEventHandler(object sender, EventArgs e);
 		/// <summary>
 		/// 热键事件
 		/// </summary>
@@ -119,7 +119,7 @@ namespace DoubanFM
 				throw new Exception("热键" + this + "已经被注册!");
 			}
 			//注册热键
-			if (false == HotKey.RegisterHotKey(Handle, KeyId, (uint)ControlKey, (uint)KeyInterop.VirtualKeyFromKey(Key)))
+			if (false == NativeMethods.RegisterHotKey(Handle, KeyId, (uint)ControlKey, (uint)KeyInterop.VirtualKeyFromKey(Key)))
 			{
 				throw new Exception("热键" + this + "注册失败!");
 			}
@@ -145,16 +145,12 @@ namespace DoubanFM
 		{
 			if (!IsRegistered) return;
 			if (ControlKey == ControlKeys.None && Key == Key.None) return;
-			HotKey.UnregisterHotKey(Handle, KeyId);
+			NativeMethods.UnregisterHotKey(Handle, KeyId);
 			HotKey.KeyPair.Remove(KeyId);
 			OnHotKey = null;
 			IsRegistered = false;
 		}
 
-		[System.Runtime.InteropServices.DllImport("user32")]
-		private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint controlKey, uint virtualKey);
-		[System.Runtime.InteropServices.DllImport("user32")]
-		private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 		//安装热键处理挂钩
 		static private bool InstallHotKeyHook(HotKey hk)
 		{
@@ -184,7 +180,7 @@ namespace DoubanFM
 				if (hk.OnHotKey != null)
 				{
 
-					hk.OnHotKey();
+					hk.OnHotKey(hk, EventArgs.Empty);
 				}
 			}
 			return IntPtr.Zero;
@@ -192,14 +188,14 @@ namespace DoubanFM
 
 		#endregion
 
-		public HotKey(SerializationInfo info, StreamingContext context)
+		protected HotKey(SerializationInfo info, StreamingContext context)
 		{
 			ControlKey = (ControlKeys)info.GetValue("ControlKey", typeof(ControlKeys));
 			Key = (Key)info.GetValue("Key", typeof(Key));
 			KeyId = (int)ControlKey + (int)Key * 100;
 		}
 
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("ControlKey", ControlKey);
 			info.AddValue("Key", Key);

@@ -193,10 +193,10 @@ namespace DoubanFM.Core
 		//    }
 		//}
 		
-		/// <summary>
-		/// 注销链接
-		/// </summary>
-		private string _logOffLink;
+		///// <summary>
+		///// 注销链接
+		///// </summary>
+		//private string _logOffLink;
 
 		#endregion
 
@@ -209,9 +209,9 @@ namespace DoubanFM.Core
 		internal void Update(string html)
 		{
 			//_captchaId = GetCaptchaId(html);          //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
-			_logOffLink = GetLogOffLink(html);
-			System.Diagnostics.Debug.WriteLine("注销链接：");
-			System.Diagnostics.Debug.WriteLine(_logOffLink);
+			//_logOffLink = GetLogOffLink(html);
+			//System.Diagnostics.Debug.WriteLine("注销链接：");
+			//System.Diagnostics.Debug.WriteLine(_logOffLink);
 			string s = null;
 			if (!string.IsNullOrEmpty(html))
 			{
@@ -271,11 +271,11 @@ namespace DoubanFM.Core
 		{
 			if (result != null && result.r == false && result.user_info != null)
 			{
-				_logOffLink = "http://douban.fm/partner/logout?source=radio&ck=" + result.user_info.ck + "&no_login=y";
+				//_logOffLink = "http://douban.fm/partner/logout?source=radio&ck=" + result.user_info.ck + "&no_login=y";
 				Dispatcher.Invoke(new Action(() =>
 				{
-					System.Diagnostics.Debug.WriteLine("注销链接：");
-					System.Diagnostics.Debug.WriteLine(_logOffLink);
+					//System.Diagnostics.Debug.WriteLine("注销链接：");
+					//System.Diagnostics.Debug.WriteLine(_logOffLink);
 					/*System.Diagnostics.Debug.WriteLine("**********************************************************************");
 					System.Diagnostics.Debug.WriteLine(DateTime.Now + " 以下是本次“登录/注销”返回的结果");
 					System.Diagnostics.Debug.Indent();
@@ -336,7 +336,7 @@ namespace DoubanFM.Core
 		/// </summary>
 		/// <param name="html">HTML文件</param>
 		/// <returns></returns>
-		string GetLogOffLink(string html)
+		static string GetLogOffLink(string html)
 		{
 			if (html == null) return null;
 			Match match = Regex.Match(html, "\"(http://.*logout[^\\s]*)\"", RegexOptions.IgnoreCase);
@@ -374,7 +374,7 @@ namespace DoubanFM.Core
 			if (CurrentState != State.LoggedOn) return;
 			CurrentState = State.LoggingOff;
 			ConnectionBase.cc = new System.Net.CookieContainer(1000, 1000, 100000);
-			_logOffLink = string.Empty;
+			//_logOffLink = string.Empty;
 			Settings.User.Nickname = string.Empty;
 			Settings.User.Played = 0;
 			Settings.User.Liked = 0;

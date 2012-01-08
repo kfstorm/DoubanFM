@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 namespace DoubanFM.Bass
 {
 
-	public class BassEngine : INotifyPropertyChanged
+	public class BassEngine : INotifyPropertyChanged, IDisposable
 	{
 		#region Fields
 		private static BassEngine instance;
@@ -67,17 +67,40 @@ namespace DoubanFM.Bass
 		#region Destructor
 		~BassEngine()
 		{
-			// at the end of your application call this!
-			Un4seen.Bass.Bass.BASS_Free();
-			Un4seen.Bass.Bass.FreeMe();
-			//BassMix.FreeMe(targetPath);
-			//...
-			//foreach (int plugin in LoadedBassPlugIns.Keys)
-			//    Bass.BASS_PluginFree(plugin);
+			Dispose(false);
+		}
+		#endregion
 
-			if (proxyHandle != IntPtr.Zero)
-				Marshal.FreeHGlobal(proxyHandle);
-			proxyHandle = IntPtr.Zero;
+		#region IDisposable
+		bool _disposed;
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!_disposed)
+			{
+				if (disposing)
+				{
+				}
+				// at the end of your application call this!
+				Un4seen.Bass.Bass.BASS_Free();
+				Un4seen.Bass.Bass.FreeMe();
+				//BassMix.FreeMe(targetPath);
+				//...
+				//foreach (int plugin in LoadedBassPlugIns.Keys)
+				//    Bass.BASS_PluginFree(plugin);
+
+				if (proxyHandle != IntPtr.Zero)
+					Marshal.FreeHGlobal(proxyHandle);
+				proxyHandle = IntPtr.Zero;
+
+				_disposed = true;
+			}
 		}
 		#endregion
 

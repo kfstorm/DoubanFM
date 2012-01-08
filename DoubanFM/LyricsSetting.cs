@@ -188,7 +188,7 @@ namespace DoubanFM
 
 		}
 
-		public LyricsSetting(SerializationInfo info, StreamingContext context)
+		protected LyricsSetting(SerializationInfo info, StreamingContext context)
 		{
 			LyricsSetting def = new LyricsSetting();
 			try
@@ -297,7 +297,7 @@ namespace DoubanFM
 			}
 		}
 
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			if (FontFamily != null)
 			{

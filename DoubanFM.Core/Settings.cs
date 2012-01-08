@@ -267,7 +267,7 @@ namespace DoubanFM.Core
 		internal Settings()
 			: this("", "") { }
 
-		public Settings(SerializationInfo info, StreamingContext context)
+		protected Settings(SerializationInfo info, StreamingContext context)
 		{
 			Settings def = new Settings();
 			try
@@ -472,7 +472,7 @@ namespace DoubanFM.Core
 			}
 		}
 
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("User", User);
 			info.AddValue("RememberPassword", RememberPassword);

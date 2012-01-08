@@ -60,14 +60,6 @@ namespace DoubanFM
 		/// </summary>
 		private Storyboard ChangeLyricsStoryboard, HideLyricsStoryboard;
 		
-		[DllImport("user32.dll")]
-		static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-		[DllImport("user32.dll", SetLastError = true)]
-		static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-		static readonly int GWL_EXSTYLE = (-20);
-		static readonly int WS_EX_TRANSPARENT = 0x0020;
-		static readonly int WS_EX_TOOLWINDOW = 0x00000080;
-
 		public LyricsWindow(LyricsSetting lyricsSetting = null)
 		{
 			this.InitializeComponent();
@@ -81,12 +73,12 @@ namespace DoubanFM
 			this.SourceInitialized += new EventHandler((o, e) =>
 			{
 				var hwnd = new WindowInteropHelper(this).Handle;
-				int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-				SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle
+				int extendedStyle = NativeMethods.GetWindowLong(hwnd, NativeMethods.GWL_EXSTYLE);
+				NativeMethods.SetWindowLong(hwnd, NativeMethods.GWL_EXSTYLE, extendedStyle
 					//鼠标穿透
-					| WS_EX_TRANSPARENT
+					| NativeMethods.WS_EX_TRANSPARENT
 					//在按下Alt+Tab时不显示
-					| WS_EX_TOOLWINDOW);
+					| NativeMethods.WS_EX_TOOLWINDOW);
 			});
 
 			UpdateForegroundSetting();

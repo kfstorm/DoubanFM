@@ -103,7 +103,7 @@ namespace DoubanFM
 			catch { }
 		}
 
-		public ShareSetting(SerializationInfo info, StreamingContext context)
+		protected ShareSetting(SerializationInfo info, StreamingContext context)
 		{
 			ShareSetting def = new ShareSetting();
 
@@ -136,7 +136,7 @@ namespace DoubanFM
 		public ShareSetting()
 		{ }
 
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("EnableOneKeyShare", EnableOneKeyShare);
 			info.AddValue("OneKeyShareSites", OneKeyShareSites);

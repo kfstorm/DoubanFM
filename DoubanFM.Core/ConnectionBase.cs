@@ -30,11 +30,11 @@ namespace DoubanFM.Core
 		/// </summary>
 		public static string DefaultUserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
 		/// <summary>
-		/// 默认HTTP头：Accept
+		/// 默认HTTP头：accept
 		/// </summary>
 		public static string DefaultAccept = "text/html, application/xhtml+xml, */*";
 		/// <summary>
-		/// 默认HTTP头：ContentType
+		/// 默认HTTP头：contentType
 		/// </summary>
 		public static string DefaultContentType = "application/x-www-form-urlencoded";
 		/// <summary>
@@ -88,40 +88,40 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 用Post方法发送请求
 		/// </summary>
-		/// <param name="PostUri">请求的地址</param>
-		/// <param name="Accept">Accept头</param>
-		/// <param name="Referer">Referer头</param>
-		/// <param name="ContentType">ContentType头</param>
-		/// <param name="Content">请求正文</param>
+		/// <param name="postUri">请求的地址</param>
+		/// <param name="accept">Accept头</param>
+		/// <param name="referer">Referer头</param>
+		/// <param name="contentType">ContentType头</param>
+		/// <param name="content">请求正文</param>
 		/// <returns>
 		/// 响应正文
 		/// </returns>
-		public string Post(string PostUri, string Accept, string Referer, string ContentType, byte[] Content)
+		public string Post(string postUri, string accept, string referer, string contentType, byte[] content)
 		{
 			string file = null;
 
 			try
 			{
-				HttpWebRequest request = WebRequest.Create(PostUri) as HttpWebRequest;
-				request.Accept = Accept;
+				HttpWebRequest request = WebRequest.Create(postUri) as HttpWebRequest;
+				request.Accept = accept;
 				request.AllowAutoRedirect = true;
-				request.ContentLength = Content.Length;
-				request.ContentType = ContentType;
+				request.ContentLength = content.Length;
+				request.ContentType = contentType;
 				request.CookieContainer = cc;
 				request.KeepAlive = true;
 				request.Method = "POST";
-				request.Referer = Referer;
+				request.Referer = referer;
 				request.UserAgent = UserAgent;
 				using (Stream requestStream = request.GetRequestStream())
-					requestStream.Write(Content, 0, Content.Length);
+					requestStream.Write(content, 0, content.Length);
 				using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
 				using (StreamReader sr = new StreamReader(responce.GetResponseStream(), Encoding))
 					file = sr.ReadToEnd();
 			}
-			catch (Exception e)
+			catch
 			{
 				if (ThrowException)
-					throw e;
+					throw;
 			}
 
 			return file;
@@ -129,55 +129,55 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 用Post方法发送请求
 		/// </summary>
-		/// <param name="PostUri">请求的地址</param>
-		/// <param name="Content">请求正文</param>
+		/// <param name="postUri">请求的地址</param>
+		/// <param name="content">请求正文</param>
 		/// <returns>响应正文</returns>
-		public string Post(string PostUri, byte[] Content)
+		public string Post(string postUri, byte[] content)
 		{
-			return Post(PostUri, null, Content);
+			return Post(postUri, null, content);
 		}
 		/// <summary>
 		/// 用Post方法发送请求
 		/// </summary>
-		/// <param name="PostUri">请求的地址</param>
-		/// <param name="Referer">Referer头</param>
-		/// <param name="Content">请求正文</param>
+		/// <param name="postUri">请求的地址</param>
+		/// <param name="referer">Referer头</param>
+		/// <param name="content">请求正文</param>
 		/// <returns>响应正文</returns>
-		public string Post(string PostUri, string Referer, byte[] Content)
+		public string Post(string postUri, string referer, byte[] content)
 		{
-			return Post(PostUri, Accept, Referer, ContentType, Content);
+			return Post(postUri, Accept, referer, ContentType, content);
 		}
 		/// <summary>
 		/// 用Get方法发送请求
 		/// </summary>
-		/// <param name="GetUri">请求的地址</param>
-		/// <param name="Accept">Accept头</param>
-		/// <param name="Referer">Referer头</param>
+		/// <param name="getUri">请求的地址</param>
+		/// <param name="accept">Accept头</param>
+		/// <param name="referer">Referer头</param>
 		/// <returns>
 		/// 响应正文
 		/// </returns>
-		public string Get(string GetUri, string Accept, string Referer)
+		public string Get(string getUri, string accept, string referer)
 		{
 			string file = null;
 
 			try
 			{
-				HttpWebRequest request = WebRequest.Create(GetUri) as HttpWebRequest;
-				request.Accept = Accept;
+				HttpWebRequest request = WebRequest.Create(getUri) as HttpWebRequest;
+				request.Accept = accept;
 				request.AllowAutoRedirect = true;
 				request.CookieContainer = cc;
 				request.KeepAlive = true;
 				request.Method = "GET";
-				request.Referer = Referer;
+				request.Referer = referer;
 				request.UserAgent = UserAgent;
 				using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
 				using (StreamReader sr = new StreamReader(responce.GetResponseStream(), Encoding))
 					file = sr.ReadToEnd();
 			}
-			catch (Exception e)
+			catch
 			{
 				if (ThrowException)
-					throw e;
+					throw;
 			}
 
 			return file;
@@ -185,22 +185,22 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 用Get方法发送请求
 		/// </summary>
-		/// <param name="GetUri">请求的地址</param>
+		/// <param name="getUri">请求的地址</param>
 		/// <returns>响应正文</returns>
-		public string Get(string GetUri)
+		public string Get(string getUri)
 		{
-			return Get(GetUri, Accept, null);
+			return Get(getUri, Accept, null);
 		}
 
 		/// <summary>
 		/// 用Get方法发送请求
 		/// </summary>
-		/// <param name="GetUri">请求的地址</param>
-		/// <param name="Referer">Referer头</param>
+		/// <param name="getUri">请求的地址</param>
+		/// <param name="referer">Referer头</param>
 		/// <returns>响应正文</returns>
-		public string Get(string GetUri, string Referer)
+		public string Get(string getUri, string referer)
 		{
-			return Get(GetUri, Accept, Referer);
+			return Get(getUri, Accept, referer);
 		}
 		/// <summary>
 		/// 读取Cookies

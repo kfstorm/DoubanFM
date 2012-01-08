@@ -9,26 +9,19 @@ Website : http://www.kfstorm.com
 		xmlns:local="clr-namespace:DoubanFM"
 		x:Name="Window"
 		Title="常规设置" Background="#FF813131">
-	<Grid Width="300" MinHeight="150"  Margin="10">
-		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
-		<CheckBox x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
-		<CheckBox Grid.Row="1" x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" />
-		<CheckBox Grid.Row="2" x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-		<Grid Grid.Row="3">
+	<StackPanel Width="300" Margin="10">
+		<CheckBox x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+		<CheckBox x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+		<CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-		<CheckBox x:Name="CbEnableProxy" Content="启用代理" IsChecked="{Binding Settings.EnableProxy, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-		<Button x:Name="BtnApplyProxy" Grid.Column="1" Height="30" Width="100" Margin="5" Click="BtnApplyProxy_Click">应用代理设置</Button>
+			<CheckBox x:Name="CbEnableProxy" Content="启用代理" IsChecked="{Binding Settings.EnableProxy, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
+			<Button x:Name="BtnApplyProxy" Grid.Column="1" Height="30" Width="100" Margin="5" Click="BtnApplyProxy_Click">应用代理设置</Button>
 		</Grid>
-		<Grid Grid.Row="4">
+		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition/>
@@ -40,5 +33,5 @@ Website : http://www.kfstorm.com
 			<Label Grid.Column="2" Margin="10,0,0,0">端口：</Label>
 			<TextBox x:Name="TbPort" Grid.Column="3" Width="50" Text="{Binding Settings.ProxyPort, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=CbEnableProxy}" Height="20" MaxLength="10"/>
 		</Grid>
-	</Grid>
+	</StackPanel>
 </local:ChildWindowBase>

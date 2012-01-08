@@ -31,10 +31,6 @@ namespace DoubanFM
 
 		private Window m_target;
 
-		[DllImport("user32.dll")]
-		static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-		[DllImport("user32.dll", SetLastError = true)]
-		static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 		static readonly int GWL_EXSTYLE = (-20);
 		static readonly int WS_EX_TRANSPARENT = 0x0020;
 		
@@ -158,8 +154,8 @@ namespace DoubanFM
 			wnd.SourceInitialized += new EventHandler((o, e) =>
 			{
 				var hwnd = new WindowInteropHelper(wnd).Handle;
-				int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-				SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle
+				int extendedStyle = NativeMethods.GetWindowLong(hwnd, GWL_EXSTYLE);
+				NativeMethods.SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle
 					//鼠标穿透
 					| WS_EX_TRANSPARENT);
 			});

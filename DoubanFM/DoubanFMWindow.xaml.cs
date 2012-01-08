@@ -46,10 +46,10 @@ namespace DoubanFM
 		/// 进度更新计时器
 		/// </summary>
 		private DispatcherTimer _progressRefreshTimer;
-		/// <summary>
-		/// 防止不执行下一首
-		/// </summary>
-		private DispatcherTimer _forceNextTimer;
+		///// <summary>
+		///// 防止不执行下一首
+		///// </summary>
+		//private DispatcherTimer _forceNextTimer;
 		/// <summary>
 		/// 各种无法在XAML里直接启动的Storyboard
 		/// </summary>
@@ -1138,15 +1138,15 @@ namespace DoubanFM
 				CustomBaloon = null;
 			}
 
-			ChannelTextBlock.Text = _player.CurrentChannel.Name;
+			//ChannelTextBlock.Text = _player.CurrentChannel.Name;
 			TotalTime.Text = TimeSpanToStringConverter.QuickConvert(_player.CurrentSong.Length);
-			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(new TimeSpan(0));
+			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(TimeSpan.Zero);
 			Slider.Minimum = 0;
 			Slider.Maximum = _player.CurrentSong.Length.TotalSeconds;
 			Slider.Value = 0;
 
 			BassEngine.Instance.OpenUrlAsync(_player.CurrentSong.FileUrl);
-			_lastTimeChangeSong = DateTime.Now;
+			//_lastTimeChangeSong = DateTime.Now;
 
 			////防止无故静音
 			//Audio.IsMuted = !Audio.IsMuted;

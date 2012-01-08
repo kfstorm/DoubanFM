@@ -90,7 +90,7 @@ namespace DoubanFM.Core
 			Password = string.Empty;
 		}
 
-		public User(SerializationInfo info, StreamingContext context)
+		protected User(SerializationInfo info, StreamingContext context)
 		{
 			User def = new User();
 			try
@@ -144,7 +144,7 @@ namespace DoubanFM.Core
 			
 		}
 
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("Username", Username);
 			info.AddValue("Password", Password);

@@ -16,7 +16,7 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// 反馈
 	/// </summary>
-	public class Feedback
+	public static class Feedback
 	{
 		/// <summary>
 		/// 产品名称

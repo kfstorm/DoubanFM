@@ -87,8 +87,6 @@ namespace DoubanFM.Core
                         cs.FlushFinalBlock();
 
                         //Get the decrypted data back from the memory stream
-                        StringBuilder ret = new StringBuilder();
-
                         return System.Text.Encoding.Default.GetString(ms.ToArray());
                     }
                 }

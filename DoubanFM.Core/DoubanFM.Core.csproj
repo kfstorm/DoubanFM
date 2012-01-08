@@ -46,9 +46,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cate.cs" />
-    <Compile Include="Channel.cs" />
-    <Compile Include="ChannelInfo.cs" />
+    <Compile Include="Player\Cate.cs" />
+    <Compile Include="Player\Channel.cs" />
+    <Compile Include="Player\ChannelInfo.cs" />
     <Compile Include="ConnectionBase.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="Feedback.cs" />
@@ -64,26 +64,26 @@
     <Compile Include="Json\SubDjCate.cs" />
     <Compile Include="Json\SubDjChannel.cs" />
     <Compile Include="Json\UserInfo.cs" />
-    <Compile Include="Lyrics.cs" />
-    <Compile Include="LyricsAssistant.cs" />
-    <Compile Include="LyricsItem.cs" />
-    <Compile Include="LyricsResult.cs" />
+    <Compile Include="Lyrics\Lyrics.cs" />
+    <Compile Include="Lyrics\LyricsAssistant.cs" />
+    <Compile Include="Lyrics\LyricsItem.cs" />
+    <Compile Include="Lyrics\LyricsResult.cs" />
     <Compile Include="MusicSearch.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="PlayList.cs" />
-    <Compile Include="Product.cs" />
-    <Compile Include="Products.cs" />
+    <Compile Include="Player\Player.cs" />
+    <Compile Include="Player\PlayList.cs" />
+    <Compile Include="Updater\Product.cs" />
+    <Compile Include="Updater\Products.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchItem.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Share.cs" />
     <Compile Include="ShareSongInfo.cs" />
-    <Compile Include="Song.cs" />
-    <Compile Include="Updater.cs" />
-    <Compile Include="UpdateResult.cs" />
-    <Compile Include="UpdateWork.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="UserAssistant.cs" />
+    <Compile Include="Player\Song.cs" />
+    <Compile Include="Updater\Updater.cs" />
+    <Compile Include="Updater\UpdateResult.cs" />
+    <Compile Include="Updater\UpdateWork.cs" />
+    <Compile Include="Player\User.cs" />
+    <Compile Include="Player\UserAssistant.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
