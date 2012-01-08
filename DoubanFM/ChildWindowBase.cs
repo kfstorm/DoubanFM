@@ -26,23 +26,33 @@ namespace DoubanFM
 		
 		public ChildWindowBase()
 		{
-			Owner = Application.Current.MainWindow;
-			AllowsTransparency = Owner.AllowsTransparency;
-			this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+			try
+			{
+				Owner = Application.Current.MainWindow;
+				AllowsTransparency = Owner.AllowsTransparency;
+				this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+			}
+			catch { }
 		}
 
 		protected override void OnInitialized(EventArgs e)
 		{
 			base.OnInitialized(e);
 
-			System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Background");
-			binding.Source = Owner;
-			this.SetBinding(UpdateWindow.BackgroundProperty, binding);
+			if (Owner != null)
+			{
+				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Background");
+				binding.Source = Owner;
+				this.SetBinding(UpdateWindow.BackgroundProperty, binding);
+			}
 		}
 
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
-			Owner.Activate();
+			if (Owner != null)
+			{
+				Owner.Activate();
+			}
 
 			base.OnClosing(e);
 		}

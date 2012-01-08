@@ -42,21 +42,29 @@ namespace DoubanFM
 				Debug.WriteLine("豆瓣电台出现错误：" + App.GetPreciseTime(DateTime.Now));
 				Debug.WriteLine("**********************************************************************");
 				Debug.WriteLine("错误信息：");
-				Debug.WriteLine(e.ExceptionObject.ToString());
+				Debug.WriteLine(ExceptionWindow.GetExceptionMessage(e.ExceptionObject));
 
-				DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
-				if (mainWindow != null)
-				{
-					(FindResource("Player") as Player).SaveSettings(true);
-					mainWindow._lyricsSetting.Save();
-					mainWindow.ShareSetting.Save();
-					mainWindow.HotKeys.Save();
-				}
+				Dispatcher.Invoke(new Action(() =>
+					{
+						try
+						{
+							DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
+							if (mainWindow != null)
+							{
+								Player player = FindResource("Player") as Player;
+								if (player != null) player.SaveSettings(true);
+								if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
+								if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
+								if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
+								if (mainWindow.NotifyIcon != null) mainWindow.NotifyIcon.Dispose();
+							}
+						}
+						catch { }
 
-				var window = new ExceptionWindow();
-				window.Exception = e.ExceptionObject as Exception;
-				window.ShowDialog();
-				mainWindow.NotifyIcon.Dispose();
+						var window = new ExceptionWindow();
+						window.ExceptionObject = e.ExceptionObject;
+						window.ShowDialog();
+					}));
 				Process.GetCurrentProcess().Kill();
 			});
 

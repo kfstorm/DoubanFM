@@ -14,6 +14,9 @@ using System.Runtime.InteropServices;
 namespace DoubanFM.Bass
 {
 
+	/// <summary>
+	/// Bass播放器
+	/// </summary>
 	public class BassEngine : INotifyPropertyChanged, IDisposable
 	{
 		#region Fields
@@ -86,6 +89,11 @@ namespace DoubanFM.Bass
 			{
 				if (disposing)
 				{
+					if (onlineFileWorker != null)
+					{
+						onlineFileWorker.Abort();
+						onlineFileWorker = null;
+					}
 				}
 				// at the end of your application call this!
 				Un4seen.Bass.Bass.BASS_Free();
@@ -117,6 +125,9 @@ namespace DoubanFM.Bass
 		#endregion
 
 		#region Singleton Instance
+		/// <summary>
+		/// 获取BassEngine的唯一实例
+		/// </summary>
 		public static BassEngine Instance
 		{
 			get
@@ -129,6 +140,9 @@ namespace DoubanFM.Bass
 		#endregion
 
 		#region Public Methods
+		/// <summary>
+		/// 停止
+		/// </summary>
 		public void Stop()
 		{
 			if (canStop)
@@ -151,6 +165,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 暂停
+		/// </summary>
 		public void Pause()
 		{
 			if (IsPlaying && CanPause)
@@ -167,6 +184,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 播放
+		/// </summary>
 		public void Play()
 		{
 			if (CanPlay)
@@ -184,6 +204,10 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 打开文件
+		/// </summary>
+		/// <param name="filename">文件名</param>
 		public void OpenFile(string filename)
 		{
 			Stop();
@@ -240,6 +264,10 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 打开网络地址
+		/// </summary>
+		/// <param name="url">URL地址</param>
 		public void OpenUrlAsync(string url)
 		{
 			if (onlineFileWorker != null)
@@ -311,6 +339,13 @@ namespace DoubanFM.Bass
 			onlineFileWorker.Start();
 		}
 
+		/// <summary>
+		/// 设置代理服务器
+		/// </summary>
+		/// <param name="host">主机</param>
+		/// <param name="port">端口</param>
+		/// <param name="username">用户名</param>
+		/// <param name="password">密码</param>
 		public void SetProxy(string host, int? port, string username, string password)
 		{
 			if (proxyHandle != IntPtr.Zero)
@@ -356,6 +391,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 使用默认代理服务器设置
+		/// </summary>
 		public void UseDefaultProxy()
 		{
 			if (proxyHandle != IntPtr.Zero)
@@ -389,6 +427,9 @@ namespace DoubanFM.Bass
 		#endregion
 
 		#region Private Utility Methods
+		/// <summary>
+		/// 初始化
+		/// </summary>
 		private void Initialize()
 		{
 			positionTimer.Interval = TimeSpan.FromMilliseconds(50);
@@ -415,6 +456,9 @@ namespace DoubanFM.Bass
 			Un4seen.Bass.Bass.BASS_SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_TIMEOUT, 15000);
 		}
 
+		/// <summary>
+		/// 播放当前流
+		/// </summary>
 		private void PlayCurrentStream()
 		{
 			// Play Stream
@@ -432,6 +476,9 @@ namespace DoubanFM.Bass
 			}
 #endif
 		}
+		/// <summary>
+		/// 设置音量
+		/// </summary>
 		private void SetVolume()
 		{
 			if (ActiveStreamHandle != 0)
@@ -454,6 +501,9 @@ namespace DoubanFM.Bass
 		#endregion
 
 		#region Public Properties
+		/// <summary>
+		/// 长度
+		/// </summary>
 		public TimeSpan ChannelLength
 		{
 			get { return channelLength; }
@@ -466,6 +516,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 位置
+		/// </summary>
 		public TimeSpan ChannelPosition
 		{
 			get { return currentChannelPosition; }
@@ -488,6 +541,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 当前流的句柄
+		/// </summary>
 		public int ActiveStreamHandle
 		{
 			get { return activeStreamHandle; }

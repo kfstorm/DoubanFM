@@ -22,17 +22,38 @@ namespace DoubanFM
 	/// </summary>
 	public partial class ExceptionWindow : ChildWindowBase
 	{
-		private Exception exception;
-		public Exception Exception
+		private object exceptionObject;
+		public object ExceptionObject
 		{
-			get { return exception; }
+			get { return exceptionObject; }
 			set
 			{
-				if (exception != value)
+				if (exceptionObject != value)
 				{
-					exception = value;
-					TbErrorReport.Text = exception == null ? string.Empty : exception.ToString();
+					exceptionObject = value;
+					TbErrorReport.Text = exceptionObject == null ? string.Empty : GetExceptionMessage(exceptionObject);
 				}
+			}
+		}
+
+		public static string GetExceptionMessage(object exceptionObject)
+		{
+			if (exceptionObject == null) return string.Empty;
+			if (exceptionObject is Exception)
+			{
+				StringBuilder sb = new StringBuilder();
+				var ex = exceptionObject as Exception;
+				while (ex != null)
+				{
+					sb.AppendLine("************** Exception **************");
+					sb.AppendLine(ex.ToString());
+					ex = ex.InnerException;
+				}
+				return sb.ToString();
+			}
+			else
+			{
+				return exceptionObject.ToString();
 			}
 		}
 
@@ -44,12 +65,17 @@ namespace DoubanFM
 			BtnViewErrorReport.Visibility = System.Windows.Visibility.Visible;
 			BtnOK.Visibility = System.Windows.Visibility.Collapsed;
 #endif
+			if (Owner == null)
+			{
+				ShowInTaskbar = true;
+				WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+			}
 		}
 
 		private void BtnOK_Click(object sender, RoutedEventArgs e)
 		{
 			BtnOK.IsEnabled = false;
-			if (Exception != null)
+			if (exceptionObject != null)
 			{
 				PbSending.Visibility = System.Windows.Visibility.Visible;
 				ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
@@ -61,7 +87,7 @@ namespace DoubanFM
 					Parameters parameters = new Parameters();
 					parameters.Add(new UrlParameter("ProductName", productName));
 					parameters.Add(new UrlParameter("VersionNumber", versionNumber));
-					parameters.Add(new UrlParameter("Exception", Exception.ToString()));
+					parameters.Add(new UrlParameter("Exception", TbErrorReport.Text));
 					string result = new ConnectionBase().Post("http://www.kfstorm.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
 					Debug.WriteLine(result);
 					Dispatcher.BeginInvoke(new Action(() =>
