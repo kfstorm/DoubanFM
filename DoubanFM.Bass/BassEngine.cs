@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Interop;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace DoubanFM.Bass
 {
@@ -29,12 +30,12 @@ namespace DoubanFM.Bass
 		private TimeSpan currentChannelPosition = TimeSpan.Zero;
 		private bool inChannelSet;
 		private bool inChannelTimerUpdate;
-		private bool isOpening;
 		private Thread onlineFileWorker;
 		enum PendingOperation { None = 0, Play, Pause, Stop };
 		private PendingOperation pendingOperation = PendingOperation.None;
 		private double volume;
 		private bool isMuted;
+		private IntPtr proxyHandle = IntPtr.Zero;
 		#endregion
 
 		#region Constructor
@@ -73,6 +74,10 @@ namespace DoubanFM.Bass
 			//...
 			//foreach (int plugin in LoadedBassPlugIns.Keys)
 			//    Bass.BASS_PluginFree(plugin);
+
+			if (proxyHandle != IntPtr.Zero)
+				Marshal.FreeHGlobal(proxyHandle);
+			proxyHandle = IntPtr.Zero;
 		}
 		#endregion
 
@@ -229,7 +234,6 @@ namespace DoubanFM.Bass
 				ActiveStreamHandle = 0;
 				CanPlay = false;
 			}
-
 			onlineFileWorker = new Thread(new ThreadStart(() =>
 				{
 					int handle = Un4seen.Bass.Bass.BASS_StreamCreateURL(url, 0, Un4seen.Bass.BASSFlag.BASS_SAMPLE_FLOAT | Un4seen.Bass.BASSFlag.BASS_STREAM_PRESCAN, null, IntPtr.Zero);
@@ -283,6 +287,66 @@ namespace DoubanFM.Bass
 			onlineFileWorker.IsBackground = true;
 			onlineFileWorker.Start();
 		}
+
+		public void SetProxy(string host, int? port, string username, string password)
+		{
+			if (proxyHandle != IntPtr.Zero)
+				Marshal.FreeHGlobal(proxyHandle);
+			proxyHandle = IntPtr.Zero;
+
+			//user:pass@server:port
+			StringBuilder sb = new StringBuilder();
+			if (!string.IsNullOrEmpty(username))
+			{
+				if (string.IsNullOrEmpty(password))
+					throw new ArgumentException("密码为空", "password");
+				sb.Append(username);
+				sb.Append(":");
+				sb.Append(password);
+			}
+			if (sb.Length == 0)
+			{
+				if (string.IsNullOrEmpty(host))
+					throw new ArgumentException("主机为空", "host");
+				if (!port.HasValue)
+					throw new ArgumentException("端口号为空", "port");
+			}
+			sb.Append("@");
+			if (!string.IsNullOrEmpty(host) && port.HasValue)
+			{
+				if (host.Contains(':'))
+					throw new ArgumentException("主机不能包含符号:");
+				sb.Append("http://");
+				sb.Append(host);
+				sb.Append(":");
+				sb.Append(port);
+			}
+			string proxyString = sb.ToString();
+
+			// set it
+			proxyHandle = Marshal.StringToHGlobalUni(proxyString);
+			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
+
+			if (!result)
+			{
+				throw new Exception("设置BassEngine的代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+			}
+		}
+
+		public void UseDefaultProxy()
+		{
+			if (proxyHandle != IntPtr.Zero)
+				Marshal.FreeHGlobal(proxyHandle);
+			proxyHandle = IntPtr.Zero;
+			
+			proxyHandle = Marshal.StringToHGlobalAnsi(string.Empty);
+			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
+
+			if (!result)
+			{
+				throw new Exception("设置BassEngine的代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+			}
+		}
 		#endregion
 
 		#region Event Handleres
@@ -322,8 +386,10 @@ namespace DoubanFM.Bass
 			}
 			else
 			{
-				throw new Exception("Bass initialization error!");
+				throw new Exception("Bass initialization error : " + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
+
+			Un4seen.Bass.Bass.BASS_SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_TIMEOUT, 15000);
 		}
 
 		private void PlayCurrentStream()

@@ -743,9 +743,12 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 保存偏好设置
 		/// </summary>
-		void SaveSettings()
+		/// <param name="includeCookie">是否包括Cookie</param>
+		public void SaveSettings(bool includeCookie = false)
 		{
 			Settings.Save();
+			if (includeCookie)
+				SaveCookies();
 		}
 		/// <summary>
 		/// 保存Cookies

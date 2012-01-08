@@ -359,7 +359,7 @@ namespace DoubanFM.Core
 				parameters.Add("remember", "on");
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					string file = new ConnectionBase().Post("http://douban.fm/j/login", Encoding.Default.GetBytes(parameters.ToString()));
+					string file = new ConnectionBase().Post("http://douban.fm/j/login", Encoding.UTF8.GetBytes(parameters.ToString()));
 					System.Diagnostics.Debug.WriteLine("登录结果：");
 					System.Diagnostics.Debug.WriteLine(file);
 					var result = Json.LogOnResult.FromJson(file);

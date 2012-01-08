@@ -108,6 +108,15 @@ namespace DoubanFM
 
 		void target_Closed(object sender, EventArgs e)
 		{
+			m_target.Closed -= target_Closed;
+			m_target.Activated -= target_Activated;
+			m_target.Deactivated -= target_Deactivated;
+
+			m_target.LocationChanged -= target_LocationChanged;
+			m_target.SizeChanged -= target_LocationChanged;
+			m_target.StateChanged -= target_StateChanged;
+			m_target.IsVisibleChanged -= target_IsVisibleChanged;
+
 			CloseSurrounds();
 		}
 
@@ -235,10 +244,14 @@ namespace DoubanFM
 		/// </summary>
 		private void ShowSurrounds()
 		{
-			m_wndT.Show();
-			m_wndL.Show();
-			m_wndB.Show();
-			m_wndR.Show();
+			try
+			{
+				m_wndT.Show();
+				m_wndL.Show();
+				m_wndB.Show();
+				m_wndR.Show();
+			}
+			catch { }
 		}
 
 		/// <summary>
@@ -246,20 +259,28 @@ namespace DoubanFM
 		/// </summary>
 		private void HideSurrounds()
 		{
-			m_wndT.Hide();
-			m_wndL.Hide();
-			m_wndB.Hide();
-			m_wndR.Hide();
+			try
+			{
+				m_wndT.Hide();
+				m_wndL.Hide();
+				m_wndB.Hide();
+				m_wndR.Hide();
+			}
+			catch { }
 		}
 		/// <summary>
 		/// Closes the surrounding windows.
 		/// </summary>
 		private void CloseSurrounds()
 		{
-			m_wndT.Close();
-			m_wndL.Close();
-			m_wndB.Close();
-			m_wndR.Close();
+			try
+			{
+				m_wndT.Close();
+				m_wndL.Close();
+				m_wndB.Close();
+				m_wndR.Close();
+			}
+			catch { }
 		}
 	}
 }

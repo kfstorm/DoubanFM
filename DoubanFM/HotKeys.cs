@@ -19,7 +19,7 @@ namespace DoubanFM
 	/// 热键集合
 	/// </summary>
 	[Serializable]
-	class HotKeys : Dictionary<DoubanFMWindow.Commands, HotKey>
+	public class HotKeys : Dictionary<DoubanFMWindow.Commands, HotKey>
 	{
 		/// <summary>
 		/// 数据保存文件夹

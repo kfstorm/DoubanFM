@@ -17,6 +17,7 @@ using System.IO.MemoryMappedFiles;
 using DoubanFM.Core;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 
 namespace DoubanFM
 {
@@ -41,16 +42,25 @@ namespace DoubanFM
 				Debug.WriteLine("豆瓣电台出现错误：" + App.GetPreciseTime(DateTime.Now));
 				Debug.WriteLine("**********************************************************************");
 				Debug.WriteLine("错误信息：");
-				Exception ex = e.ExceptionObject as Exception;
-				while (ex != null)
-				{
-					Debug.WriteLine(ex.Message);
-					ex = ex.InnerException;
-				}
 				Debug.WriteLine(e.ExceptionObject.ToString());
+
+				DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
+				if (mainWindow != null)
+				{
+					(FindResource("Player") as Player).SaveSettings(true);
+					mainWindow._lyricsSetting.Save();
+					mainWindow.ShareSetting.Save();
+					mainWindow.HotKeys.Save();
+				}
+
+				var window = new ExceptionWindow();
+				window.Exception = e.ExceptionObject as Exception;
+				window.ShowDialog();
+				mainWindow.NotifyIcon.Dispose();
+				Process.GetCurrentProcess().Kill();
 			});
 
-			App.Current.Exit += new ExitEventHandler((sender, e) =>
+			Exit += new ExitEventHandler((sender, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 程序结束，返回代码为" + e.ApplicationExitCode);
 			});
@@ -71,7 +81,7 @@ namespace DoubanFM
 			{
 				if (channel != null) WriteChannelToMappedFile(channel);
 				Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
-				App.Current.Shutdown(0);
+				Shutdown(0);
 				return;
 			}
 		}

@@ -73,7 +73,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 热键
 		/// </summary>
-		private HotKeys _hotKeys;
+		public HotKeys HotKeys;
 		/// <summary>
 		/// 临时文件夹
 		/// </summary>
@@ -205,7 +205,6 @@ namespace DoubanFM
 		public DoubanFMWindow()
 		{
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 进入主窗口构造方法");
-			
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " InitializeComponent");
 			InitializeComponent();
@@ -226,14 +225,6 @@ namespace DoubanFM
 				FirstTimePanel.Visibility = Visibility.Collapsed;
 			}
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine");
-			InitBassEngine();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置");
-			InitProxy();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置完成");
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除老版本产生的临时文件");
 			ClearOldTempFiles();
@@ -274,9 +265,6 @@ namespace DoubanFM
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化键盘钩子");
 			InitKeyboardHook();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化键盘钩子完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
-			_player.Initialize();
 		}
 
 		/// <summary>
@@ -404,6 +392,11 @@ namespace DoubanFM
 		{
 			_player.Initialized += new EventHandler((o, e) => {
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器完成");
+
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine");
+				InitBassEngine();
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine完成");
+
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表");
 				ShowChannels();
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表完成");
@@ -619,6 +612,7 @@ namespace DoubanFM
 				}
 			});
 			_mappedFile = MemoryMappedFile.CreateOrOpen(App._mappedFileName, 10240);
+			ClearMappedFile();
 			checkMappedFileTimer.Start();
 		}
 		/// <summary>
@@ -855,9 +849,23 @@ namespace DoubanFM
 			try
 			{
 				if (_player.Settings.EnableProxy)
+				{
+					if (_player.Settings.ProxyHost != null)
+						if (_player.Settings.ProxyHost.Contains(':'))
+							throw new ArgumentException("主机不能包含符号:");
 					ConnectionBase.SetProxy(_player.Settings.ProxyHost == null ? string.Empty : _player.Settings.ProxyHost, _player.Settings.ProxyPort);
+				}
 				else
 					ConnectionBase.ResetProxy();
+
+				if (_player.Settings.EnableProxy)
+				{
+					BassEngine.Instance.SetProxy(_player.Settings.ProxyHost, _player.Settings.ProxyPort, null, null);
+				}
+				else
+				{
+					BassEngine.Instance.UseDefaultProxy();
+				}
 			}
 			catch (Exception ex)
 			{
@@ -1048,7 +1056,7 @@ namespace DoubanFM
 				using (Stream stream = _mappedFile.CreateViewStream())
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
-					return (Channel)formatter.Deserialize(stream);
+					return formatter.Deserialize(stream) as Channel;
 				}
 			}
 			catch
@@ -1360,12 +1368,12 @@ namespace DoubanFM
 			BassEngine.Instance.Stop();
 			//if (Audio != null)
 			//    Audio.Close();
-			if (_hotKeys != null)
+			if (HotKeys != null)
 			{
-				_hotKeys.UnRegister();
+				HotKeys.UnRegister();
 				if (SaveSettings)
 				{
-					_hotKeys.Save();
+					HotKeys.Save();
 				}
 			}
 			if (SaveSettings)
@@ -1663,10 +1671,17 @@ namespace DoubanFM
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " Window.Loaded事件已触发，主窗口已准备好呈现");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置");
+			InitProxy();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置完成");
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
+			_player.Initialize();
 			
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置");
 			//加载热键设置
-			_hotKeys = HotKeys.Load();
+			HotKeys = HotKeys.Load();
 			HotKeys.RegisterError += new EventHandler<HotKeys.RegisterErrorEventArgs>((oo, ee) =>
 			{
 				System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -1677,8 +1692,8 @@ namespace DoubanFM
 				MessageBox.Show(sb.ToString());
 			});
 
-			AddLogicToHotKeys(_hotKeys);
-			_hotKeys.Register(this);
+			AddLogicToHotKeys(HotKeys);
+			HotKeys.Register(this);
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置完成");
 			
@@ -1732,14 +1747,14 @@ namespace DoubanFM
 		{
 			// 在此处添加事件处理程序实现。
 			ButtonHotKeySettings.IsEnabled = false;
-			_hotKeys.UnRegister();
-			HotKeyWindow hotKeyWindow = new HotKeyWindow(this, _hotKeys);
+			HotKeys.UnRegister();
+			HotKeyWindow hotKeyWindow = new HotKeyWindow(this, HotKeys);
 			hotKeyWindow.Closed += new EventHandler((o, ee) =>
 			{
 				ButtonHotKeySettings.IsEnabled = true;
-				_hotKeys = hotKeyWindow.HotKeys;
-				AddLogicToHotKeys(_hotKeys);
-				_hotKeys.Register(this);
+				HotKeys = hotKeyWindow.HotKeys;
+				AddLogicToHotKeys(HotKeys);
+				HotKeys.Register(this);
 			});
 			hotKeyWindow.Show();
 		}

@@ -42,7 +42,7 @@ Website : http://www.kfstorm.com
 	</Style>
 
 	<ControlTemplate x:Key="ChildWindowBaseTemplate" TargetType="{x:Type local:ChildWindowBase}">
-		<Grid x:Name="MainPanel" Background="{TemplateBinding Background}">
+		<Grid x:Name="MainPanel" Background="{TemplateBinding Background}" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition/>

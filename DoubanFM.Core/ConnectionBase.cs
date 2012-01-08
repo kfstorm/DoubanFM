@@ -67,7 +67,7 @@ namespace DoubanFM.Core
 			if (!LoadCookies()) cc = DefaultCookie;
 		}
 
-		internal ConnectionBase(bool throwException, string userAgent, string accept, string contentType, Encoding encoding)
+		public ConnectionBase(bool throwException, string userAgent, string accept, string contentType, Encoding encoding)
 		{
 			ThrowException = throwException;
 			UserAgent = userAgent;
@@ -76,12 +76,12 @@ namespace DoubanFM.Core
 			Encoding = encoding;
 		}
 
-		internal ConnectionBase(bool throwException = false)
+		public ConnectionBase(bool throwException = false)
 			: this(DefaultEncoding, throwException)
 		{
 		}
 
-		internal ConnectionBase(Encoding encoding, bool throwException = false)
+		public ConnectionBase(Encoding encoding, bool throwException = false)
 			: this(throwException, DefaultUserAgent, DefaultAccept, DefaultContentType, encoding)
 		{
 		}
@@ -96,7 +96,7 @@ namespace DoubanFM.Core
 		/// <returns>
 		/// 响应正文
 		/// </returns>
-		internal string Post(string PostUri, string Accept, string Referer, string ContentType, byte[] Content)
+		public string Post(string PostUri, string Accept, string Referer, string ContentType, byte[] Content)
 		{
 			string file = null;
 
@@ -132,7 +132,7 @@ namespace DoubanFM.Core
 		/// <param name="PostUri">请求的地址</param>
 		/// <param name="Content">请求正文</param>
 		/// <returns>响应正文</returns>
-		internal string Post(string PostUri, byte[] Content)
+		public string Post(string PostUri, byte[] Content)
 		{
 			return Post(PostUri, null, Content);
 		}
@@ -143,7 +143,7 @@ namespace DoubanFM.Core
 		/// <param name="Referer">Referer头</param>
 		/// <param name="Content">请求正文</param>
 		/// <returns>响应正文</returns>
-		internal string Post(string PostUri, string Referer, byte[] Content)
+		public string Post(string PostUri, string Referer, byte[] Content)
 		{
 			return Post(PostUri, Accept, Referer, ContentType, Content);
 		}
@@ -156,7 +156,7 @@ namespace DoubanFM.Core
 		/// <returns>
 		/// 响应正文
 		/// </returns>
-		internal string Get(string GetUri, string Accept, string Referer)
+		public string Get(string GetUri, string Accept, string Referer)
 		{
 			string file = null;
 
@@ -187,7 +187,7 @@ namespace DoubanFM.Core
 		/// </summary>
 		/// <param name="GetUri">请求的地址</param>
 		/// <returns>响应正文</returns>
-		internal string Get(string GetUri)
+		public string Get(string GetUri)
 		{
 			return Get(GetUri, Accept, null);
 		}
@@ -198,7 +198,7 @@ namespace DoubanFM.Core
 		/// <param name="GetUri">请求的地址</param>
 		/// <param name="Referer">Referer头</param>
 		/// <returns>响应正文</returns>
-		internal string Get(string GetUri, string Referer)
+		public string Get(string GetUri, string Referer)
 		{
 			return Get(GetUri, Accept, Referer);
 		}
@@ -206,7 +206,7 @@ namespace DoubanFM.Core
 		/// 读取Cookies
 		/// </summary>
 		/// <returns>成功与否</returns>
-		internal static bool LoadCookies()
+		public static bool LoadCookies()
 		{
 			try
 			{
@@ -226,7 +226,7 @@ namespace DoubanFM.Core
 		/// 保存Cookies
 		/// </summary>
 		/// <returns>成功与否</returns>
-		internal static bool SaveCookies()
+		public static bool SaveCookies()
 		{
 			try
 			{
@@ -252,7 +252,7 @@ namespace DoubanFM.Core
 		/// <param name="baseUrl">请求URL</param>
 		/// <param name="parameters">参数</param>
 		/// <returns>新的URL</returns>
-		internal static string ConstructUrlWithParameters(string baseUrl, Parameters parameters)
+		public static string ConstructUrlWithParameters(string baseUrl, Parameters parameters)
 		{
 			if (parameters == null || parameters.Count() == 0)
 				return baseUrl;
@@ -281,7 +281,7 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// URL参数
 	/// </summary>
-	class UrlParameter
+	public class UrlParameter
 	{
 		/// <summary>
 		/// 参数名
@@ -292,7 +292,7 @@ namespace DoubanFM.Core
 		/// </summary>
 		public string Value { get; set; }
 
-		internal UrlParameter(string key, string value)
+		public UrlParameter(string key, string value)
 		{
 			Key = key;
 			Value = value;
@@ -301,7 +301,7 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// 多个URL参数
 	/// </summary>
-	class Parameters : List<UrlParameter>
+	public class Parameters : List<UrlParameter>
 	{
 		/// <summary>
 		/// 是否添加空参数
@@ -312,7 +312,7 @@ namespace DoubanFM.Core
 		/// Initializes a new instance of the <see cref="Parameters"/> class.
 		/// </summary>
 		/// <param name="addEmptyParameter">是否添加空参数</param>
-		internal Parameters(bool addEmptyParameter = false)
+		public Parameters(bool addEmptyParameter = false)
 			:base()
 		{
 			AddEmptyParameter = addEmptyParameter;
@@ -321,7 +321,7 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 添加参数
 		/// </summary>
-		internal void Add(string key, string value)
+		public void Add(string key, string value)
 		{
 			if (!AddEmptyParameter && string.IsNullOrEmpty(value)) return;
 			Add(new UrlParameter(key, value));
