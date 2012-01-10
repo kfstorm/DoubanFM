@@ -22,7 +22,7 @@ namespace DoubanFM
 		private void Link_Click(object sender, RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			Process.Start((string)((Button)sender).Tag);
+			Core.UrlHelper.OpenLink((string)((Button)sender).Tag);
 		}
 
 		private void WindowBaseStyle_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

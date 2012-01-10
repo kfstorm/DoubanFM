@@ -84,6 +84,7 @@
     <Compile Include="Updater\UpdateWork.cs" />
     <Compile Include="Player\User.cs" />
     <Compile Include="Player\UserAssistant.cs" />
+    <Compile Include="UrlHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1521,8 +1521,8 @@ namespace DoubanFM
 			{
 				if (_player.CurrentSong != null && !string.IsNullOrEmpty(_player.CurrentSong.AlbumInfo))
 					if (_player.CurrentSong.AlbumInfo.Contains("http://"))
-						Process.Start(_player.CurrentSong.AlbumInfo);
-					else Process.Start("http://music.douban.com" + _player.CurrentSong.AlbumInfo);
+						Core.UrlHelper.OpenLink(_player.CurrentSong.AlbumInfo);
+					else Core.UrlHelper.OpenLink("http://music.douban.com" + _player.CurrentSong.AlbumInfo);
 			}
 		}
 
@@ -1613,7 +1613,7 @@ namespace DoubanFM
 
 		private void VisitOfficialWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			Process.Start("http://douban.fm/");
+			Core.UrlHelper.OpenLink("http://douban.fm/");
 		}
 
 		private void Search_Click(object sender, RoutedEventArgs e)
@@ -1654,7 +1654,7 @@ namespace DoubanFM
 		private void Feedback_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			Process.Start("http://www.kfstorm.com/blog/2011/12/01/%E8%B1%86%E7%93%A3%E7%94%B5%E5%8F%B0faq/");
+			Core.UrlHelper.OpenLink("http://www.kfstorm.com/blog/2011/12/01/%E8%B1%86%E7%93%A3%E7%94%B5%E5%8F%B0faq/");
 		}
 
 		private void CheckBoxShowLyrics_Checked(object sender, System.Windows.RoutedEventArgs e)
@@ -1768,7 +1768,7 @@ namespace DoubanFM
 
 		private void GoToHomePage_Click(object sender, RoutedEventArgs e)
 		{
-			Process.Start("http://www.kfstorm.com/blog/doubanfm/");
+			Core.UrlHelper.OpenLink("http://www.kfstorm.com/blog/doubanfm/");
 		}
 
 		private void BtnCopyUrl_Click(object sender, RoutedEventArgs e)
@@ -1795,17 +1795,17 @@ namespace DoubanFM
 
 		private void HlPlayed_Click(object sender, RoutedEventArgs e)
 		{
-			Process.Start("http://douban.fm/mine?type=played");
+			Core.UrlHelper.OpenLink("http://douban.fm/mine?type=played");
 		}
 
 		private void HlLiked_Click(object sender, RoutedEventArgs e)
 		{
-			Process.Start("http://douban.fm/mine?type=liked");
+			Core.UrlHelper.OpenLink("http://douban.fm/mine?type=liked");
 		}
 
 		private void HlBanned_Click(object sender, RoutedEventArgs e)
 		{
-			Process.Start("http://douban.fm/mine?type=banned");
+			Core.UrlHelper.OpenLink("http://douban.fm/mine?type=banned");
 		}
 
 		private void NotifyIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
@@ -1832,7 +1832,7 @@ namespace DoubanFM
 
 		private void ButtonSignUp_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			Process.Start("http://www.douban.com/accounts/register");
+			Core.UrlHelper.OpenLink("http://www.douban.com/accounts/register");
 		}
 
 		private void BtnResetSettings_Click(object sender, System.Windows.RoutedEventArgs e)

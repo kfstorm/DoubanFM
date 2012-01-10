@@ -154,13 +154,13 @@ namespace DoubanFM
 		private void ManualDownload(object sender, System.Windows.RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			Process.Start(Updater.DownloadLink);
+			Core.UrlHelper.OpenLink(Updater.DownloadLink);
 		}
 
 		private void HomePage(object sender, System.Windows.RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			Process.Start("http://www.kfstorm.com/doubanfm");
+			Core.UrlHelper.OpenLink("http://www.kfstorm.com/doubanfm");
 		}
 
 		private void ReDownload(object sender, System.Windows.RoutedEventArgs e)

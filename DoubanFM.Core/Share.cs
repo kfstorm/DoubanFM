@@ -241,7 +241,7 @@ namespace DoubanFM.Core
 			}
 			else
 			{
-				System.Diagnostics.Process.Start(GetShareLink());
+				UrlHelper.OpenLink(GetShareLink());
 			}
 		}
 

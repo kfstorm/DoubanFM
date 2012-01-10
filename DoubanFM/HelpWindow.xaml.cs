@@ -34,7 +34,7 @@ namespace DoubanFM
 		{
 			try
 			{
-				System.Diagnostics.Process.Start((sender as Hyperlink).Tag as string);
+				Core.UrlHelper.OpenLink((sender as Hyperlink).Tag as string);
 			}
 			catch (Exception ex)
 			{

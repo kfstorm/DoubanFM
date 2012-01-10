@@ -43,7 +43,7 @@ namespace DoubanFM.Core
 			parameters.Add(new UrlParameter("ProductName", ProductName));
 			parameters.Add(new UrlParameter("VersionNumber", VersionNumber));
 			string url = ConnectionBase.ConstructUrlWithParameters("http://www.kfstorm.com/products/feedback.php", parameters);
-			Process.Start(url);
+			UrlHelper.OpenLink(url);
 		}
 	}
 }
