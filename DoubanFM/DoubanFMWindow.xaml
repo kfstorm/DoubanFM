@@ -473,7 +473,7 @@ Website : http://www.kfstorm.com
 									<Button x:Name="BtnHelp" Height="40" Click="BtnHelp_Click" Style="{DynamicResource HelpStyle}"/>
 								</StackPanel>
 								<TextBlock Grid.Row="1" HorizontalAlignment="Center">第三方客户端</TextBlock>
-								<Label Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">1.7.1</Label>
+								<Label Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">1.7.2</Label>
 								<Button x:Name="CheckUpdate" Grid.Row="3" Click="CheckUpdate_Click" Style="{DynamicResource CheckUpdateStyle}"/>
 								<Grid Grid.Row="4" Height="40">
 									<Grid.ColumnDefinitions>

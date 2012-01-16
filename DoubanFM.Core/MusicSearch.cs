@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Threading;
+using System.Diagnostics;
 
 namespace DoubanFM.Core
 {
@@ -197,7 +198,18 @@ namespace DoubanFM.Core
 					parameters.Add("start", ((_page - 1) * 15).ToString());
 					parameters.Add("search_text", _searchText);
 					string url = ConnectionBase.ConstructUrlWithParameters("http://music.douban.com/subject_search", parameters);
-					string file = new ConnectionBase().Get(url);
+					ConnectionBase connection= new ConnectionBase(true);
+					string file = string.Empty;
+					try
+					{
+						file = connection.Get(url);
+					}
+					catch (Exception ex)
+					{
+						Debug.WriteLine(ex);
+						file = new ConnectionBase().Get("http://music.douban.com");
+						file = new ConnectionBase().Get(url);
+					}
 					var searhResult = GetSearchItems(file);
 					var previous = GetPreviousPageLink(file);
 					var next = GetNextPageLink(file);
