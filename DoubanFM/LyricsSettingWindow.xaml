@@ -12,72 +12,75 @@ Website : http://www.kfstorm.com
 	<Window.Resources>
 		<local:OpacityToTransparencyConverter x:Key="OpacityToTransparencyConverter"/>
 	</Window.Resources>
-	<Grid Width="300" Margin="10">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
-		<Grid Margin="10">
+	<StackPanel Width="300" Margin="10">
+		<Grid Margin="0,2">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
-				<RowDefinition Height="10"/>
-				<RowDefinition/>
-				<RowDefinition Height="10"/>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<CheckBox Grid.ColumnSpan="2" x:Name="CbShowLyrics" Checked="CbShowLyrics_Checked" Unchecked="CbShowLyrics_Unchecked">显示歌词</CheckBox>
-			<CheckBox Grid.Row="2" x:Name="CbEnableDesktopLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableDesktopLyrics, ElementName=Window}" Checked="CbEnableDesktopLyrics_Checked" Unchecked="CbEnableDesktopLyrics_Unchecked">桌面歌词</CheckBox>
-			<CheckBox Grid.Row="2" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked">内嵌歌词</CheckBox>
-			<RadioButton Grid.Row="4" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window}" Content="单行歌词"/>
-			<RadioButton Grid.Row="4" Grid.Column="1" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Content="双行歌词"/>
+			<CheckBox Grid.ColumnSpan="2" x:Name="CbShowLyrics" Checked="CbShowLyrics_Checked" Unchecked="CbShowLyrics_Unchecked" Margin="0,2">显示歌词</CheckBox>
+			<CheckBox Grid.Row="1" x:Name="CbEnableDesktopLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableDesktopLyrics, ElementName=Window}" Checked="CbEnableDesktopLyrics_Checked" Unchecked="CbEnableDesktopLyrics_Unchecked" Margin="0,2">桌面歌词</CheckBox>
+			<CheckBox Grid.Row="1" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked" Margin="0,2">内嵌歌词</CheckBox>
 		</Grid>
-		<Grid Grid.Row="1">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="10"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="10"/>
-			</Grid.ColumnDefinitions>
-			<Label VerticalAlignment="Center">字体</Label>
-			<local:FontPicker x:Name="FpFontPicker" Grid.Column="2" Margin="0,5" Height="24" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
-			<Label Grid.Row="1" VerticalAlignment="Center">大小</Label>
-			<Slider x:Name="SliderFontSize" Grid.Row="1" Grid.Column="2" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="0,5" SmallChange="0.2" LargeChange="5"/>
-			<Label Grid.Row="2" VerticalAlignment="Center">底部间距</Label>
-			<Slider x:Name="SliderBottomMargin" Grid.Row="2" Grid.Column="2" Value="{Binding LyricsSetting.BottomMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,5" SmallChange="0.001" LargeChange="0.1"/>
-			<Label Grid.Row="3" VerticalAlignment="Center">粗细</Label>
-			<Slider x:Name="SliderFontWeight" Grid.Row="3" Grid.Column="2" Value="{Binding LyricsSetting.FontWeight, ElementName=Window}" Maximum="900" Minimum="100" Margin="0,5" SmallChange="5" LargeChange="50"/>
-			<Label Grid.Row="4" VerticalAlignment="Center">描边粗细</Label>
-			<Slider x:Name="SliderStrokeWeight" Grid.Row="4" Grid.Column="2" Value="{Binding LyricsSetting.StrokeWeight, ElementName=Window}" Maximum="3" Minimum="0" Margin="0,5" SmallChange="0.05" LargeChange="0.3"/>
-			<Label Grid.Row="5" VerticalAlignment="Center">透明度</Label>
-			<Slider x:Name="SliderOpacity" Grid.Row="5" Grid.Column="2" Value="{Binding LyricsSetting.Opacity, ElementName=Window, Converter={StaticResource OpacityToTransparencyConverter}}" Maximum="1" Minimum="0" Margin="0,5" SmallChange="0.01" LargeChange="0.1" RenderTransformOrigin="0.5,0.5"/>
-			<Label Grid.Row="6" VerticalAlignment="Center">前景色</Label>
-			<Grid Grid.Row="6" Grid.Column="2">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<CheckBox x:Name="CbAutoForeground" Margin="20,5" VerticalAlignment="Center" IsChecked="{Binding LyricsSetting.AutoForeground, ElementName=Window}" Click="CbAutoForeground_Click">自动</CheckBox>
-				<local:PopupableColorPicker Grid.Column="1" Margin="0,5" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}"/>
-			</Grid>
-			<Label Grid.Row="7" VerticalAlignment="Center">描边色</Label>
-			<local:PopupableColorPicker Grid.Row="7" Grid.Column="2" Margin="0,5" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
-			<Label Grid.Row="8" VerticalAlignment="Center">阴影色</Label>
-			<local:PopupableColorPicker Grid.Row="8" Grid.Column="2" Margin="0,5" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
-		</Grid>
-	</Grid>
+		<GroupBox Header="桌面歌词设置" Margin="0,2">
+			<StackPanel>
+				<Grid Margin="0,5">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<RadioButton IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window}" Content="单行歌词" Margin="0,2"/>
+				<RadioButton Grid.Column="1" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Content="双行歌词" Margin="0,2"/>
+				</Grid>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="32"/>
+						<RowDefinition Height="32"/>
+						<RowDefinition Height="32"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="10"/>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="10"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock VerticalAlignment="Center">字体</TextBlock>
+					<local:FontPicker x:Name="FpFontPicker" Grid.Column="2" Margin="0,2" Height="24" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
+					<TextBlock Grid.Row="1" VerticalAlignment="Center">大小</TextBlock>
+					<Slider x:Name="SliderFontSize" Grid.Row="1" Grid.Column="2" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="0,2" SmallChange="0.2" LargeChange="5"/>
+					<TextBlock Grid.Row="2" VerticalAlignment="Center">底部间距</TextBlock>
+					<Slider x:Name="SliderBottomMargin" Grid.Row="2" Grid.Column="2" Value="{Binding LyricsSetting.BottomMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
+					<TextBlock Grid.Row="3" VerticalAlignment="Center">粗细</TextBlock>
+					<Slider x:Name="SliderFontWeight" Grid.Row="3" Grid.Column="2" Value="{Binding LyricsSetting.FontWeight, ElementName=Window}" Maximum="900" Minimum="100" Margin="0,2" SmallChange="5" LargeChange="50"/>
+					<TextBlock Grid.Row="4" VerticalAlignment="Center">描边粗细</TextBlock>
+					<Slider x:Name="SliderStrokeWeight" Grid.Row="4" Grid.Column="2" Value="{Binding LyricsSetting.StrokeWeight, ElementName=Window}" Maximum="3" Minimum="0" Margin="0,2" SmallChange="0.05" LargeChange="0.3"/>
+					<TextBlock Grid.Row="5" VerticalAlignment="Center">透明度</TextBlock>
+					<Slider x:Name="SliderOpacity" Grid.Row="5" Grid.Column="2" Value="{Binding LyricsSetting.Opacity, ElementName=Window, Converter={StaticResource OpacityToTransparencyConverter}}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.01" LargeChange="0.1" RenderTransformOrigin="0.5,0.5"/>
+					<TextBlock Grid.Row="6" VerticalAlignment="Center">前景色</TextBlock>
+					<Grid Grid.Row="6" Grid.Column="2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<CheckBox x:Name="CbAutoForeground" Margin="20,2" VerticalAlignment="Center" IsChecked="{Binding LyricsSetting.AutoForeground, ElementName=Window}" Click="CbAutoForeground_Click">自动</CheckBox>
+						<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}"/>
+					</Grid>
+					<TextBlock Grid.Row="7" VerticalAlignment="Center">描边色</TextBlock>
+					<local:PopupableColorPicker Grid.Row="7" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
+					<TextBlock Grid.Row="8" VerticalAlignment="Center">阴影色</TextBlock>
+					<local:PopupableColorPicker Grid.Row="8" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
+				</Grid>
+			</StackPanel>
+		</GroupBox>
+	</StackPanel>
 </local:ChildWindowBase>

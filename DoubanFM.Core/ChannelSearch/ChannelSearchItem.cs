@@ -14,7 +14,7 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// 搜索结果中的项
 	/// </summary>
-	public class SearchItem
+	public class ChannelSearchItem
 	{
 		/// <summary>
 		/// 标题
@@ -48,7 +48,7 @@ namespace DoubanFM.Core
 			get { return Context != null && Context.Length > 0; }
 		}
 		
-		internal SearchItem(string title, string picture, string link, string[] infomations, bool isArtist, string context)
+		internal ChannelSearchItem(string title, string picture, string link, string[] infomations, bool isArtist, string context)
 		{
 			Title = title;
 			Picture = picture;

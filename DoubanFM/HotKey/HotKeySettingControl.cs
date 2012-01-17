@@ -78,7 +78,7 @@ namespace DoubanFM
 		}
 
 		private static Dictionary<Key, HotKey.ControlKeys> keyMap;
-		private static HashSet<Key> ignoredKeys = new HashSet<Key> { Key.None, Key.KanaMode, Key.HangulMode, Key.JunjaMode, Key.FinalMode, Key.HanjaMode, Key.KanjiMode, Key.ImeConvert, Key.ImeNonConvert, Key.ImeAccept, Key.ImeModeChange, Key.ImeProcessed, Key.System, Key.NoName, Key.DeadCharProcessed };
+		private static HashSet<Key> ignoredKeys = new HashSet<Key> { Key.None, Key.LineFeed, Key.KanaMode, Key.HangulMode, Key.JunjaMode, Key.FinalMode, Key.HanjaMode, Key.KanjiMode, Key.ImeConvert, Key.ImeNonConvert, Key.ImeAccept, Key.ImeModeChange, Key.ImeProcessed, Key.System, Key.NoName, Key.DeadCharProcessed };
 
 		static HotKeySettingControl()
 		{

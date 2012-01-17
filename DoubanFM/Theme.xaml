@@ -11,6 +11,11 @@ Website : http://www.kfstorm.com
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Style TargetType="{x:Type Label}">
 		<Setter Property="Foreground" Value="White"/>
+		<Style.Triggers>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="#7FFFFFFF"/>
+			</Trigger>
+		</Style.Triggers>
 	</Style>
 	
 	<Style x:Key="CustomButtonBaseStyle" TargetType="{x:Type ButtonBase}">
@@ -88,18 +93,19 @@ Website : http://www.kfstorm.com
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Thumb}">
-					<Border x:Name="bd" Style="{StaticResource stBorder}"/>
-					<ControlTemplate.Triggers>
-						<Trigger Property="IsMouseOver" Value="true">
-							<Setter TargetName="bd" Property="Background" Value="{StaticResource HighlightColor}"/>
-						</Trigger>
-						<Trigger Property="IsDragging" Value="true">
-							<Setter TargetName="bd" Property="Background" Value="{StaticResource PressedColor}"/>
-						</Trigger>
-					</ControlTemplate.Triggers>
+					<Border x:Name="bd" Background="{TemplateBinding Background}"/>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		<Setter Property="Background" Value="{StaticResource NormalColor}"/>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="true">
+				<Setter Property="Background" Value="{StaticResource HighlightColor}"/>
+			</Trigger>
+			<Trigger Property="IsDragging" Value="true">
+				<Setter Property="Background" Value="{StaticResource PressedColor}"/>
+			</Trigger>
+		</Style.Triggers>
 	</Style>
 	<ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
 		<Border Style="{StaticResource stBackBorder}">
@@ -347,7 +353,7 @@ Website : http://www.kfstorm.com
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="BorderThickness" Value="3"/>
+		<Setter Property="BorderThickness" Value="1"/>
 	</Style>
 	<ControlTemplate x:Key="HorizontalSliderControlTemplate" TargetType="{x:Type Slider}">
 		<Grid>
@@ -356,10 +362,10 @@ Website : http://www.kfstorm.com
 			</Border>
 			<Track x:Name="PART_Track">
 				<Track.DecreaseRepeatButton>
-					<RepeatButton Command="Slider.DecreaseLarge" Height="10" Style="{StaticResource stScrollBtn}" Background="#7FFFFFFF"/>
+					<RepeatButton x:Name="LeftRepeatButton" Command="Slider.DecreaseLarge" Height="10" Style="{StaticResource stScrollBtn}" Background="#7FFFFFFF"/>
 				</Track.DecreaseRepeatButton>
 				<Track.IncreaseRepeatButton>
-					<RepeatButton Command="Slider.IncreaseLarge" Height="10" Style="{StaticResource stScrollBtn}" Background="#7F000000"/>
+					<RepeatButton x:Name="RightRepeatButton" Command="Slider.IncreaseLarge" Height="10" Style="{StaticResource stScrollBtn}" Background="#7F000000"/>
 				</Track.IncreaseRepeatButton>
 				<Track.Thumb>
 					<Thumb x:Name="Thumb" Width="15" Height="30" Style="{StaticResource stThumb}"/>
@@ -373,6 +379,11 @@ Website : http://www.kfstorm.com
 			<Trigger Property="IsKeyboardFocused" Value="True">
 				<Setter Property="Foreground" TargetName="Thumb" Value="Blue"/>
 			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Background" TargetName="Thumb" Value="#3FFFFFFF"/>
+				<Setter Property="Background" TargetName="LeftRepeatButton" Value="#3FFFFFFF"/>
+				<Setter Property="Background" TargetName="RightRepeatButton" Value="#3FFFFFFF"/>
+			</Trigger>
 		</ControlTemplate.Triggers>
 	</ControlTemplate>
 	<ControlTemplate x:Key="VerticalSliderControlTemplate" TargetType="{x:Type Slider}">
@@ -382,10 +393,10 @@ Website : http://www.kfstorm.com
 			</Border>
 			<Track x:Name="PART_Track" Orientation="Vertical">
 				<Track.DecreaseRepeatButton>
-					<RepeatButton Command="Slider.DecreaseLarge" Width="10" Style="{StaticResource stScrollBtn}" Background="#7FFFFFFF"/>
+					<RepeatButton x:Name="LeftRepeatButton" Command="Slider.DecreaseLarge" Width="10" Style="{StaticResource stScrollBtn}" Background="#7FFFFFFF"/>
 				</Track.DecreaseRepeatButton>
 				<Track.IncreaseRepeatButton>
-					<RepeatButton Command="Slider.IncreaseLarge" Width="10" Style="{StaticResource stScrollBtn}" Background="#7F000000"/>
+					<RepeatButton x:Name="RightRepeatButton" Command="Slider.IncreaseLarge" Width="10" Style="{StaticResource stScrollBtn}" Background="#7F000000"/>
 				</Track.IncreaseRepeatButton>
 				<Track.Thumb>
 					<Thumb x:Name="Thumb" Height="15" Width="30" Style="{StaticResource stThumb}"/>
@@ -398,6 +409,11 @@ Website : http://www.kfstorm.com
 			</Trigger>
 			<Trigger Property="IsKeyboardFocused" Value="True">
 				<Setter Property="Foreground" TargetName="Thumb" Value="Blue"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Background" TargetName="Thumb" Value="#3FFFFFFF"/>
+				<Setter Property="Background" TargetName="LeftRepeatButton" Value="#3FFFFFFF"/>
+				<Setter Property="Background" TargetName="RightRepeatButton" Value="#3FFFFFFF"/>
 			</Trigger>
 		</ControlTemplate.Triggers>
 	</ControlTemplate>

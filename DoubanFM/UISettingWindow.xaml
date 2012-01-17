@@ -53,14 +53,14 @@ Website : http://www.kfstorm.com
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<TextBlock Grid.RowSpan="2" VerticalAlignment="Center">窗口背景</TextBlock>
-				<RadioButton Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}}">自动</RadioButton>
+				<RadioButton x:Name="RbAugoBackground" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}}">自动</RadioButton>
 				<RadioButton Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}">手动</RadioButton>
-				<Grid Grid.Column="2">
+				<Grid Grid.Column="2" IsEnabled="{Binding IsChecked, ElementName=RbAugoBackground}">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock VerticalAlignment="Center" Margin="5,0">透明度</TextBlock>
+					<Label VerticalAlignment="Center" Margin="5,0">透明度</Label>
 					<Slider Grid.Column="1" Value="{Binding Settings.BackgroundTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="1"/>
 				</Grid>
 				<local:PopupableColorPicker Grid.Row="1" Grid.Column="2" Margin="0,5" Height="24" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}"/>

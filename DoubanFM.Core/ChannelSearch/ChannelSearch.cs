@@ -18,15 +18,15 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// 提供音乐搜索的功能
 	/// </summary>
-	public class MusicSearch : DependencyObject
+	public class ChannelSearch : DependencyObject
 	{
 		#region 依赖项属性
 
-		public static readonly DependencyProperty IsSearchFinishedProperty = DependencyProperty.Register("IsSearchFinished", typeof(bool), typeof(MusicSearch), new PropertyMetadata(true));
-		public static readonly DependencyProperty IsPreviousPageEnabledProperty = DependencyProperty.Register("IsPreviousPageEnabled", typeof(bool), typeof(MusicSearch));
-		public static readonly DependencyProperty IsNextPageEnabledProperty = DependencyProperty.Register("IsNextPageEnabled", typeof(bool), typeof(MusicSearch));
-		public static readonly DependencyProperty ShowNoResultHintProperty = DependencyProperty.Register("ShowNoResultHint", typeof(bool), typeof(MusicSearch), new PropertyMetadata(true));
-		public static readonly DependencyProperty SearchResultProperty = DependencyProperty.Register("SearchResult", typeof(IEnumerable<SearchItem>), typeof(MusicSearch));
+		public static readonly DependencyProperty IsSearchFinishedProperty = DependencyProperty.Register("IsSearchFinished", typeof(bool), typeof(ChannelSearch), new PropertyMetadata(true));
+		public static readonly DependencyProperty IsPreviousPageEnabledProperty = DependencyProperty.Register("IsPreviousPageEnabled", typeof(bool), typeof(ChannelSearch));
+		public static readonly DependencyProperty IsNextPageEnabledProperty = DependencyProperty.Register("IsNextPageEnabled", typeof(bool), typeof(ChannelSearch));
+		public static readonly DependencyProperty ShowNoResultHintProperty = DependencyProperty.Register("ShowNoResultHint", typeof(bool), typeof(ChannelSearch), new PropertyMetadata(true));
+		public static readonly DependencyProperty SearchResultProperty = DependencyProperty.Register("SearchResult", typeof(IEnumerable<ChannelSearchItem>), typeof(ChannelSearch));
 		
 		#endregion
 
@@ -53,9 +53,9 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 获取搜索结果
 		/// </summary>
-		public IEnumerable<SearchItem> SearchResult
+		public IEnumerable<ChannelSearchItem> SearchResult
 		{
-			get { return (IEnumerable<SearchItem>)GetValue(SearchResultProperty); }
+			get { return (IEnumerable<ChannelSearchItem>)GetValue(SearchResultProperty); }
 			private set
 			{
 				SetValue(SearchResultProperty, value);
@@ -123,7 +123,7 @@ namespace DoubanFM.Core
 		
 		#endregion
 
-		internal MusicSearch(Settings settings)
+		internal ChannelSearch(Settings settings)
 			:base()
 		{
 			Settings = settings;
@@ -226,9 +226,9 @@ namespace DoubanFM.Core
 		/// 获取搜索的结果
 		/// </summary>
 		/// <returns></returns>
-		private IEnumerable<SearchItem> GetSearchItems(string file)
+		private IEnumerable<ChannelSearchItem> GetSearchItems(string file)
 		{
-			List<SearchItem> items = new List<SearchItem>();
+			List<ChannelSearchItem> items = new List<ChannelSearchItem>();
 			try
 			{
 				bool isSearchFilterEnabled = true;
@@ -247,7 +247,7 @@ namespace DoubanFM.Core
 					Match ma = Regex.Match(temp, @".*?href=\""http://douban\.fm/\?context=([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 					string context = null;
 					if (ma != null) context = ma.Groups[1].Value;
-					SearchItem item = new SearchItem(title, picture, link, null, true, context);
+					ChannelSearchItem item = new ChannelSearchItem(title, picture, link, null, true, context);
 					if (!isSearchFilterEnabled || !string.IsNullOrEmpty(item.Context))
 						items.Add(item);
 				}
@@ -266,7 +266,7 @@ namespace DoubanFM.Core
 					string context = null;
 					if (ma != null) context = ma.Groups[1].Value;
 				
-					SearchItem item = new SearchItem(title, picture, link, null, false, context);
+					ChannelSearchItem item = new ChannelSearchItem(title, picture, link, null, false, context);
 					if (!isSearchFilterEnabled || !string.IsNullOrEmpty(item.Context))
 						items.Add(item);
 				}

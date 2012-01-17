@@ -1618,23 +1618,23 @@ namespace DoubanFM
 
 		private void Search_Click(object sender, RoutedEventArgs e)
 		{
-			_player.MusicSearch.StartSearch(SearchText.Text);
+			_player.ChannelSearch.StartSearch(SearchText.Text);
 		}
 
 		private void PreviousPage_Click(object sender, RoutedEventArgs e)
 		{
-			_player.MusicSearch.PreviousPage();
+			_player.ChannelSearch.PreviousPage();
 		}
 
 		private void NextPage_Click(object sender, RoutedEventArgs e)
 		{
-			_player.MusicSearch.NextPage();
+			_player.ChannelSearch.NextPage();
 		}
 
 		private void SearchResultList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
 		{
 			if (SearchResultList.SelectedItem == null) return;
-			Channel channel = ((SearchItem)SearchResultList.SelectedItem).GetChannel();
+			Channel channel = ((ChannelSearchItem)SearchResultList.SelectedItem).GetChannel();
 			if (channel != null) _player.CurrentChannel = channel;
 		}
 
@@ -1861,6 +1861,12 @@ namespace DoubanFM
 					MessageBox.Show(ex.Message, "重置设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 			}
+		}
+
+		private void BtnDownloadSearch_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			if (_player.CurrentSong != null)
+				DownloadSearch.Search(_player.CurrentSong.Title, _player.CurrentSong.Artist, _player.CurrentSong.Album);
 		}
 
 		#endregion

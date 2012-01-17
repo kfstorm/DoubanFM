@@ -49,6 +49,9 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty MainWindowFontProperty = DependencyProperty.Register("MainWindowFont", typeof(FontFamily), typeof(Settings), new PropertyMetadata(System.Windows.SystemFonts.MessageFontFamily));
 		public static readonly DependencyProperty ShowBalloonWhenSongChangedProperty = DependencyProperty.Register("ShowBalloonWhenSongChanged", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty BackgroundTransparencyProperty = DependencyProperty.Register("BackgroundTransparency", typeof(double), typeof(Settings), new PropertyMetadata(0.0));
+		public static readonly DependencyProperty DownloadSiteProperty = DependencyProperty.Register("DownloadSite", typeof(DownloadSite), typeof(Settings), new PropertyMetadata(DownloadSite.GoogleMusic | DownloadSite.BaiduTing));
+		public static readonly DependencyProperty TrimBracketsProperty = DependencyProperty.Register("TrimBrackets", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty SearchAlbumProperty = DependencyProperty.Register("SearchAlbum", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 
 		#endregion
 
@@ -251,6 +254,30 @@ namespace DoubanFM.Core
 		{
 			get { return (double)GetValue(BackgroundTransparencyProperty); }
 			set { SetValue(BackgroundTransparencyProperty, value); }
+		}
+		/// <summary>
+		/// 下载网站
+		/// </summary>
+		public DownloadSite DownloadSite
+		{
+			get { return (DownloadSite)GetValue(DownloadSiteProperty); }
+			set { SetValue(DownloadSiteProperty, value); }
+		}
+		/// <summary>
+		/// 搜索下载时自动剔除歌曲信息中的括号内容
+		/// </summary>
+		public bool TrimBrackets
+		{
+			get { return (bool)GetValue(TrimBracketsProperty); }
+			set { SetValue(TrimBracketsProperty, value); }
+		}
+		/// <summary>
+		/// 搜索下载时包括专辑信息
+		/// </summary>
+		public bool SearchAlbum
+		{
+			get { return (bool)GetValue(SearchAlbumProperty); }
+			set { SetValue(SearchAlbumProperty, value); }
 		}
 
 		/// <summary>
@@ -470,6 +497,30 @@ namespace DoubanFM.Core
 			{
 				BackgroundTransparency = def.BackgroundTransparency;
 			}
+			try
+			{
+				DownloadSite = (DownloadSite)info.GetValue("DownloadSite", typeof(DownloadSite));
+			}
+			catch
+			{
+				DownloadSite = def.DownloadSite;
+			}
+			try
+			{
+				TrimBrackets = info.GetBoolean("TrimBrackets");
+			}
+			catch
+			{
+				TrimBrackets = def.TrimBrackets;
+			}
+			try
+			{
+				SearchAlbum = info.GetBoolean("SearchAlbum");
+			}
+			catch
+			{
+				SearchAlbum = def.SearchAlbum;
+			}
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -505,6 +556,9 @@ namespace DoubanFM.Core
 			}
 			info.AddValue("ShowBalloonWhenSongChanged", ShowBalloonWhenSongChanged);
 			info.AddValue("BackgroundTransparency", BackgroundTransparency);
+			info.AddValue("DownloadSite", DownloadSite);
+			info.AddValue("TrimBrackets", TrimBrackets);
+			info.AddValue("SearchAlbum", SearchAlbum);
 		}
 
 		/// <summary>

@@ -28,11 +28,38 @@ namespace DoubanFM
 		public GeneralSettingWindow()
 		{
 			InitializeComponent();
+
+			CbSearchGoogleMusic.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.GoogleMusic);
+			CbSearchBaiduTing.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.BaiduTing);
 		}
 
 		private void BtnApplyProxy_Click(object sender, RoutedEventArgs e)
 		{
 			(Owner as DoubanFMWindow).ApplyProxy();
+		}
+
+		private void CbSearchGoogleMusic_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			if (CbSearchGoogleMusic.IsChecked == true)
+			{
+				DownloadSearch.Settings.DownloadSite |= DownloadSite.GoogleMusic;
+			}
+			else
+			{
+				DownloadSearch.Settings.DownloadSite &= ~DownloadSite.GoogleMusic;
+			}
+		}
+
+		private void CbSearchBaiduTing_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			if (CbSearchBaiduTing.IsChecked == true)
+			{
+				DownloadSearch.Settings.DownloadSite |= DownloadSite.BaiduTing;
+			}
+			else
+			{
+				DownloadSearch.Settings.DownloadSite &= ~DownloadSite.BaiduTing;
+			}
 		}
 	}
 }

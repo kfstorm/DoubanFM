@@ -184,10 +184,10 @@ namespace DoubanFM.Core
 		/// </summary>
 		public UserAssistant UserAssistant { get; private set; }
 		/// <summary>
-		/// 搜索
+		/// 频道搜索
 		/// </summary>
-		public MusicSearch MusicSearch { get; private set; }
-
+		public ChannelSearch ChannelSearch { get; private set; }
+		
 		#endregion
 
 		#region 成员变量
@@ -355,7 +355,8 @@ namespace DoubanFM.Core
 			LoadSettings();
 			UserAssistant = new UserAssistant();
 			UserAssistant.Settings = Settings;
-			MusicSearch = new MusicSearch(Settings);
+			ChannelSearch = new ChannelSearch(Settings);
+			DownloadSearch.Settings = Settings;
 			CurrentChannelChanged += new EventHandler((o, e) =>
 			{
 				IsLikedEnabled = !CurrentChannel.IsDj;

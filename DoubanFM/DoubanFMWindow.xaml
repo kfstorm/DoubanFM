@@ -218,8 +218,8 @@ Website : http://www.kfstorm.com
 				<ColumnDefinition Width="300"/>
 			</Grid.ColumnDefinitions>
 			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1" ClipToBounds="True">
-				<TabControl x:Name="ControlPanel" Style="{DynamicResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
-					<TabItem Header="{DynamicResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
+				<TabControl x:Name="ControlPanel" Style="{StaticResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
+					<TabItem Header="{StaticResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
 						<Grid x:Name="ChannelsGrid">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="40"/>
@@ -231,21 +231,21 @@ Website : http://www.kfstorm.com
 									<ColumnDefinition/>
 									<ColumnDefinition/>
 								</Grid.ColumnDefinitions>
-								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="我的电台" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}" Style="{DynamicResource ChannelCategoryStyle}">
+								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="我的电台" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}" Style="{StaticResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard Storyboard="{StaticResource PersonalClickStoryboard}"/>
 										</EventTrigger>
 									</RadioButton.Triggers>
 								</RadioButton>
-								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" IsChecked="True" Content="公共兆赫" Style="{DynamicResource ChannelCategoryStyle}">
+								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" IsChecked="True" Content="公共兆赫" Style="{StaticResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard Storyboard="{StaticResource PublicClickStoryboard}"/>
 										</EventTrigger>
 									</RadioButton.Triggers>
 								</RadioButton>
-								<RadioButton x:Name="ButtonDjCates" Grid.Column="2" Margin="5" Content="DJ兆赫" Click="ButtonDjCates_Click" Style="{DynamicResource ChannelCategoryStyle}">
+								<RadioButton x:Name="ButtonDjCates" Grid.Column="2" Margin="5" Content="DJ兆赫" Click="ButtonDjCates_Click" Style="{StaticResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard Storyboard="{StaticResource DjClickStoryboard}"/>																	</EventTrigger>
@@ -253,7 +253,7 @@ Website : http://www.kfstorm.com
 								</RadioButton>
 							</Grid>
 							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" d:IsHidden="True">
-								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Opacity="0">
+								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Opacity="0">
 									<ListBox.RenderTransform>
 										<TransformGroup>
 											<ScaleTransform/>
@@ -263,7 +263,7 @@ Website : http://www.kfstorm.com
 										</TransformGroup>
 									</ListBox.RenderTransform>
 								</ListBox>
-								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{DynamicResource ChannelsStyle}" Panel.ZIndex="1">
+								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Panel.ZIndex="1">
 									<ListBox.RenderTransform>
 										<TransformGroup>
 											<ScaleTransform/>
@@ -273,7 +273,7 @@ Website : http://www.kfstorm.com
 										</TransformGroup>
 									</ListBox.RenderTransform>
 								</ListBox>
-								<ListBox x:Name="DjCates" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged" Opacity="0">
+								<ListBox x:Name="DjCates" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged" Opacity="0">
 									<ListBox.RenderTransform>
 										<TransformGroup>
 											<ScaleTransform/>
@@ -288,7 +288,7 @@ Website : http://www.kfstorm.com
 										</DataTemplate>
 									</ListBox.ItemTemplate>
 								</ListBox>
-								<ListBox x:Name="DjChannels" Style="{DynamicResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0">
+								<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0">
 									<ListBox.RenderTransform>
 										<TransformGroup>
 											<ScaleTransform/>
@@ -301,7 +301,7 @@ Website : http://www.kfstorm.com
 							</Grid>
 						</Grid>
 					</TabItem>
-					<TabItem Header="{DynamicResource TabItemSearch}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
+					<TabItem Header="{StaticResource TabItemSearch}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
 						<Grid>
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto"/>
@@ -313,12 +313,12 @@ Website : http://www.kfstorm.com
 									<ColumnDefinition/>
 									<ColumnDefinition Width="Auto"/>
 								</Grid.ColumnDefinitions>
-								<TextBox x:Name="SearchText" Height="20" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}"/>
-								<Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsDefault="True" IsEnabled="{Binding Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" Style="{DynamicResource SearchStyle}"/>
+								<TextBox x:Name="SearchText" Height="20" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}"/>
+								<Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsDefault="True" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}" Style="{StaticResource SearchStyle}"/>
 							</Grid>
-							<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{DynamicResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=MusicSearch.SearchResult}" />
-							<Label Grid.Row="1" Visibility="{Binding Converter={StaticResource BoolReverseToVisibilityConverter}, Source={StaticResource Player}, Path=MusicSearch.IsSearchFinished}" HorizontalAlignment="Center" VerticalAlignment="Center">正在搜索...</Label>
-							<StackPanel Grid.Row="1" Visibility="{Binding Path=MusicSearch.ShowNoResultHint, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}" Height="Auto" VerticalAlignment="Center">
+							<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{StaticResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=ChannelSearch.SearchResult}" />
+							<Label Grid.Row="1" Visibility="{Binding Converter={StaticResource BoolReverseToVisibilityConverter}, Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}" HorizontalAlignment="Center" VerticalAlignment="Center">正在搜索...</Label>
+							<StackPanel Grid.Row="1" Visibility="{Binding Path=ChannelSearch.ShowNoResultHint, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}" Height="Auto" VerticalAlignment="Center">
 								<Label HorizontalAlignment="Center">搜索结果与music.douban.com保持一致</Label>
 								<StackPanel Visibility="{Binding Converter={StaticResource BoolToVisibilityConverter}, Source={StaticResource Player}, Path=Settings.IsSearchFilterEnabled}">
 									<Label HorizontalAlignment="Center">您开启了自动剔除无法收听的项目</Label>
@@ -326,13 +326,13 @@ Website : http://www.kfstorm.com
 								</StackPanel>
 							</StackPanel>
 							<StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Height="30">
-								<Button x:Name="PreviousPage" Click="PreviousPage_Click" IsEnabled="{Binding Path=MusicSearch.IsPreviousPageEnabled, Source={StaticResource Player}}" Style="{DynamicResource PreviousPageStyle}"/>
+								<Button x:Name="PreviousPage" Click="PreviousPage_Click" IsEnabled="{Binding Path=ChannelSearch.IsPreviousPageEnabled, Source={StaticResource Player}}" Style="{StaticResource PreviousPageStyle}"/>
 								<Border Width="20"/>
-								<Button x:Name="NextPage" Click="NextPage_Click" IsEnabled="{Binding Path=MusicSearch.IsNextPageEnabled, Source={StaticResource Player}}" Style="{DynamicResource NextPageStyle}"/>
+								<Button x:Name="NextPage" Click="NextPage_Click" IsEnabled="{Binding Path=ChannelSearch.IsNextPageEnabled, Source={StaticResource Player}}" Style="{StaticResource NextPageStyle}"/>
 							</StackPanel>
 						</Grid>
 					</TabItem>
-					<TabItem x:Name="Account" Header="{DynamicResource TabItemAccount}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
+					<TabItem x:Name="Account" Header="{StaticResource TabItemAccount}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
 						<Grid>
 							<Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
 								<Grid Margin="20">
@@ -429,7 +429,7 @@ Website : http://www.kfstorm.com
 							</Grid>
 						</Grid>
 					</TabItem>
-					<TabItem Header="{DynamicResource TabItemSettings}">
+					<TabItem Header="{StaticResource TabItemSettings}">
 						<Grid Margin="20">
 							<Grid.RowDefinitions>
 								<RowDefinition/>
@@ -456,7 +456,7 @@ Website : http://www.kfstorm.com
 							<Button x:Name="BtnResetSettings" Grid.Row="1" Width="100" Content="重置所有设置" Click="BtnResetSettings_Click"/>
 						</Grid>			
 					</TabItem>
-					<TabItem Header="{DynamicResource TabItemInfo}">
+					<TabItem Header="{StaticResource TabItemInfo}">
 						<Border Padding="20">
 							<Grid>
 								<Grid.RowDefinitions>
@@ -468,20 +468,20 @@ Website : http://www.kfstorm.com
 									<RowDefinition Height="Auto"/>
 								</Grid.RowDefinitions>
 								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-									<Button x:Name="GoToHomePage" Height="40" Style="{DynamicResource IconStyle}" Margin="0,0,10,0" Click="GoToHomePage_Click"/>
+									<Button x:Name="GoToHomePage" Height="40" Style="{StaticResource IconStyle}" Margin="0,0,10,0" Click="GoToHomePage_Click"/>
 									<Label HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667">豆瓣电台</Label>
-									<Button x:Name="BtnHelp" Height="40" Click="BtnHelp_Click" Style="{DynamicResource HelpStyle}"/>
+									<Button x:Name="BtnHelp" Height="40" Click="BtnHelp_Click" Style="{StaticResource HelpStyle}"/>
 								</StackPanel>
 								<TextBlock Grid.Row="1" HorizontalAlignment="Center">第三方客户端</TextBlock>
 								<Label Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">1.7.2</Label>
-								<Button x:Name="CheckUpdate" Grid.Row="3" Click="CheckUpdate_Click" Style="{DynamicResource CheckUpdateStyle}"/>
+								<Button x:Name="CheckUpdate" Grid.Row="3" Click="CheckUpdate_Click" Style="{StaticResource CheckUpdateStyle}"/>
 								<Grid Grid.Row="4" Height="40">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition/>
 										<ColumnDefinition/>
 									</Grid.ColumnDefinitions>
-									<Button x:Name="Feedback" Click="Feedback_Click" Style="{DynamicResource FeedbackStyle}"/>
-									<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Click="VisitOfficialWebsite_Click" Style="{DynamicResource DoubanFMOfficialWebsiteStyle}"/>
+									<Button x:Name="Feedback" Click="Feedback_Click" Style="{StaticResource FeedbackStyle}"/>
+									<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Click="VisitOfficialWebsite_Click" Style="{StaticResource DoubanFMOfficialWebsiteStyle}"/>
 								</Grid>
 								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011-2012 K.F.Storm</Label>
 							</Grid>
@@ -506,11 +506,11 @@ Website : http://www.kfstorm.com
 						</Grid.ColumnDefinitions>
 						<TextBlock x:Name="ChannelTextBlock" TextTrimming="CharacterEllipsis" Foreground="White" FontSize="14.667" FontStretch="Normal" Text="{Binding Source={StaticResource Player}, Path=CurrentChannel}" />
 						<StackPanel Grid.Column="1" x:Name="WindowStateControls" Orientation="Horizontal" HorizontalAlignment="Right">
-							<Button x:Name="ButtonMinimize" Click="ButtonMinimize_Click" Style="{DynamicResource MinimizeStyle}"/>
+							<Button x:Name="ButtonMinimize" Click="ButtonMinimize_Click" Style="{StaticResource MinimizeStyle}"/>
 							<Border Width="10"/>
-							<Button x:Name="ButtonToNotifyIcon" Click="ButtonToNotifyIcon_Click" Style="{DynamicResource ToNotifyIconStyle}"/>
+							<Button x:Name="ButtonToNotifyIcon" Click="ButtonToNotifyIcon_Click" Style="{StaticResource ToNotifyIconStyle}"/>
 							<Border Width="10"/>
-							<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
+							<Button x:Name="ButtonExit" Click="ButtonExit_Click" Style="{StaticResource ExitStyle}"/>
 						</StackPanel>
 					</Grid>
 					<Grid Grid.Row="1" x:Name="SongInfoPanel" TextOptions.TextFormattingMode="Ideal" VerticalAlignment="Top" Height="120" RenderTransformOrigin="0.5,0.5">
@@ -540,6 +540,7 @@ Website : http://www.kfstorm.com
 					<Grid Grid.Row="2" Margin="0,5" HorizontalAlignment="Right" Height="24" ClipToBounds="True">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition/>
+							<ColumnDefinition Width="Auto"/>
 							<ColumnDefinition Width="Auto"/>
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
@@ -572,22 +573,23 @@ Website : http://www.kfstorm.com
 							</Grid.Triggers>
 							<Viewbox StretchDirection="DownOnly" HorizontalAlignment="Right">
 								<StackPanel x:Name="Shares" Height="24" Width="0" Opacity="0" Orientation="Horizontal" ButtonBase.Click="ShareButton_Click">
-									<Button Style="{DynamicResource ShareDoubanStyle}" Tag="{x:Static core:Share+Sites.Douban}"/>
-									<Button Style="{DynamicResource ShareWeiboStyle}" Tag="{x:Static core:Share+Sites.Weibo}"/>
-									<Button Style="{DynamicResource ShareMsnStyle}" Tag="{x:Static core:Share+Sites.Msn}"/>
-									<Button Style="{DynamicResource ShareKaixinStyle}" Tag="{x:Static core:Share+Sites.Kaixin}"/>
-									<Button Style="{DynamicResource ShareRenenStyle}" Tag="{x:Static core:Share+Sites.Renren}"/>
-									<Button Style="{DynamicResource ShareTencentWeiboStyle}" Tag="{x:Static core:Share+Sites.TencentWeibo}"/>
-									<Button Style="{DynamicResource ShareFanfouStyle}" Tag="{x:Static core:Share+Sites.Fanfou}"/>
-									<Button Style="{DynamicResource ShareFacebookStyle}" Tag="{x:Static core:Share+Sites.Facebook}"/>
-									<Button Style="{DynamicResource ShareTwitterStyle}" Tag="{x:Static core:Share+Sites.Twitter}"/>
+									<Button Style="{StaticResource ShareDoubanStyle}" Tag="{x:Static core:Share+Sites.Douban}"/>
+									<Button Style="{StaticResource ShareWeiboStyle}" Tag="{x:Static core:Share+Sites.Weibo}"/>
+									<Button Style="{StaticResource ShareMsnStyle}" Tag="{x:Static core:Share+Sites.Msn}"/>
+									<Button Style="{StaticResource ShareKaixinStyle}" Tag="{x:Static core:Share+Sites.Kaixin}"/>
+									<Button Style="{StaticResource ShareRenenStyle}" Tag="{x:Static core:Share+Sites.Renren}"/>
+									<Button Style="{StaticResource ShareTencentWeiboStyle}" Tag="{x:Static core:Share+Sites.TencentWeibo}"/>
+									<Button Style="{StaticResource ShareFanfouStyle}" Tag="{x:Static core:Share+Sites.Fanfou}"/>
+									<Button Style="{StaticResource ShareFacebookStyle}" Tag="{x:Static core:Share+Sites.Facebook}"/>
+									<Button Style="{StaticResource ShareTwitterStyle}" Tag="{x:Static core:Share+Sites.Twitter}"/>
 								</StackPanel>
 							</Viewbox>
 							<Button x:Name="BtnCopyUrl" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="分享（点击直接复制地址）" Click="BtnCopyUrl_Click" Visibility="{Binding ShareSetting.EnableOneKeyShare, ElementName=Window, Converter={StaticResource BoolReverseToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
 							<Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="一键分享" Click="BtnOneKeyShare_Click" Visibility="{Binding ShareSetting.EnableOneKeyShare, ElementName=Window, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
 						</Grid>
-						<CheckBox x:Name="CheckBoxShowLyrics" Grid.Column="1" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
-						<Border x:Name="BdVolumeControl" Grid.Column="2" Background="Transparent" Margin="0,0,-65,0">
+						<Button x:Name="BtnDownloadSearch" Grid.Column="1" Style="{StaticResource SearchStyle}" ToolTip="搜索下载" Click="BtnDownloadSearch_Click"/>
+						<CheckBox x:Name="CheckBoxShowLyrics" Grid.Column="2" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{StaticResource ShowLyricsStyle}"/>
+						<Border x:Name="BdVolumeControl" Grid.Column="3" Background="Transparent" Margin="0,0,-65,0">
 							<Viewbox StretchDirection="DownOnly">
 								<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" Width="150"/>
 							</Viewbox>
@@ -601,7 +603,7 @@ Website : http://www.kfstorm.com
 						<TextBlock x:Name="CurrentTime" FontSize="18" Foreground="White" Text="00:00"/>
 						<TextBlock Grid.Column="1" x:Name="TotalTime" FontSize="18" HorizontalAlignment="Right" Foreground="White" Text="00:00"/>
 					</Grid>
-					<Slider x:Name="Slider" Grid.Row="4" Margin="0,5" Style="{DynamicResource SliderStyleForProgress}" Background="#7F000000" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=Window}"/>
+					<Slider x:Name="Slider" Grid.Row="4" Margin="0,5" Style="{StaticResource SliderStyleForProgress}" Background="#7F000000" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=Window}"/>
 					<Grid Grid.Row="5" HorizontalAlignment="Center" Height="50" VerticalAlignment="Bottom">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="38" />
@@ -612,10 +614,10 @@ Website : http://www.kfstorm.com
 							<ColumnDefinition Width="20"/>
 							<ColumnDefinition Width="38"/>
 						</Grid.ColumnDefinitions>
-						<CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{DynamicResource LikeStyle}" IsChecked="{Binding Path=IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsLikedEnabled}" />
-						<Button Grid.Column="2" x:Name="ButtonNever" Style="{DynamicResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding Source={StaticResource Player}, Path=IsNeverEnabled}" />
-						<CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{DynamicResource PauseStyle}" IsChecked="{Binding Path=IsPlaying, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" />
-						<Button Grid.Column="6" x:Name="ButtonNext" Click="ButtonNext_Click" Style="{DynamicResource NextStyle}"/>
+						<CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{StaticResource LikeStyle}" IsChecked="{Binding Path=IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsLikedEnabled}" />
+						<Button Grid.Column="2" x:Name="ButtonNever" Style="{StaticResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding Source={StaticResource Player}, Path=IsNeverEnabled}" />
+						<CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{StaticResource PauseStyle}" IsChecked="{Binding Path=IsPlaying, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" />
+						<Button Grid.Column="6" x:Name="ButtonNext" Click="ButtonNext_Click" Style="{StaticResource NextStyle}"/>
 					</Grid>
 				</Grid>
 			</Grid>

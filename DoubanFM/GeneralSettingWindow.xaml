@@ -13,25 +13,37 @@ Website : http://www.kfstorm.com
 		<CheckBox x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
-		<Grid>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<CheckBox x:Name="CbEnableProxy" Content="启用代理" IsChecked="{Binding Settings.EnableProxy, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-			<Button x:Name="BtnApplyProxy" Grid.Column="1" Height="30" Width="100" Margin="5" Click="BtnApplyProxy_Click">应用代理设置</Button>
-		</Grid>
-		<Grid>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-			</Grid.ColumnDefinitions>
-			<Label>代理主机：</Label>
-			<TextBox x:Name="TbHost" Grid.Column="1" Text="{Binding Settings.ProxyHost, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=CbEnableProxy}" Height="20"/>
-			<Label Grid.Column="2" Margin="10,0,0,0">端口：</Label>
-			<TextBox x:Name="TbPort" Grid.Column="3" Width="50" Text="{Binding Settings.ProxyPort, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=CbEnableProxy}" Height="20" MaxLength="10"/>
-		</Grid>
+		<GroupBox Margin="0,2" Header="下载搜索设置">
+			<StackPanel>
+				<CheckBox Margin="0,2" IsChecked="{Binding Settings.SearchAlbum, Source={StaticResource Player}}">搜索下载时包括专辑信息</CheckBox>
+				<CheckBox Margin="0,2" IsChecked="{Binding Settings.TrimBrackets, Source={StaticResource Player}}">搜索下载时自动剔除歌曲信息中的括号内容</CheckBox>
+				<CheckBox x:Name="CbSearchGoogleMusic" Click="CbSearchGoogleMusic_Click">搜索谷歌音乐</CheckBox>
+				<CheckBox x:Name="CbSearchBaiduTing" Click="CbSearchBaiduTing_Click">搜索百度听</CheckBox>
+			</StackPanel>
+		</GroupBox>
+		<GroupBox Header="代理设置" Margin="0,2">
+			<StackPanel>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<CheckBox x:Name="CbEnableProxy" Content="启用代理" IsChecked="{Binding Settings.EnableProxy, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
+					<Button x:Name="BtnApplyProxy" HorizontalAlignment="Right" Grid.Column="1" Height="30" Width="100" Margin="0,2" Click="BtnApplyProxy_Click">应用代理设置</Button>
+				</Grid>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+					<Label>代理主机：</Label>
+					<TextBox x:Name="TbHost" Grid.Column="1" Text="{Binding Settings.ProxyHost, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=CbEnableProxy}" Height="20"/>
+					<Label Grid.Column="2" Margin="10,0,0,0">端口：</Label>
+					<TextBox x:Name="TbPort" Grid.Column="3" Width="50" Text="{Binding Settings.ProxyPort, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=CbEnableProxy}" Height="20" MaxLength="10"/>
+				</Grid>
+			</StackPanel>
+		</GroupBox>
 	</StackPanel>
 </local:ChildWindowBase>

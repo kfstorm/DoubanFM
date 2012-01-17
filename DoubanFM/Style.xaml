@@ -460,7 +460,7 @@ Website : http://www.kfstorm.com
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style x:Key="SearchItemStyle" TargetType="{x:Type ListBoxItem}">
+	<Style x:Key="ChannelSearchItemStyle" TargetType="{x:Type ListBoxItem}">
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -541,10 +541,10 @@ Website : http://www.kfstorm.com
 		<Setter Property="Background" Value="#7F000000"/>
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
-		<Setter Property="ItemContainerStyle" Value="{StaticResource SearchItemStyle}"/>
+		<Setter Property="ItemContainerStyle" Value="{StaticResource ChannelSearchItemStyle}"/>
 		<Setter Property="ItemTemplate">
 			<Setter.Value>
-				<DataTemplate DataType="{x:Type core:SearchItem}">
+				<DataTemplate DataType="{x:Type core:ChannelSearchItem}">
 					<Grid Height="70" Width="225">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto"/>
