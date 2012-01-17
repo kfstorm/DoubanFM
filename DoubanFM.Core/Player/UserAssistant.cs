@@ -295,7 +295,7 @@ namespace DoubanFM.Core
 			else
 				Dispatcher.Invoke(new Action(() =>
 				{
-					if (result != null || string.IsNullOrEmpty(result.err_msg))
+					if (result != null && string.IsNullOrEmpty(result.err_msg))
 					{
 						LogOnFailedMessage = result.err_msg;
 					}

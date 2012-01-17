@@ -78,6 +78,7 @@ namespace DoubanFM
 			if (exceptionObject != null)
 			{
 				PbSending.Visibility = System.Windows.Visibility.Visible;
+				string exception = TbErrorReport.Text;
 				ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
 					Assembly assembly = Assembly.GetEntryAssembly();
@@ -87,7 +88,7 @@ namespace DoubanFM
 					Parameters parameters = new Parameters();
 					parameters.Add(new UrlParameter("ProductName", productName));
 					parameters.Add(new UrlParameter("VersionNumber", versionNumber));
-					parameters.Add(new UrlParameter("Exception", TbErrorReport.Text));
+					parameters.Add(new UrlParameter("Exception", exception));
 					string result = new ConnectionBase().Post("http://www.kfstorm.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
 					Debug.WriteLine(result);
 					Dispatcher.BeginInvoke(new Action(() =>
