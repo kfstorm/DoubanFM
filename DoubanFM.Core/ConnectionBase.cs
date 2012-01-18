@@ -112,6 +112,7 @@ namespace DoubanFM.Core
 				request.Method = "POST";
 				request.Referer = referer;
 				request.UserAgent = UserAgent;
+				request.ServicePoint.Expect100Continue = false;
 				using (Stream requestStream = request.GetRequestStream())
 					requestStream.Write(content, 0, content.Length);
 				using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
