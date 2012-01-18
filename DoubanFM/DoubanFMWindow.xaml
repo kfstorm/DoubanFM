@@ -218,7 +218,7 @@ Website : http://www.kfstorm.com
 				<ColumnDefinition Width="300"/>
 			</Grid.ColumnDefinitions>
 			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1" ClipToBounds="True">
-				<TabControl x:Name="ControlPanel" Style="{StaticResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
+				<TabControl x:Name="ControlPanel" Style="{StaticResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}" SelectionChanged="ControlPanel_SelectionChanged">
 					<TabItem Header="{StaticResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
 						<Grid x:Name="ChannelsGrid">
 							<Grid.RowDefinitions>
@@ -335,63 +335,46 @@ Website : http://www.kfstorm.com
 					<TabItem x:Name="Account" Header="{StaticResource TabItemAccount}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
 						<Grid>
 							<Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
-								<Grid Margin="20">
-									<Grid.RowDefinitions>
-										<RowDefinition Height="Auto"/>
-										<RowDefinition Height="Auto"/>
-										<RowDefinition/>
-									</Grid.RowDefinitions>
-									<Grid>
-										<Grid.RowDefinitions>
-											<RowDefinition/> 					
-											<RowDefinition/> 					
-											<RowDefinition Height="Auto"/> 					
-											<RowDefinition Height="Auto"/> 					
-										</Grid.RowDefinitions> 
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="70"/>
-											<ColumnDefinition/>
-										</Grid.ColumnDefinitions>
-										<TextBlock VerticalAlignment="Center" Text="邮箱/用户名"/>
-										<TextBlock VerticalAlignment="Center" Grid.Row="1" Text="密码"/>
-										<TextBox x:Name="TbUsername" Grid.Column="1" Margin="0,4" Text="{Binding Path=Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}"/>
-										<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="0,4" PasswordChanged="PbPassword_PasswordChanged" />
-										<!--<Grid x:Name="CaptchaGrid" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.HasCaptcha, Source={StaticResource Player}}">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="Auto"/>
-												<ColumnDefinition/>
-											</Grid.ColumnDefinitions>
+								<DockPanel Margin="20">
+									<StackPanel DockPanel.Dock="Top">
+										<Grid>
 											<Grid.RowDefinitions>
-												<RowDefinition Height="Auto"/>
-												<RowDefinition/>
-											</Grid.RowDefinitions>
-											<Button x:Name="ButtonRefreshCaptcha" Grid.ColumnSpan="2" Click="ButtonRefreshCaptcha_Click" Padding="0" MinHeight="40" MaxHeight="40" BorderThickness="0">
-												<Image x:Name="Captcha" Stretch="Fill"/>
-											</Button>
-											<Label Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Content="验证码"/>
-											<TextBox x:Name="CaptchaText" Grid.Row="1" Grid.Column="1" Margin="4"/>
-										</Grid>-->
-									</Grid>
-									<StackPanel Grid.Row="1" Margin="0,10">
-										<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.ShowLogOnFailedHint, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}"/>
-										<Grid Margin="0,10">
+												<RowDefinition/> 					
+												<RowDefinition/> 					
+												<RowDefinition Height="Auto"/> 					
+											</Grid.RowDefinitions> 
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="70"/>
+												<ColumnDefinition/>
+											</Grid.ColumnDefinitions>
+											<TextBlock VerticalAlignment="Center" Text="邮箱/用户名"/>
+											<TextBlock VerticalAlignment="Center" Grid.Row="1" Text="密码" Margin="0,2"/>
+											<TextBox x:Name="TbUsername" Grid.Column="1" Text="{Binding Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
+											<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="0,2" PasswordChanged="PbPassword_PasswordChanged" />
+											<TextBlock Grid.Row="2" VerticalAlignment="Center" Text="验证码" Visibility="{Binding Visibility, ElementName=CaptchaText}"/>
+											<TextBox x:Name="CaptchaText" Grid.Row="2" Grid.Column="1" Margin="0,2" Visibility="{Binding UserAssistant.HasCaptcha, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+										</Grid>
+										<Button x:Name="ButtonRefreshCaptcha" Grid.Column="2" Click="ButtonRefreshCaptcha_Click" Padding="0" Height="40" BorderThickness="0" ToolTip="点击刷新验证码" IsTabStop="False" Visibility="{Binding Visibility, ElementName=CaptchaText}" Margin="0,2" Cursor="Hand">
+											<Image x:Name="Captcha" Stretch="Fill" Source="{Binding UserAssistant.CaptchaUrl, Source={StaticResource Player}}"/>
+										</Button>
+										<StackPanel Margin="0,2">
+											<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding UserAssistant.ShowLogOnFailedHint, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}" Margin="0,2"/>
+											<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Right" Width="100" Height="40" FontSize="16" Margin="0,5"/>
+										</StackPanel>
+										
+									</StackPanel>
+									<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+										<Button x:Name="ButtonSignUp" Content="注册" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Height="30" Click="ButtonSignUp_Click" Margin="0,5"/>
+										<Grid VerticalAlignment="Bottom" Width="210">
 											<Grid.ColumnDefinitions>
 												<ColumnDefinition/>
 												<ColumnDefinition/>
 											</Grid.ColumnDefinitions>
-											<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Center" Width="100" Height="40" FontSize="16"/>
-											<Button x:Name="ButtonSignUp" Content="注册" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Height="30" Click="ButtonSignUp_Click"/>
+											<CheckBox x:Name="CheckBoxRememberPassword" VerticalAlignment="Center" HorizontalAlignment="Center" Content="记住密码" IsChecked="{Binding Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
+											<CheckBox Grid.Column="1" x:Name="CheckBoxAutoLogOnNextTime" VerticalAlignment="Center" HorizontalAlignment="Center" Content="下次自动登录" IsChecked="{Binding Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
 										</Grid>
 									</StackPanel>
-									<Grid Grid.Row="2" VerticalAlignment="Bottom" Margin="0,20">
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition/>
-											<ColumnDefinition/>
-										</Grid.ColumnDefinitions>
-										<CheckBox x:Name="CheckBoxRememberPassword" VerticalAlignment="Center" HorizontalAlignment="Center" Content="记住密码" IsChecked="{Binding Path=Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}" />
-										<CheckBox Grid.Column="1" x:Name="CheckBoxAutoLogOnNextTime" VerticalAlignment="Center" HorizontalAlignment="Center" Content="下次自动登录" IsChecked="{Binding Path=Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}" />
-									</Grid>
-								</Grid>
+								</DockPanel>
 							</Grid>
 							<Grid x:Name="LogOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOn, Source={StaticResource Player}}">
 								<Grid.RowDefinitions>

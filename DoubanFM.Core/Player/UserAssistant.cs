@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Threading;
+using System.Diagnostics;
 
 namespace DoubanFM.Core
 {
@@ -27,8 +28,8 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty IsLoggingOnProperty = DependencyProperty.Register("IsLoggingOn", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty IsLoggingOffProperty = DependencyProperty.Register("IsLoggingOff", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty HasCaptchaProperty = DependencyProperty.Register("HasCaptcha", typeof(bool), typeof(UserAssistant));
+		public static readonly DependencyProperty CaptchaUrlProperty = DependencyProperty.Register("CaptchaUrl", typeof(string), typeof(UserAssistant));
 		public static readonly DependencyProperty ShowLogOnFailedHintProperty = DependencyProperty.Register("ShowLogOnFailedHint", typeof(bool), typeof(UserAssistant));
-		//public static readonly DependencyProperty NicknameProperty = DependencyProperty.Register("Nickname", typeof(string), typeof(UserAssistant));
 		public static readonly DependencyProperty LogOnFailedMessageProperty = DependencyProperty.Register("LogOnFailedMessage", typeof(string), typeof(UserAssistant));
 
 		#endregion
@@ -39,14 +40,6 @@ namespace DoubanFM.Core
 		/// 用户
 		/// </summary>
 		public Settings Settings { get; internal set; }
-		///// <summary>
-		///// 昵称
-		///// </summary>
-		//public string Nickname
-		//{
-		//    get { return (string)GetValue(NicknameProperty); }
-		//    protected set { SetValue(NicknameProperty, value); }
-		//}
 		/// <summary>
 		///  状态枚举
 		/// </summary>
@@ -79,8 +72,16 @@ namespace DoubanFM.Core
 						RaiseLogOffSucceedEvent();
 					else if (CurrentState == State.LoggedOn)
 						RaiseLogOffFailedEvent();
-				//if (lastState == State.Unknown && CurrentState == State.LoggedOff)      //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
-					//Refresh();
+				//假定登录时始终需要验证码
+				if (lastState == State.LoggingOn && CurrentState == State.LoggedOff) // && (HasCaptcha || ErrorNo == 1011))
+				{
+					UpdateCaptcha();
+				}
+				//假定登录时始终需要验证码
+				else if (lastState == State.LoggingOff && CurrentState == State.LoggedOff)// && HasCaptcha)
+				{
+					UpdateCaptcha();
+				}
 			}
 		}
 		/// <summary>
@@ -115,24 +116,32 @@ namespace DoubanFM.Core
 			get { return (string)GetValue(LogOnFailedMessageProperty); }
 			protected set { SetValue(LogOnFailedMessageProperty, value); }
 		}
-		///// <summary>
-		///// 验证码URL
-		///// </summary>
-		//public string CaptchaUrl
-		//{
-		//    get
-		//    {
-		//        if (HasCaptcha) return "https://www.douban.com/misc/captcha?id=" + _captchaId + "&amp;size=s";
-		//        else return null;
-		//    }
-		//}
-		///// <summary>
-		///// 是否要求输入验证码
-		///// </summary>
-		//public bool HasCaptcha
-		//{
-		//    get { return (bool)GetValue(HasCaptchaProperty); }
-		//}
+		/// <summary>
+		/// 错误代码
+		/// </summary>
+		public int ErrorNo { get; set; }
+		/// <summary>
+		/// 验证码URL
+		/// </summary>
+		public string CaptchaUrl
+		{
+			get
+			{
+				return (string)GetValue(CaptchaUrlProperty);
+			}
+			protected set
+			{
+				SetValue(CaptchaUrlProperty, value);
+			}
+		}
+		/// <summary>
+		/// 是否要求输入验证码
+		/// </summary>
+		public bool HasCaptcha
+		{
+			get { return (bool)GetValue(HasCaptchaProperty); }
+			set { SetValue(HasCaptchaProperty, value); }
+		}
 
 		#endregion
 
@@ -179,19 +188,10 @@ namespace DoubanFM.Core
 
 		#region 私用变量
 
-		///// <summary>
-		///// 验证码ID
-		///// </summary>
-		//private string _captchaId;
-		//private string CaptchaId
-		//{
-		//    get { return _captchaId; }
-		//    set
-		//    {
-		//        _captchaId = value;
-		//        SetValue(HasCaptchaProperty, !string.IsNullOrEmpty(_captchaId));
-		//    }
-		//}
+		/// <summary>
+		/// 验证码ID
+		/// </summary>
+		private string captchaId;
 		
 		///// <summary>
 		///// 注销链接
@@ -203,12 +203,41 @@ namespace DoubanFM.Core
 		#region 成员方法
 
 		/// <summary>
+		/// 更新验证码
+		/// </summary>
+		public void UpdateCaptcha()
+		{
+			HasCaptcha = true;
+			captchaId = null;
+			CaptchaUrl = null;
+			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+				{
+					captchaId = new ConnectionBase().Get("http://douban.fm/j/new_captcha");
+					Dispatcher.BeginInvoke(new Action(() =>
+						{
+							if (string.IsNullOrEmpty(captchaId))
+							{
+								HasCaptcha = false;
+								captchaId = null;
+								CaptchaUrl = null;
+							}
+							else
+							{
+								captchaId = captchaId.Trim('\"');
+								HasCaptcha = true;
+								CaptchaUrl = @"http://douban.fm/misc/captcha?size=m&id=" + captchaId;
+							}
+						}));
+				}));
+		}
+
+		/// <summary>
 		/// 更新
 		/// </summary>
 		/// <param name="html">HTML文件</param>
 		internal void Update(string html)
 		{
-			//_captchaId = GetCaptchaId(html);          //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
+			//captchaId = GetCaptchaId(html);          //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
 			//_logOffLink = GetLogOffLink(html);
 			//System.Diagnostics.Debug.WriteLine("注销链接：");
 			//System.Diagnostics.Debug.WriteLine(_logOffLink);
@@ -288,6 +317,7 @@ namespace DoubanFM.Core
 					Settings.User.Liked = result.user_info.play_record.liked;
 					Settings.User.Banned = result.user_info.play_record.banned;
 					LogOnFailedMessage = null;
+					ErrorNo = 0;
 					System.Diagnostics.Debug.WriteLine("已登录");
 					CurrentState = State.LoggedOn;
 				}));
@@ -295,13 +325,16 @@ namespace DoubanFM.Core
 			else
 				Dispatcher.Invoke(new Action(() =>
 				{
-					if (result != null && !string.IsNullOrEmpty(result.err_msg))
+					if (result != null)
 					{
+						Debug.WriteLine(result.err_no + ":" + result.err_msg);
 						LogOnFailedMessage = result.err_msg;
+						ErrorNo = result.err_no;
 					}
 					else
 					{
 						LogOnFailedMessage = "未知错误";
+						ErrorNo = 0;
 					}
 					if (CurrentState == State.LoggingOn) CurrentState = State.LoggedOff;
 					else if (CurrentState == State.LoggingOff) CurrentState = State.LoggedOn;
@@ -331,21 +364,21 @@ namespace DoubanFM.Core
 		//    Match match = Regex.Match(html, "<img src=\"http[s]?://www\\.douban\\.com/misc/captcha\\?id=(\\w*)", RegexOptions.IgnoreCase);
 		//    return match.Groups[1].Value;
 		//}
-		/// <summary>
-		/// 获取注销链接
-		/// </summary>
-		/// <param name="html">HTML文件</param>
-		/// <returns></returns>
-		static string GetLogOffLink(string html)
-		{
-			if (html == null) return null;
-			Match match = Regex.Match(html, "\"(http://.*logout[^\\s]*)\"", RegexOptions.IgnoreCase);
-			return match.Groups[1].Value;
-		}
+		///// <summary>
+		///// 获取注销链接
+		///// </summary>
+		///// <param name="html">HTML文件</param>
+		///// <returns></returns>
+		//static string GetLogOffLink(string html)
+		//{
+		//    if (html == null) return null;
+		//    Match match = Regex.Match(html, "\"(http://.*logout[^\\s]*)\"", RegexOptions.IgnoreCase);
+		//    return match.Groups[1].Value;
+		//}
 		/// <summary>
 		/// 登录
 		/// </summary>
-		public void LogOn()
+		public void LogOn(string captcha = null)
 		{
 			if (CurrentState != State.LoggedOff) return;
 			CurrentState = State.LoggingOn;
@@ -353,8 +386,8 @@ namespace DoubanFM.Core
 			parameters.Add("source", "radio");
 			parameters.Add("alias", Settings.User.Username);
 			parameters.Add("form_password", Settings.User.Password);
-			//parameters.Add("captcha-solution", Captcha);
-			//parameters.Add("captcha-id", _captchaId);
+			parameters.Add("captcha_solution", captcha);
+			parameters.Add("captcha_id", captchaId);
 			if (Settings.AutoLogOnNextTime)
 				parameters.Add("remember", "on");
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
@@ -380,15 +413,17 @@ namespace DoubanFM.Core
 			Settings.User.Liked = 0;
 			Settings.User.Banned = 0;
 			CurrentState = State.LoggedOff;
+			LogOnFailedMessage = null;
+			ErrorNo = 0;
 		}
 
-		/// <summary>
-		/// 强制注销，非后台
-		/// </summary>
-		internal void ForceLogOff()
-		{
-			LogOff();
-		}
+		///// <summary>
+		///// 强制注销，非后台
+		///// </summary>
+		//internal void ForceLogOff()
+		//{
+		//    LogOff();
+		//}
 		#endregion
 	}
 }

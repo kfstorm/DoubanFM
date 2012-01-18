@@ -487,11 +487,11 @@ namespace DoubanFM
 				VolumeFadeOut.Begin();
 				SetLyrics(null);
 			});
-			/*_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
+			_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
 			{
-				if (_player.UserAssistant.HasCaptcha)
-					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));
-			});*/
+				/*if (_player.UserAssistant.HasCaptcha)
+					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
+			});
 			_player.UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录已成功");
@@ -1406,7 +1406,8 @@ namespace DoubanFM
 		/// </summary>
 		private void ButtonLogOn_Click(object sender, RoutedEventArgs e)
 		{
-			_player.UserAssistant.LogOn();
+			_player.UserAssistant.LogOn(_player.UserAssistant.HasCaptcha? CaptchaText.Text : null);
+			CaptchaText.Text = null;
 		}
 		/// <summary>
 		/// 注销
@@ -1871,7 +1872,28 @@ namespace DoubanFM
 				DownloadSearch.Search(_player.CurrentSong.Title, _player.CurrentSong.Artist, _player.CurrentSong.Album);
 		}
 
-		#endregion
+		private void ButtonRefreshCaptcha_Click(object sender, RoutedEventArgs e)
+		{
+			_player.UserAssistant.UpdateCaptcha();
+		}
 
+		private void ControlPanel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+		{
+			if (e.OriginalSource == ControlPanel)
+			{
+				if (e.AddedItems.Contains(Account))
+				{
+					if (_player.UserAssistant.CurrentState == UserAssistant.State.LoggedOff)
+					{
+						if (!_player.UserAssistant.HasCaptcha)
+						{
+							_player.UserAssistant.UpdateCaptcha();
+						}
+					}
+				}
+			}
+		}
+
+		#endregion
 	}
 }

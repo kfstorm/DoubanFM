@@ -25,6 +25,9 @@ namespace DoubanFM.Core.Json
 
 		[DataMember]
 		public string err_msg { get; set; }
+		
+		[DataMember]
+		public int err_no { get; set; }
 
 		/// <summary>
 		/// 从JSON生成
