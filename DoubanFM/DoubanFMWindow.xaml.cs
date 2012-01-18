@@ -447,6 +447,8 @@ namespace DoubanFM
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲已改变，当前歌曲为" + _player.CurrentSong);
 				if (_player.CurrentSong != null)
 				{
+					if (BassEngine.Instance.IsPlaying)
+						BassEngine.Instance.Stop();
 					stoped = false;
 					VolumeDirectIn.Begin();
 					Update();
