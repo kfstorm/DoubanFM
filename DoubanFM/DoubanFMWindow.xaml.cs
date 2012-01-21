@@ -359,6 +359,7 @@ namespace DoubanFM
 				System.Windows.Data.Binding binding = new System.Windows.Data.Binding();
 				binding.Source = _player.Settings;
 				binding.Path = new PropertyPath(Settings.BackgroundProperty);
+				binding.Converter = new PreventFullTransparentConverter();
 				System.Windows.Data.BindingOperations.SetBinding(Background, SolidColorBrush.ColorProperty, binding);
 			}
 			else
@@ -547,12 +548,16 @@ namespace DoubanFM
 			});
 			_player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
 			{
-				MessageBox.Show(this, "获取播放列表失败：" + e.Msg, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
+				string message = "获取播放列表失败：" + e.Msg;
+				Debug.WriteLine(message);
+				MessageBox.Show(this, message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
 				this.Close();
 			});
 			_player.FinishedPlayingReportFailed += new EventHandler<ErrorEventArgs>((o, e) =>
 			{
-				MessageBox.Show(this, e.GetException().Message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
+				string message = e.GetException().Message;
+				Debug.WriteLine(message);
+				MessageBox.Show(this, message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
 				this.Close();
 			});
 		}

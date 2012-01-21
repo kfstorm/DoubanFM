@@ -289,6 +289,7 @@ namespace DoubanFM
 			Color color = (Color)values[0];
 			double transparency = (double)values[1];
 			color.A = (byte)(int)(color.A * (1 - transparency));
+			if (color.A == 0) color.A = 1;		//不能全透明
 			SolidColorBrush brush = new SolidColorBrush(color);
 			if (brush.CanFreeze) brush.Freeze();
 			return brush;
@@ -299,4 +300,24 @@ namespace DoubanFM
 			throw new NotImplementedException();
 		}
 	}
+	/// <summary>
+	/// 避免完全透明
+	/// </summary>
+	public class PreventFullTransparentConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			Color oldColor = (Color)value;
+			Color newColor = oldColor;
+			if (newColor.A == 0)
+				newColor.A = 1;
+			return newColor;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
 }
