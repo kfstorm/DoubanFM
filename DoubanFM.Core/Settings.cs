@@ -52,6 +52,8 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty DownloadSiteProperty = DependencyProperty.Register("DownloadSite", typeof(DownloadSite), typeof(Settings), new PropertyMetadata(DownloadSite.GoogleMusic | DownloadSite.BaiduTing));
 		public static readonly DependencyProperty TrimBracketsProperty = DependencyProperty.Register("TrimBrackets", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty SearchAlbumProperty = DependencyProperty.Register("SearchAlbum", typeof(bool), typeof(Settings), new PropertyMetadata(false));
+		public static readonly DependencyProperty LocationLeftProperty = DependencyProperty.Register("LocationLeft", typeof(double), typeof(Settings), new PropertyMetadata(double.NaN));
+		public static readonly DependencyProperty LocationTopProperty = DependencyProperty.Register("LocationTop", typeof(double), typeof(Settings), new PropertyMetadata(double.NaN));
 
 		#endregion
 
@@ -278,6 +280,24 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(SearchAlbumProperty); }
 			set { SetValue(SearchAlbumProperty, value); }
+		}
+
+		/// <summary>
+		/// 窗口位置Left
+		/// </summary>
+		public double LocationLeft
+		{
+			get { return (double)GetValue(LocationLeftProperty); }
+			set { SetValue(LocationLeftProperty, value); }
+		}
+
+		/// <summary>
+		/// 窗口位置Top
+		/// </summary>
+		public double LocationTop
+		{
+			get { return (double)GetValue(LocationTopProperty); }
+			set { SetValue(LocationTopProperty, value); }
 		}
 
 		/// <summary>
@@ -521,6 +541,22 @@ namespace DoubanFM.Core
 			{
 				SearchAlbum = def.SearchAlbum;
 			}
+			try
+			{
+				LocationLeft = info.GetDouble("LocationLeft");
+			}
+			catch
+			{
+				LocationLeft = def.LocationLeft;
+			}
+			try
+			{
+				LocationTop = info.GetDouble("LocationTop");
+			}
+			catch
+			{
+				LocationTop = def.LocationTop;
+			}
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -559,6 +595,8 @@ namespace DoubanFM.Core
 			info.AddValue("DownloadSite", DownloadSite);
 			info.AddValue("TrimBrackets", TrimBrackets);
 			info.AddValue("SearchAlbum", SearchAlbum);
+			info.AddValue("LocationLeft", LocationLeft);
+			info.AddValue("LocationTop", LocationTop);
 		}
 
 		/// <summary>

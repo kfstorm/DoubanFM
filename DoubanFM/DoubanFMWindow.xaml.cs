@@ -215,15 +215,7 @@ namespace DoubanFM
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化成员变量完成");
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置");
-			PbPassword.Password = _player.Settings.User.Password;
-			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
-			if (channel != null) _player.Settings.LastChannel = channel;
-			if (_player.Settings.ScaleTransform != 1.0)
-				TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
-			if (!_player.Settings.FirstTime)
-			{
-				FirstTimePanel.Visibility = Visibility.Collapsed;
-			}
+			InitPlayerSettings();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置完成");
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除老版本产生的临时文件");
@@ -267,6 +259,33 @@ namespace DoubanFM
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化键盘钩子完成");
 		}
 
+		/// <summary>
+		/// 初始化播放器设置
+		/// </summary>
+		void InitPlayerSettings()
+		{
+			PbPassword.Password = _player.Settings.User.Password;
+			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
+			if (channel != null) _player.Settings.LastChannel = channel;
+			if (_player.Settings.ScaleTransform != 1.0)
+				TextOptions.SetTextFormattingMode(this, TextFormattingMode.Ideal);
+			if (!_player.Settings.FirstTime)
+			{
+				FirstTimePanel.Visibility = Visibility.Collapsed;
+			}
+			if (!double.IsNaN(_player.Settings.LocationLeft))
+			{
+				this.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+				this.Left = _player.Settings.LocationLeft;
+				this.Top = _player.Settings.LocationTop;
+
+				//防止调整分辨率后窗口超出屏幕
+				if (this.Left + 50 > SystemParameters.FullPrimaryScreenWidth)
+					this.Left = SystemParameters.FullPrimaryScreenWidth - 50;
+				if (this.Top + 50 > SystemParameters.FullPrimaryScreenHeight)
+					this.Top = SystemParameters.FullPrimaryScreenHeight - 50;
+			}
+		}
 		/// <summary>
 		/// 初始化BassEngine
 		/// </summary>
@@ -1686,7 +1705,7 @@ namespace DoubanFM
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
 			_player.Initialize();
-			
+
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置");
 			//加载热键设置
 			HotKeys = HotKeys.Load();
@@ -1704,7 +1723,7 @@ namespace DoubanFM
 			HotKeys.Register(this);
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置完成");
-			
+
 			//设置歌词显示
 			if (_player.Settings.ShowLyrics)
 			{
@@ -1899,6 +1918,13 @@ namespace DoubanFM
 			}
 		}
 
+		private void Window_LocationChanged(object sender, EventArgs e)
+		{
+			_player.Settings.LocationLeft = this.Left;
+			_player.Settings.LocationTop = this.Top;
+		}
+
 		#endregion
+
 	}
 }
