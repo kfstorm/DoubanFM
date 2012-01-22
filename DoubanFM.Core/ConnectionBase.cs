@@ -13,6 +13,7 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System.Diagnostics;
 
 namespace DoubanFM.Core
 {
@@ -119,8 +120,9 @@ namespace DoubanFM.Core
 				using (StreamReader sr = new StreamReader(responce.GetResponseStream(), Encoding))
 					file = sr.ReadToEnd();
 			}
-			catch
+			catch (Exception ex)
 			{
+				Debug.WriteLine(ex);
 				if (ThrowException)
 					throw;
 			}
@@ -175,8 +177,9 @@ namespace DoubanFM.Core
 				using (StreamReader sr = new StreamReader(responce.GetResponseStream(), Encoding))
 					file = sr.ReadToEnd();
 			}
-			catch
+			catch (Exception ex)
 			{
+				Debug.WriteLine(ex);
 				if (ThrowException)
 					throw;
 			}

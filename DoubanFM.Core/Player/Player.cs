@@ -11,6 +11,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Diagnostics;
 
 namespace DoubanFM.Core
 {
@@ -410,7 +411,12 @@ namespace DoubanFM.Core
 					{
 						file = new ConnectionBase().Get("http://douban.fm");
 						channelInfo = new ChannelInfo(Json.ChannelInfo.FromHtml(file));
-						if (!channelInfo.IsEffective) TakeABreak();
+						if (!channelInfo.IsEffective)
+						{
+							Debug.WriteLine("获取播放列表失败，获取结果为：");
+							Debug.WriteLine(file == null ? string.Empty : file);
+							TakeABreak();
+						}
 						else break;
 					}
 					UserAssistant.Update(file);

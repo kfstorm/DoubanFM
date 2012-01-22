@@ -40,10 +40,6 @@ Website : http://www.kfstorm.com
 				</FlowDocument.Resources>
 				<Paragraph TextAlignment="Center" Style="{StaticResource TitleStyleKey}">豆瓣电台帮助文档</Paragraph>
 				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">为什么有时听歌没声音？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">这是微软的bug，网络不好时，很可能音乐缓冲时下载断掉了，就会出现这种情况。这个问题目前没办法解决，但可以跳到下一首，如果网络状况不是很糟，应该是能正常播放的。</Paragraph>
-					<Paragraph Style="{StaticResource Header1StyleKey}">为什么无法播放音乐，音乐进度条不走动？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">目前已知的一种情况是：电脑上安装的Windows Media Player是测试版，而不是正式版。比如XP下Windows Media Player 11的测试版就会导致无法播放音乐，安装正式版即可解决问题。<Hyperlink Tag="http://www.microsoft.com/downloads/zh-cn/details.aspx?FamilyID=1d224714-e238-4e45-8668-5166114010ca&amp;displayLang=zh-cn" Style="{StaticResource HyperlinkStyleKey}">点此下载Windows Media Player 11 for XP的正式版本</Hyperlink>（Vista和Win7用户不要用这个版本）。因为Vista自带11，Win7自带12，所以应该不存在这个问题。</Paragraph>
 					<Paragraph Style="{StaticResource Header1StyleKey}">怎么设置字体？</Paragraph>
 					<Paragraph Style="{StaticResource TextStyleKey}">本软件可同时设置多种字体。由于大部分中文字体的英文都不太好看，所以有时将中英文字体分别设置就很有必要了。下面是一个例子：</Paragraph>
 					<Paragraph>
@@ -187,12 +183,6 @@ Website : http://www.kfstorm.com
 					<Paragraph Style="{StaticResource TextStyleKey}">因为搜索出的频道的分享链接比较特殊，有:和|这两个符号，人人网会认为这是非法网址。目前没有解决办法。</Paragraph>
 				</Section>
 				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">为什么点注销却注销不了？先显示正在注销，但马上又显示已登录。</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">这个问题正在解决中，目前有两种方法强行注销。第一种方法是在网页上注销一次，再打开电台客户端。第二种方法是先关闭客户端，然后删除
-						<Hyperlink Tag="{x:Static core:ConnectionBase.DataFolder}" Style="{StaticResource HyperlinkStyleKey}">此文件夹</Hyperlink>下的cookies.dat这个文件，再打开客户端。
-					</Paragraph>
-				</Section>
-				<Section>
 					<Paragraph Style="{StaticResource Header1StyleKey}">程序崩溃了……</Paragraph>
 					<Paragraph Style="{StaticResource TextStyleKey}">如果发生了程序崩溃的情况，请
 						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">向我反应</Hyperlink> ，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。
@@ -202,6 +192,11 @@ Website : http://www.kfstorm.com
 				<Section>
 					<Paragraph Style="{StaticResource Header1StyleKey}">修改主界面字体后经常看不清字，怎么办？</Paragraph>
 					<Paragraph Style="{StaticResource TextStyleKey}">可以把主界面缩放调大一点，字会清晰很多。</Paragraph>
+				</Section>
+				<Section>
+					<Paragraph Style="{StaticResource Header1StyleKey}">为什么登录后就无法使用了，需要重置设置才能继续使用？</Paragraph>
+					<Paragraph Style="{StaticResource TextStyleKey}">请打开浏览器进入
+						<Hyperlink Tag="http://www.douban.com/" Style="{StaticResource HyperlinkStyleKey}">www.douban.com</Hyperlink> 并登录，检查一下自己的帐号是否存在异常，有可能是帐号被锁定，或者帐号未激活。</Paragraph>
 				</Section>
 				<Section>
 					<Paragraph></Paragraph>
