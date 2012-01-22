@@ -65,6 +65,14 @@ namespace DoubanFM
 		internal static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 		#endregion
 
+		#region Region
+
+		[DllImport("Gdi32.dll")]
+		internal static extern IntPtr CreateRectRgn([In] int nLeftRect, [In] int nTopRect, [In] int nRightRect, [In] int nBottomRect);
+		[DllImport("Gdi32.dll")]
+		internal static extern bool DeleteObject([In] IntPtr hObject);
+		#endregion
+
 		#region Others
 		[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
 		internal static extern IntPtr GetModuleHandle(string lpModuleName);

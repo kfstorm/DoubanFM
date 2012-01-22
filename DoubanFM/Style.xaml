@@ -86,27 +86,26 @@ Website : http://www.kfstorm.com
 	</AlternationConverter>
 	<Style x:Key="SliderStyleForProgress" TargetType="{x:Type Slider}">
 		<Setter Property="Height" Value="5"/>
-		<Setter Property="Background" Value="Dodgerblue"/>
-		<Setter Property="Foreground" Value="Yellow"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Slider}">
 					<Grid>
-						<Rectangle x:Name="Track" Fill="{TemplateBinding Background}"/>
-						<Rectangle x:Name="Thumb" Fill="{TemplateBinding Foreground}">
-							<Rectangle.RenderTransform>
-								<ScaleTransform>
-									<ScaleTransform.ScaleX>
-										<MultiBinding Converter="{StaticResource converter1}">
-											<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Value"/>
-											<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Minimum"/>
-											<Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Maximum"/>
-										</MultiBinding>
-									</ScaleTransform.ScaleX>
-								</ScaleTransform>
-							</Rectangle.RenderTransform>
-						</Rectangle>
+						<Border x:Name="TrackBackground" Background="{TemplateBinding Background}">
+							<Rectangle x:Name="PART_SelectionRange" Visibility="Hidden"/>
+						</Border>
+						<Track x:Name="PART_Track">
+							<Track.DecreaseRepeatButton>
+								<RepeatButton x:Name="LeftRepeatButton" Style="{StaticResource stScrollBtn}" Background="#7FFFFFFF" IsEnabled="False"/>
+							</Track.DecreaseRepeatButton>
+							<Track.IncreaseRepeatButton>
+								<RepeatButton x:Name="RightRepeatButton" Style="{StaticResource stScrollBtn}" Background="#7F000000" IsEnabled="False"/>
+							</Track.IncreaseRepeatButton>
+							<Track.Thumb>
+								<Thumb x:Name="Thumb" Width="0" Height="0"/>
+							</Track.Thumb>
+						</Track>
+						<Rectangle HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=LeftRepeatButton}" Fill="{TemplateBinding Foreground}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

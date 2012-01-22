@@ -44,6 +44,14 @@ namespace DoubanFM
 					Aero.AeroHelper.EnableBlurBehindWindow(this);
 				}
 			};
+
+			this.SizeChanged += delegate
+			{
+				if (Environment.OSVersion.Version.Major >= 6)
+				{
+					Aero.AeroHelper.EnableBlurBehindWindow(this);
+				}
+			};
 		}
 
 		void WindowBase_AeroGlassCompositionChanged(object sender, Aero.AeroGlassCompositionChangedEventArgs e)

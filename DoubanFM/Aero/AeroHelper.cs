@@ -36,9 +36,10 @@ namespace DoubanFM.Aero
 			DwmApi.DWM_BLURBEHIND bb = new DwmApi.DWM_BLURBEHIND();
 			bb.dwFlags = DwmApi.DWM_BLURBEHIND.DWM_BB_ENABLE | DwmApi.DWM_BLURBEHIND.DWM_BB_BLURREGION;
 			bb.fEnable = true;
-			bb.hRegionBlur = IntPtr.Zero;
+			bb.hRegionBlur = DoubanFM.NativeMethods.CreateRectRgn(0, 0, (int)window.ActualWidth, (int)window.ActualHeight);
 			DwmApi.DwmEnableBlurBehindWindow(hwnd, bb);
-
+			DoubanFM.NativeMethods.DeleteObject(bb.hRegionBlur);
+			
 			return true;
 		}
 
