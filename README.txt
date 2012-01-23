@@ -4,6 +4,8 @@
 
 本软件中的音频播放技术使用的是BASS（http://www.un4seen.com/）。
 
+本软件中的频谱显示使用了WPF Sound Visualization Library（http://wpfsvl.codeplex.com/）。
+
 Copyright (C) 2011-2012 K.F.Storm
 
 软件主页：http://www.kfstorm.com/blog/doubanfm
