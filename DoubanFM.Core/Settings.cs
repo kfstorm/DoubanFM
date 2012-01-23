@@ -44,7 +44,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty ProxyHostProperty = DependencyProperty.Register("ProxyHost", typeof(string), typeof(Settings));
 		public static readonly DependencyProperty ProxyPortProperty = DependencyProperty.Register("ProxyPort", typeof(int), typeof(Settings), new PropertyMetadata(8080));
 		public static readonly DependencyProperty AutoBackgroundProperty = DependencyProperty.Register("AutoBackground", typeof(bool), typeof(Settings), new PropertyMetadata(true));
-		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(System.Windows.Media.Color), typeof(Settings), new PropertyMetadata(System.Windows.Media.ColorConverter.ConvertFromString("#FF1960AF")));
+		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(Color), typeof(Settings), new PropertyMetadata(ColorConverter.ConvertFromString("#FF1960AF")));
 		public static readonly DependencyProperty FirstTimeProperty = DependencyProperty.Register("FirstTime", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 		public static readonly DependencyProperty MainWindowFontProperty = DependencyProperty.Register("MainWindowFont", typeof(FontFamily), typeof(Settings), new PropertyMetadata(System.Windows.SystemFonts.MessageFontFamily));
 		public static readonly DependencyProperty ShowBalloonWhenSongChangedProperty = DependencyProperty.Register("ShowBalloonWhenSongChanged", typeof(bool), typeof(Settings), new PropertyMetadata(true));
@@ -54,7 +54,10 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty SearchAlbumProperty = DependencyProperty.Register("SearchAlbum", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 		public static readonly DependencyProperty LocationLeftProperty = DependencyProperty.Register("LocationLeft", typeof(double), typeof(Settings), new PropertyMetadata(double.NaN));
 		public static readonly DependencyProperty LocationTopProperty = DependencyProperty.Register("LocationTop", typeof(double), typeof(Settings), new PropertyMetadata(double.NaN));
-
+		public static readonly DependencyProperty SpectrumColorProperty = DependencyProperty.Register("SpectrumColor", typeof(Color), typeof(Settings), new PropertyMetadata(Colors.White));
+		public static readonly DependencyProperty SpectrumTransparencyProperty = DependencyProperty.Register("SpectrumTransparency", typeof(double), typeof(Settings), new PropertyMetadata(0.0));
+		public static readonly DependencyProperty ShowSpectrumProperty = DependencyProperty.Register("ShowSpectrum", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		
 		#endregion
 
 		/// <summary>
@@ -220,9 +223,9 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 指定的窗口背景色
 		/// </summary>
-		public System.Windows.Media.Color Background
+		public Color Background
 		{
-			get { return (System.Windows.Media.Color)GetValue(BackgroundProperty); }
+			get { return (Color)GetValue(BackgroundProperty); }
 			set { SetValue(BackgroundProperty, value); }
 		}
 		/// <summary>
@@ -298,6 +301,31 @@ namespace DoubanFM.Core
 		{
 			get { return (double)GetValue(LocationTopProperty); }
 			set { SetValue(LocationTopProperty, value); }
+		}
+		/// <summary>
+		/// 指定的频谱颜色
+		/// </summary>
+		public Color SpectrumColor
+		{
+			get { return (Color)GetValue(SpectrumColorProperty); }
+			set { SetValue(SpectrumColorProperty, value); }
+		}
+		/// <summary>
+		/// 频谱透明度
+		/// </summary>
+		public double SpectrumTransparency
+		{
+			get { return (double)GetValue(SpectrumTransparencyProperty); }
+			set { SetValue(SpectrumTransparencyProperty, value); }
+		}
+
+		/// <summary>
+		/// 是否显示频谱
+		/// </summary>
+		public bool ShowSpectrum
+		{
+			get { return (bool)GetValue(ShowSpectrumProperty); }
+			set { SetValue(ShowSpectrumProperty, value); }
 		}
 
 		/// <summary>
@@ -479,7 +507,7 @@ namespace DoubanFM.Core
 			}
 			try
 			{
-				Background = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(info.GetString("Background"));
+				Background = (Color)ColorConverter.ConvertFromString(info.GetString("Background"));
 			}
 			catch
 			{
@@ -557,6 +585,37 @@ namespace DoubanFM.Core
 			{
 				LocationTop = def.LocationTop;
 			}
+			try
+			{
+				SpectrumColor = (Color)ColorConverter.ConvertFromString(info.GetString("SpectrumColor"));
+			}
+			catch
+			{
+				SpectrumColor = def.SpectrumColor;
+			}
+			try
+			{
+				SpectrumTransparency = info.GetDouble("SpectrumTransparency");
+			}
+			catch
+			{
+				SpectrumTransparency = def.SpectrumTransparency;
+			}
+			try
+			{
+				ShowSpectrum = info.GetBoolean("ShowSpectrum");
+			}
+			catch
+			{
+				ShowSpectrum = def.ShowSpectrum;
+			}
+
+			//向下兼容
+			if (!AutoBackground && Background.A != 255)
+			{
+				BackgroundTransparency = 1 - (double)Background.A / 255;
+				Background = Color.FromRgb(Background.R, Background.G, Background.B);
+			}
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -597,6 +656,12 @@ namespace DoubanFM.Core
 			info.AddValue("SearchAlbum", SearchAlbum);
 			info.AddValue("LocationLeft", LocationLeft);
 			info.AddValue("LocationTop", LocationTop);
+			if (SpectrumColor != null)
+			{
+				info.AddValue("SpectrumColor", SpectrumColor.ToString());
+			}
+			info.AddValue("SpectrumTransparency", SpectrumTransparency);
+			info.AddValue("ShowSpectrum", ShowSpectrum);
 		}
 
 		/// <summary>

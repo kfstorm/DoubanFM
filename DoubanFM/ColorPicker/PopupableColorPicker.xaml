@@ -13,7 +13,7 @@ Website : http://www.kfstorm.com
 			 x:Name="UserControl"
 			 d:DesignHeight="300" d:DesignWidth="300">
 	<Grid>
-		<Button BorderBrush="Black" BorderThickness="1" Click="Button_Click" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0">
+		<Button x:Name="button" BorderBrush="Black" BorderThickness="1" Click="Button_Click" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="0">
 			<Button.Background>
 				<DrawingBrush TileMode="Tile" ViewportUnits="Absolute" Viewport="0,0,16,16">
 					<DrawingBrush.Drawing>
@@ -43,8 +43,9 @@ Website : http://www.kfstorm.com
 				</Rectangle.Fill>
 			</Rectangle>
 		</Button>
+		<Rectangle Fill="#7F7F7F7F" Visibility="{Binding IsEnabled, ElementName=UserControl, Converter={StaticResource BoolReverseToVisibilityConverter}}"/>
 		<Popup x:Name="popup" Placement="Top" StaysOpen="False" AllowsTransparency="{Binding MainWindow.AllowsTransparency, Source={x:Static Application.Current}}">
-			<local:ColorPicker Color="{Binding Color, ElementName=UserControl, Mode=TwoWay}" Background="{Binding Background, ElementName=UserControl}"/>
+			<local:ColorPicker Color="{Binding Color, ElementName=UserControl, Mode=TwoWay}" Background="{Binding Background, ElementName=UserControl}" IsAlphaEnabled="{Binding IsAlphaEnabled, ElementName=UserControl, Mode=TwoWay}"/>
 		</Popup>
 	</Grid>
 </UserControl>

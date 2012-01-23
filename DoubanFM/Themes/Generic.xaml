@@ -11,6 +11,9 @@ Website : http://www.kfstorm.com
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="/DoubanFM;component/Theme.xaml"/>
 	</ResourceDictionary.MergedDictionaries>
+
+	<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+	
 	<ControlTemplate x:Key="WindowBaseTemplate" TargetType="{x:Type Window}">
 		<Grid x:Name="MainPanel" Background="{TemplateBinding Background}">
 			<ContentPresenter/>
@@ -288,9 +291,9 @@ Website : http://www.kfstorm.com
 									<TextBlock Grid.Row="2" VerticalAlignment="Center"><Run Text="B"/></TextBlock>
 									<Slider Grid.Row="2" Grid.Column="1" Style="{StaticResource ArgbSliderStyle}" Value="{Binding B, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
 									<TextBox x:Name="PART_TextBoxB" Grid.Row="2" Grid.Column="2" Text="{Binding B, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Style="{StaticResource ArgbAndHexTextBoxStyle}"/>
-									<TextBlock Grid.Row="3" VerticalAlignment="Center"><Run Text="A"/></TextBlock>
-									<Slider Grid.Row="3" Grid.Column="1" Style="{StaticResource ArgbSliderStyle}" Value="{Binding A, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
-									<TextBox x:Name="PART_TextBoxA" Grid.Row="3" Grid.Column="2" Text="{Binding A, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Style="{StaticResource ArgbAndHexTextBoxStyle}"/>
+									<TextBlock Grid.Row="3" VerticalAlignment="Center" Visibility="{Binding Visibility, ElementName=PART_TextBoxA}"><Run Text="A"/></TextBlock>
+									<Slider Grid.Row="3" Grid.Column="1" Style="{StaticResource ArgbSliderStyle}" Value="{Binding A, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{Binding Visibility, ElementName=PART_TextBoxA}"/>
+									<TextBox x:Name="PART_TextBoxA" Grid.Row="3" Grid.Column="2" Text="{Binding A, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Style="{StaticResource ArgbAndHexTextBoxStyle}" Visibility="{Binding IsAlphaEnabled, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"/>
 									<Grid Grid.Row="4" Grid.ColumnSpan="3" Margin="0,2,0,0">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition/>

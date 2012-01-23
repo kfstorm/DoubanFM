@@ -62,7 +62,14 @@ namespace DoubanFM
 			picker.R = picker.Color.R;
 			picker.G = picker.Color.G;
 			picker.B = picker.Color.B;
-			picker.HexString = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", picker.A, picker.R, picker.G, picker.B);
+			if (picker.IsAlphaEnabled)
+			{
+				picker.HexString = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", picker.A, picker.R, picker.G, picker.B);
+			}
+			else
+			{
+				picker.HexString = string.Format("{0:X2}{1:X2}{2:X2}", picker.R, picker.G, picker.B);
+			}
 			
 			picker.RaiseEvent(new RoutedPropertyChangedEventArgs<Color>((Color)e.OldValue, (Color)e.NewValue, ColorChangedEvent));
 
@@ -235,7 +242,7 @@ namespace DoubanFM
 				{
 					string hex = o as string;
 					if (hex == null) return false;
-					if (hex.Length != 8) return false;
+					if (hex.Length != 8 && hex.Length != 6) return false;
 					return hex.All(ch =>
 						{
 							return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f');
@@ -245,13 +252,25 @@ namespace DoubanFM
 		public static void OnHexStringChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			ColorPicker picker = (ColorPicker)d;
-			picker.UpdateColor(Color.FromArgb(
-				byte.Parse(((string)e.NewValue).Substring(0,2), System.Globalization.NumberStyles.HexNumber),
-				byte.Parse(((string)e.NewValue).Substring(2,2), System.Globalization.NumberStyles.HexNumber),
-				byte.Parse(((string)e.NewValue).Substring(4,2), System.Globalization.NumberStyles.HexNumber),
-				byte.Parse(((string)e.NewValue).Substring(6,2), System.Globalization.NumberStyles.HexNumber)),
-				null);
-			picker.RaiseEvent(new RoutedPropertyChangedEventArgs<string>((string)e.OldValue, (string)e.NewValue, HexStringChangedEvent));
+
+			if (((string)e.NewValue).Length == 8 && picker.IsAlphaEnabled)
+			{
+				picker.UpdateColor(Color.FromArgb(
+					byte.Parse(((string)e.NewValue).Substring(0, 2), System.Globalization.NumberStyles.HexNumber),
+					byte.Parse(((string)e.NewValue).Substring(2, 2), System.Globalization.NumberStyles.HexNumber),
+					byte.Parse(((string)e.NewValue).Substring(4, 2), System.Globalization.NumberStyles.HexNumber),
+					byte.Parse(((string)e.NewValue).Substring(6, 2), System.Globalization.NumberStyles.HexNumber)),
+					null);
+				picker.RaiseEvent(new RoutedPropertyChangedEventArgs<string>((string)e.OldValue, (string)e.NewValue, HexStringChangedEvent));
+			}
+			else if (((string)e.NewValue).Length == 6 && !picker.IsAlphaEnabled)
+			{
+				picker.UpdateColor(Color.FromRgb(
+					byte.Parse(((string)e.NewValue).Substring(0, 2), System.Globalization.NumberStyles.HexNumber),
+					byte.Parse(((string)e.NewValue).Substring(2, 2), System.Globalization.NumberStyles.HexNumber),
+					byte.Parse(((string)e.NewValue).Substring(4, 2), System.Globalization.NumberStyles.HexNumber)),
+					null);
+			}
 		}
 
 		public event RoutedPropertyChangedEventHandler<string> HexStringChanged
@@ -267,6 +286,45 @@ namespace DoubanFM
 		}
 
 		public static readonly RoutedEvent HexStringChangedEvent = EventManager.RegisterRoutedEvent("HexStringChanged", RoutingStrategy.Bubble, typeof(RoutedPropertyChangedEventHandler<string>), typeof(ColorPicker));
+
+		#endregion
+
+		#region IsAlphaEnabled
+
+		public bool IsAlphaEnabled
+		{
+			get { return (bool)GetValue(IsAlphaEnabledProperty); }
+			set { SetValue(IsAlphaEnabledProperty, value); }
+		}
+
+		public static readonly DependencyProperty IsAlphaEnabledProperty =
+			DependencyProperty.Register("IsAlphaEnabled", typeof(bool), typeof(ColorPicker), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(OnIsAlphaEnabledChanged)));
+
+		public static void OnIsAlphaEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			ColorPicker picker = (ColorPicker)d;
+			if (!(bool)e.NewValue)
+			{
+				Color color = picker.Color;
+				color.A = 255;
+				picker.UpdateColor(color, null);
+			}
+			picker.RaiseEvent(new RoutedPropertyChangedEventArgs<bool>((bool)e.OldValue, (bool)e.NewValue, IsAlphaEnabledChangedEvent));
+		}
+
+		public event RoutedPropertyChangedEventHandler<bool> IsAlphaEnabledChanged
+		{
+			add
+			{
+				AddHandler(IsAlphaEnabledChangedEvent, value);
+			}
+			remove
+			{
+				RemoveHandler(IsAlphaEnabledChangedEvent, value);
+			}
+		}
+
+		public static readonly RoutedEvent IsAlphaEnabledChangedEvent = EventManager.RegisterRoutedEvent("IsAlphaEnabledChanged", RoutingStrategy.Bubble, typeof(RoutedPropertyChangedEventHandler<bool>), typeof(ColorPicker));
 
 		#endregion
 

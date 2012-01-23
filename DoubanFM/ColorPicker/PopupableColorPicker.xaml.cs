@@ -41,6 +41,18 @@ namespace DoubanFM
 		public static readonly DependencyProperty ColorProperty =
 			DependencyProperty.Register("Color", typeof(Color), typeof(PopupableColorPicker), new FrameworkPropertyMetadata(Colors.White, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+
+
+		public bool IsAlphaEnabled
+		{
+			get { return (bool)GetValue(IsAlphaEnabledProperty); }
+			set { SetValue(IsAlphaEnabledProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for IsAlphaEnabled.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty IsAlphaEnabledProperty =
+			DependencyProperty.Register("IsAlphaEnabled", typeof(bool), typeof(PopupableColorPicker), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
 		#endregion
 
 		private void Button_Click(object sender, RoutedEventArgs e)

@@ -42,29 +42,41 @@ Website : http://www.kfstorm.com
 				<TextBlock VerticalAlignment="Center">主界面字体</TextBlock>
 				<local:FontPicker Grid.Column="1" Font="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Height="24"/>
 			</Grid>
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="80"/>
-					<ColumnDefinition Width="64"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Grid.RowSpan="2" VerticalAlignment="Center">窗口背景</TextBlock>
-				<RadioButton x:Name="RbAugoBackground" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}}">自动</RadioButton>
-				<RadioButton Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}">手动</RadioButton>
-				<Grid Grid.Column="2" IsEnabled="{Binding IsChecked, ElementName=RbAugoBackground}">
+			<GroupBox Header="窗口背景" Margin="0,2">
+				<Grid>
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="120"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<Label VerticalAlignment="Center" Margin="5,0">透明度</Label>
-					<Slider Grid.Column="1" Value="{Binding Settings.BackgroundTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="1"/>
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<TextBlock VerticalAlignment="Center" Margin="5,0">透明度</TextBlock>
+					<Slider Grid.Column="1" Value="{Binding Settings.BackgroundTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="0.99" LargeChange="0.1" SmallChange="0.01"/>
+					<CheckBox Grid.Row="1" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" Margin="5,0">手动指定颜色</CheckBox>
+					<local:PopupableColorPicker Grid.Row="1" Grid.Column="1" Margin="0,5" Height="24" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}" IsAlphaEnabled="False" IsEnabled="{Binding Settings.AutoBackground, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}"/>
 				</Grid>
-				<local:PopupableColorPicker Grid.Row="1" Grid.Column="2" Margin="0,5" Height="24" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}"/>
-			</Grid>
+			</GroupBox>
+			<GroupBox Margin="0,2">
+				<GroupBox.Header>
+					<CheckBox IsChecked="{Binding Settings.ShowSpectrum, Source={StaticResource Player}}">频谱</CheckBox>
+				</GroupBox.Header>
+				<Grid IsEnabled="{Binding Settings.ShowSpectrum, Source={StaticResource Player}}">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="120"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<TextBlock VerticalAlignment="Center" Margin="5,0">透明度</TextBlock>
+					<Slider Grid.Column="1" Value="{Binding Settings.SpectrumTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01"/>
+					<TextBlock Grid.Row="1" VerticalAlignment="Center" Margin="5,0">颜色</TextBlock>
+					<local:PopupableColorPicker Grid.Row="1" Grid.Column="1" Margin="0,5" Height="24" Color="{Binding Settings.SpectrumColor, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}" IsAlphaEnabled="False"/>
+				</Grid>
+			</GroupBox>
 		</StackPanel>
 	</Grid>
 </local:ChildWindowBase>

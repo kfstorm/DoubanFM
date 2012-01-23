@@ -17,11 +17,12 @@ namespace DoubanFM.Bass
 	/// <summary>
 	/// Bass播放器
 	/// </summary>
-	public class BassEngine : INotifyPropertyChanged, IDisposable
+	public class BassEngine : WPFSoundVisualizationLib.ISpectrumPlayer, INotifyPropertyChanged, IDisposable
 	{
 		#region Fields
 		private static BassEngine instance;
 		private readonly DispatcherTimer positionTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
+		private readonly int maxFFT = (int)(Un4seen.Bass.BASSData.BASS_DATA_AVAILABLE | Un4seen.Bass.BASSData.BASS_DATA_FFT4096);
 		private readonly Un4seen.Bass.SYNCPROC endTrackSyncProc;
 		private int sampleFrequency = 44100;
 		private int activeStreamHandle;
@@ -664,6 +665,18 @@ namespace DoubanFM.Bass
 		{
 			if (OpenSucceeded != null)
 				OpenSucceeded(this, EventArgs.Empty);
+		}
+		#endregion
+
+		#region ISpectrumPlayer
+		public bool GetFFTData(float[] fftDataBuffer)
+		{
+			return (Un4seen.Bass.Bass.BASS_ChannelGetData(ActiveStreamHandle, fftDataBuffer, maxFFT)) > 0;
+		}
+
+		public int GetFFTFrequencyIndex(int frequency)
+		{
+			return Un4seen.Bass.Utils.FFTFrequency2Index(frequency, 4096, sampleFrequency);
 		}
 		#endregion
 	}

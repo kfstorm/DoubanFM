@@ -9,8 +9,9 @@ Website : http://www.kfstorm.com
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
 		xmlns:tb="http://www.hardcodet.net/taskbar"
 		xmlns:notify="clr-namespace:DoubanFM.NotifyIcon"
+		xmlns:sound="clr-namespace:WPFSoundVisualizationLib;assembly=WPFSoundVisualizationLib"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:DoubanFM"  xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"  mc:Ignorable="d" x:Class="DoubanFM.DoubanFMWindow" x:Name="Window"
-		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Background="#FF1960AF" Foreground="White" LocationChanged="Window_LocationChanged">
+		Title="豆瓣电台" ResizeMode="CanMinimize" Closed="Window_Closed" WindowStartupLocation="CenterScreen" IsVisibleChanged="Window_IsVisibleChanged" AllowsTransparency="True" Loaded="Window_Loaded" Topmost="{Binding Source={StaticResource Player}, Path=Settings.TopMost}" FontFamily="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Foreground="White" LocationChanged="Window_LocationChanged">
 	<Window.Resources>
 		<Storyboard x:Key="BackgroundColorStoryboard">
 			<ColorAnimation Storyboard.TargetName="Window" Storyboard.TargetProperty="(local:DoubanFMWindow.OriginalBackgroundColor)" Duration="0:0:5" EasingFunction="{StaticResource Smooth}"/>
@@ -179,6 +180,9 @@ Website : http://www.kfstorm.com
 		<Storyboard x:Key="VolumeDirectIn">
 			<DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="1" Duration="0"/>
 		</Storyboard>
+		<local:OpacityToTransparencyConverter x:Key="OpacityToTransparencyConverter"/>
+		<local:ToTransparentColorConverter x:Key="ToTransparentColorConverter"/>
+		<local:TransparencyToOpacityAndPreventFullTransparentConverter x:Key="TransparencyToOpacityAndPreventFullTransparentConverter"/>
 	</Window.Resources>
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="BdVolumeControl">
@@ -198,6 +202,9 @@ Website : http://www.kfstorm.com
 			</TaskbarItemInfo.ThumbButtonInfos>
 		</TaskbarItemInfo>
 	</Window.TaskbarItemInfo>
+	<Window.Background>
+		<SolidColorBrush x:Name="SolidBackground" Color="#FF1960AF" Opacity="{Binding Settings.BackgroundTransparency, Source={StaticResource Player}, Converter={StaticResource TransparencyToOpacityAndPreventFullTransparentConverter}}"/>
+	</Window.Background>
 	<Grid>
 		<Grid.LayoutTransform>
 			<TransformGroup>
@@ -473,6 +480,37 @@ Website : http://www.kfstorm.com
 				</TabControl>
 			</Grid>
 			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent" ClipToBounds="True">
+				<Grid x:Name="SpectrumPanel" Height="50" Margin="-5,0,-5,-15" VerticalAlignment="Bottom" Opacity="{Binding Settings.SpectrumTransparency, Source={StaticResource Player}, Converter={StaticResource OpacityToTransparencyConverter}}" Visibility="{Binding Settings.ShowSpectrum, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}}">
+					<Grid.Effect>
+						<BlurEffect Radius="10"/>
+					</Grid.Effect>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<Rectangle RenderTransformOrigin="0.5,0.5">
+						<Rectangle.RenderTransform>
+							<ScaleTransform ScaleX="-1"/>
+						</Rectangle.RenderTransform>
+						<Rectangle.Fill>
+							<VisualBrush Visual="{Binding ElementName=SpectrumAnalyzer}" Stretch="None" AlignmentX="Right" AlignmentY="Bottom"/>
+						</Rectangle.Fill>
+					</Rectangle>
+					<sound:SpectrumAnalyzer x:Name="SpectrumAnalyzer" Grid.Column="1" BarSpacing="0" PeakStyle="{x:Null}" IsFrequencyScaleLinear="True" Margin="-1,0,0,-1" AveragePeaks="True">
+						<sound:SpectrumAnalyzer.BarStyle>
+							<Style TargetType="{x:Type Rectangle}">
+								<Setter Property="Fill">
+									<Setter.Value>
+										<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" x:Name="BarBrush">
+											<GradientStop Color="{Binding (GradientBrush.GradientStops)[1].Color, Converter={StaticResource ToTransparentColorConverter}, RelativeSource={RelativeSource AncestorType={x:Type LinearGradientBrush}}}" Offset="0"/>
+											<GradientStop Color="{Binding Settings.SpectrumColor, Source={StaticResource Player}}" Offset="0.7"/>
+										</LinearGradientBrush>
+									</Setter.Value>
+								</Setter>
+							</Style>
+						</sound:SpectrumAnalyzer.BarStyle>
+					</sound:SpectrumAnalyzer>
+				</Grid>
 				<Grid Margin="15,10,10,10">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>
@@ -487,7 +525,7 @@ Website : http://www.kfstorm.com
 							<ColumnDefinition Width="2*"/>
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
-						<TextBlock x:Name="ChannelTextBlock" TextTrimming="CharacterEllipsis" Foreground="White" FontSize="14.667" FontStretch="Normal" Text="{Binding Source={StaticResource Player}, Path=CurrentChannel}" />
+						<TextBlock x:Name="ChannelTextBlock" TextTrimming="CharacterEllipsis" Foreground="White" FontSize="14.667" FontStretch="Normal" Text="{Binding CurrentChannel, Source={StaticResource Player}}" />
 						<StackPanel Grid.Column="1" x:Name="WindowStateControls" Orientation="Horizontal" HorizontalAlignment="Right">
 							<Button x:Name="ButtonMinimize" Click="ButtonMinimize_Click" Style="{StaticResource MinimizeStyle}"/>
 							<Border Width="10"/>
@@ -567,8 +605,8 @@ Website : http://www.kfstorm.com
 									<Button Style="{StaticResource ShareTwitterStyle}" Tag="{x:Static core:Share+Sites.Twitter}"/>
 								</StackPanel>
 							</Viewbox>
-							<Button x:Name="BtnCopyUrl" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="分享（点击直接复制地址）" Click="BtnCopyUrl_Click" Visibility="{Binding ShareSetting.EnableOneKeyShare, ElementName=Window, Converter={StaticResource BoolReverseToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
-							<Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="一键分享" Click="BtnOneKeyShare_Click" Visibility="{Binding ShareSetting.EnableOneKeyShare, ElementName=Window, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+							<Button x:Name="BtnCopyUrl" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="分享（点击直接复制地址）" Click="BtnCopyUrl_Click" Visibility="{Binding ShareSetting.EnableOneKeyShare, ConverterParameter={x:Static Visibility.Collapsed}, Converter={StaticResource BoolReverseToVisibilityConverter}, ElementName=Window}"/>
+							<Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="一键分享" Click="BtnOneKeyShare_Click" Visibility="{Binding ShareSetting.EnableOneKeyShare, ConverterParameter={x:Static Visibility.Collapsed}, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Window}"/>
 						</Grid>
 						<Button x:Name="BtnDownloadSearch" Grid.Column="1" Style="{StaticResource SearchStyle}" ToolTip="搜索下载" Click="BtnDownloadSearch_Click"/>
 						<CheckBox x:Name="CheckBoxShowLyrics" Grid.Column="2" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{StaticResource ShowLyricsStyle}"/>
@@ -597,9 +635,9 @@ Website : http://www.kfstorm.com
 							<ColumnDefinition Width="20"/>
 							<ColumnDefinition Width="38"/>
 						</Grid.ColumnDefinitions>
-						<CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{StaticResource LikeStyle}" IsChecked="{Binding Path=IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsLikedEnabled}" />
-						<Button Grid.Column="2" x:Name="ButtonNever" Style="{StaticResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding Source={StaticResource Player}, Path=IsNeverEnabled}" />
-						<CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{StaticResource PauseStyle}" IsChecked="{Binding Path=IsPlaying, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" />
+						<CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{StaticResource LikeStyle}" IsChecked="{Binding IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding IsLikedEnabled, Source={StaticResource Player}}" />
+						<Button Grid.Column="2" x:Name="ButtonNever" Style="{StaticResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding IsNeverEnabled, Source={StaticResource Player}}" />
+						<CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{StaticResource PauseStyle}" IsChecked="{Binding IsPlaying, Converter={StaticResource BoolReverseConverter}, Source={StaticResource Player}}" />
 						<Button Grid.Column="6" x:Name="ButtonNext" Click="ButtonNext_Click" Style="{StaticResource NextStyle}"/>
 					</Grid>
 				</Grid>

@@ -93,6 +93,7 @@ namespace DoubanFM
 			if (value is SolidColorBrush)
 			{
 				SolidColorBrush brush = new SolidColorBrush(ColorFunctions.ReviseBrighter(new HSLColor(((SolidColorBrush)value).Color), ColorFunctions.ProgressBarReviseParameter).ToRGB());
+				brush.Opacity = ((SolidColorBrush)value).Opacity;
 				if (brush.CanFreeze) brush.Freeze();
 				return brush;
 			}
@@ -278,40 +279,33 @@ namespace DoubanFM
 			return 1.0 - (double)value;
 		}
 	}
-
 	/// <summary>
-	/// 根据原始背景色和透明度确定最终背景
+	/// 将透明度转换为不透明度的转换器，避免完全透明
 	/// </summary>
-	public class OriginalBackgroundColorAndBackgroundTransparencyToBackgroundConverter : IMultiValueConverter
-	{
-		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			Color color = (Color)values[0];
-			double transparency = (double)values[1];
-			color.A = (byte)(int)(color.A * (1 - transparency));
-			if (color.A == 0) color.A = 1;		//不能全透明
-			SolidColorBrush brush = new SolidColorBrush(color);
-			if (brush.CanFreeze) brush.Freeze();
-			return brush;
-		}
-
-		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
-		{
-			throw new NotImplementedException();
-		}
-	}
-	/// <summary>
-	/// 避免完全透明
-	/// </summary>
-	public class PreventFullTransparentConverter : IValueConverter
+	public class TransparencyToOpacityAndPreventFullTransparentConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			Color oldColor = (Color)value;
-			Color newColor = oldColor;
-			if (newColor.A == 0)
-				newColor.A = 1;
-			return newColor;
+			if ((double)value == 1)
+				return 0.01;
+			return 1.0 - (double)value;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			if ((double)value == 0)
+				return 0.99;
+			return 1.0 - (double)value;
+		}
+	}
+	/// <summary>
+	/// 将任意颜色转换为RGB值相同的透明色
+	/// </summary>
+	public class ToTransparentColorConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			return Color.FromArgb(0, ((Color)value).R, ((Color)value).G, ((Color)value).B);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

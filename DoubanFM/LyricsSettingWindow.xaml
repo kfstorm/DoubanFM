@@ -73,12 +73,12 @@ Website : http://www.kfstorm.com
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
 						<CheckBox x:Name="CbAutoForeground" Margin="20,2" VerticalAlignment="Center" IsChecked="{Binding LyricsSetting.AutoForeground, ElementName=Window}" Click="CbAutoForeground_Click">自动</CheckBox>
-						<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}"/>
+						<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}" IsEnabled="{Binding LyricsSetting.AutoForeground, ElementName=Window, Converter={StaticResource BoolReverseConverter}}"/>
 					</Grid>
 					<TextBlock Grid.Row="7" VerticalAlignment="Center">描边色</TextBlock>
 					<local:PopupableColorPicker Grid.Row="7" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
 					<TextBlock Grid.Row="8" VerticalAlignment="Center">阴影色</TextBlock>
-					<local:PopupableColorPicker Grid.Row="8" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
+					<local:PopupableColorPicker Grid.Row="8" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}" IsAlphaEnabled="False"/>
 				</Grid>
 			</StackPanel>
 		</GroupBox>

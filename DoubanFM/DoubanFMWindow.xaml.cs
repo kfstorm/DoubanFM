@@ -111,24 +111,6 @@ namespace DoubanFM
 			DependencyProperty.Register("OriginalBackgroundColor", typeof(Color), typeof(DoubanFMWindow), new UIPropertyMetadata(ColorConverter.ConvertFromString("#FF1960AF")));
 
 		/// <summary>
-		/// 背景透明度
-		/// </summary>
-		public double BackgroundTransparency
-		{
-			get { return (double)GetValue(BackgroundTransparencyProperty); }
-			set { SetValue(BackgroundTransparencyProperty, value); }
-		}
-
-		public static readonly DependencyProperty BackgroundTransparencyProperty =
-			DependencyProperty.Register("BackgroundTransparency", typeof(double), typeof(DoubanFMWindow), new UIPropertyMetadata(0.0), new ValidateValueCallback((value) =>
-			{
-				double v = (double)value;
-				return v >= 0 && v <= 1;
-			}));
-
-
-
-		/// <summary>
 		/// 自动更换背景
 		/// </summary>
 		public bool AutoBackground
@@ -143,8 +125,6 @@ namespace DoubanFM
 					DoubanFMWindow window = (DoubanFMWindow)d;
 					window.OnAutoBackgroundChanged((bool)e.OldValue, (bool)e.NewValue);
 				})));
-
-
 
 		/// <summary>
 		/// 音量设置
@@ -359,11 +339,6 @@ namespace DoubanFM
 			binding.Path = new PropertyPath("Settings.AutoBackground");
 			this.SetBinding(AutoBackgroundProperty, binding);
 
-			binding = new Binding();
-			binding.Source = _player;
-			binding.Path = new PropertyPath("Settings.BackgroundTransparency");
-			this.SetBinding(BackgroundTransparencyProperty, binding);
-			
 			if (_player.Settings.AutoBackground)
 			{
 				OnAutoBackgroundChanged(!_player.Settings.AutoBackground, _player.Settings.AutoBackground);
@@ -374,26 +349,17 @@ namespace DoubanFM
 		{
 			if (!newValue)
 			{
-				Background = new SolidColorBrush();
-				System.Windows.Data.Binding binding = new System.Windows.Data.Binding();
+				Binding binding = new Binding();
 				binding.Source = _player.Settings;
 				binding.Path = new PropertyPath(Settings.BackgroundProperty);
-				binding.Converter = new PreventFullTransparentConverter();
-				System.Windows.Data.BindingOperations.SetBinding(Background, SolidColorBrush.ColorProperty, binding);
+				BindingOperations.SetBinding(SolidBackground, SolidColorBrush.ColorProperty, binding);
 			}
 			else
 			{
-				MultiBinding binding = new MultiBinding();
-				Binding binding1 = new Binding();
-				binding1.Source = this;
-				binding1.Path = new PropertyPath(DoubanFMWindow.OriginalBackgroundColorProperty);
-				Binding binding2 = new Binding();
-				binding2.Source = this;
-				binding2.Path = new PropertyPath(DoubanFMWindow.BackgroundTransparencyProperty);
-				binding.Bindings.Add(binding1);
-				binding.Bindings.Add(binding2);
-				binding.Converter = new OriginalBackgroundColorAndBackgroundTransparencyToBackgroundConverter();
-				this.SetBinding(BackgroundProperty, binding);
+				Binding binding = new Binding();
+				binding.Source = this;
+				binding.Path = new PropertyPath(DoubanFMWindow.OriginalBackgroundColorProperty);
+				BindingOperations.SetBinding(SolidBackground, SolidColorBrush.ColorProperty, binding);
 			}
 		}
 
@@ -415,6 +381,7 @@ namespace DoubanFM
 
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine");
 				InitBassEngine();
+				SpectrumAnalyzer.RegisterSoundPlayer(BassEngine.Instance);
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine完成");
 
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表");
