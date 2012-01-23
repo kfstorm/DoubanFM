@@ -493,7 +493,7 @@ Website : http://www.kfstorm.com
 							<ScaleTransform ScaleX="-1"/>
 						</Rectangle.RenderTransform>
 						<Rectangle.Fill>
-							<VisualBrush Visual="{Binding ElementName=SpectrumAnalyzer}" Stretch="None" AlignmentX="Right" AlignmentY="Bottom"/>
+							<VisualBrush Visual="{Binding ElementName=SpectrumAnalyzer}" Stretch="None" AlignmentX="Left" AlignmentY="Bottom"/>
 						</Rectangle.Fill>
 					</Rectangle>
 					<sound:SpectrumAnalyzer x:Name="SpectrumAnalyzer" Grid.Column="1" BarSpacing="0" PeakStyle="{x:Null}" IsFrequencyScaleLinear="True" Margin="-1,0,0,-1" AveragePeaks="True">
