@@ -53,7 +53,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 各种无法在XAML里直接启动的Storyboard
 		/// </summary>
-		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, DjChannelClickStoryboard, VolumeFadeOut, VolumeFadeIn, VolumeDirectIn;
+		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, DjChannelClickStoryboard, VolumeFadeOut, VolumeFadeIn, VolumeDirectIn, EnhancementsPanelShow, EnhancementsPanelHide;
 		/// <summary>
 		/// 滑动封面的计时器
 		/// </summary>
@@ -565,6 +565,8 @@ namespace DoubanFM
 			VolumeFadeOut = (Storyboard)FindResource("VolumeFadeOut");
 			VolumeFadeIn = (Storyboard)FindResource("VolumeFadeIn");
 			VolumeDirectIn = (Storyboard)FindResource("VolumeDirectIn");
+			EnhancementsPanelShow = (Storyboard)FindResource("EnhancementsPanelShow");
+			EnhancementsPanelHide = (Storyboard)FindResource("EnhancementsPanelHide");
 		}
 
 		/// <summary>
@@ -1360,6 +1362,11 @@ namespace DoubanFM
 			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(BassEngine.Instance.ChannelPosition);
 			Slider.Value = BassEngine.Instance.ChannelPosition.TotalSeconds;
 			if (_lyricsWindow != null) _lyricsWindow.Refresh(BassEngine.Instance.ChannelPosition);
+			if (isEnhancementsPanelShowing && DateTime.Now - lastTimeRightPanelMouseMove >= TimeSpan.FromSeconds(10))
+			{
+				isEnhancementsPanelShowing = false;
+				EnhancementsPanelHide.Begin();
+			}
 		}
 		///// <summary>
 		///// 在网络不好时有用
@@ -1744,6 +1751,8 @@ namespace DoubanFM
 				ShowLyrics();
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示歌词完成");
 			}
+
+			lastTimeRightPanelMouseMove = DateTime.Now;
 		}
 
 		private void ButtonGeneralSetting_Click(object sender, RoutedEventArgs e)
@@ -1934,6 +1943,19 @@ namespace DoubanFM
 		{
 			_player.Settings.LocationLeft = this.Left;
 			_player.Settings.LocationTop = this.Top;
+		}
+
+		private DateTime lastTimeRightPanelMouseMove = DateTime.MaxValue;
+		private bool isEnhancementsPanelShowing = true;
+
+		private void RightPanel_MouseMove(object sender, MouseEventArgs e)
+		{
+			lastTimeRightPanelMouseMove = DateTime.Now;
+			if (!isEnhancementsPanelShowing)
+			{
+				isEnhancementsPanelShowing = true;
+				EnhancementsPanelShow.Begin();
+			}
 		}
 
 		#endregion

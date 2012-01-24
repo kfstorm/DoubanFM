@@ -183,6 +183,16 @@ Website : http://www.kfstorm.com
 		<local:OpacityToTransparencyConverter x:Key="OpacityToTransparencyConverter"/>
 		<local:ToTransparentColorConverter x:Key="ToTransparentColorConverter"/>
 		<local:TransparencyToOpacityAndPreventFullTransparentConverter x:Key="TransparencyToOpacityAndPreventFullTransparentConverter"/>
+		<Storyboard x:Key="EnhancementsPanelShow">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="EnhancementsPanel">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="1"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="EnhancementsPanelHide">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="EnhancementsPanel">
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
 	</Window.Resources>
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="BdVolumeControl">
@@ -479,7 +489,7 @@ Website : http://www.kfstorm.com
 					</TabItem>
 				</TabControl>
 			</Grid>
-			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent" ClipToBounds="True">
+			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent" ClipToBounds="True" MouseMove="RightPanel_MouseMove">
 				<Grid x:Name="SpectrumPanel" Height="50" Margin="-5,0,-5,-15" VerticalAlignment="Bottom" Opacity="{Binding Settings.SpectrumTransparency, Source={StaticResource Player}, Converter={StaticResource OpacityToTransparencyConverter}}" Visibility="{Binding Settings.ShowSpectrum, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}}">
 					<Grid.Effect>
 						<BlurEffect Radius="10"/>
@@ -558,7 +568,7 @@ Website : http://www.kfstorm.com
 							<TextBlock x:Name="Album" VerticalAlignment="Center" FontSize="20" Foreground="White" />
 						</Viewbox>
 					</Grid>
-					<Grid Grid.Row="2" Margin="0,5" HorizontalAlignment="Right" Height="24" ClipToBounds="True">
+					<Grid x:Name="EnhancementsPanel" Grid.Row="2" Margin="0,5" HorizontalAlignment="Right" Height="24" ClipToBounds="True">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition/>
 							<ColumnDefinition Width="Auto"/>
