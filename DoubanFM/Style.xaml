@@ -173,6 +173,9 @@ Website : http://www.kfstorm.com
 						<Trigger Property="IsChecked" Value="True">
 							<Setter Property="StrokeThickness" TargetName="path" Value="20"/>
 						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="StrokeThickness" TargetName="path" Value="0"/>
+						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
@@ -183,6 +186,9 @@ Website : http://www.kfstorm.com
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="#7F222222"/>
 			</Trigger>
 		</Style.Triggers>
 	</Style>

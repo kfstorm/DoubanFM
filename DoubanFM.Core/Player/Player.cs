@@ -83,9 +83,9 @@ namespace DoubanFM.Core
 					SetValue(CurrentChannelProperty, value);
 					RaiseStopedEvent();
 					Settings.LastChannel = CurrentChannel;
-					if (CurrentChannel.IsSpecial || CurrentChannel.IsDj || CurrentSong == null || lastChannel.IsDj)
+					//if (CurrentChannel.IsSpecial || CurrentChannel.IsDj || CurrentSong == null || lastChannel.IsDj)
 						NewPlayList();
-					else Skip();
+					//else Skip();
 					RaiseCurrentChannelChangedEvent();
 				}
 			}
@@ -538,9 +538,13 @@ namespace DoubanFM.Core
 						if (!ps.CurrentChannel.IsDj && pl.Count == 0) TakeABreak();
 						else break;
 					}
-					if (!ps.CurrentChannel.IsDj)
-						ChangePlayListSongs(pl);
-					ChangeCurrentSong();
+					PlayerState ps2 = GetPlayerState();
+					if (ps.CurrentChannel == ps2.CurrentChannel)
+					{
+						if (!ps.CurrentChannel.IsDj)
+							ChangePlayListSongs(pl);
+						ChangeCurrentSong();
+					}
 					_skipping = false;
 				}
 			}));
@@ -569,9 +573,13 @@ namespace DoubanFM.Core
 							if (!ps.CurrentChannel.IsDj && pl.Count == 0) TakeABreak();
 							else break;
 						}
-						if (!ps.CurrentChannel.IsDj)
-							ChangePlayListSongs(pl);
-						ChangeCurrentSong();
+						PlayerState ps2 = GetPlayerState();
+						if (ps.CurrentChannel == ps2.CurrentChannel)
+						{
+							if (!ps.CurrentChannel.IsDj)
+								ChangePlayListSongs(pl);
+							ChangeCurrentSong();
+						}
 						_skipping = false;
 					}
 				}));
@@ -601,7 +609,11 @@ namespace DoubanFM.Core
 						if (pl.Count == 0) TakeABreak();
 						else break;
 					}
-					ChangePlayListSongs(pl);
+					PlayerState ps2 = GetPlayerState();
+					if (ps.CurrentChannel == ps2.CurrentChannel)
+					{
+						ChangePlayListSongs(pl);
+					}
 				}
 			}));
 		}
@@ -630,7 +642,11 @@ namespace DoubanFM.Core
 						if (pl.Count == 0) TakeABreak();
 						else break;
 					}
-					ChangePlayListSongs(pl);
+					PlayerState ps2 = GetPlayerState();
+					if (ps.CurrentChannel == ps2.CurrentChannel)
+					{
+						ChangePlayListSongs(pl);
+					}
 				}
 			}));
 		}
@@ -663,8 +679,12 @@ namespace DoubanFM.Core
 						if (pl.Count == 0) TakeABreak();
 						else break;
 					}
-					ChangePlayListSongs(pl);
-					ChangeCurrentSong();
+					PlayerState ps2 = GetPlayerState();
+					if (ps.CurrentChannel == ps2.CurrentChannel)
+					{
+						ChangePlayListSongs(pl);
+						ChangeCurrentSong();
+					}					
 					_neverring = false;
 				}
 			}));
@@ -705,7 +725,11 @@ namespace DoubanFM.Core
 							if (pl.Count == 0) TakeABreak();
 							else break;
 						}
-						ChangePlayListSongs(pl);
+						PlayerState ps2 = GetPlayerState();
+						if (ps.CurrentChannel == ps2.CurrentChannel)
+						{
+							ChangePlayListSongs(pl);
+						}
 					}
 				}));
 			}
@@ -805,8 +829,12 @@ namespace DoubanFM.Core
 					if (pl.Count == 0) TakeABreak();
 					else break;
 				}
-				ChangePlayListSongs(pl);
-				ChangeCurrentSong();
+				PlayerState ps2 = GetPlayerState();
+				if (ps.CurrentChannel == ps2.CurrentChannel)
+				{
+					ChangePlayListSongs(pl);
+					ChangeCurrentSong();
+				}
 			}));
 		}
 		/// <summary>

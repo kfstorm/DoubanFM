@@ -993,7 +993,11 @@ namespace DoubanFM
 					case Commands.None:
 						break;
 					case Commands.Like:
-						hotKey.OnHotKey += delegate { Like(); };
+						hotKey.OnHotKey += delegate {
+							Like();
+							if (_player.CurrentSong != null && _player.IsLikedEnabled && _player.IsLiked)
+								NotifyIcon.ShowCustomBalloon(new PopupLiked(), System.Windows.Controls.Primitives.PopupAnimation.Fade, 1000);
+						};
 						break;
 					case Commands.Unlike:
 						hotKey.OnHotKey += delegate { Unlike(); };
