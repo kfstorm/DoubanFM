@@ -473,7 +473,7 @@ Website : http://www.kfstorm.com
 									<Button x:Name="BtnHelp" Height="40" Click="BtnHelp_Click" Style="{StaticResource HelpStyle}"/>
 								</StackPanel>
 								<TextBlock Grid.Row="1" HorizontalAlignment="Center">第三方客户端</TextBlock>
-								<Label Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">1.7.3</Label>
+								<Label Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">1.7.4</Label>
 								<Button x:Name="CheckUpdate" Grid.Row="3" Click="CheckUpdate_Click" Style="{StaticResource CheckUpdateStyle}"/>
 								<Grid Grid.Row="4" Height="40">
 									<Grid.ColumnDefinitions>
@@ -634,7 +634,7 @@ Website : http://www.kfstorm.com
 						<TextBlock x:Name="CurrentTime" FontSize="18" Foreground="White" Text="00:00"/>
 						<TextBlock Grid.Column="1" x:Name="TotalTime" FontSize="18" HorizontalAlignment="Right" Foreground="White" Text="00:00"/>
 					</Grid>
-					<Slider x:Name="Slider" Grid.Row="4" Margin="0,5" Style="{StaticResource SliderStyleForProgress}" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=Window}"/>
+					<Slider x:Name="Slider" Grid.Row="4" Margin="0,5" Style="{StaticResource SliderStyleForProgress}" Foreground="{Binding Background, Converter={StaticResource WindowBackgroundToSliderForegroundConverter}, ElementName=Window}" Minimum="0" Maximum="1"/>
 					<Grid Grid.Row="5" HorizontalAlignment="Center" Height="50" VerticalAlignment="Bottom">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="38" />
