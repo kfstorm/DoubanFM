@@ -1183,7 +1183,7 @@ namespace DoubanFM
 			TotalTime.Text = TimeSpanToStringConverter.QuickConvert(_player.CurrentSong.Length);
 			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(TimeSpan.Zero);
 			Slider.Minimum = 0;
-			Slider.Maximum = _player.CurrentSong.Length.TotalSeconds;
+			Slider.Maximum = Math.Max(1.0, _player.CurrentSong.Length.TotalSeconds);
 			Slider.Value = 0;
 
 			BassEngine.Instance.OpenUrlAsync(_player.CurrentSong.FileUrl);
@@ -1941,8 +1941,11 @@ namespace DoubanFM
 
 		private void Window_LocationChanged(object sender, EventArgs e)
 		{
-			_player.Settings.LocationLeft = this.Left;
-			_player.Settings.LocationTop = this.Top;
+			if (this.Left + this.ActualWidth > 0 && this.Top + this.ActualHeight > 0 && this.IsLoaded && this.WindowState != System.Windows.WindowState.Minimized && this.IsVisible)
+			{
+				_player.Settings.LocationLeft = this.Left;
+				_player.Settings.LocationTop = this.Top;
+			}
 		}
 
 		private DateTime lastTimeRightPanelMouseMove = DateTime.MaxValue;
