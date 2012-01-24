@@ -307,7 +307,12 @@ namespace DoubanFM
 			{
 				Color color = picker.Color;
 				color.A = 255;
+				picker.HexString = string.Format("{0:X2}{1:X2}{2:X2}", picker.R, picker.G, picker.B);
 				picker.UpdateColor(color, null);
+			}
+			else
+			{
+				picker.HexString = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", picker.A, picker.R, picker.G, picker.B);
 			}
 			picker.RaiseEvent(new RoutedPropertyChangedEventArgs<bool>((bool)e.OldValue, (bool)e.NewValue, IsAlphaEnabledChangedEvent));
 		}

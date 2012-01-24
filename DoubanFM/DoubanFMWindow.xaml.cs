@@ -69,7 +69,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 命令
 		/// </summary>
-		public enum Commands { None, Like, Unlike, LikeUnlike, Never, PlayPause, Next, ShowMinimize, ShowHide, ShowLyrics, HideLyrics, ShowHideLyrics, OneKeyShare }
+		public enum Commands { None, Like, Unlike, LikeUnlike, Never, PlayPause, Next, ShowMinimize, ShowHide, ShowLyrics, HideLyrics, ShowHideLyrics, OneKeyShare, SearchDownload, VolumeUp, VolumeDown, MuteSwitch }
 		/// <summary>
 		/// 热键
 		/// </summary>
@@ -830,6 +830,38 @@ namespace DoubanFM
 				new Share(_player, site).Go();
 			}
 		}
+		/// <summary>
+		/// 搜索下载
+		/// </summary>
+		public void SearchDownload()
+		{
+			if (_player.CurrentSong != null)
+				DownloadSearch.Search(_player.CurrentSong.Title, _player.CurrentSong.Artist, _player.CurrentSong.Album);
+		}
+
+		/// <summary>
+		/// 音量增
+		/// </summary>
+		public void VolumeUp()
+		{
+			_player.Settings.Volume = Math.Min(1.0, _player.Settings.Volume + 0.1);
+		}
+
+		/// <summary>
+		/// 音量减
+		/// </summary>
+		public void VolumeDown()
+		{
+			_player.Settings.Volume = Math.Max(0.0, _player.Settings.Volume - 0.1);
+		}
+
+		/// <summary>
+		/// 静音切换
+		/// </summary>
+		public void MuteSwitch()
+		{
+			_player.Settings.IsMuted = !_player.Settings.IsMuted;
+		}
 
 		#endregion
 
@@ -996,7 +1028,17 @@ namespace DoubanFM
 					case Commands.OneKeyShare:
 						hotKey.OnHotKey += delegate { OneKeyShare(); };
 						break;
-					default:
+					case Commands.SearchDownload:
+						hotKey.OnHotKey += delegate { SearchDownload(); };
+						break;
+					case Commands.VolumeUp:
+						hotKey.OnHotKey += delegate { VolumeUp(); };
+						break;
+					case Commands.VolumeDown:
+						hotKey.OnHotKey += delegate { VolumeDown(); };
+						break;
+					case Commands.MuteSwitch:
+						hotKey.OnHotKey += delegate { MuteSwitch(); };
 						break;
 				}
 			}
@@ -1859,8 +1901,7 @@ namespace DoubanFM
 
 		private void BtnDownloadSearch_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			if (_player.CurrentSong != null)
-				DownloadSearch.Search(_player.CurrentSong.Title, _player.CurrentSong.Artist, _player.CurrentSong.Album);
+			SearchDownload();
 		}
 
 		private void ButtonRefreshCaptcha_Click(object sender, RoutedEventArgs e)

@@ -18,53 +18,47 @@ Website : http://www.kfstorm.com
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 		</Style>
 	</Window.Resources>
-	<Grid Width="300" Margin="10">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="20"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
-		<local:HotKeySettingControl Grid.Row="0" Command="Like">
-			<TextBlock Width="100" VerticalAlignment="Center">加红心（不取消）</TextBlock>
+	<StackPanel Margin="10" Width="300" >
+		<local:HotKeySettingControl Command="Like" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="加红心（不取消）"/></TextBlock>
 		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Grid.Row="2" Command="Never">
-			<TextBlock Width="100" VerticalAlignment="Center">不再播放</TextBlock>
+		<local:HotKeySettingControl Command="Never" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="不再播放"/></TextBlock>
 		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Grid.Row="4" Command="PlayPause">
-			<TextBlock Width="100" VerticalAlignment="Center">播放/暂停</TextBlock>
+		<local:HotKeySettingControl Command="PlayPause" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="播放/暂停"/></TextBlock>
 		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Grid.Row="6" Command="Next">
-			<TextBlock Width="100" VerticalAlignment="Center">下一首</TextBlock>
+		<local:HotKeySettingControl Command="Next" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="下一首"/></TextBlock>
 		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Grid.Row="8" Command="ShowMinimize">
-			<TextBlock Width="100" VerticalAlignment="Center">显示/最小化</TextBlock>
+		<TextBlock Margin="0,2">（多媒体键“播放/暂停”和“下一首”已自动设置）</TextBlock>
+		<local:HotKeySettingControl Command="ShowMinimize" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="显示/最小化"/></TextBlock>
 		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Grid.Row="10" Command="ShowHide">
-			<TextBlock Width="100" VerticalAlignment="Center">显示/隐藏 窗口</TextBlock>
+		<local:HotKeySettingControl Command="ShowHide" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="显示/隐藏 窗口"/></TextBlock>
 		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Grid.Row="12" Command="ShowHideLyrics">
-			<TextBlock Width="100" VerticalAlignment="Center">显示/隐藏 歌词</TextBlock>
+		<local:HotKeySettingControl Command="ShowHideLyrics" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="显示/隐藏 歌词"/></TextBlock>
 		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Grid.Row="14" Command="OneKeyShare">
-			<TextBlock Width="100" VerticalAlignment="Center">一键分享</TextBlock>
+		<local:HotKeySettingControl Command="OneKeyShare" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="一键分享"/></TextBlock>
 		</local:HotKeySettingControl>
-		<StackPanel Grid.Row="16" HorizontalAlignment="Center" Orientation="Horizontal">
+		<local:HotKeySettingControl Command="SearchDownload" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="搜索下载"/></TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Command="VolumeUp" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="音量增大"/></TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Command="VolumeDown" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="音量减小"/></TextBlock>
+		</local:HotKeySettingControl>
+		<local:HotKeySettingControl Command="MuteSwitch" Height="20" Margin="0,2">
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="静音切换"/></TextBlock>
+		</local:HotKeySettingControl>
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="40" Margin="0,2">
 			<Button x:Name="Ok" Click="Ok_Click" Style="{DynamicResource OKButtonStyle}"/>
 			<Button x:Name="Cancel" Margin="20,0,0,0" Click="Cancel_Click" Style="{DynamicResource CancelButtonStyle}"/>
 		</StackPanel>
-	</Grid>
+	</StackPanel>
 </local:ChildWindowBase>

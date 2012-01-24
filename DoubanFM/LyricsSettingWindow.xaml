@@ -23,7 +23,10 @@ Website : http://www.kfstorm.com
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
 			<CheckBox Grid.ColumnSpan="2" x:Name="CbShowLyrics" Checked="CbShowLyrics_Checked" Unchecked="CbShowLyrics_Unchecked" Margin="0,2">显示歌词</CheckBox>
-			<CheckBox Grid.Row="1" x:Name="CbEnableDesktopLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableDesktopLyrics, ElementName=Window}" Checked="CbEnableDesktopLyrics_Checked" Unchecked="CbEnableDesktopLyrics_Unchecked" Margin="0,2">桌面歌词</CheckBox>
+			<StackPanel Grid.Row="1" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}">
+				<CheckBox x:Name="CbEnableDesktopLyrics" IsChecked="{Binding Path=LyricsSetting.EnableDesktopLyrics, ElementName=Window}" Checked="CbEnableDesktopLyrics_Checked" Unchecked="CbEnableDesktopLyrics_Unchecked" Margin="0,2">桌面歌词</CheckBox>
+				<Label Padding="0">（会占用一定CPU）</Label>
+			</StackPanel>
 			<CheckBox Grid.Row="1" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked" Margin="0,2">内嵌歌词</CheckBox>
 		</Grid>
 		<GroupBox Header="桌面歌词设置" Margin="0,2">
