@@ -492,7 +492,7 @@ Website : http://www.kfstorm.com
 			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent" ClipToBounds="True" MouseMove="RightPanel_MouseMove">
 				<Grid x:Name="SpectrumPanel" Height="50" Margin="-5,0,-5,-15" VerticalAlignment="Bottom" Opacity="{Binding Settings.SpectrumTransparency, Source={StaticResource Player}, Converter={StaticResource OpacityToTransparencyConverter}}" Visibility="{Binding Settings.ShowSpectrum, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}}">
 					<Grid.Effect>
-						<BlurEffect Radius="10"/>
+						<BlurEffect Radius="6"/>
 					</Grid.Effect>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition/>
