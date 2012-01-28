@@ -224,8 +224,8 @@ namespace DoubanFM
 					parameters.Add(new UrlParameter("SystemInformation", SystemInformation));
 					parameters.Add(new UrlParameter("Exception", ExceptionMessage));
 					parameters.Add(new UrlParameter("UserMessage", userMessage));
-					//string result = new ConnectionBase().Post("http://www.kfstorm.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
-					string result = new ConnectionBase().Post("http://localhost/phpStudy/ProductManager/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
+					string result = new ConnectionBase().Post("http://www.kfstorm.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
+					//string result = new ConnectionBase().Post("http://localhost/phpStudy/ProductManager/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
 					Dispatcher.BeginInvoke(new Action(() =>
 						{
 							this.Close();
