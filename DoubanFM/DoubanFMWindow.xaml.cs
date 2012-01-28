@@ -210,10 +210,6 @@ namespace DoubanFM
 			InitNotifyIcon();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化托盘图标完成");
 
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer");
-			InitTimers();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer完成");
-
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件");
 			CheckMappedFile();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件完成");
@@ -384,6 +380,10 @@ namespace DoubanFM
 				SpectrumAnalyzer.RegisterSoundPlayer(BassEngine.Instance);
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine完成");
 
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer");
+				InitTimers();
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer完成");
+
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表");
 				ShowChannels();
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表完成");
@@ -431,11 +431,10 @@ namespace DoubanFM
 			});
 			_player.CurrentSongChanged += new EventHandler((o, e) =>
 			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲已改变，当前歌曲为" + _player.CurrentSong);
 				if (_player.CurrentSong != null)
 				{
-					if (BassEngine.Instance.IsPlaying)
-						BassEngine.Instance.Stop();
+					Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲已改变，当前歌曲为" + _player.CurrentSong);
+					BassEngine.Instance.Stop();
 					stoped = false;
 					VolumeDirectIn.Begin();
 					Update();
