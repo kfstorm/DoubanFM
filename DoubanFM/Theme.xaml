@@ -477,8 +477,8 @@ Website : http://www.kfstorm.com
 		<Setter Property="Padding" Value="2,0,0,0"/>
 	</Style>
 	<Style TargetType="{x:Type ProgressBar}">
-		<Setter Property="Background" Value="#7F000000"/>
-		<Setter Property="Foreground" Value="Gray"/>
+		<Setter Property="Background" Value="#3F000000"/>
+		<Setter Property="Foreground" Value="#BFFFFFFF"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ProgressBar}">

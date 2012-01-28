@@ -41,9 +41,7 @@ namespace DoubanFM
 				Debug.WriteLine("**********************************************************************");
 				Debug.WriteLine("豆瓣电台出现错误：" + App.GetPreciseTime(DateTime.Now));
 				Debug.WriteLine("**********************************************************************");
-				Debug.WriteLine("错误信息：");
-				Debug.WriteLine(ExceptionWindow.GetExceptionMessage(e.ExceptionObject));
-
+				
 				Dispatcher.Invoke(new Action(() =>
 					{
 						try

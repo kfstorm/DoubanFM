@@ -76,6 +76,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -101,6 +102,7 @@
     <Compile Include="ColorPicker\PopupableColorPicker.xaml.cs">
       <DependentUpon>PopupableColorPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WMI\DisplayConfiguration.cs" />
     <Compile Include="ExceptionWindow.xaml.cs">
       <DependentUpon>ExceptionWindow.xaml</DependentUpon>
     </Compile>
@@ -154,6 +156,10 @@
     </Compile>
     <Compile Include="WindowBase.cs" />
     <Compile Include="WindowShadow.cs" />
+    <Compile Include="WMI\OperatingSystem.cs" />
+    <Compile Include="WMI\PhysicalMemory.cs" />
+    <Compile Include="WMI\Processor.cs" />
+    <Compile Include="WMI\SoundDevice.cs" />
     <Page Include="ColorPicker\PopupableColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

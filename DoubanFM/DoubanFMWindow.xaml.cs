@@ -210,6 +210,10 @@ namespace DoubanFM
 			InitNotifyIcon();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化托盘图标完成");
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer");
+			InitTimers();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer完成");
+
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件");
 			CheckMappedFile();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件完成");
@@ -256,10 +260,14 @@ namespace DoubanFM
 				this.Top = _player.Settings.LocationTop;
 
 				//防止调整分辨率后窗口超出屏幕
-				if (this.Left + 50 > SystemParameters.FullPrimaryScreenWidth)
-					this.Left = SystemParameters.FullPrimaryScreenWidth - 50;
-				if (this.Top + 50 > SystemParameters.FullPrimaryScreenHeight)
-					this.Top = SystemParameters.FullPrimaryScreenHeight - 50;
+				if (this.Left + 50 > SystemParameters.WorkArea.Right)
+					this.Left = SystemParameters.WorkArea.Right - 50;
+				if (this.Left + 50 > SystemParameters.WorkArea.Right)
+					this.Left = SystemParameters.WorkArea.Right - 50;
+				if (this.Top + 50 > SystemParameters.WorkArea.Bottom)
+					this.Top = SystemParameters.WorkArea.Bottom - 50;
+				if (this.Top + 50 > SystemParameters.WorkArea.Bottom)
+					this.Top = SystemParameters.WorkArea.Bottom - 50;
 			}
 		}
 		/// <summary>
@@ -379,10 +387,6 @@ namespace DoubanFM
 				InitBassEngine();
 				SpectrumAnalyzer.RegisterSoundPlayer(BassEngine.Instance);
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine完成");
-
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer");
-				InitTimers();
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer完成");
 
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表");
 				ShowChannels();
@@ -573,10 +577,6 @@ namespace DoubanFM
 		/// </summary>
 		void InitTimers()
 		{
-			_progressRefreshTimer = new DispatcherTimer();
-			_progressRefreshTimer.Interval = new TimeSpan(1000000);
-			_progressRefreshTimer.Tick += new EventHandler(timer_Tick);
-			_progressRefreshTimer.Start();
 			//_forceNextTimer = new DispatcherTimer();
 			//_forceNextTimer.Interval = new TimeSpan(600000000);
 			//_forceNextTimer.Tick += new EventHandler(_forceNextTimer_Tick);
@@ -1751,6 +1751,12 @@ namespace DoubanFM
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示歌词完成");
 			}
 
+			//开始刷新歌曲进度
+			_progressRefreshTimer = new DispatcherTimer();
+			_progressRefreshTimer.Interval = new TimeSpan(1000000);
+			_progressRefreshTimer.Tick += new EventHandler(timer_Tick);
+			_progressRefreshTimer.Start();
+
 			lastTimeRightPanelMouseMove = DateTime.Now;
 		}
 
@@ -1940,7 +1946,7 @@ namespace DoubanFM
 
 		private void Window_LocationChanged(object sender, EventArgs e)
 		{
-			if (this.Left + this.ActualWidth > 0 && this.Top + this.ActualHeight > 0 && this.IsLoaded && this.WindowState != System.Windows.WindowState.Minimized && this.IsVisible)
+			if (this.Left + this.ActualWidth > 0 && this.Top + this.ActualHeight > 0 && this.Left <= SystemParameters.WorkArea.Right && this.Top <= SystemParameters.WorkArea.Bottom && this.IsLoaded && this.WindowState != System.Windows.WindowState.Minimized && this.IsVisible)
 			{
 				_player.Settings.LocationLeft = this.Left;
 				_player.Settings.LocationTop = this.Top;
