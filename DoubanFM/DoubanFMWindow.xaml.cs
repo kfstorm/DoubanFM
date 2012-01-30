@@ -1160,13 +1160,31 @@ namespace DoubanFM
 			}
 
 			if (_player.Settings.ShowLyrics) DownloadLyrics();
+
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[1]).KeyFrames[0].Value = _player.CurrentSong.Title;
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[2]).KeyFrames[0].Value = _player.CurrentSong.Artist;
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = _player.CurrentSong.Album;
 			ChangeSongInfoStoryboard.Begin();
+
 			string stringA = _player.CurrentSong.Title + " - " + _player.CurrentSong.Artist;
 			string stringB = "    豆瓣电台 - " + _player.CurrentChannel.Name;
 			this.Title = stringA + stringB;
+
+			string song = _player.CurrentSong.ToString();
+			if (song.Length <= 63)							//Windows限制托盘图标的提示信息最长为63个字符
+			{
+				NotifyIcon.ToolTipText = song;
+			}
+			else if (this.Title.Length <= 63)
+			{
+				NotifyIcon.ToolTipText = this.Title;
+			}
+			else
+			{
+				string dotdotdot = "...";
+				string text = song.Substring(0, Math.Max(0, 63 - dotdotdot.Length));
+				NotifyIcon.ToolTipText = text + dotdotdot;
+			}
 
 			if (_player.Settings.ShowBalloonWhenSongChanged && !NotifyIcon.TrayPopupResolved.IsOpen && !NotifyIcon.TrayToolTipResolved.IsOpen)
 			{
