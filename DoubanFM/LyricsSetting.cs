@@ -22,18 +22,18 @@ namespace DoubanFM
 	[Serializable]
 	public class LyricsSetting : DependencyObject, ISerializable
 	{
-		public static readonly DependencyProperty FontFamilyProperty = DependencyProperty.Register("FontFamily", typeof(FontFamily), typeof(LyricsSetting), new PropertyMetadata(SystemFonts.MessageFontFamily));
-		public static readonly DependencyProperty FontSizeProperty = DependencyProperty.Register("FontSize", typeof(double), typeof(LyricsSetting), new PropertyMetadata(48.0));
-		public static readonly DependencyProperty FontWeightProperty = DependencyProperty.Register("FontWeight", typeof(int), typeof(LyricsSetting), new PropertyMetadata(System.Windows.FontWeights.Normal.ToOpenTypeWeight()));
-		public static readonly DependencyProperty StrokeWeightProperty = DependencyProperty.Register("StrokeWeight", typeof(double), typeof(LyricsSetting), new PropertyMetadata(1.0));
-		public static readonly DependencyProperty BottomMarginProperty = DependencyProperty.Register("BottomMargin", typeof(double), typeof(LyricsSetting), new PropertyMetadata(0.03));
+		public static readonly DependencyProperty FontFamilyProperty = DependencyProperty.Register("FontFamily", typeof(FontFamily), typeof(LyricsSetting), new PropertyMetadata(new FontFamily("微软雅黑,华文新魏,楷体")));
+		public static readonly DependencyProperty FontSizeProperty = DependencyProperty.Register("FontSize", typeof(double), typeof(LyricsSetting), new PropertyMetadata(32.0));
+		public static readonly DependencyProperty FontWeightProperty = DependencyProperty.Register("FontWeight", typeof(int), typeof(LyricsSetting), new PropertyMetadata(System.Windows.FontWeights.ExtraBlack.ToOpenTypeWeight()));
+		public static readonly DependencyProperty StrokeWeightProperty = DependencyProperty.Register("StrokeWeight", typeof(double), typeof(LyricsSetting), new PropertyMetadata(2.0));
+		public static readonly DependencyProperty BottomMarginProperty = DependencyProperty.Register("BottomMargin", typeof(double), typeof(LyricsSetting), new PropertyMetadata(0.0));
 		public static readonly DependencyProperty EnableDesktopLyricsProperty = DependencyProperty.Register("EnableDesktopLyrics", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(true));
 		public static readonly DependencyProperty EnableEmbeddedLyricsProperty = DependencyProperty.Register("EnableEmbeddedLyrics", typeof(bool), typeof(LyricsSetting));
 		public static readonly DependencyProperty OpacityProperty = DependencyProperty.Register("Opacity", typeof(double), typeof(LyricsSetting), new PropertyMetadata(1.0));
-		public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register("Foreground", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Colors.White));
-		public static readonly DependencyProperty StrokeColorProperty = DependencyProperty.Register("StrokeColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Colors.Black));
-		public static readonly DependencyProperty ShadowColorProperty = DependencyProperty.Register("ShadowColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Colors.Black));
-		public static readonly DependencyProperty AutoForegroundProperty = DependencyProperty.Register("AutoForeground", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(true));
+		public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register("Foreground", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Color.FromArgb(0x40, 0, 0, 0)));
+		public static readonly DependencyProperty StrokeColorProperty = DependencyProperty.Register("StrokeColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Color.FromArgb(0xFF, 0, 0xFF, 0xFF)));
+		public static readonly DependencyProperty ShadowColorProperty = DependencyProperty.Register("ShadowColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Color.FromArgb(0xFF, 0, 0, 0xFF)));
+		public static readonly DependencyProperty AutoForegroundProperty = DependencyProperty.Register("AutoForeground", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
 		public static readonly DependencyProperty SingleLineLyricsProperty = DependencyProperty.Register("SingleLineLyrics", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
 		
 		/// <summary>
