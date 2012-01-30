@@ -222,9 +222,9 @@ Website : http://www.kfstorm.com
 			</TransformGroup>
 		</Grid.LayoutTransform>
 		<tb:TaskbarIcon x:Name="NotifyIcon" IconSource="icon.ico" PopupActivation="RightClick" ToolTipText="豆瓣电台" TrayLeftMouseUp="NotifyIcon_TrayLeftMouseUp">
-			<!--<tb:TaskbarIcon.TrayToolTip>
+			<tb:TaskbarIcon.TrayToolTip>
 				<notify:BalloonSongInfo/>
-			</tb:TaskbarIcon.TrayToolTip>-->
+			</tb:TaskbarIcon.TrayToolTip>
 			<tb:TaskbarIcon.TrayPopup>
 				<notify:PopupControlPanel/>
 			</tb:TaskbarIcon.TrayPopup>
