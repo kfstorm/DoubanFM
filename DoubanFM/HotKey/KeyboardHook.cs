@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using DoubanFM.Interop;
 
 namespace DoubanFM
 {
@@ -13,9 +14,9 @@ namespace DoubanFM
 	/// </summary>
 	public class KeyboardHook : IDisposable
 	{
-		NativeMethods.HookType _hookType = NativeMethods.HookType.WH_KEYBOARD_LL;
+		WH _hookType = WH.KEYBOARD_LL;
 		IntPtr _hookHandle = IntPtr.Zero;
-		NativeMethods.HookProc _hookFunction = null;
+		HOOKPROC _hookFunction = null;
 
 
 		// events
@@ -25,7 +26,7 @@ namespace DoubanFM
 
 		public KeyboardHook()
 		{
-			_hookFunction = new NativeMethods.HookProc(HookCallback);
+			_hookFunction = new HOOKPROC(HookCallback);
 			Install();
 		}
 
@@ -35,7 +36,7 @@ namespace DoubanFM
 		}
 
 		// hook function called by system
-		private IntPtr HookCallback(int code, IntPtr wParam, ref NativeMethods.KBDLLHOOKSTRUCT lParam)
+		private IntPtr HookCallback(int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam)
 		{
 			if (code < 0)
 				return NativeMethods.CallNextHookEx(_hookHandle, code, wParam, ref lParam);

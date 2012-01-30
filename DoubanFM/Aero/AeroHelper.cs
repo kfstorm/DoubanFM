@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Interop;
+using DoubanFM.Interop;
 
 namespace DoubanFM.Aero
 {
@@ -18,8 +19,8 @@ namespace DoubanFM.Aero
 			if (hwnd == IntPtr.Zero)
 				throw new InvalidOperationException("The Window must be shown before extending glass.");
 
-			DwmApi.MARGINS margins = new DwmApi.MARGINS((int)margin.Left, (int)margin.Top, (int)margin.Right, (int)margin.Bottom);
-			DwmApi.DwmExtendFrameIntoClientArea(hwnd, margins);
+			MARGINS margins = new MARGINS((int)margin.Left, (int)margin.Top, (int)margin.Right, (int)margin.Bottom);
+			NativeMethods.DwmExtendFrameIntoClientArea(hwnd, margins);
 
 			return true;
 		}
@@ -33,12 +34,12 @@ namespace DoubanFM.Aero
 			if (hwnd == IntPtr.Zero)
 				throw new InvalidOperationException("The Window must be shown before extending glass.");
 
-			DwmApi.DWM_BLURBEHIND bb = new DwmApi.DWM_BLURBEHIND();
-			bb.dwFlags = DwmApi.DWM_BLURBEHIND.DWM_BB_ENABLE | DwmApi.DWM_BLURBEHIND.DWM_BB_BLURREGION;
+			DWM_BLURBEHIND bb = new DWM_BLURBEHIND();
+			bb.dwFlags = DWM_BLURBEHIND.DWM_BB_ENABLE | DWM_BLURBEHIND.DWM_BB_BLURREGION;
 			bb.fEnable = true;
-			bb.hRegionBlur = DoubanFM.NativeMethods.CreateRectRgn(0, 0, (int)window.ActualWidth, (int)window.ActualHeight);
-			DwmApi.DwmEnableBlurBehindWindow(hwnd, bb);
-			DoubanFM.NativeMethods.DeleteObject(bb.hRegionBlur);
+			bb.hRegionBlur = NativeMethods.CreateRectRgn(0, 0, (int)window.ActualWidth, (int)window.ActualHeight);
+			NativeMethods.DwmEnableBlurBehindWindow(hwnd, bb);
+			NativeMethods.DeleteObject(bb.hRegionBlur);
 			
 			return true;
 		}
@@ -51,7 +52,7 @@ namespace DoubanFM.Aero
 				{
 					try
 					{
-						return DwmApi.DwmIsCompositionEnabled();
+						return NativeMethods.DwmIsCompositionEnabled();
 					}
 					catch
 					{

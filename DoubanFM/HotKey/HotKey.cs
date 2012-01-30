@@ -14,6 +14,7 @@ using System.Windows.Interop;
 using System.Collections;
 using System.Runtime.Serialization;
 using System.Windows.Input;
+using DoubanFM.Interop;
 
 namespace DoubanFM
 {

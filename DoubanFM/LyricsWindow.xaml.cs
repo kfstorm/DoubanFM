@@ -20,6 +20,7 @@ using DoubanFM.Core;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Globalization;
+using DoubanFM.Interop;
 
 namespace DoubanFM
 {
@@ -73,12 +74,12 @@ namespace DoubanFM
 			this.SourceInitialized += new EventHandler((o, e) =>
 			{
 				var hwnd = new WindowInteropHelper(this).Handle;
-				int extendedStyle = NativeMethods.GetWindowLong(hwnd, NativeMethods.GWL_EXSTYLE);
-				NativeMethods.SetWindowLong(hwnd, NativeMethods.GWL_EXSTYLE, extendedStyle
+				int extendedStyle = NativeMethods.GetWindowLong(hwnd, GWL.EXSTYLE);
+				NativeMethods.SetWindowLong(hwnd, GWL.EXSTYLE, extendedStyle
 					//鼠标穿透
-					| NativeMethods.WS_EX_TRANSPARENT
+					| WS.EX.TRANSPARENT
 					//在按下Alt+Tab时不显示
-					| NativeMethods.WS_EX_TOOLWINDOW);
+					| WS.EX.TOOLWINDOW);
 			});
 
 			UpdateForegroundSetting();

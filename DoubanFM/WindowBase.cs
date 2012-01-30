@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Interop;
+using DoubanFM.Interop;
 
 namespace DoubanFM
 {
@@ -79,8 +80,8 @@ namespace DoubanFM
 
 		private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
-			if (msg == Aero.DwmApi.DWMMessages.WM_DWMCOMPOSITIONCHANGED
-				|| msg == Aero.DwmApi.DWMMessages.WM_DWMNCRENDERINGCHANGED)
+			if (msg == WM.DWMCOMPOSITIONCHANGED
+				|| msg == WM.DWMNCRENDERINGCHANGED)
 			{
 				if (AeroGlassCompositionChanged != null)
 				{

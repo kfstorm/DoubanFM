@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using DoubanFM.Interop;
 
 namespace DoubanFM
 {
@@ -31,9 +32,6 @@ namespace DoubanFM
 
 		private Window m_target;
 
-		static readonly int GWL_EXSTYLE = (-20);
-		static readonly int WS_EX_TRANSPARENT = 0x0020;
-		
 		public WindowShadow(Window target)
 		{
 			m_target = target;
@@ -154,10 +152,10 @@ namespace DoubanFM
 			wnd.SourceInitialized += new EventHandler((o, e) =>
 			{
 				var hwnd = new WindowInteropHelper(wnd).Handle;
-				int extendedStyle = NativeMethods.GetWindowLong(hwnd, GWL_EXSTYLE);
-				NativeMethods.SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle
+				int extendedStyle = NativeMethods.GetWindowLong(hwnd, GWL.EXSTYLE);
+				NativeMethods.SetWindowLong(hwnd, GWL.EXSTYLE, extendedStyle
 					//鼠标穿透
-					| WS_EX_TRANSPARENT);
+					| WS.EX.TRANSPARENT);
 			});
 			
 			// set initial height to 0 so that the window doesn't "pop in" from a larger size
@@ -242,12 +240,23 @@ namespace DoubanFM
 		{
 			try
 			{
-				m_wndT.Show();
-				m_wndL.Show();
-				m_wndB.Show();
-				m_wndR.Show();
+				//m_wndT.Show();
+				//m_wndL.Show();
+				//m_wndB.Show();
+				//m_wndR.Show();
+				ShowShowdowWinow(m_wndT);
+				ShowShowdowWinow(m_wndL);
+				ShowShowdowWinow(m_wndB);
+				ShowShowdowWinow(m_wndR);
 			}
 			catch { }
+		}
+
+		private void ShowShowdowWinow(Window shadow)
+		{
+			shadow.Show();
+			//保证阴影窗口始终和目标窗口的Z序相邻，防止有时其他窗口覆盖在目标窗口上时阴影窗口会覆盖其他窗口。
+			NativeMethods.SetWindowPos(new WindowInteropHelper(shadow).Handle, new WindowInteropHelper(m_target).Handle, 0, 0, 0, 0, SWP.SHOWWINDOW| SWP.NOACTIVATE| SWP.NOOWNERZORDER| SWP.NOREPOSITION| SWP.NOMOVE| SWP.NOSIZE);
 		}
 
 		/// <summary>
