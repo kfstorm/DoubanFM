@@ -1984,6 +1984,11 @@ namespace DoubanFM
 			}
 		}
 
+		private void BtnDonate_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			Core.UrlHelper.OpenLink("http://me.alipay.com/kfstorm");
+		}
+
 		#endregion
 
 	}

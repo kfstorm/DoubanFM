@@ -479,9 +479,11 @@ Website : http://www.kfstorm.com
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition/>
 										<ColumnDefinition/>
+										<ColumnDefinition/>
 									</Grid.ColumnDefinitions>
 									<Button x:Name="Feedback" Click="Feedback_Click" Style="{StaticResource FeedbackStyle}"/>
-									<Button x:Name="VisitOfficialWebsite" Grid.Column="1" Click="VisitOfficialWebsite_Click" Style="{StaticResource DoubanFMOfficialWebsiteStyle}"/>
+									<Button x:Name="BtnDonate" Grid.Column="1" Style="{StaticResource DonateStyle}" Click="BtnDonate_Click"/>
+									<Button x:Name="VisitOfficialWebsite" Grid.Column="2" Click="VisitOfficialWebsite_Click" Style="{StaticResource DoubanFMOfficialWebsiteStyle}"/>
 								</Grid>
 								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011-2012 K.F.Storm</Label>
 							</Grid>
