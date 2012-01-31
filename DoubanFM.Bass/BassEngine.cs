@@ -35,7 +35,7 @@ namespace DoubanFM.Bass
 		private bool inChannelSet;
 		private bool inChannelTimerUpdate;
 		private Thread onlineFileWorker;
-		enum PendingOperation { None = 0, Play, Pause, Stop };
+		enum PendingOperation { None = 0, Play, Pause };
 		private PendingOperation pendingOperation = PendingOperation.None;
 		private double volume;
 		private bool isMuted;
@@ -162,14 +162,10 @@ namespace DoubanFM.Bass
 				CanStop = false;
 				CanPlay = false;
 				CanPause = false;
-				pendingOperation = PendingOperation.None;
-			}
-			else
-			{
-				pendingOperation = PendingOperation.Stop;
 			}
 
 			FreeCurrentStream();
+			pendingOperation = PendingOperation.None;
 		}
 
 		/// <summary>
@@ -222,6 +218,7 @@ namespace DoubanFM.Bass
 			openningFile = filename;
 			Debug.WriteLine("已调用BassEngine.OpenFile()");
 			Stop();
+			pendingOperation = PendingOperation.None;
 
 			int handle = Un4seen.Bass.Bass.BASS_StreamCreateFile(filename, 0, 0, Un4seen.Bass.BASSFlag.BASS_SAMPLE_FLOAT | Un4seen.Bass.BASSFlag.BASS_STREAM_PRESCAN);
 
@@ -255,9 +252,6 @@ namespace DoubanFM.Bass
 					case PendingOperation.Pause:
 						Pause();
 						break;
-					case PendingOperation.Stop:
-						Stop();
-						break;
 					default:
 						break;
 				}
@@ -278,6 +272,7 @@ namespace DoubanFM.Bass
 			Debug.WriteLine("已调用BassEngine.OpenUrlAsync()");
 
 			Stop();
+			pendingOperation = PendingOperation.None;
 
 			onlineFileWorker = new Thread(new ThreadStart(() =>
 				{
@@ -317,9 +312,6 @@ namespace DoubanFM.Bass
 											break;
 										case PendingOperation.Pause:
 											Pause();
-											break;
-										case PendingOperation.Stop:
-											Stop();
 											break;
 										default:
 											break;

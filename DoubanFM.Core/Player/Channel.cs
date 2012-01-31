@@ -126,7 +126,7 @@ namespace DoubanFM.Core
 		
 		public object Clone()
 		{
-			return new Channel(Id, Name, ProgramId, Context);
+			return this.MemberwiseClone();
 		}
 
 		public override string ToString()
@@ -148,8 +148,6 @@ namespace DoubanFM.Core
 				return false;
 			if (Object.ReferenceEquals(this, other))
 				return true;
-			if (this.GetType() != other.GetType())
-				return false;
 			return Id == other.Id && Name == other.Name &&
 				((string.IsNullOrEmpty(ProgramId) && string.IsNullOrEmpty(other.ProgramId)) || ProgramId == other.ProgramId) &&
 				((string.IsNullOrEmpty(Context) && string.IsNullOrEmpty(other.Context)) || Context == other.Context);

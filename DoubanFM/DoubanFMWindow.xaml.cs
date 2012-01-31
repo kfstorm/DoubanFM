@@ -171,10 +171,10 @@ namespace DoubanFM
 			}));
 		
 
-		/// <summary>
-		/// 记录最后一次切歌的时间
-		/// </summary>
-		private DateTime _lastTimeChangeSong = DateTime.MaxValue;
+		///// <summary>
+		///// 记录最后一次切歌的时间
+		///// </summary>
+		//private DateTime _lastTimeChangeSong = DateTime.MaxValue;
 
 		public bool SaveSettings = true;
 
@@ -1048,13 +1048,17 @@ namespace DoubanFM
 				}
 			}
 		}
+
+		Song downloadingLyrics = null;
 		/// <summary>
 		/// 下载歌词
 		/// </summary>
 		void DownloadLyrics()
 		{
 			if (_player == null || _player.CurrentSong == null) return;
-			Song song = _player.CurrentSong;
+			if (_player.CurrentSong == downloadingLyrics) return;
+			Song song = (Song)_player.CurrentSong.Clone();
+			downloadingLyrics = song;
 			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
 			{
 				Lyrics lyrics = LyricsAssistant.GetLyrics(song.Artist, song.Title);

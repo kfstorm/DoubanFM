@@ -14,7 +14,7 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// 歌曲
 	/// </summary>
-	public class Song : ICloneable
+	public class Song : ICloneable, IEquatable<Song>
 	{
 		/// <summary>
 		/// 音乐文件URL
@@ -103,24 +103,7 @@ namespace DoubanFM.Core
 
 		public object Clone()
 		{
-			Song song = new Song();
-			song.FileUrl = FileUrl;
-			song.Title = Title;
-			song.Artist = Artist;
-			song.Album = Album;
-			song.Company = Company;
-			song.Picture = Picture;
-			song.Length = new TimeSpan((long)Length.TotalMilliseconds * 10000L);
-			song.PublicTime = PublicTime;
-			song.AlbumInfo = AlbumInfo;
-			song.SSId = SSId;
-			song.Rate = Rate;
-			song.SourceUrl = SourceUrl;
-			song.Type = Type;
-			song.SongId = SongId;
-			song.AlbumId = AlbumId;
-			song.Like = Like;
-			return song;
+			return this.MemberwiseClone();
 		}
 
 		public override string ToString()
@@ -132,6 +115,39 @@ namespace DoubanFM.Core
 			sb.Append(" - ");
 			sb.Append(Album);
 			return sb.ToString();
+		}
+
+		public bool Equals(Song other)
+		{
+			if (Object.ReferenceEquals(other, null))
+				return false;
+			if (Object.ReferenceEquals(this, other))
+				return true;
+			return this.FileUrl == other.FileUrl;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as Song);
+		}
+
+		public override int GetHashCode()
+		{
+			if (FileUrl == null) return 0;
+			return FileUrl.GetHashCode();
+		}
+
+		public static bool operator ==(Song lhs, Song rhs)
+		{
+			if (Object.ReferenceEquals(lhs, null))
+				if (Object.ReferenceEquals(rhs, null))
+					return true;
+				else return false;
+			return lhs.Equals(rhs);
+		}
+		public static bool operator !=(Song lhs, Song rhs)
+		{
+			return !(lhs == rhs);
 		}
 	}
 }
