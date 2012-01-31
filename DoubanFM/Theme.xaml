@@ -354,6 +354,7 @@ Website : http://www.kfstorm.com
 			</Setter.Value>
 		</Setter>
 		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Margin" Value="2"/>
 	</Style>
 	<ControlTemplate x:Key="HorizontalSliderControlTemplate" TargetType="{x:Type Slider}">
 		<Grid>

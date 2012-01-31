@@ -262,10 +262,6 @@ namespace DoubanFM
 				//防止调整分辨率后窗口超出屏幕
 				if (this.Left + 50 > SystemParameters.WorkArea.Right)
 					this.Left = SystemParameters.WorkArea.Right - 50;
-				if (this.Left + 50 > SystemParameters.WorkArea.Right)
-					this.Left = SystemParameters.WorkArea.Right - 50;
-				if (this.Top + 50 > SystemParameters.WorkArea.Bottom)
-					this.Top = SystemParameters.WorkArea.Bottom - 50;
 				if (this.Top + 50 > SystemParameters.WorkArea.Bottom)
 					this.Top = SystemParameters.WorkArea.Bottom - 50;
 			}
@@ -1968,10 +1964,15 @@ namespace DoubanFM
 
 		private void Window_LocationChanged(object sender, EventArgs e)
 		{
-			if (this.Left + this.ActualWidth > 0 && this.Top + this.ActualHeight > 0 && this.Left <= SystemParameters.WorkArea.Right && this.Top <= SystemParameters.WorkArea.Bottom && this.IsLoaded && this.WindowState != System.Windows.WindowState.Minimized && this.IsVisible)
+			//if (this.Left + this.ActualWidth > 0 && this.Top + this.ActualHeight > 0 && this.Left <= SystemParameters.WorkArea.Right && this.Top <= SystemParameters.WorkArea.Bottom && this.IsLoaded && this.WindowState != System.Windows.WindowState.Minimized && this.IsVisible)
 			{
-				_player.Settings.LocationLeft = this.Left;
-				_player.Settings.LocationTop = this.Top;
+				if (!this.RestoreBounds.IsEmpty)
+				{
+					//_player.Settings.LocationLeft = this.Left;
+					//_player.Settings.LocationTop = this.Top;
+					_player.Settings.LocationLeft = this.RestoreBounds.Left;
+					_player.Settings.LocationTop = this.RestoreBounds.Top;
+				}
 			}
 		}
 

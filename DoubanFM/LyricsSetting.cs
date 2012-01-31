@@ -26,7 +26,10 @@ namespace DoubanFM
 		public static readonly DependencyProperty FontSizeProperty = DependencyProperty.Register("FontSize", typeof(double), typeof(LyricsSetting), new PropertyMetadata(32.0));
 		public static readonly DependencyProperty FontWeightProperty = DependencyProperty.Register("FontWeight", typeof(int), typeof(LyricsSetting), new PropertyMetadata(System.Windows.FontWeights.ExtraBlack.ToOpenTypeWeight()));
 		public static readonly DependencyProperty StrokeWeightProperty = DependencyProperty.Register("StrokeWeight", typeof(double), typeof(LyricsSetting), new PropertyMetadata(2.0));
+		public static readonly DependencyProperty TopMarginProperty = DependencyProperty.Register("TopMargin", typeof(double), typeof(LyricsSetting), new PropertyMetadata(0.0));
 		public static readonly DependencyProperty BottomMarginProperty = DependencyProperty.Register("BottomMargin", typeof(double), typeof(LyricsSetting), new PropertyMetadata(0.0));
+		public static readonly DependencyProperty LeftMarginProperty = DependencyProperty.Register("LeftMargin", typeof(double), typeof(LyricsSetting), new PropertyMetadata(0.05));
+		public static readonly DependencyProperty RightMarginProperty = DependencyProperty.Register("RightMargin", typeof(double), typeof(LyricsSetting), new PropertyMetadata(0.05));
 		public static readonly DependencyProperty EnableDesktopLyricsProperty = DependencyProperty.Register("EnableDesktopLyrics", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(true));
 		public static readonly DependencyProperty EnableEmbeddedLyricsProperty = DependencyProperty.Register("EnableEmbeddedLyrics", typeof(bool), typeof(LyricsSetting));
 		public static readonly DependencyProperty OpacityProperty = DependencyProperty.Register("Opacity", typeof(double), typeof(LyricsSetting), new PropertyMetadata(1.0));
@@ -35,7 +38,9 @@ namespace DoubanFM
 		public static readonly DependencyProperty ShadowColorProperty = DependencyProperty.Register("ShadowColor", typeof(Color), typeof(LyricsSetting), new PropertyMetadata(Color.FromArgb(0xFF, 0, 0, 0xFF)));
 		public static readonly DependencyProperty AutoForegroundProperty = DependencyProperty.Register("AutoForeground", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
 		public static readonly DependencyProperty SingleLineLyricsProperty = DependencyProperty.Register("SingleLineLyrics", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
-		
+		public static readonly DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register("HorizontalAlignment", typeof(HorizontalAlignment), typeof(LyricsSetting), new PropertyMetadata(HorizontalAlignment.Center));
+		public static readonly DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register("VerticalAlignment", typeof(VerticalAlignment), typeof(LyricsSetting), new PropertyMetadata(VerticalAlignment.Bottom));
+
 		/// <summary>
 		/// 字体
 		/// </summary>
@@ -69,12 +74,36 @@ namespace DoubanFM
 			set { SetValue(StrokeWeightProperty, value); }
 		}
 		/// <summary>
+		/// 顶部边距
+		/// </summary>
+		public double TopMargin
+		{
+			get { return (double)GetValue(TopMarginProperty); }
+			set { SetValue(TopMarginProperty, value); }
+		}
+		/// <summary>
 		/// 底部边距
 		/// </summary>
 		public double BottomMargin
 		{
 			get { return (double)GetValue(BottomMarginProperty); }
 			set { SetValue(BottomMarginProperty, value); }
+		}
+		/// <summary>
+		/// 左边距
+		/// </summary>
+		public double LeftMargin
+		{
+			get { return (double)GetValue(LeftMarginProperty); }
+			set { SetValue(LeftMarginProperty, value); }
+		}
+		/// <summary>
+		/// 右边距
+		/// </summary>
+		public double RightMargin
+		{
+			get { return (double)GetValue(RightMarginProperty); }
+			set { SetValue(RightMarginProperty, value); }
 		}
 		/// <summary>
 		/// 是否开启桌面歌词
@@ -143,6 +172,24 @@ namespace DoubanFM
 		}
 
 		/// <summary>
+		/// 水平对齐方式
+		/// </summary>
+		public HorizontalAlignment HorizontalAlignment
+		{
+			get { return (HorizontalAlignment)GetValue(HorizontalAlignmentProperty); }
+			set { SetValue(HorizontalAlignmentProperty, value); }
+		}
+
+		/// <summary>
+		/// 垂直对齐方式
+		/// </summary>
+		public VerticalAlignment VerticalAlignment
+		{
+			get { return (VerticalAlignment)GetValue(VerticalAlignmentProperty); }
+			set { SetValue(VerticalAlignmentProperty, value); }
+		}
+
+		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
 		private static string _dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
@@ -175,7 +222,7 @@ namespace DoubanFM
 			{
 				if (!Directory.Exists(_dataFolder))
 					Directory.CreateDirectory(_dataFolder);
-				using (FileStream stream = File.OpenWrite(Path.Combine(_dataFolder,"LyricsSetting.dat")))
+				using (FileStream stream = File.OpenWrite(Path.Combine(_dataFolder, "LyricsSetting.dat")))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					formatter.Serialize(stream, this);
@@ -225,11 +272,35 @@ namespace DoubanFM
 			}
 			try
 			{
+				TopMargin = info.GetDouble("TopMargin");
+			}
+			catch
+			{
+				TopMargin = def.TopMargin;
+			}
+			try
+			{
 				BottomMargin = info.GetDouble("BottomMargin");
 			}
 			catch
 			{
 				BottomMargin = def.BottomMargin;
+			}
+			try
+			{
+				LeftMargin = info.GetDouble("LeftMargin");
+			}
+			catch
+			{
+				LeftMargin = def.LeftMargin;
+			}
+			try
+			{
+				RightMargin = info.GetDouble("RightMargin");
+			}
+			catch
+			{
+				RightMargin = def.RightMargin;
 			}
 			try
 			{
@@ -295,6 +366,26 @@ namespace DoubanFM
 			{
 				SingleLineLyrics = def.SingleLineLyrics;
 			}
+			try
+			{
+				HorizontalAlignment = (HorizontalAlignment)info.GetValue("HorizontalAlignment", typeof(HorizontalAlignment));
+				if (HorizontalAlignment == System.Windows.HorizontalAlignment.Stretch)
+					HorizontalAlignment = def.HorizontalAlignment;
+			}
+			catch
+			{
+				HorizontalAlignment = def.HorizontalAlignment;
+			}
+			try
+			{
+				VerticalAlignment = (VerticalAlignment)info.GetValue("VerticalAlignment", typeof(VerticalAlignment));
+				if (VerticalAlignment == System.Windows.VerticalAlignment.Stretch)
+					VerticalAlignment = def.VerticalAlignment;
+			}
+			catch
+			{
+				VerticalAlignment = def.VerticalAlignment;
+			}
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -306,7 +397,10 @@ namespace DoubanFM
 			info.AddValue("FontSize", FontSize);
 			info.AddValue("FontWeight", FontWeight);
 			info.AddValue("StrokeWeight", StrokeWeight);
+			info.AddValue("TopMargin", TopMargin);
 			info.AddValue("BottomMargin", BottomMargin);
+			info.AddValue("LeftMargin", LeftMargin);
+			info.AddValue("RightMargin", RightMargin);
 			info.AddValue("EnableDesktopLyrics", EnableDesktopLyrics);
 			info.AddValue("EnableEmbeddedLyrics", EnableEmbeddedLyrics);
 			info.AddValue("Opacity", Opacity);
@@ -315,6 +409,8 @@ namespace DoubanFM
 			info.AddValue("ShadowColor", ShadowColor.ToString());
 			info.AddValue("AutoForeground", AutoForeground);
 			info.AddValue("SingleLineLyrics", SingleLineLyrics);
+			info.AddValue("HorizontalAlignment", HorizontalAlignment);
+			info.AddValue("VerticalAlignment", VerticalAlignment);
 		}
 	}
 }

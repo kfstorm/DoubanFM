@@ -26,7 +26,7 @@ namespace DoubanFM
 	public partial class LyricsSettingWindow : ChildWindowBase
 	{
 		public static readonly DependencyProperty LyricsSettingProperty = DependencyProperty.Register("LyricsSetting", typeof(LyricsSetting), typeof(LyricsSettingWindow));
-		
+
 		public LyricsSetting LyricsSetting
 		{
 			get { return (LyricsSetting)GetValue(LyricsSettingProperty); }
@@ -37,6 +37,14 @@ namespace DoubanFM
 		{
 			LyricsSetting = setting;
 			InitializeComponent();
+
+			this.Closed += delegate
+			{
+				if (CbShowLyricsBackground.IsChecked == true)
+				{
+					(Owner as DoubanFMWindow)._lyricsWindow.HideBoundary();
+				}
+			};
 		}
 
 		private void CbShowLyrics_Checked(object sender, RoutedEventArgs e)
@@ -74,6 +82,18 @@ namespace DoubanFM
 		private void CbAutoForeground_Click(object sender, RoutedEventArgs e)
 		{
 			(Owner as DoubanFMWindow)._lyricsWindow.UpdateForegroundSetting();
+		}
+
+		private void CbShowLyricsBackground_Click(object sender, RoutedEventArgs e)
+		{
+			if (CbShowLyricsBackground.IsChecked == true)
+			{
+				(Owner as DoubanFMWindow)._lyricsWindow.ShowBoundary();
+			}
+			else
+			{
+				(Owner as DoubanFMWindow)._lyricsWindow.HideBoundary();
+			}
 		}
 	}
 }

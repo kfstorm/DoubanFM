@@ -83,6 +83,9 @@ namespace DoubanFM
 			});
 
 			UpdateForegroundSetting();
+			UpdateSizeAndLocation();
+
+			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += delegate { UpdateSizeAndLocation(); };
 
 			Binding binding = new Binding();
 			binding.Source = LyricsSetting;
@@ -175,6 +178,33 @@ namespace DoubanFM
 			{
 				HideLyricsStoryboard.Begin();
 			}
+		}
+
+		/// <summary>
+		/// 更新窗口的位置和大小
+		/// </summary>
+		protected void UpdateSizeAndLocation()
+		{
+			this.Left = SystemParameters.WorkArea.Left;
+			this.Top = SystemParameters.WorkArea.Top;
+			this.Width = SystemParameters.WorkArea.Width;
+			this.Height = SystemParameters.WorkArea.Height;
+		}
+
+		/// <summary>
+		/// 显示边界
+		/// </summary>
+		public void ShowBoundary()
+		{
+			GrayPanel.Background = new SolidColorBrush(Color.FromArgb(0x7F, 0, 0, 0));
+		}
+
+		/// <summary>
+		/// 隐藏边界
+		/// </summary>
+		public void HideBoundary()
+		{
+			GrayPanel.Background = null;
 		}
 
 		#region 绘制歌词

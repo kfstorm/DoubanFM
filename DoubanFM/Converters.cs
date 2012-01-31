@@ -7,6 +7,7 @@
 using System.Windows.Data;
 using System;
 using System.Windows.Media;
+using System.Windows;
 
 namespace DoubanFM
 {
@@ -131,22 +132,22 @@ namespace DoubanFM
 			{
 				if (parameter != null)
 					return parameter;
-				return System.Windows.Visibility.Hidden;
+				return Visibility.Hidden;
 			}
 			else
 			{
-				return System.Windows.Visibility.Visible;
+				return Visibility.Visible;
 			}
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			switch ((System.Windows.Visibility)value)
+			switch ((Visibility)value)
 			{
-				case System.Windows.Visibility.Collapsed:
-				case System.Windows.Visibility.Hidden:
+				case Visibility.Collapsed:
+				case Visibility.Hidden:
 					return false;
-				case System.Windows.Visibility.Visible:
+				case Visibility.Visible:
 					return true;
 				default:
 					return true;
@@ -164,22 +165,22 @@ namespace DoubanFM
 			{
 				if (parameter != null)
 					return parameter;
-				return System.Windows.Visibility.Hidden;
+				return Visibility.Hidden;
 			}
 			else
 			{
-				return System.Windows.Visibility.Visible;
+				return Visibility.Visible;
 			}
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			switch ((System.Windows.Visibility)value)
+			switch ((Visibility)value)
 			{
-				case System.Windows.Visibility.Collapsed:
-				case System.Windows.Visibility.Hidden:
+				case Visibility.Collapsed:
+				case Visibility.Hidden:
 					return true;
-				case System.Windows.Visibility.Visible:
+				case Visibility.Visible:
 					return false;
 				default:
 					return true;
@@ -215,27 +216,27 @@ namespace DoubanFM
 	}
 
 	/// <summary>
-	/// OpenTypeWeight到System.Windows.FontWeight类型的值转换器
+	/// OpenTypeWeight到FontWeight类型的值转换器
 	/// </summary>
 	public class OpenTypeWeightToFontWeightConverter : IValueConverter
 	{
 		/// <summary>
-		/// 由OpenTypeWeight转换为System.Windows.FontWeight类型
+		/// 由OpenTypeWeight转换为FontWeight类型
 		/// </summary>
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			if ((int)value > System.Windows.FontWeights.UltraBold.ToOpenTypeWeight())
-				return System.Windows.FontWeights.UltraBold;
-			if ((int)value < System.Windows.FontWeights.Thin.ToOpenTypeWeight())
-				return System.Windows.FontWeights.Thin;
-			return System.Windows.FontWeight.FromOpenTypeWeight((int)value);
+			if ((int)value > FontWeights.UltraBold.ToOpenTypeWeight())
+				return FontWeights.UltraBold;
+			if ((int)value < FontWeights.Thin.ToOpenTypeWeight())
+				return FontWeights.Thin;
+			return FontWeight.FromOpenTypeWeight((int)value);
 		}
 		/// <summary>
-		/// 由System.Windows.FontWeight类型转换为OpenTypeWeight
+		/// 由FontWeight类型转换为OpenTypeWeight
 		/// </summary>
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			return ((System.Windows.FontWeight)value).ToOpenTypeWeight();
+			return ((FontWeight)value).ToOpenTypeWeight();
 		}
 	}
 
@@ -306,6 +307,89 @@ namespace DoubanFM
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			return Color.FromArgb(0, ((Color)value).R, ((Color)value).G, ((Color)value).B);
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	/// <summary>
+	/// 将HorizontalAlignment转换为RenderTransformOrigin
+	/// </summary>
+	public class HorizontalAlignmentToRenderTransformOriginConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			switch ((HorizontalAlignment)value)
+			{
+				case HorizontalAlignment.Center:
+				case HorizontalAlignment.Stretch:
+					return new Point(0.5, 0.5);
+				case HorizontalAlignment.Left:
+					return new Point(0, 0.5);
+				case HorizontalAlignment.Right:
+					return new Point(1, 0.5);
+				default:
+					return new Point(0.5, 0.5);
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	/// <summary>
+	/// 将HorizontalAlignment转换为字符串
+	/// </summary>
+	public class HorizontalAlignmentToStringConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			switch ((HorizontalAlignment)value)
+			{
+				case HorizontalAlignment.Center:
+					return "居中";
+				case HorizontalAlignment.Left:
+					return "左对齐";
+				case HorizontalAlignment.Right:
+					return "右对齐";
+				case HorizontalAlignment.Stretch:
+					return "两端对齐";
+				default:
+					return "……";
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	/// <summary>
+	/// 将VerticalAlignment转换为字符串
+	/// </summary>
+	public class VerticalAlignmentToStringConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			switch ((VerticalAlignment)value)
+			{
+				case VerticalAlignment.Center:
+					return "居中";
+				case VerticalAlignment.Top:
+					return "上对齐";
+				case VerticalAlignment.Bottom:
+					return "下对齐";
+				case VerticalAlignment.Stretch:
+					return "两端对齐";
+				default:
+					return "……";
+			}
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

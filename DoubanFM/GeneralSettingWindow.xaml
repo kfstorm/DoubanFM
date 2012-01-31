@@ -17,8 +17,8 @@ Website : http://www.kfstorm.com
 			<StackPanel>
 				<CheckBox Margin="0,2" IsChecked="{Binding Settings.SearchAlbum, Source={StaticResource Player}}">搜索下载时包括专辑信息</CheckBox>
 				<CheckBox Margin="0,2" IsChecked="{Binding Settings.TrimBrackets, Source={StaticResource Player}}">搜索下载时自动剔除歌曲信息中的括号内容</CheckBox>
-				<CheckBox x:Name="CbSearchGoogleMusic" Click="CbSearchGoogleMusic_Click">搜索谷歌音乐</CheckBox>
-				<CheckBox x:Name="CbSearchBaiduTing" Click="CbSearchBaiduTing_Click">搜索百度听</CheckBox>
+				<CheckBox Margin="0,2" x:Name="CbSearchGoogleMusic" Click="CbSearchGoogleMusic_Click">搜索谷歌音乐</CheckBox>
+				<CheckBox Margin="0,2" x:Name="CbSearchBaiduTing" Click="CbSearchBaiduTing_Click">搜索百度听</CheckBox>
 			</StackPanel>
 		</GroupBox>
 		<GroupBox Header="代理设置" Margin="0,2">
