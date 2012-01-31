@@ -86,6 +86,11 @@ namespace DoubanFM
 			UpdateSizeAndLocation();
 
 			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += delegate { UpdateSizeAndLocation(); };
+			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler((sender, e) =>
+				{
+					if (e.Category == Microsoft.Win32.UserPreferenceCategory.Desktop)
+						UpdateSizeAndLocation();
+				});
 
 			Binding binding = new Binding();
 			binding.Source = LyricsSetting;

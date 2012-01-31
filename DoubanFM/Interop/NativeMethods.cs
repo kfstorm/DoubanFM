@@ -45,9 +45,9 @@ namespace DoubanFM.Interop
 
 		#region Desktop Window Manager
 		[DllImport("dwmapi.dll", PreserveSig = false)]
-		internal static extern void DwmEnableBlurBehindWindow(IntPtr hWnd, DWM_BLURBEHIND pBlurBehind);
+		internal static extern void DwmEnableBlurBehindWindow(IntPtr hWnd, ref DWM_BLURBEHIND pBlurBehind);
 		[DllImport("dwmapi.dll", PreserveSig = false)]
-		internal static extern void DwmExtendFrameIntoClientArea(IntPtr hWnd, MARGINS pMargins);
+		internal static extern void DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMargins);
 		[DllImport("dwmapi.dll", PreserveSig = false)]
 		internal static extern bool DwmIsCompositionEnabled();
 		[DllImport("dwmapi.dll", PreserveSig = false)]
@@ -59,7 +59,7 @@ namespace DoubanFM.Interop
 		[DllImport("dwmapi.dll", PreserveSig = false)]
 		internal static extern void DwmUnregisterThumbnail(IntPtr hThumbnail);
 		[DllImport("dwmapi.dll", PreserveSig = false)]
-		internal static extern void DwmUpdateThumbnailProperties(IntPtr hThumbnail, DWM_THUMBNAIL_PROPERTIES props);
+		internal static extern void DwmUpdateThumbnailProperties(IntPtr hThumbnail, ref DWM_THUMBNAIL_PROPERTIES props);
 		[DllImport("dwmapi.dll", PreserveSig = false)]
 		internal static extern void DwmQueryThumbnailSourceSize(IntPtr hThumbnail, out System.Windows.Size size);
 		#endregion

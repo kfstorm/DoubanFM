@@ -20,7 +20,7 @@ namespace DoubanFM.Aero
 				throw new InvalidOperationException("The Window must be shown before extending glass.");
 
 			MARGINS margins = new MARGINS((int)margin.Left, (int)margin.Top, (int)margin.Right, (int)margin.Bottom);
-			NativeMethods.DwmExtendFrameIntoClientArea(hwnd, margins);
+			NativeMethods.DwmExtendFrameIntoClientArea(hwnd, ref margins);
 
 			return true;
 		}
@@ -38,7 +38,7 @@ namespace DoubanFM.Aero
 			bb.dwFlags = DWM_BLURBEHIND.DWM_BB_ENABLE | DWM_BLURBEHIND.DWM_BB_BLURREGION;
 			bb.fEnable = true;
 			bb.hRegionBlur = NativeMethods.CreateRectRgn(0, 0, (int)window.ActualWidth, (int)window.ActualHeight);
-			NativeMethods.DwmEnableBlurBehindWindow(hwnd, bb);
+			NativeMethods.DwmEnableBlurBehindWindow(hwnd, ref bb);
 			NativeMethods.DeleteObject(bb.hRegionBlur);
 			
 			return true;
