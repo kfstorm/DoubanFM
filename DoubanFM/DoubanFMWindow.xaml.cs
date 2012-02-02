@@ -1080,7 +1080,12 @@ namespace DoubanFM
 					{
 						Process.Start(update.Updater.DownloadedFilePath, "/S");
 					});
-					this.Close();
+					//有可能是主窗口的关闭引起更新窗口的关闭，这时再关闭主窗口会出错。
+					try
+					{
+						this.Close();
+					}
+					catch { }
 				}
 			});
 			update.Show();
