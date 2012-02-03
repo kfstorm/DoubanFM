@@ -1380,7 +1380,6 @@ namespace DoubanFM
 		/// </summary>
 		void timer_Tick(object sender, EventArgs e)
 		{
-
 			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(BassEngine.Instance.ChannelPosition);
 			Slider.Value = BassEngine.Instance.ChannelPosition.TotalSeconds;
 			if (_lyricsWindow != null) _lyricsWindow.Refresh(BassEngine.Instance.ChannelPosition);
@@ -1589,9 +1588,13 @@ namespace DoubanFM
 			else
 			{
 				if (_player.CurrentSong != null && !string.IsNullOrEmpty(_player.CurrentSong.AlbumInfo))
+				{
+					_slideCoverLeftTimer.Stop();
+					_slideCoverRightTimer.Stop();
 					if (_player.CurrentSong.AlbumInfo.Contains("http://"))
 						Core.UrlHelper.OpenLink(_player.CurrentSong.AlbumInfo);
 					else Core.UrlHelper.OpenLink("http://music.douban.com" + _player.CurrentSong.AlbumInfo);
+				}
 			}
 		}
 
@@ -1969,15 +1972,12 @@ namespace DoubanFM
 
 		private void Window_LocationChanged(object sender, EventArgs e)
 		{
-			//if (this.Left + this.ActualWidth > 0 && this.Top + this.ActualHeight > 0 && this.Left <= SystemParameters.WorkArea.Right && this.Top <= SystemParameters.WorkArea.Bottom && this.IsLoaded && this.WindowState != System.Windows.WindowState.Minimized && this.IsVisible)
+			if (!this.RestoreBounds.IsEmpty)
 			{
-				if (!this.RestoreBounds.IsEmpty)
-				{
-					//_player.Settings.LocationLeft = this.Left;
-					//_player.Settings.LocationTop = this.Top;
-					_player.Settings.LocationLeft = this.RestoreBounds.Left;
-					_player.Settings.LocationTop = this.RestoreBounds.Top;
-				}
+				//_player.Settings.LocationLeft = this.Left;
+				//_player.Settings.LocationTop = this.Top;
+				_player.Settings.LocationLeft = this.RestoreBounds.Left;
+				_player.Settings.LocationTop = this.RestoreBounds.Top;
 			}
 		}
 

@@ -15,7 +15,7 @@ using DoubanFM.Core;
 using System.Reflection;
 using System.Diagnostics;
 using System.IO;
-using DoubanFM.WMI;
+using DoubanFM.Wmi;
 
 namespace DoubanFM
 {
@@ -87,7 +87,7 @@ namespace DoubanFM
 			StringBuilder sb = new StringBuilder();
 			try
 			{
-				var os = DoubanFM.WMI.OperatingSystem.GetInstance();
+				var os = DoubanFM.Wmi.OperatingSystem.GetInstance();
 				sb.AppendLine("操作系统：" + string.Format("{0} ({1})", os.Caption, Environment.OSVersion));
 			}
 			catch { }

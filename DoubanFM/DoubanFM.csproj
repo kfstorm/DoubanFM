@@ -113,7 +113,7 @@
     <Compile Include="Interop\SWP.cs" />
     <Compile Include="Interop\WM.cs" />
     <Compile Include="Interop\WS.cs" />
-    <Compile Include="WMI\DisplayConfiguration.cs" />
+    <Compile Include="Wmi\DisplayConfiguration.cs" />
     <Compile Include="ExceptionWindow.xaml.cs">
       <DependentUpon>ExceptionWindow.xaml</DependentUpon>
     </Compile>
@@ -167,10 +167,11 @@
     </Compile>
     <Compile Include="WindowBase.cs" />
     <Compile Include="WindowShadow.cs" />
-    <Compile Include="WMI\OperatingSystem.cs" />
-    <Compile Include="WMI\PhysicalMemory.cs" />
-    <Compile Include="WMI\Processor.cs" />
-    <Compile Include="WMI\SoundDevice.cs" />
+    <Compile Include="Wmi\OperatingSystem.cs" />
+    <Compile Include="Wmi\PhysicalMemory.cs" />
+    <Compile Include="Wmi\Processor.cs" />
+    <Compile Include="Wmi\SoundDevice.cs" />
+    <Compile Include="Wmi\WmiBase.cs" />
     <Page Include="ColorPicker\PopupableColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

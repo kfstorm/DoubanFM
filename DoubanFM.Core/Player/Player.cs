@@ -492,6 +492,7 @@ namespace DoubanFM.Core
 						AppendPlayedSongs("e");
 						ChangeCurrentSong();
 						Parameters parameters = new Parameters();
+						parameters.Add("from", "ie9");
 						parameters.Add("sid", ps.CurrentSong.SongId);
 						parameters.Add("channel", ps.CurrentChannel.Id);
 						parameters.Add("type", "e");

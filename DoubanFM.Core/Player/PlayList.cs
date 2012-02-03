@@ -45,6 +45,7 @@ namespace DoubanFM.Core
 		internal static PlayList GetPlayList(string context, string songId, Channel channel, string operationType, string history)
 		{
 			Parameters parameters = new Parameters();
+			parameters.Add("from", "ie9");
 			parameters.Add("context", context);
 			parameters.Add("sid", songId);
 			parameters.Add("channel", channel.Id);
