@@ -71,7 +71,7 @@ namespace DoubanFM.Core
 				if (value == null)
 					throw new Exception("频道不能设为空");
 				if (value.IsPersonal && !value.IsSpecial && !UserAssistant.IsLoggedOn) return;	//没登录时不能使用私人频道
-				if (CurrentChannel != null && CurrentChannel.IsSpecial && !value.IsSpecial)     //由特殊模式转为普通模式
+				//if (CurrentChannel != null && CurrentChannel.IsSpecial && !value.IsSpecial)     //由特殊模式转为普通模式
 					CurrentSong = null;
 				if (CurrentChannel != value)
 				{
@@ -361,7 +361,7 @@ namespace DoubanFM.Core
 			CurrentChannelChanged += new EventHandler((o, e) =>
 			{
 				IsLikedEnabled = !CurrentChannel.IsDj;
-				IsNeverEnabled = CurrentChannel.IsPersonal && UserAssistant.IsLoggedOn;
+				IsNeverEnabled = !CurrentChannel.IsDj && UserAssistant.IsLoggedOn;
 			});
 			CurrentSongChanged += new EventHandler((o, e) =>
 			{
@@ -659,7 +659,7 @@ namespace DoubanFM.Core
 		public void Never()
 		{
 			if (CurrentSong == null) return;
-			if (!CurrentChannel.IsPersonal) return;
+			if (CurrentChannel.IsDj) return;
 			if (_neverring) return;
 			RaiseStopedEvent();
 			if (UserAssistant.IsLoggedOn)

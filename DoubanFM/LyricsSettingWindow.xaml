@@ -56,14 +56,14 @@ Website : http://www.kfstorm.com
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					<GroupBox Header="文字">
-						<StackPanel>
+						<UniformGrid Rows="4">
 							<Grid>
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="60"/>
 									<ColumnDefinition/>
 								</Grid.ColumnDefinitions>
 								<TextBlock VerticalAlignment="Center">字体</TextBlock>
-								<local:FontPicker x:Name="FpFontPicker" Grid.Column="1" Margin="0,2" Height="30" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
+								<local:FontPicker x:Name="FpFontPicker" Grid.Column="1" Margin="0,2" Height="24" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
 							</Grid>
 							<Grid>
 								<Grid.ColumnDefinitions>
@@ -89,10 +89,10 @@ Website : http://www.kfstorm.com
 								<TextBlock VerticalAlignment="Center">描边粗细</TextBlock>
 								<Slider x:Name="SliderStrokeWeight" Grid.Column="1" Value="{Binding LyricsSetting.StrokeWeight, ElementName=Window}" Maximum="3" Minimum="0" Margin="0,2" SmallChange="0.05" LargeChange="0.3"/>
 							</Grid>
-						</StackPanel>
+						</UniformGrid>
 					</GroupBox>
 					<GroupBox Header="颜色" Grid.Column="1">
-						<StackPanel>
+						<UniformGrid Rows="4">
 							<Grid>
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="60"/>
@@ -105,7 +105,7 @@ Website : http://www.kfstorm.com
 										<ColumnDefinition/>
 									</Grid.ColumnDefinitions>
 									<CheckBox x:Name="CbAutoForeground" Margin="20,2" VerticalAlignment="Center" IsChecked="{Binding LyricsSetting.AutoForeground, ElementName=Window}" Click="CbAutoForeground_Click">自动</CheckBox>
-									<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}" IsEnabled="{Binding LyricsSetting.AutoForeground, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Height="30"/>
+									<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}" IsEnabled="{Binding LyricsSetting.AutoForeground, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Height="24"/>
 								</Grid>
 							</Grid>
 							<Grid>
@@ -114,7 +114,7 @@ Website : http://www.kfstorm.com
 									<ColumnDefinition/>
 								</Grid.ColumnDefinitions>
 								<TextBlock VerticalAlignment="Center">描边色</TextBlock>
-								<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}" Height="30"/>
+								<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}" Height="24"/>
 							</Grid>
 							<Grid>
 								<Grid.ColumnDefinitions>
@@ -122,7 +122,7 @@ Website : http://www.kfstorm.com
 									<ColumnDefinition/>
 								</Grid.ColumnDefinitions>
 								<TextBlock VerticalAlignment="Center">阴影色</TextBlock>
-								<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}" IsAlphaEnabled="False" Height="30"/>
+								<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}" IsAlphaEnabled="False" Height="24"/>
 							</Grid>
 							<Grid>
 								<Grid.ColumnDefinitions>
@@ -132,7 +132,7 @@ Website : http://www.kfstorm.com
 								<TextBlock VerticalAlignment="Center">透明度</TextBlock>
 								<Slider x:Name="SliderOpacity" Grid.Column="1" Value="{Binding LyricsSetting.Opacity, ElementName=Window, Converter={StaticResource OpacityToTransparencyConverter}}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.01" LargeChange="0.1" RenderTransformOrigin="0.5,0.5"/>
 							</Grid>
-						</StackPanel>
+						</UniformGrid>
 					</GroupBox>
 					<GroupBox Header="布局" Grid.Row="1" Grid.ColumnSpan="2">
 						<Grid>
@@ -140,7 +140,7 @@ Website : http://www.kfstorm.com
 								<ColumnDefinition/>
 								<ColumnDefinition/>
 							</Grid.ColumnDefinitions>
-							<StackPanel Margin="0,0,5,0">
+							<UniformGrid Rows="4" Margin="0,0,5,0">
 								<Grid>
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition Width="60"/>
@@ -173,15 +173,15 @@ Website : http://www.kfstorm.com
 									<TextBlock VerticalAlignment="Center">右间距</TextBlock>
 									<Slider x:Name="SliderRightMargin" Grid.Column="1" Value="{Binding LyricsSetting.RightMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
 								</Grid>
-							</StackPanel>
-							<StackPanel Margin="5,0,0,0" Grid.Column="1">
+							</UniformGrid>
+							<UniformGrid Rows="4" Margin="5,0,0,0" Grid.Column="1">
 								<Grid Margin="0,2">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition Width="80"/>
 										<ColumnDefinition/>
 									</Grid.ColumnDefinitions>
 									<TextBlock VerticalAlignment="Center">水平对齐方式</TextBlock>
-									<ComboBox x:Name="CbHorizontalAlignment" Grid.Column="1" SelectedItem="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}" Height="30">
+									<ComboBox x:Name="CbHorizontalAlignment" Grid.Column="1" SelectedItem="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}" Height="24">
 										<ComboBox.ItemTemplate>
 											<DataTemplate DataType="{x:Type HorizontalAlignment}">
 												<TextBlock Text="{Binding Converter={StaticResource HorizontalAlignmentToStringConverter}}"/>
@@ -198,7 +198,7 @@ Website : http://www.kfstorm.com
 										<ColumnDefinition/>
 									</Grid.ColumnDefinitions>
 									<TextBlock VerticalAlignment="Center">垂直对齐方式</TextBlock>
-									<ComboBox x:Name="CbVerticalAlignment" Grid.Column="1" SelectedItem="{Binding LyricsSetting.VerticalAlignment, ElementName=Window}" Height="30">
+									<ComboBox x:Name="CbVerticalAlignment" Grid.Column="1" SelectedItem="{Binding LyricsSetting.VerticalAlignment, ElementName=Window}" Height="24">
 										<ComboBox.ItemTemplate>
 											<DataTemplate DataType="{x:Type VerticalAlignment}">
 												<TextBlock Text="{Binding Converter={StaticResource VerticalAlignmentToStringConverter}}"/>
@@ -209,8 +209,8 @@ Website : http://www.kfstorm.com
 										<VerticalAlignment>Bottom</VerticalAlignment>
 									</ComboBox>
 								</Grid>
-								<CheckBox x:Name="CbShowLyricsBackground" Margin="0,2" Click="CbShowLyricsBackground_Click">显示歌词边界，以方便调整布局</CheckBox>
-							</StackPanel>
+								<CheckBox x:Name="CbShowLyricsBackground" Margin="0,2" VerticalAlignment="Center" Click="CbShowLyricsBackground_Click">显示歌词边界，以方便调整布局</CheckBox>
+							</UniformGrid>
 						</Grid>
 					</GroupBox>
 				</Grid>
