@@ -1557,7 +1557,7 @@ namespace DoubanFM
 		private void CoverGrid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			base.OnMouseLeftButtonUp(e);
-			if (!_player.Settings.SlideCoverWhenMouseMove || !_player.Settings.OpenAlbumInfoWhenClickCover)
+			if (!_player.Settings.SlideCoverWhenMouseMove || !_player.Settings.OpenAlbumInfoWhenClickCover || _player.CurrentSong == null)
 			{
 				Point leftLocation = e.GetPosition(LeftPanel);
 				//Debug.WriteLine("LeftPanel:" + leftLocation);

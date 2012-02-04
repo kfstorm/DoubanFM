@@ -611,6 +611,7 @@ Website : http://www.kfstorm.com
 									<Button Style="{StaticResource ShareMsnStyle}" Tag="{x:Static core:Share+Sites.Msn}"/>
 									<Button Style="{StaticResource ShareKaixinStyle}" Tag="{x:Static core:Share+Sites.Kaixin}"/>
 									<Button Style="{StaticResource ShareRenenStyle}" Tag="{x:Static core:Share+Sites.Renren}"/>
+									<Button Style="{StaticResource ShareQzoneStyle}" Tag="{x:Static core:Share+Sites.Qzone}"/>
 									<Button Style="{StaticResource ShareTencentWeiboStyle}" Tag="{x:Static core:Share+Sites.TencentWeibo}"/>
 									<Button Style="{StaticResource ShareFanfouStyle}" Tag="{x:Static core:Share+Sites.Fanfou}"/>
 									<Button Style="{StaticResource ShareFacebookStyle}" Tag="{x:Static core:Share+Sites.Facebook}"/>

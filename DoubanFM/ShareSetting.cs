@@ -64,7 +64,7 @@ namespace DoubanFM
 					where site != Share.Sites.None
 					select site)));
 
-		
+
 		/// <summary>
 		/// 加载设置
 		/// </summary>
@@ -73,7 +73,7 @@ namespace DoubanFM
 			ShareSetting setting = null;
 			try
 			{
-				using (FileStream stream = File.OpenRead(Path.Combine(_dataFolder,"ShareSetting.dat")))
+				using (FileStream stream = File.OpenRead(Path.Combine(_dataFolder, "ShareSetting.dat")))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
 					setting = (ShareSetting)formatter.Deserialize(stream);
@@ -115,9 +115,13 @@ namespace DoubanFM
 			{
 				EnableOneKeyShare = def.EnableOneKeyShare;
 			}
+
+			#region 兼容1.7.4及更早版本的保存方式
+			bool isOld = false;
 			try
 			{
 				OneKeyShareSites = info.GetValue("OneKeyShareSites", typeof(List<Share.Sites>)) as List<Share.Sites>;
+				isOld = true;
 			}
 			catch
 			{
@@ -126,11 +130,71 @@ namespace DoubanFM
 			try
 			{
 				DisplayedSites = info.GetValue("DisplayedSites", typeof(List<Share.Sites>)) as List<Share.Sites>;
+				isOld = true;
 			}
 			catch
 			{
 				DisplayedSites = def.DisplayedSites;
 			}
+			if (isOld)
+			{
+				foreach (var site in Share.GetSortedSites())
+				{
+					//如果出现了1.7.4及之前版本中没出现的网站，则默认显示
+					//这里列出的是1.7.4版本中已定义的网站列表
+					if (site != Share.Sites.None
+						&& site != Share.Sites.Douban
+						&& site != Share.Sites.Weibo
+						&& site != Share.Sites.Msn
+						&& site != Share.Sites.Kaixin
+						&& site != Share.Sites.Renren
+						&& site != Share.Sites.TencentWeibo
+						&& site != Share.Sites.Fanfou
+						&& site != Share.Sites.Facebook
+						&& site != Share.Sites.Twitter)
+					{
+						DisplayedSites.Add(site);
+					}
+				}
+			}
+			#endregion
+
+			#region 1.7.5及更高版本的保存方式
+			if (!isOld)
+			{
+				DisplayedSites = new List<Share.Sites>();
+				OneKeyShareSites = new List<Share.Sites>();
+				foreach (var site in Share.GetSortedSites())
+				{
+					try
+					{
+						bool value = info.GetBoolean("DisplayedSites_" + site);
+						if (value)
+						{
+							DisplayedSites.Add(site);
+						}
+					}
+					catch
+					{
+						//说明这是更新为新版本后新增加的网站
+						DisplayedSites.Add(site);
+					}
+
+					try
+					{
+						bool value = info.GetBoolean("OneKeyShareSites_" + site);
+						if (value)
+						{
+							OneKeyShareSites.Add(site);
+						}
+					}
+					catch
+					{
+						//新增加的网站默认不设置一键分享
+					}
+				}
+			}
+			#endregion
 		}
 
 		public ShareSetting()
@@ -139,8 +203,11 @@ namespace DoubanFM
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("EnableOneKeyShare", EnableOneKeyShare);
-			info.AddValue("OneKeyShareSites", OneKeyShareSites);
-			info.AddValue("DisplayedSites", DisplayedSites);
+			foreach (var site in Share.GetSortedSites())
+			{
+				info.AddValue("OneKeyShareSites_" + site, OneKeyShareSites.Contains(site));
+				info.AddValue("DisplayedSites_" + site, DisplayedSites.Contains(site));
+			}
 		}
 	}
 }

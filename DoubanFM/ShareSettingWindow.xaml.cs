@@ -33,44 +33,41 @@ namespace DoubanFM
 
 			this.InitializeComponent();
 
-			foreach (var site in Enum.GetValues(typeof(Share.Sites)) as IEnumerable<Share.Sites>)
+			foreach (var site in Share.GetSortedSites())
 			{
-				if (site == Share.Sites.None) continue;
-				TextBlock tb = new TextBlock();
-				tb.Text = Share.SiteName[site];
-				tb.Tag = site;
-				LbDisplayedSites.Items.Add(tb);
-				if (ShareSetting.DisplayedSites.Contains(site))
-					LbDisplayedSites.SelectedItems.Add(tb);
+				if (site != Share.Sites.None)
+				{
+					LbDisplayedSites.Items.Add(site);
+					if (ShareSetting.DisplayedSites.Contains(site))
+						LbDisplayedSites.SelectedItems.Add(site);
+				}
 			}
 
 			LbDisplayedSites.SelectionChanged += delegate
 			{
 				ShareSetting.DisplayedSites = new List<Share.Sites>();
-				foreach (FrameworkElement tb in LbDisplayedSites.SelectedItems)
+				foreach (Share.Sites site in LbDisplayedSites.SelectedItems)
 				{
-					ShareSetting.DisplayedSites.Add((Share.Sites)tb.Tag);
+					ShareSetting.DisplayedSites.Add(site);
 				}
 				(Owner as DoubanFMWindow).ApplyShareSetting();
 			};
 
-			foreach (var site in Enum.GetValues(typeof(Share.Sites)) as IEnumerable<Share.Sites>)
+			foreach (var site in Share.GetSortedSites())
 			{
-				TextBlock tb = new TextBlock();
-				tb.Text = Share.SiteName[site];
-				tb.Tag = site;
-				LbOneKeyShareSites.Items.Add(tb);
+				LbOneKeyShareSites.Items.Add(site);
 				if (ShareSetting.OneKeyShareSites.Contains(site))
-					LbOneKeyShareSites.SelectedItems.Add(tb);
+					LbOneKeyShareSites.SelectedItems.Add(site);
 			}
 
 			LbOneKeyShareSites.SelectionChanged += delegate
 			{
 				ShareSetting.OneKeyShareSites = new List<Share.Sites>();
-				foreach (TextBlock tb in LbOneKeyShareSites.SelectedItems)
+				foreach (Share.Sites site in LbOneKeyShareSites.SelectedItems)
 				{
-					ShareSetting.OneKeyShareSites.Add((Share.Sites)tb.Tag);
+					ShareSetting.OneKeyShareSites.Add(site);
 				}
+				(Owner as DoubanFMWindow).ApplyShareSetting();
 			};
 		}
 	}

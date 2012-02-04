@@ -398,4 +398,28 @@ namespace DoubanFM
 		}
 	}
 
+	/// <summary>
+	/// 将Share.Sites转换为字符串
+	/// </summary>
+	public class ShareSitesToStringConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			if (Enum.IsDefined(typeof(Core.Share.Sites), value))
+			{
+				return Core.Share.SiteName[(Core.Share.Sites)value];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+
 }

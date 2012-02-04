@@ -726,6 +726,20 @@ Website : http://www.kfstorm.com
 			</Setter.Value>
 		</Setter>
 	</Style>
+	<Style x:Key="ShareQzoneStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="ToolTip" Value="分享到QQ空间"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="240" Height="231.724" Canvas.Left="7.99997" Canvas.Top="12.1379" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 7.99997,103.172C 7.99997,111.448 65.931,152.828 65.931,161.103C 65.931,174.897 60.4138,191.448 57.6551,205.241C 54.8965,213.517 46.6207,243.862 57.6551,243.862C 63.1724,243.862 121.103,205.241 129.379,205.241C 134.897,205.241 187.31,243.862 203.862,243.862L 192.828,177.655L 206.621,172.138C 184.552,172.138 151.448,183.172 123.862,180.414L 74.2069,174.897L 151.448,119.724L 60.4138,111.448L 68.6896,108.69L 134.897,105.931L 187.31,108.69L 190.069,111.448L 118.345,161.103L 115.586,163.862L 156.965,169.379L 190.069,169.379L 190.069,163.862C 190.069,152.828 248,111.448 248,100.414C 248,97.6552 173.517,89.3793 165.241,89.3793C 159.724,78.3448 134.897,12.1379 126.621,12.1379C 123.862,12.1379 93.5172,81.1035 88,89.3793C 76.9655,89.3793 7.99997,94.8966 7.99997,103.172 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 	<Style x:Key="ShareTencentWeiboStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
 		<Setter Property="ToolTip" Value="分享到腾讯微博"/>
 		<Setter Property="Template">

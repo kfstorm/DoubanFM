@@ -60,7 +60,11 @@ namespace DoubanFM.Core
 			/// <summary>
 			/// Twitter
 			/// </summary>
-			Twitter
+			Twitter,
+			/// <summary>
+			/// QQ空间
+			/// </summary>
+			Qzone
 		}
 
 		public static readonly Dictionary<Sites, string> SiteName;
@@ -97,6 +101,7 @@ namespace DoubanFM.Core
 			SiteName.Add(Sites.TencentWeibo, "腾讯微博");
 			SiteName.Add(Sites.Twitter, "Twitter");
 			SiteName.Add(Sites.Weibo, "新浪微博");
+			SiteName.Add(Sites.Qzone, "QQ空间");
 			SiteName.Add(Sites.None, "*复制网址到剪贴板*");
 		}
 
@@ -126,6 +131,15 @@ namespace DoubanFM.Core
 		public Share(Player player)
 			: this(player, Sites.None)
 		{ }
+
+		/// <summary>
+		/// 获取用于显示的网站排序
+		/// </summary>
+		/// <returns></returns>
+		public static Sites[] GetSortedSites()
+		{
+			return new Sites[] { Sites.None, Sites.Douban, Sites.Weibo, Sites.Msn, Sites.Kaixin, Sites.Renren, Sites.Qzone, Sites.TencentWeibo, Sites.Fanfou, Sites.Facebook, Sites.Twitter };
+		}
 
 		/// <summary>
 		/// 获取分享链接
@@ -218,6 +232,11 @@ namespace DoubanFM.Core
 				case Sites.Twitter:
 					parameters.Add("status", Text + " " + _songInfo.Url);
 					url = ConnectionBase.ConstructUrlWithParameters("http://twitter.com/home", parameters);
+					break;
+				case Sites.Qzone:
+					parameters.Add("url", _songInfo.Url);
+					parameters.Add("title", Text);
+					url = ConnectionBase.ConstructUrlWithParameters("http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey", parameters);
 					break;
 				default:
 					break;

@@ -7,8 +7,12 @@ Website : http://www.kfstorm.com
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:DoubanFM"
+		xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"
 		x:Name="Window"
 		Title="分享设置" Background="#FF813131">
+	<local:ChildWindowBase.Resources>
+		<local:ShareSitesToStringConverter x:Key="ShareSitesToStringConverter"/>
+	</local:ChildWindowBase.Resources>
 	<Grid Width="300"  Margin="10">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -25,6 +29,11 @@ Website : http://www.kfstorm.com
 					<UniformGrid Columns="2"/>
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
+			<ListBox.ItemTemplate>
+				<DataTemplate DataType="{x:Type core:Share+Sites}">
+					<TextBlock Text="{Binding Converter={StaticResource ShareSitesToStringConverter}}"/>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
 		</ListBox>
 		<CheckBox Grid.Row="3" IsChecked="{Binding Path=ShareSetting.EnableOneKeyShare, ElementName=Window}">启用一键分享</CheckBox>
 		<Label Grid.Row="4">一键分享的网站：</Label>
@@ -34,6 +43,11 @@ Website : http://www.kfstorm.com
 					<UniformGrid Columns="2"/>
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
+			<ListBox.ItemTemplate>
+				<DataTemplate DataType="{x:Type core:Share+Sites}">
+					<TextBlock Text="{Binding Converter={StaticResource ShareSitesToStringConverter}}"/>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
 		</ListBox>
 	</Grid>
 </local:ChildWindowBase>
