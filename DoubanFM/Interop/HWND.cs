@@ -7,9 +7,9 @@ namespace DoubanFM.Interop
 {
 	internal static class HWND
 	{
-		internal static readonly IntPtr NoTopMost = new IntPtr(-2);
-		internal static readonly IntPtr IntPtrTopMost = new IntPtr(-1);
-		internal static readonly IntPtr IntPtrTop = new IntPtr(0);
-		internal static readonly IntPtr IntPtrBottom = new IntPtr(1);
+		internal static readonly IntPtr NOTOPMOST = new IntPtr(-2);
+		internal static readonly IntPtr TOPMOST = new IntPtr(-1);
+		internal static readonly IntPtr TOP = new IntPtr(0);
+		internal static readonly IntPtr BOTTOM = new IntPtr(1);
 	}
 }

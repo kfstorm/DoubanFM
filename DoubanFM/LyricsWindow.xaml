@@ -12,7 +12,7 @@ Website : http://www.kfstorm.com
 	mc:Ignorable="PresentationOptions"
 	x:Class="DoubanFM.LyricsWindow"
 	x:Name="Window"
-	Title="" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}" IsHitTestVisible="False">
+	Title="" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}" IsHitTestVisible="False" Loaded="Window_Loaded" Closed="Window_Closed">
 	<Window.Resources>
 		<Storyboard x:Key="ChangeLyricsStoryboard">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Offset" Storyboard.TargetProperty="(TranslateTransform.Y)" FillBehavior="Stop">

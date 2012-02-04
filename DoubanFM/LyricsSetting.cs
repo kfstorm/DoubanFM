@@ -40,6 +40,7 @@ namespace DoubanFM
 		public static readonly DependencyProperty SingleLineLyricsProperty = DependencyProperty.Register("SingleLineLyrics", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
 		public static readonly DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register("HorizontalAlignment", typeof(HorizontalAlignment), typeof(LyricsSetting), new PropertyMetadata(HorizontalAlignment.Center));
 		public static readonly DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register("VerticalAlignment", typeof(VerticalAlignment), typeof(LyricsSetting), new PropertyMetadata(VerticalAlignment.Bottom));
+		public static readonly DependencyProperty ForceTopMostProperty = DependencyProperty.Register("ForceTopMost", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
 
 		/// <summary>
 		/// 字体
@@ -187,6 +188,14 @@ namespace DoubanFM
 		{
 			get { return (VerticalAlignment)GetValue(VerticalAlignmentProperty); }
 			set { SetValue(VerticalAlignmentProperty, value); }
+		}
+		/// <summary>
+		/// 是否强力置顶
+		/// </summary>
+		public bool ForceTopMost
+		{
+			get { return (bool)GetValue(ForceTopMostProperty); }
+			set { SetValue(ForceTopMostProperty, value); }
 		}
 
 		/// <summary>
@@ -386,6 +395,14 @@ namespace DoubanFM
 			{
 				VerticalAlignment = def.VerticalAlignment;
 			}
+			try
+			{
+				ForceTopMost = info.GetBoolean("ForceTopMost");
+			}
+			catch
+			{
+				ForceTopMost = def.ForceTopMost;
+			}
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -411,6 +428,7 @@ namespace DoubanFM
 			info.AddValue("SingleLineLyrics", SingleLineLyrics);
 			info.AddValue("HorizontalAlignment", HorizontalAlignment);
 			info.AddValue("VerticalAlignment", VerticalAlignment);
+			info.AddValue("ForceTopMost", ForceTopMost);
 		}
 	}
 }

@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Globalization;
 using DoubanFM.Interop;
+using System.Windows.Threading;
 
 namespace DoubanFM
 {
@@ -60,7 +61,7 @@ namespace DoubanFM
 		/// 更换歌词的Storyboard
 		/// </summary>
 		private Storyboard ChangeLyricsStoryboard, HideLyricsStoryboard;
-		
+
 		public LyricsWindow(LyricsSetting lyricsSetting = null)
 		{
 			this.InitializeComponent();
@@ -70,7 +71,7 @@ namespace DoubanFM
 
 			ChangeLyricsStoryboard = (Storyboard)FindResource("ChangeLyricsStoryboard");
 			HideLyricsStoryboard = (Storyboard)FindResource("HideLyricsStoryboard");
-			
+
 			this.SourceInitialized += new EventHandler((o, e) =>
 			{
 				var hwnd = new WindowInteropHelper(this).Handle;
@@ -368,5 +369,26 @@ namespace DoubanFM
 		}
 
 		#endregion
+
+		DispatcherTimer timer = new DispatcherTimer();
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			//强力置顶
+			timer.Interval = TimeSpan.FromSeconds(1);
+			timer.Tick += delegate
+			{
+				if (LyricsSetting.ForceTopMost)
+				{
+					NativeMethods.SetWindowPos(new WindowInteropHelper(this).EnsureHandle(), HWND.TOPMOST, 0, 0, 0, 0, SWP.NOMOVE | SWP.NOSIZE | SWP.NOACTIVATE | SWP.NOREPOSITION | SWP.NOREDRAW);
+				}
+			};
+			timer.Start();
+		}
+
+		private void Window_Closed(object sender, EventArgs e)
+		{
+			timer.Stop();
+		}
 	}
 }

@@ -33,15 +33,19 @@ Website : http://www.kfstorm.com
 			<CheckBox Grid.Row="1" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked" Margin="0,2">内嵌歌词</CheckBox>
 		</Grid>
 			<GroupBox Header="桌面歌词设置" Margin="0,2">
-				<StackPanel>
-					<Grid Margin="0,5" Width="300" HorizontalAlignment="Left">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition/>
-							<ColumnDefinition/>
-						</Grid.ColumnDefinitions>
-						<RadioButton IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window}" Content="单行歌词" Margin="0,2"/>
+			<StackPanel>
+				<Grid Margin="0,2" Width="300" HorizontalAlignment="Left">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<RadioButton IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window}" Content="单行歌词" Margin="0,2"/>
 					<RadioButton Grid.Column="1" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Content="双行歌词" Margin="0,2"/>
-					</Grid>
+				</Grid>
+				<StackPanel Margin="0,2">
+					<CheckBox IsChecked="{Binding LyricsSetting.ForceTopMost, ElementName=Window}" Margin="0,2">强力置顶</CheckBox>
+					<TextBlock TextWrapping="Wrap">（开启强力置顶可有效解决桌面歌词置顶失效的问题，但玩较老的全屏游戏时桌面歌词会覆盖在游戏之上；若不开启强力置顶，当某些程序置顶时，桌面歌词的置顶可能会失效，这时可以先关闭桌面歌词，再打开，即可恢复置顶。）</TextBlock>
+				</StackPanel>
 				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition/>
