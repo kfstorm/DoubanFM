@@ -28,10 +28,10 @@ namespace DoubanFM
 
 		public WindowBase()
 		{
+			ShadowWindow.Attach(this);
+
 			this.SourceInitialized += delegate
 			{
-				shadow = new WindowShadow(this);
-
 				if (Environment.OSVersion.Version.Major >= 6)
 				{
 					this.AeroGlassCompositionChanged += new EventHandler<Aero.AeroGlassCompositionChangedEventArgs>(WindowBase_AeroGlassCompositionChanged);
@@ -62,8 +62,6 @@ namespace DoubanFM
 				Aero.AeroHelper.EnableBlurBehindWindow(this);
 			}
 		}
-
-		private WindowShadow shadow;
 
 		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
 		{

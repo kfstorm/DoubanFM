@@ -147,7 +147,7 @@ namespace DoubanFM.Bass
 		/// </summary>
 		public void Stop()
 		{
-			Debug.WriteLine("已调用BassEngine.Stop()");
+			//Debug.WriteLine("已调用BassEngine.Stop()");
 
 			if (canStop)
 			{
@@ -156,7 +156,7 @@ namespace DoubanFM.Bass
 				{
 					Un4seen.Bass.Bass.BASS_ChannelStop(ActiveStreamHandle);
 					Un4seen.Bass.Bass.BASS_ChannelSetPosition(ActiveStreamHandle, ChannelPosition.TotalSeconds);
-					Debug.WriteLine("已调用BASS_ChannelStop()");
+					//Debug.WriteLine("已调用BASS_ChannelStop()");
 				}
 				IsPlaying = false;
 				CanStop = false;
@@ -173,7 +173,7 @@ namespace DoubanFM.Bass
 		/// </summary>
 		public void Pause()
 		{
-			Debug.WriteLine("已调用BassEngine.Pause()");
+			//Debug.WriteLine("已调用BassEngine.Pause()");
 			if (IsPlaying && CanPause)
 			{
 				Un4seen.Bass.Bass.BASS_ChannelPause(ActiveStreamHandle);
@@ -193,7 +193,7 @@ namespace DoubanFM.Bass
 		/// </summary>
 		public void Play()
 		{
-			Debug.WriteLine("已调用BassEngine.Play()");
+			//Debug.WriteLine("已调用BassEngine.Play()");
 			if (CanPlay)
 			{
 				PlayCurrentStream();
@@ -216,7 +216,7 @@ namespace DoubanFM.Bass
 		public void OpenFile(string filename)
 		{
 			openningFile = filename;
-			Debug.WriteLine("已调用BassEngine.OpenFile()");
+			//Debug.WriteLine("已调用BassEngine.OpenFile()");
 			Stop();
 			pendingOperation = PendingOperation.None;
 
@@ -269,7 +269,7 @@ namespace DoubanFM.Bass
 		public void OpenUrlAsync(string url)
 		{
 			openningFile = url;
-			Debug.WriteLine("已调用BassEngine.OpenUrlAsync()");
+			//Debug.WriteLine("已调用BassEngine.OpenUrlAsync()");
 
 			Stop();
 			pendingOperation = PendingOperation.None;
@@ -277,8 +277,7 @@ namespace DoubanFM.Bass
 			onlineFileWorker = new Thread(new ThreadStart(() =>
 				{
 					int handle = Un4seen.Bass.Bass.BASS_StreamCreateURL(url, 0, Un4seen.Bass.BASSFlag.BASS_SAMPLE_FLOAT | Un4seen.Bass.BASSFlag.BASS_STREAM_PRESCAN, null, IntPtr.Zero);
-
-					DateTime start = DateTime.Now;
+					
 					Application.Current.Dispatcher.BeginInvoke(new Action(() =>
 						{
 							if (handle != 0)
@@ -323,7 +322,7 @@ namespace DoubanFM.Bass
 									{
 										Debug.WriteLine("BASS_StreamFree失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 									}
-									Debug.WriteLine("已调用BASS_StreamFree()");
+									//Debug.WriteLine("已调用BASS_StreamFree()");
 								}
 							}
 							else
@@ -331,8 +330,6 @@ namespace DoubanFM.Bass
 								Debug.WriteLine(Un4seen.Bass.Bass.BASS_ErrorGetCode());
 								RaiseOpenFailedEvent();
 							}
-							TimeSpan period = DateTime.Now - start;
-							Debug.WriteLine("测时结果：" + period);
 						}));
 					onlineFileWorker = null;
 				}));
@@ -349,7 +346,7 @@ namespace DoubanFM.Bass
 		/// <param name="password">密码</param>
 		public void SetProxy(string host, int? port, string username, string password)
 		{
-			Debug.WriteLine("已调用BassEngine.SetProxy()");
+			//Debug.WriteLine("已调用BassEngine.SetProxy()");
 			if (proxyHandle != IntPtr.Zero)
 				Marshal.FreeHGlobal(proxyHandle);
 			proxyHandle = IntPtr.Zero;
@@ -398,7 +395,7 @@ namespace DoubanFM.Bass
 		/// </summary>
 		public void UseDefaultProxy()
 		{
-			Debug.WriteLine("已调用BassEngine.UseDefaultProxy()");
+			//Debug.WriteLine("已调用BassEngine.UseDefaultProxy()");
 			if (proxyHandle != IntPtr.Zero)
 				Marshal.FreeHGlobal(proxyHandle);
 			proxyHandle = IntPtr.Zero;
@@ -496,7 +493,7 @@ namespace DoubanFM.Bass
 				{
 					Debug.WriteLine("BASS_StreamFree失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 				}
-				Debug.WriteLine("已调用BASS_StreamFree()");
+				//Debug.WriteLine("已调用BASS_StreamFree()");
 				ActiveStreamHandle = 0;
 			}
 		}

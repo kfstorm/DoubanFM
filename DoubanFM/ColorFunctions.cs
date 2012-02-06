@@ -62,15 +62,32 @@ namespace DoubanFM
 		/// <param name="image">图片</param>
 		public static void GetImageColorForBackgroundAsync(BitmapSource image, ComputeCompleteCallback callback)
 		{
-			FormatConvertedBitmap bitmap = new FormatConvertedBitmap(image, PixelFormats.Rgb24, BitmapPalettes.WebPalette, 0);
-			if (bitmap.CanFreeze) bitmap.Freeze();
+			FormatConvertedBitmap bitmap = null;
 			const int bytesPerPixel = 3;
-			byte[] pixels = new byte[bitmap.PixelHeight * bitmap.PixelWidth * bytesPerPixel];
-			bitmap.CopyPixels(pixels, bitmap.PixelWidth * bytesPerPixel, 0);
-			int width = bitmap.PixelWidth;
-			int height = bitmap.PixelHeight;
+			byte[] pixels = null;
+			int width = 0;
+			int height = 0;
+			bool isFrozen = image.IsFrozen;
+			if (!isFrozen)
+			{
+				bitmap = new FormatConvertedBitmap(image, PixelFormats.Rgb24, BitmapPalettes.WebPalette, 0);
+				if (bitmap.CanFreeze) bitmap.Freeze();
+				pixels = new byte[bitmap.PixelHeight * bitmap.PixelWidth * bytesPerPixel];
+				bitmap.CopyPixels(pixels, bitmap.PixelWidth * bytesPerPixel, 0);
+				width = bitmap.PixelWidth;
+				height = bitmap.PixelHeight;
+			}
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
+					if (isFrozen)
+					{
+						bitmap = new FormatConvertedBitmap(image, PixelFormats.Rgb24, BitmapPalettes.WebPalette, 0);
+						if (bitmap.CanFreeze) bitmap.Freeze();
+						pixels = new byte[bitmap.PixelHeight * bitmap.PixelWidth * bytesPerPixel];
+						bitmap.CopyPixels(pixels, bitmap.PixelWidth * bytesPerPixel, 0);
+						width = bitmap.PixelWidth;
+						height = bitmap.PixelHeight;
+					}
 					int sum = width * height;
 					int r = 0, g = 0, b = 0;
 					int offset = 0;

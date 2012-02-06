@@ -113,6 +113,9 @@
     <Compile Include="Interop\SWP.cs" />
     <Compile Include="Interop\WM.cs" />
     <Compile Include="Interop\WS.cs" />
+    <Compile Include="ShadowWindow.xaml.cs">
+      <DependentUpon>ShadowWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Wmi\DisplayConfiguration.cs" />
     <Compile Include="ExceptionWindow.xaml.cs">
       <DependentUpon>ExceptionWindow.xaml</DependentUpon>
@@ -166,7 +169,6 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowBase.cs" />
-    <Compile Include="WindowShadow.cs" />
     <Compile Include="Wmi\OperatingSystem.cs" />
     <Compile Include="Wmi\PhysicalMemory.cs" />
     <Compile Include="Wmi\Processor.cs" />
@@ -193,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NotifyIcon\PopupLiked.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShadowWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -358,6 +364,16 @@
     <Resource Include="Images\Shadow\INACTIVESHADOWLEFT.PNG" />
     <Resource Include="Images\Shadow\INACTIVESHADOWRIGHT.PNG" />
     <Resource Include="Images\Shadow\INACTIVESHADOWTOP.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOMLEFT.png" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOMRIGHT.png" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWTOPLEFT.png" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWTOPRIGHT.png" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOMLEFT.png" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOMRIGHT.png" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWTOPLEFT.png" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWTOPRIGHT.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

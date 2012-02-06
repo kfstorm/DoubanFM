@@ -1232,13 +1232,13 @@ namespace DoubanFM
 				bitmap.UriSource = new Uri(_player.CurrentSong.Picture);
 				bitmap.EndInit();
 				//BitmapImage bitmap = new BitmapImage(new Uri(_player.CurrentSong.Picture));
-				Debug.WriteLine(_player.CurrentSong.Picture);
+				//Debug.WriteLine(_player.CurrentSong.Picture);
 				if (bitmap.IsDownloading)
 				{
 					bitmap.DownloadCompleted += new EventHandler((o, e) =>
 					{
 						if (bitmap.CanFreeze) bitmap.Freeze();
-						Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 封面下载成功");
+						//Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 封面下载成功");
 						Dispatcher.Invoke(new Action(() =>
 						{
 							try
@@ -1283,6 +1283,7 @@ namespace DoubanFM
 				}
 				else
 				{
+					if (bitmap.CanFreeze) bitmap.Freeze();
 					ChangeBackground(bitmap);
 					SwitchCover(bitmap);
 				}
