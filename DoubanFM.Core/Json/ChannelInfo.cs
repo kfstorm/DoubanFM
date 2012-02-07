@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace DoubanFM.Core.Json
 {
@@ -65,24 +66,38 @@ namespace DoubanFM.Core.Json
 			List<Cate> ret = new List<Cate>();
 			try
 			{
-				Match match = Regex.Match(html, @"channelInfo\.dj\s*=\s*(.*);", RegexOptions.IgnoreCase);
+				Match match = Regex.Match(html, @"channelInfo\.dj\s*=\s*(\[.*\]);", RegexOptions.IgnoreCase);
 				DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ChannelInfoDotDj));
 				ChannelInfoDotDj cidd = null;
 				using (MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(match.Groups[1].Value)))
 					cidd = (ChannelInfoDotDj)ser.ReadObject(ms);
-				Match match2 = Regex.Match(html, @"subChannelInfo\s*=\s*{(.*)};", RegexOptions.IgnoreCase);
-				string s = match2.Groups[1].Value;
-				MatchCollection mc = Regex.Matches(s, "\"(\\w*)\":\\[([^\\[]*)\\]", RegexOptions.None);
+				Match match2 = Regex.Match(html, @"subChannelInfo\s*=\s*({.*});", RegexOptions.IgnoreCase);
 				List<SubDjCate> subdjcates = new List<SubDjCate>();
-				foreach (Match ma in mc)
+				using (var reader = JsonReaderWriterFactory.CreateJsonReader(Encoding.Unicode.GetBytes(match2.Groups[1].Value), System.Xml.XmlDictionaryReaderQuotas.Max))
 				{
-					var subdjcate = new SubDjCate();
-					subdjcate.Cate = ma.Groups[1].Value;
-					DataContractJsonSerializer ser2 = new DataContractJsonSerializer(typeof(SubDjChannel[]));
-					using (MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes("[" + ma.Groups[2].Value + "]")))
-						subdjcate.DjChannels = (SubDjChannel[])ser2.ReadObject(ms);
-					subdjcates.Add(subdjcate);
+					reader.Read();
+					while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+					{
+						SubDjCate cate = new SubDjCate();
+						cate.Cate = reader.GetAttribute("item");
+						List<SubDjChannel> channels = new List<SubDjChannel>();
+						while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+						{
+							SubDjChannel channel = new SubDjChannel();
+							while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+							{
+								if (reader.Name == "channel_id")
+									channel.pid = reader.ReadString();
+								else if (reader.Name == "name")
+									channel.name = reader.ReadString();
+							}
+							channels.Add(channel);
+						}
+						cate.DjChannels = channels.ToArray();
+						subdjcates.Add(cate);
+					}
 				}
+
 				foreach (DjChannel djchannel in cidd)
 				{
 					foreach (SubDjCate subdjcate in subdjcates)
@@ -120,7 +135,7 @@ namespace DoubanFM.Core.Json
 			try
 			{
 				html = html.Replace("&amp;", "&");
-				Match match = Regex.Match(html, @"var\s*channelInfo\s*=\s*(.*),", RegexOptions.IgnoreCase);
+				Match match = Regex.Match(html, @"var\s*channelInfo\s*=\s*({.*}),", RegexOptions.IgnoreCase);
 				ChannelInfo ci = ChannelInfo.FromJson(match.Groups[1].Value);
 				ci.Dj = GetDjCates(html);
 
