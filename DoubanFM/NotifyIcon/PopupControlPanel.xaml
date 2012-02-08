@@ -83,6 +83,7 @@
 							<ColumnDefinition/>
 							<ColumnDefinition Width="Auto"/>
 							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
 						<Grid x:Name="SharePanel">
 							<Grid.ColumnDefinitions>
@@ -122,8 +123,9 @@
 							<Button x:Name="BtnCopyUrl" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="分享（点击直接复制地址）" Click="BtnCopyUrl_Click" Visibility="{Binding MainWindow.ShareSetting.EnableOneKeyShare, Source={x:Static Application.Current}, Converter={StaticResource BoolReverseToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
 							<Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="一键分享" Click="BtnOneKeyShare_Click" Visibility="{Binding MainWindow.ShareSetting.EnableOneKeyShare, Source={x:Static Application.Current}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
 						</Grid>
-						<CheckBox x:Name="CheckBoxShowLyrics" Grid.Column="1" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
-						<Border x:Name="BdVolumeControl" Grid.Column="2" Background="Transparent" Margin="0,0,-65,0">
+						<Button x:Name="BtnDownloadSearch" Grid.Column="1" Style="{StaticResource SearchStyle}" ToolTip="搜索下载" Click="BtnDownloadSearch_Click"/>
+						<CheckBox x:Name="CheckBoxShowLyrics" Grid.Column="2" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
+						<Border x:Name="BdVolumeControl" Grid.Column="3" Background="Transparent" Margin="0,0,-65,0">
 							<Viewbox StretchDirection="DownOnly">
 								<local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" Width="150"/>
 							</Viewbox>

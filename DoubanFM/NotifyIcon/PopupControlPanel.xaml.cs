@@ -81,5 +81,10 @@ namespace DoubanFM.NotifyIcon
 		{
 			App.Current.MainWindow.Close();
 		}
+
+		private void BtnDownloadSearch_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			(App.Current.MainWindow as DoubanFMWindow).SearchDownload();
+		}
 	}
 }
