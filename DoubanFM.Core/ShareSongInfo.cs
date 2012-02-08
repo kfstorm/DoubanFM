@@ -76,11 +76,25 @@ namespace DoubanFM.Core
 			{
 				songName = song.Title;
 				channelName = channel.Name;
+				Parameters parameters = new Parameters();
 				if (!song.IsAd)
-					url = "http://douban.fm/?start=" + song.SongId + "g" + song.SSId + "g" + channel.Id + "&cid=" + channel.Id;
-				else url = "http://douban.fm/?daid=" + song.SongId + "&cid=" + channel.Id;
+				{
+					parameters.Add("start", song.SongId + "g" + song.SSId + "g" + channel.Id);
+					parameters.Add("cid", channel.Id);
+					//url = "http://douban.fm/?start=" + song.SongId + "g" + song.SSId + "g" + channel.Id + "&cid=" + channel.Id;
+				}
+				else
+				{
+					parameters.Add("daid", song.SongId);
+					parameters.Add("cid", channel.Id);
+					//url = "http://douban.fm/?daid=" + song.SongId + "&cid=" + channel.Id;
+				}
 				if (channel.IsSpecial)
-					url += "&context=" + channel.Context;
+				{
+					parameters.Add("context", channel.Context);
+					//url += "&context=" + channel.Context;
+				}
+				url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/", parameters);
 			}
 
 			switch (channelName)
