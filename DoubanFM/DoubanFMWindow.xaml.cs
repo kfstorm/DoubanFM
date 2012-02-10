@@ -169,7 +169,7 @@ namespace DoubanFM
 				double v = (double)value;
 				return v >= 0 && v <= 1;
 			}));
-		
+
 
 		///// <summary>
 		///// 记录最后一次切歌的时间
@@ -376,7 +376,8 @@ namespace DoubanFM
 		/// </summary>
 		void AddPlayerEventListener()
 		{
-			_player.Initialized += new EventHandler((o, e) => {
+			_player.Initialized += new EventHandler((o, e) =>
+			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器完成");
 
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine");
@@ -523,7 +524,7 @@ namespace DoubanFM
 			});
 			_player.IsNeverEnabledChanged += new EventHandler((o, e) =>
 			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsNeverEnabled ? " 垃圾桶功能已启用" : " 垃圾桶功能已禁用")); 
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsNeverEnabled ? " 垃圾桶功能已启用" : " 垃圾桶功能已禁用"));
 				if (_player.IsNeverEnabled)
 					NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
 				else
@@ -839,17 +840,17 @@ namespace DoubanFM
 		/// <summary>
 		/// 音量增
 		/// </summary>
-		public void VolumeUp()
+		public void VolumeUp(double delta = 0.1)
 		{
-			_player.Settings.Volume = Math.Min(1.0, _player.Settings.Volume + 0.1);
+			_player.Settings.Volume = Math.Min(1.0, _player.Settings.Volume + delta);
 		}
 
 		/// <summary>
 		/// 音量减
 		/// </summary>
-		public void VolumeDown()
+		public void VolumeDown(double delta = 0.1)
 		{
-			_player.Settings.Volume = Math.Max(0.0, _player.Settings.Volume - 0.1);
+			_player.Settings.Volume = Math.Max(0.0, _player.Settings.Volume - delta);
 		}
 
 		/// <summary>
@@ -990,7 +991,8 @@ namespace DoubanFM
 					case Commands.None:
 						break;
 					case Commands.Like:
-						hotKey.OnHotKey += delegate {
+						hotKey.OnHotKey += delegate
+						{
 							Like();
 							if (_player.CurrentSong != null && _player.IsLikedEnabled && _player.IsLiked)
 								NotifyIcon.ShowCustomBalloon(new PopupLiked(), System.Windows.Controls.Primitives.PopupAnimation.Fade, 1000);
@@ -1090,7 +1092,7 @@ namespace DoubanFM
 			});
 			update.Show();
 		}
-		
+
 		/// <summary>
 		/// 从内存映射文件加载频道
 		/// </summary>
@@ -1448,7 +1450,7 @@ namespace DoubanFM
 				}
 			}
 			if (NotifyIcon != null)
-			    NotifyIcon.Dispose();
+				NotifyIcon.Dispose();
 			if (_player != null)
 				_player.Dispose(SaveSettings);
 		}
@@ -1464,7 +1466,7 @@ namespace DoubanFM
 		/// </summary>
 		private void ButtonLogOn_Click(object sender, RoutedEventArgs e)
 		{
-			_player.UserAssistant.LogOn(_player.UserAssistant.HasCaptcha? CaptchaText.Text : null);
+			_player.UserAssistant.LogOn(_player.UserAssistant.HasCaptcha ? CaptchaText.Text : null);
 			CaptchaText.Text = null;
 		}
 		/// <summary>
@@ -1990,6 +1992,19 @@ namespace DoubanFM
 		private void BtnDonate_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			Core.UrlHelper.OpenLink("http://me.alipay.com/kfstorm");
+		}
+
+		private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
+		{
+			if (e.Delta > 0)
+			{
+				VolumeUp((double)e.Delta / Mouse.MouseWheelDeltaForOneLine / 10);
+			}
+			else if (e.Delta < 0)
+			{
+				VolumeDown(-(double)e.Delta / Mouse.MouseWheelDeltaForOneLine / 10);
+			}
+			e.Handled = true;
 		}
 
 		#endregion
