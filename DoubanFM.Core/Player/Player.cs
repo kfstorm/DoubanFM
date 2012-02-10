@@ -403,21 +403,28 @@ namespace DoubanFM.Core
 		public void Initialize()
 		{
 			if (IsInitialized) return;
+			Debug.WriteLine(DateTime.Now + " 播放器核心初始化中");
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
 					ChannelInfo channelInfo = null;
 					string file = null;
 					while (true)
 					{
+						Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
 						file = new ConnectionBase().Get("http://douban.fm");
+						Debug.WriteLine(DateTime.Now + " 刷新完成");
 						channelInfo = new ChannelInfo(Json.ChannelInfo.FromHtml(file));
 						if (!channelInfo.IsEffective)
 						{
-							Debug.WriteLine("获取播放列表失败，获取结果为：");
+							Debug.WriteLine(DateTime.Now + " 获取频道列表失败，获取结果为：");
 							Debug.WriteLine(file == null ? string.Empty : file);
 							TakeABreak();
 						}
-						else break;
+						else
+						{
+							Debug.WriteLine(DateTime.Now + " 获取频道列表成功");
+							break;
+						}
 					}
 					UserAssistant.Update(file);
 					Dispatcher.Invoke(new Action(() =>
@@ -430,6 +437,7 @@ namespace DoubanFM.Core
 								ConnectionBase.cc = ConnectionBase.DefaultCookie;
 							ChannelInfo = channelInfo;
 							IsInitialized = true;
+							Debug.WriteLine(DateTime.Now + " 播放器核心初始化完成");
 							ChooseChannelAtStartup();
 						}));
 				}));

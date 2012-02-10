@@ -42,5 +42,10 @@ namespace DoubanFM.NotifyIcon
 		{
 			((Popup)this.Parent).IsOpen = false;
 		}
+
+		private void userControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			((DoubanFMWindow)App.Current.MainWindow).ShowFront();
+		}
 	}
 }

@@ -7,7 +7,7 @@
 			 mc:Ignorable="d" 
 			 d:DesignHeight="300" d:DesignWidth="300"
 			 TextOptions.TextFormattingMode="Display"
-			 Foreground="White">
+			 Foreground="White" MouseLeftButtonUp="userControl_MouseLeftButtonUp">
 	<UserControl.Resources>
 		<Storyboard x:Key="ShowCoverSmooth">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Cover">
