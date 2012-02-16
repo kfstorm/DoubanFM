@@ -1996,15 +1996,18 @@ namespace DoubanFM
 
 		private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
-			if (e.Delta > 0)
+			if (_player.Settings.AdjustVolumeWithMouseWheel)
 			{
-				VolumeUp((double)e.Delta / Mouse.MouseWheelDeltaForOneLine / 10);
+				if (e.Delta > 0)
+				{
+					VolumeUp((double)e.Delta / Mouse.MouseWheelDeltaForOneLine / 10);
+				}
+				else if (e.Delta < 0)
+				{
+					VolumeDown(-(double)e.Delta / Mouse.MouseWheelDeltaForOneLine / 10);
+				}
+				e.Handled = true;
 			}
-			else if (e.Delta < 0)
-			{
-				VolumeDown(-(double)e.Delta / Mouse.MouseWheelDeltaForOneLine / 10);
-			}
-			e.Handled = true;
 		}
 
 		#endregion

@@ -57,6 +57,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty SpectrumColorProperty = DependencyProperty.Register("SpectrumColor", typeof(Color), typeof(Settings), new PropertyMetadata(Colors.White));
 		public static readonly DependencyProperty SpectrumTransparencyProperty = DependencyProperty.Register("SpectrumTransparency", typeof(double), typeof(Settings), new PropertyMetadata(0.0));
 		public static readonly DependencyProperty ShowSpectrumProperty = DependencyProperty.Register("ShowSpectrum", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty AdjustVolumeWithMouseWheelProperty = DependencyProperty.Register("AdjustVolumeWithMouseWheel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		
 		#endregion
 
@@ -326,6 +327,15 @@ namespace DoubanFM.Core
 		{
 			get { return (bool)GetValue(ShowSpectrumProperty); }
 			set { SetValue(ShowSpectrumProperty, value); }
+		}
+
+		/// <summary>
+		/// 是否启用鼠标滚轮调节音量
+		/// </summary>
+		public bool AdjustVolumeWithMouseWheel
+		{
+			get { return (bool)GetValue(AdjustVolumeWithMouseWheelProperty); }
+			set { SetValue(AdjustVolumeWithMouseWheelProperty, value); }
 		}
 
 		/// <summary>
@@ -609,6 +619,14 @@ namespace DoubanFM.Core
 			{
 				ShowSpectrum = def.ShowSpectrum;
 			}
+			try
+			{
+				AdjustVolumeWithMouseWheel = info.GetBoolean("AdjustVolumeWithMouseWheel");
+			}
+			catch
+			{
+				AdjustVolumeWithMouseWheel = def.AdjustVolumeWithMouseWheel;
+			}
 
 			//向下兼容
 			if (!AutoBackground && Background.A != 255)
@@ -662,6 +680,7 @@ namespace DoubanFM.Core
 			}
 			info.AddValue("SpectrumTransparency", SpectrumTransparency);
 			info.AddValue("ShowSpectrum", ShowSpectrum);
+			info.AddValue("AdjustVolumeWithMouseWheel", AdjustVolumeWithMouseWheel);
 		}
 
 		/// <summary>

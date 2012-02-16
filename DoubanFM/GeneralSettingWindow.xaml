@@ -11,6 +11,7 @@ Website : http://www.kfstorm.com
 		Title="常规设置" Background="#FF813131">
 	<StackPanel Width="300" Margin="10">
 		<CheckBox x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+		<CheckBox x:Name="CheckBoxAdjustVolumeWithMouseWheel" Content="鼠标滚轮调节音量" IsChecked="{Binding Settings.AdjustVolumeWithMouseWheel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<GroupBox Margin="0,2" Header="下载搜索设置">
