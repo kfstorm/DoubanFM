@@ -75,21 +75,22 @@ namespace DoubanFM.Core.Json
 				List<SubDjCate> subdjcates = new List<SubDjCate>();
 				using (var reader = JsonReaderWriterFactory.CreateJsonReader(Encoding.Unicode.GetBytes(match2.Groups[1].Value), System.Xml.XmlDictionaryReaderQuotas.Max))
 				{
-					reader.Read();
-					while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+					XmlDocument document = new XmlDocument();
+					document.Load(reader);
+					foreach (XmlNode elementCate in document.DocumentElement.ChildNodes)
 					{
 						SubDjCate cate = new SubDjCate();
-						cate.Cate = reader.GetAttribute("item");
+						cate.Cate = elementCate.Attributes["item"].Value;
 						List<SubDjChannel> channels = new List<SubDjChannel>();
-						while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+						foreach (XmlNode elementChannel in elementCate.ChildNodes)
 						{
 							SubDjChannel channel = new SubDjChannel();
-							while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+							foreach (XmlNode elementProperty in elementChannel.ChildNodes)
 							{
-								if (reader.Name == "channel_id")
-									channel.pid = reader.ReadString();
-								else if (reader.Name == "name")
-									channel.name = reader.ReadString();
+								if (elementProperty.Name == "channel_id")
+									channel.pid = elementProperty.FirstChild.Value;
+								else if (elementProperty.Name == "name")
+									channel.name = elementProperty.FirstChild.Value;
 							}
 							channels.Add(channel);
 						}
