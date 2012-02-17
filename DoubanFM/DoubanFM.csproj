@@ -349,12 +349,7 @@
   <ItemGroup>
     <Resource Include="Images\DoubanFM_Like_Disabled.png" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\NotifyIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="HelpContent\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOM.PNG" />
     <Resource Include="Images\Shadow\ACTIVESHADOWLEFT.PNG" />
