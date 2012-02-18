@@ -12,7 +12,7 @@ Website : http://www.kfstorm.com
 			 mc:Ignorable="d" 
 			 d:DesignHeight="300" d:DesignWidth="300"
 			 TextOptions.TextFormattingMode="Display"
-			 Foreground="White" MouseLeftButtonUp="userControl_MouseLeftButtonUp">
+			 Foreground="White" MouseLeftButtonUp="userControl_MouseLeftButtonUp" FontFamily="{Binding MainWindow.FontFamily, Source={x:Static Application.Current}}">
 	<UserControl.Resources>
 		<Storyboard x:Key="ShowCoverSmooth">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Cover">

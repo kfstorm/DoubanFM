@@ -12,7 +12,8 @@ Website : http://www.kfstorm.com
 			 xmlns:local="clr-namespace:DoubanFM"
 			 mc:Ignorable="d" 
 			 TextOptions.TextFormattingMode="Display"
-			 Foreground="White">
+			 Foreground="White"
+			 FontFamily="{Binding MainWindow.FontFamily, Source={x:Static Application.Current}}">
 	<UserControl.Resources>
 		<Storyboard x:Key="ShowCoverSmooth">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Cover">
