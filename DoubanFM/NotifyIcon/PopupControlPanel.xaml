@@ -70,12 +70,18 @@ Website : http://www.kfstorm.com
 						<Image Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" Stretch="UniformToFill"/>
 						<Image x:Name="Cover" Source="{Binding CurrentSong.Picture, Source={StaticResource Player}}" Stretch="UniformToFill"/>
 					</Grid>
-					<StackPanel x:Name="SongInfo" Grid.Column="1">
+					<Grid x:Name="SongInfo" Grid.Column="1">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
 						<TextBlock Text="{Binding CurrentChannel, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" TextTrimming="CharacterEllipsis"/>
-						<TextBlock FontSize="20" Text="{Binding CurrentSong.Title, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
-						<TextBlock FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
-						<TextBlock FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
-					</StackPanel>
+						<TextBlock Grid.Row="1" FontSize="20" Text="{Binding CurrentSong.Title, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+						<TextBlock Grid.Row="2" FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
+						<TextBlock Grid.Row="3" FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
+					</Grid>
 					<Button x:Name="ButtonExit" Grid.Column="2" Width="20" Height="20" Margin="2,0,0,0" VerticalAlignment="Top" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
 				</Grid>
 				<Grid Grid.Row="1">
