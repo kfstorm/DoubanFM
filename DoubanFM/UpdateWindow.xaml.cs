@@ -24,7 +24,7 @@ using System.Diagnostics;
 namespace DoubanFM
 {
 	/// <summary>
-	/// UpdateWindow.xaml 的交互逻辑
+	/// 更新窗口
 	/// </summary>
 	public partial class UpdateWindow : ChildWindowBase
 	{
@@ -40,10 +40,12 @@ namespace DoubanFM
 			Updater = updater;
 			if (updater == null) Updater = new Updater((FindResource("Player") as Player).Settings);
 			ShowRightPanel();
+			//更新器状态已改变
 			Updater.StateChanged += new EventHandler((o, e) =>
 			{
 				ShowRightPanel();
 			});
+			//更新器下载进度已改变
 			Updater.ProgressChanged += new System.Net.DownloadProgressChangedEventHandler((o, e) =>
 			{
 				DownloadProgress.Value = e.ProgressPercentage;

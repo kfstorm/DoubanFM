@@ -283,29 +283,9 @@ namespace DoubanFM.Core
 	}
 
 	/// <summary>
-	/// URL参数
-	/// </summary>
-	public class UrlParameter
-	{
-		/// <summary>
-		/// 参数名
-		/// </summary>
-		public string Key { get; set; }
-		/// <summary>
-		/// 参数值
-		/// </summary>
-		public string Value { get; set; }
-
-		public UrlParameter(string key, string value)
-		{
-			Key = key;
-			Value = value;
-		}
-	}
-	/// <summary>
 	/// 多个URL参数
 	/// </summary>
-	public class Parameters : List<UrlParameter>
+	public class Parameters : Dictionary<string, string>
 	{
 		/// <summary>
 		/// 是否添加空参数
@@ -322,26 +302,17 @@ namespace DoubanFM.Core
 			AddEmptyParameter = addEmptyParameter;
 		}
 
-		/// <summary>
-		/// 添加参数
-		/// </summary>
-		public void Add(string key, string value)
-		{
-			if (!AddEmptyParameter && string.IsNullOrEmpty(value)) return;
-			Add(new UrlParameter(key, value));
-		}
-
 		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
 			foreach (var p in this)
 			{
-				if (!string.IsNullOrEmpty(p.Value))
+				if (AddEmptyParameter || !string.IsNullOrEmpty(p.Value))
 				{
 					if (sb.Length != 0) sb.Append("&");
 					sb.Append(Uri.EscapeDataString(p.Key));
 					sb.Append("=");
-					sb.Append(Uri.EscapeDataString(p.Value));
+					sb.Append(Uri.EscapeDataString(p.Value == null ? string.Empty : p.Value));
 				}
 			}
 			return sb.ToString();

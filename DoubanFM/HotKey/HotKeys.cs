@@ -47,9 +47,10 @@ namespace DoubanFM
 		}
 
 		/// <summary>
-		/// 注册
+		/// 注册热键
 		/// </summary>
-		internal void Register(Window win)
+		/// <param name="window">目标窗口</param>
+		internal void Register(Window window)
 		{
 			List<Exception> exceptions = new List<Exception>();
 			foreach (var keyValue in this)
@@ -57,7 +58,7 @@ namespace DoubanFM
 				try
 				{
 					if (!keyValue.Value.IsRegistered)
-						keyValue.Value.Register(win);
+						keyValue.Value.Register(window);
 				}
 				catch (Exception ex)
 				{
@@ -68,7 +69,7 @@ namespace DoubanFM
 				RaiseRegisterErrorEvent(exceptions);
 		}
 		/// <summary>
-		/// 注销
+		/// 注销热键
 		/// </summary>
 		internal void UnRegister()
 		{

@@ -28,14 +28,17 @@ namespace DoubanFM
 	{
 		public App()
 		{
+			//设置调试输出
 			Debug.AutoFlush = true;
 			Debug.Listeners.Add(new TextWriterTraceListener("DoubanFM.log"));
+
 			Debug.WriteLine(string.Empty);
 			Debug.WriteLine("**********************************************************************");
 			Debug.WriteLine("豆瓣电台启动时间：" + App.GetPreciseTime(DateTime.Now));
 			Debug.WriteLine("**********************************************************************");
 			Debug.WriteLine(string.Empty);
 
+			//出现未处理的异常时，弹出错误报告窗口，让用户发送错误报告
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((sender, e) =>
 			{
 				Debug.WriteLine("**********************************************************************");
@@ -92,6 +95,11 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 获取时间的一个精确表示
+		/// </summary>
+		/// <param name="time">时间</param>
+		/// <returns>一个精确表示</returns>
 		public static string GetPreciseTime(DateTime time)
 		{
 			return time.ToString() + " " + time.Millisecond + "ms";

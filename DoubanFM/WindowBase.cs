@@ -28,24 +28,27 @@ namespace DoubanFM
 
 		public WindowBase()
 		{
+			//添加窗口阴影
 			ShadowWindow.Attach(this);
 
 			this.SourceInitialized += delegate
 			{
 				if (Environment.OSVersion.Version.Major >= 6)
 				{
+					//监听系统中Aero设置的改变
 					this.AeroGlassCompositionChanged += new EventHandler<Aero.AeroGlassCompositionChangedEventArgs>(WindowBase_AeroGlassCompositionChanged);
 
+					//添加钩子来捕获DWM消息
 					WindowInteropHelper interopHelper = new WindowInteropHelper(this);
-
-					// add Window Proc hook to capture DWM messages
 					HwndSource source = HwndSource.FromHwnd(interopHelper.Handle);
 					source.AddHook(new HwndSourceHook(WndProc));
 
+					//尝试启用Aero模糊效果
 					Aero.AeroHelper.EnableBlurBehindWindow(this);
 				}
 			};
 
+			//当窗口大小改变后，需调整Aero模糊效果的范围，所以这里调用EnableBlurBehindWindow方法更新模糊效果
 			this.SizeChanged += delegate
 			{
 				if (Environment.OSVersion.Version.Major >= 6)
@@ -55,6 +58,9 @@ namespace DoubanFM
 			};
 		}
 
+		/// <summary>
+		/// Aero效果设置已改变
+		/// </summary>
 		void WindowBase_AeroGlassCompositionChanged(object sender, Aero.AeroGlassCompositionChangedEventArgs e)
 		{
 			if (e.GlassAvailable)
@@ -63,8 +69,12 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 支持拖拽窗口
+		/// </summary>
 		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
 		{
+			//如果不加try catch语句，在点击封面打开资料页面时很容易报错
 			try
 			{
 				this.DragMove();
@@ -74,6 +84,9 @@ namespace DoubanFM
 			base.OnMouseLeftButtonDown(e);
 		}
 
+		/// <summary>
+		/// 当Aero效果设置已改变时发生。
+		/// </summary>
 		public event EventHandler<Aero.AeroGlassCompositionChangedEventArgs> AeroGlassCompositionChanged;
 
 		private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

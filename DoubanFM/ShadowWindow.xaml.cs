@@ -22,11 +22,17 @@ using System.Windows.Interop;
 namespace DoubanFM
 {
 	/// <summary>
-	/// ShadowWindow.xaml 的交互逻辑
+	/// 阴影窗口，用于在无边框的矩形窗口四周显示类似Aero特效的阴影
 	/// </summary>
 	public partial class ShadowWindow : Window
 	{
+		/// <summary>
+		/// 阴影窗口的句柄
+		/// </summary>
 		protected IntPtr Handle = IntPtr.Zero;
+		/// <summary>
+		/// 父窗口的句柄
+		/// </summary>
 		protected IntPtr OwnerHandle = IntPtr.Zero;
 
 		protected static readonly ImageSource ActiveTopLeftImage;
@@ -49,6 +55,7 @@ namespace DoubanFM
 
 		static ShadowWindow()
 		{
+			//加载阴影图片
 			ActiveTopLeftImage = new BitmapImage(GetImageUri("ACTIVESHADOWTOPLEFT.png"));
 			ActiveTopImage = new BitmapImage(GetImageUri("ACTIVESHADOWTOP.png"));
 			ActiveTopRightImage = new BitmapImage(GetImageUri("ACTIVESHADOWTOPRIGHT.png"));
@@ -67,6 +74,7 @@ namespace DoubanFM
 			InactiveBottomImage = new BitmapImage(GetImageUri("INACTIVESHADOWBOTTOM.png"));
 			InactiveBottomRightImage = new BitmapImage(GetImageUri("INACTIVESHADOWBOTTOMRIGHT.png"));
 
+			//冻结阴影图像，以便图像重复使用
 			ActiveTopLeftImage.Freeze();
 			ActiveTopImage.Freeze();
 			ActiveTopRightImage.Freeze();
@@ -86,11 +94,20 @@ namespace DoubanFM
 			InactiveBottomRightImage.Freeze();
 		}
 
+		/// <summary>
+		/// 根据文件名获取图片的URI
+		/// </summary>
+		/// <param name="filename">文件名</param>
+		/// <returns>图片的URI</returns>
 		static Uri GetImageUri(string filename)
 		{
 			return new Uri("pack://application:,,,/DoubanFM;component/Images/Shadow/" + filename);
 		}
 
+		/// <summary>
+		/// 生成 <see cref="ShadowWindow"/> class 的新实例。
+		/// </summary>
+		/// <param name="owner">父窗口</param>
 		public ShadowWindow(Window owner)
 		{
 			InitializeComponent();
@@ -108,6 +125,10 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 初始化阴影窗口
+		/// </summary>
+		/// <param name="owner">父窗口</param>
 		void Init(Window owner)
 		{
 			Owner = owner;
@@ -119,6 +140,7 @@ namespace DoubanFM
 				//鼠标穿透
 				| WS.EX.TRANSPARENT);
 
+			//监听父窗口的事件
 			Owner.Activated += new EventHandler(Owner_Activated);
 			Owner.Deactivated += new EventHandler(Owner_Deactivated);
 			Owner.StateChanged += new EventHandler(Owner_StateChanged);
@@ -126,6 +148,7 @@ namespace DoubanFM
 			Owner.LocationChanged += new EventHandler(Owner_LocationChanged);
 			Owner.SizeChanged += new SizeChangedEventHandler(Owner_SizeChanged);
 			
+			//初始化活动或非活动的阴影
 			if (Owner.IsActive)
 			{
 				ChangeToActive();
@@ -135,9 +158,11 @@ namespace DoubanFM
 				ChangeToInactive();
 			}
 
+			//初始化大小和位置
 			Owner_LocationChanged(null, null);
 			Owner_SizeChanged(null, null);
 
+			//考虑显示阴影
 			ConsiderShowShadow();
 		}
 
@@ -191,6 +216,9 @@ namespace DoubanFM
 			ChangeToInactive();
 		}
 
+		/// <summary>
+		/// 隐藏阴影
+		/// </summary>
 		protected void HideShadow()
 		{
 			try
@@ -200,6 +228,9 @@ namespace DoubanFM
 			catch { }
 		}
 
+		/// <summary>
+		/// 考虑显示阴影，若符合显示阴影的条件，则显示阴影，否则什么都不做
+		/// </summary>
 		protected void ConsiderShowShadow()
 		{
 			if (Owner.IsVisible && Owner.Visibility == Visibility.Visible && Owner.WindowState == System.Windows.WindowState.Normal)
@@ -219,6 +250,9 @@ namespace DoubanFM
 			Owner.Activate();
 		}
 
+		/// <summary>
+		/// 变更为活动窗口的阴影
+		/// </summary>
 		protected void ChangeToActive()
 		{
 			ImTopLeft.Source = ActiveTopLeftImage;
@@ -231,6 +265,9 @@ namespace DoubanFM
 			ImBottomRight.Source = ActiveBottomRightImage;
 		}
 
+		/// <summary>
+		/// 变更为非活动窗口的阴影
+		/// </summary>
 		protected void ChangeToInactive()
 		{
 			ImTopLeft.Source = InactiveTopLeftImage;
@@ -243,6 +280,11 @@ namespace DoubanFM
 			ImBottomRight.Source = InactiveBottomRightImage;
 		}
 
+		/// <summary>
+		/// 为目标窗口附加阴影
+		/// </summary>
+		/// <param name="window">目标窗口</param>
+		/// <returns>附加上的阴影窗口</returns>
 		public static ShadowWindow Attach(Window window)
 		{
 			return new ShadowWindow(window);

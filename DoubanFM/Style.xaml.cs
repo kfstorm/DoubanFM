@@ -25,21 +25,9 @@ namespace DoubanFM
 			Core.UrlHelper.OpenLink((string)((Button)sender).Tag);
 		}
 
-		private void WindowBaseStyle_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-			//如果不加try catch语句，在点击封面打开资料页面时很容易报错
-			try
-			{
-				(sender as Window).DragMove();
-			}
-			catch { }
-		}
-
-		private void ChildWindowBaseStyle_ButtonClose_Click(object sender, RoutedEventArgs e)
-		{
-			((sender as FrameworkElement).TemplatedParent as Window).Close();
-		}
-
+		/// <summary>
+		/// 使控制面板切换时有渐变效果
+		/// </summary>
 		private void ControlPanelStyle_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (e.OriginalSource == sender)

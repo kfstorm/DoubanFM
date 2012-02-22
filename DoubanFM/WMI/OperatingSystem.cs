@@ -12,6 +12,9 @@ using System.Management;
 
 namespace DoubanFM.Wmi
 {
+	/// <summary>
+	/// 包含操作系统信息的类
+	/// </summary>
 	internal class OperatingSystem : WmiBase
 	{
 		public string BootDevice;
@@ -78,6 +81,10 @@ namespace DoubanFM.Wmi
 		public string Version;
 		public string WindowsDirectory;
 
+		/// <summary>
+		/// 获取此类的实例
+		/// </summary>
+		/// <returns>此类的实例</returns>
 		internal static OperatingSystem GetInstance()
 		{
 			var instances = GetInstances<OperatingSystem>("Win32_OperatingSystem");

@@ -195,8 +195,8 @@ namespace DoubanFM.Core
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state)=>
 				{
 					Parameters parameters = new Parameters();
-					parameters.Add("start", ((_page - 1) * 15).ToString());
-					parameters.Add("search_text", _searchText);
+					parameters["start"] = ((_page - 1) * 15).ToString();
+					parameters["search_text"] = _searchText;
 					string url = ConnectionBase.ConstructUrlWithParameters("http://music.douban.com/subject_search", parameters);
 					ConnectionBase connection= new ConnectionBase(true);
 					string file = string.Empty;

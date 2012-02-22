@@ -227,8 +227,8 @@ namespace DoubanFM.Core
 		void Checking()
 		{
 			Parameters parameters = new Parameters();
-			parameters.Add(new UrlParameter("ProductName", ProductName));
-			parameters.Add(new UrlParameter("VersionNumber", VersionNumber));
+			parameters["ProductName"] = ProductName;
+			parameters["VersionNumber"] = VersionNumber;
 			string url = ConnectionBase.ConstructUrlWithParameters("http://www.kfstorm.com/products/check.php", parameters);
 			Now = State.Checking;
 			UpdateWork work = new UpdateWork(new ThreadStart(() =>

@@ -12,6 +12,9 @@ using System.Management;
 
 namespace DoubanFM.Wmi
 {
+	/// <summary>
+	/// 包含物理内存信息的类
+	/// </summary>
 	internal class PhysicalMemory : WmiBase
 	{
 		public string BankLabel;
@@ -45,11 +48,20 @@ namespace DoubanFM.Wmi
 		public UInt16 TypeDetail;
 		public string Version;
 
+		/// <summary>
+		/// 获取此类的实例
+		/// </summary>
+		/// <returns>此类的实例</returns>
 		internal static PhysicalMemory[] GetInstances()
 		{
 			return GetInstances<PhysicalMemory>("Win32_PhysicalMemory");
 		}
 
+		/// <summary>
+		/// 将字节数格式化为带单位的字符串
+		/// </summary>
+		/// <param name="bytes">字节数</param>
+		/// <returns>带单位的字符串</returns>
 		internal static string FormatBytes(ulong bytes)
 		{
 			const ulong scale = 1024;

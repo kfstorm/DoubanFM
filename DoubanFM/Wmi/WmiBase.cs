@@ -12,8 +12,17 @@ using System.Management;
 
 namespace DoubanFM.Wmi
 {
+	/// <summary>
+	/// 所有WMI类的基类，用于获取系统中的各种信息
+	/// </summary>
 	internal class WmiBase
 	{
+		/// <summary>
+		/// 获取某个WMI类的实例
+		/// </summary>
+		/// <typeparam name="TWmiClass">具体的WMI类</typeparam>
+		/// <param name="className">在Windows中该WMI类的类名</param>
+		/// <returns>一个实例数组</returns>
 		internal static TWmiClass[] GetInstances<TWmiClass>(string className) where TWmiClass : WmiBase, new()
 		{
 			if (className == null)

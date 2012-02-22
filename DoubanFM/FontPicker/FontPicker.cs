@@ -21,13 +21,21 @@ using System.Globalization;
 
 namespace DoubanFM
 {
+	/// <summary>
+	/// 字体选择器
+	/// </summary>
 	[TemplatePart(Name = "PART_FontComboBox", Type = typeof(ComboBox))]
 	public class FontPicker : Control
 	{
 
 		/// <summary>
-		/// 获取字体名称（简体中文字体返回中文名称）（只适用于单一字体，不适用于组合字体）
+		/// 获取字体名称（根据指定的CultureInfo获取本地化的字体名称）（只适用于单一字体，不适用于组合字体）
 		/// </summary>
+		/// <param name="fontFamily">一系列字体</param>
+		/// <param name="cultureInfo">指定的CultureInfo</param>
+		/// <returns>
+		/// 字体名称
+		/// </returns>
 		public static string GetFontName(FontFamily fontFamily, CultureInfo cultureInfo)
 		{
 			if (fontFamily == null) return string.Empty;
@@ -38,6 +46,11 @@ namespace DoubanFM
 			return fontFamily.FamilyNames.First().Value;
 		}
 
+		/// <summary>
+		/// 获取字体名称（根据当前线程的CultureInfo获取本地化的字体名称）（只适用于单一字体，不适用于组合字体）
+		/// </summary>
+		/// <param name="fontFamily">一系列字体</param>
+		/// <returns>字体名称</returns>
 		public static string GetFontName(FontFamily fontFamily)
 		{
 			return GetFontName(fontFamily, CultureInfo.CurrentCulture);
@@ -47,11 +60,15 @@ namespace DoubanFM
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(FontPicker), new FrameworkPropertyMetadata(typeof(FontPicker)));
 
+			//获取系统中已安装的字体
 			var fonts = from font in Fonts.SystemFontFamilies select GetFontName(font);
 			SystemFonts = fonts.ToList();
 			SystemFonts.Sort();
 		}
 
+		/// <summary>
+		/// 选中的字体
+		/// </summary>
 		public FontFamily Font
 		{
 			get { return (FontFamily)GetValue(FontProperty); }
@@ -67,6 +84,7 @@ namespace DoubanFM
 			if (e.NewValue != null && picker.CbFont != null)
 			{
 				string str = ((FontFamily)e.NewValue).ToString();
+				//将全角逗号替换为半角逗号，以支持用全角逗号作为字体的分隔符
 				if (picker.CbFont.Text.Replace('，', ',') != str)
 				{
 					picker.CbFont.Text = str;
@@ -75,6 +93,9 @@ namespace DoubanFM
 			picker.RaiseEvent(new RoutedPropertyChangedEventArgs<FontFamily>((FontFamily)e.OldValue, (FontFamily)e.NewValue, FontChangedEvent));
 		}
 
+		/// <summary>
+		/// 当选中的字体改变时发生。
+		/// </summary>
 		public event RoutedPropertyChangedEventHandler<FontFamily> FontChanged
 		{
 			add
@@ -89,10 +110,19 @@ namespace DoubanFM
 
 		public static readonly RoutedEvent FontChangedEvent = EventManager.RegisterRoutedEvent("FontChanged", RoutingStrategy.Bubble, typeof(RoutedPropertyChangedEventHandler<FontFamily>), typeof(FontPicker));
 
+		/// <summary>
+		/// 用于显示和选择字体的控件
+		/// </summary>
 		private ComboBox CbFont;
 
+		/// <summary>
+		/// 系统中已安装字体的字符串列表
+		/// </summary>
 		public static readonly List<string> SystemFonts;
 
+		/// <summary>
+		/// 在派生类中重写后，每当应用程序代码或内部进程调用 <see cref="M:System.Windows.FrameworkElement.ApplyTemplate"/>，都将调用此方法。
+		/// </summary>
 		public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
@@ -108,11 +138,21 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 当释放一个按键时，Combobox中填写的内容可能改变，需要更新选择的字体
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.Windows.Input.KeyEventArgs"/> instance containing the event data.</param>
 		void CbFont_KeyUp(object sender, KeyEventArgs e)
 		{
 			UpdateFontFamily();
 		}
 
+		/// <summary>
+		/// 当Combobox中选择的项改变时，需要更新选择的字体
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.Windows.Controls.SelectionChangedEventArgs"/> instance containing the event data.</param>
 		void CbFont_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			//引发SelectionChanged事件时Text属性还未政变，所以要延迟读取Text属性的值

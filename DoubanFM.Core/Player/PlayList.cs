@@ -45,14 +45,14 @@ namespace DoubanFM.Core
 		internal static PlayList GetPlayList(string context, string songId, Channel channel, string operationType, string history)
 		{
 			Parameters parameters = new Parameters();
-			parameters.Add("from", "ie9");
-			parameters.Add("context", context);
-			parameters.Add("sid", songId);
-			parameters.Add("channel", channel.Id);
+			parameters["from"] = "ie9";
+			parameters["context"] = context;
+			parameters["sid"] = songId;
+			parameters["channel"] = channel.Id;
 			if (channel.IsDj)
-				parameters.Add("pid", channel.ProgramId);
-			parameters.Add("type", operationType);
-			parameters.Add("h", history);
+				parameters["pid"] = channel.ProgramId;
+			parameters["type"] = operationType;
+			parameters["h"] = history;
 			string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
 			string json = new ConnectionBase().Get(url, @"application/json, text/javascript, */*; q=0.01", @"http://douban.fm");
 			var jsonPlayList = Json.PlayList.FromJson(json);

@@ -20,6 +20,9 @@ using System.Windows.Shapes;
 
 namespace DoubanFM
 {
+	/// <summary>
+	/// 颜色选择器控件
+	/// </summary>
 	[TemplatePart(Name = "PART_ColorShadeCanvas", Type = typeof(Canvas))]
 	[TemplatePart(Name = "PART_ColorShadeSelector", Type = typeof(FrameworkElement))]
 	[TemplatePart(Name = "PART_ColorSpectrumSlider", Type = typeof(ColorSpectrumSlider))]
@@ -37,14 +40,18 @@ namespace DoubanFM
 
 		public ColorPicker()
 		{
+			//在控件加载后更新一次颜色
 			this.Loaded += (sender, e) =>
 				{
 					UpdateColor(Color, null);
 				};
 		}
 
-		#region Color
+		#region Color属性
 
+		/// <summary>
+		/// 选择的颜色
+		/// </summary>
 		public Color Color
 		{
 			get { return (Color)GetValue(ColorProperty); }
@@ -58,6 +65,7 @@ namespace DoubanFM
 		{
 			ColorPicker picker = (ColorPicker)d;
 			
+			//更新控件的其他属性
 			picker.A = picker.Color.A;
 			picker.R = picker.Color.R;
 			picker.G = picker.Color.G;
@@ -73,6 +81,7 @@ namespace DoubanFM
 			
 			picker.RaiseEvent(new RoutedPropertyChangedEventArgs<Color>((Color)e.OldValue, (Color)e.NewValue, ColorChangedEvent));
 
+			//更新所有TextBox的内容
 			picker.ForceUpdateTextBox();
 		}
 
@@ -92,8 +101,11 @@ namespace DoubanFM
 
 		#endregion
 
-		#region A
+		#region A属性
 
+		/// <summary>
+		/// 颜色的Alpha通道
+		/// </summary>
 		public byte A
 		{
 			get { return (byte)GetValue(AProperty); }
@@ -126,8 +138,11 @@ namespace DoubanFM
 
 		#endregion
 
-		#region R
+		#region R属性
 
+		/// <summary>
+		/// 颜色的Red通道
+		/// </summary>
 		public byte R
 		{
 			get { return (byte)GetValue(RProperty); }
@@ -160,8 +175,11 @@ namespace DoubanFM
 
 		#endregion
 
-		#region G
+		#region G属性
 
+		/// <summary>
+		/// 颜色的Green通道
+		/// </summary>
 		public byte G
 		{
 			get { return (byte)GetValue(GProperty); }
@@ -194,8 +212,11 @@ namespace DoubanFM
 
 		#endregion
 
-		#region B
+		#region B属性
 
+		/// <summary>
+		/// 颜色的Blue通道
+		/// </summary>
 		public byte B
 		{
 			get { return (byte)GetValue(BProperty); }
@@ -228,8 +249,11 @@ namespace DoubanFM
 
 		#endregion
 
-		#region HexString
+		#region HexString属性
 
+		/// <summary>
+		/// 颜色的十六进制字符串表示
+		/// </summary>
 		public string HexString
 		{
 			get { return (string)GetValue(HexStringProperty); }
@@ -289,8 +313,11 @@ namespace DoubanFM
 
 		#endregion
 
-		#region IsAlphaEnabled
+		#region IsAlphaEnabled属性
 
+		/// <summary>
+		/// 颜色中是否包含Alpha通道
+		/// </summary>
 		public bool IsAlphaEnabled
 		{
 			get { return (bool)GetValue(IsAlphaEnabledProperty); }
@@ -333,6 +360,197 @@ namespace DoubanFM
 
 		#endregion
 
+		#region 字段
+		/// <summary>
+		/// 最后一次设置颜色时的精确颜色
+		/// </summary>
+		private HsvColor? lastPreciseColor;
+		/// <summary>
+		/// 指示是否正在更新颜色
+		/// </summary>
+		bool updatingColor = false;
+
+		/// <summary>
+		/// 渐变画布
+		/// </summary>
+		private Canvas shadeCanvas;
+		/// <summary>
+		/// 渐变选择器
+		/// </summary>
+		private FrameworkElement shadeSelector;
+		/// <summary>
+		/// 频谱选择器
+		/// </summary>
+		private ColorSpectrumSlider spectrumSlider;
+		/// <summary>
+		/// 代表A值的TextBox
+		/// </summary>
+		private TextBox tbA;
+		/// <summary>
+		/// 代表R值的TextBox
+		/// </summary>
+		private TextBox tbR;
+		/// <summary>
+		/// 代表G值的TextBox
+		/// </summary>
+		private TextBox tbG;
+		/// <summary>
+		/// 代表B值的TextBox
+		/// </summary>
+		private TextBox tbB;
+		/// <summary>
+		/// 代表HexString值的TextBox
+		/// </summary>
+		private TextBox tbHexString;
+		#endregion
+
+		#region 控件逻辑部分
+
+		/// <summary>
+		/// 在派生类中重写后，每当应用程序代码或内部进程调用 <see cref="M:System.Windows.FrameworkElement.ApplyTemplate"/>，都将调用此方法。
+		/// </summary>
+		public override void OnApplyTemplate()
+		{
+			base.OnApplyTemplate();
+
+			//初始化控件部件
+			shadeCanvas = this.Template.FindName("PART_ColorShadeCanvas", this) as Canvas;
+			shadeSelector = this.Template.FindName("PART_ColorShadeSelector", this) as FrameworkElement;
+			spectrumSlider = this.Template.FindName("PART_ColorSpectrumSlider", this) as ColorSpectrumSlider;
+			tbA = this.Template.FindName("PART_TextBoxA", this) as TextBox;
+			tbR = this.Template.FindName("PART_TextBoxR", this) as TextBox;
+			tbG = this.Template.FindName("PART_TextBoxG", this) as TextBox;
+			tbB = this.Template.FindName("PART_TextBoxB", this) as TextBox;
+			tbHexString = this.Template.FindName("PART_TextBoxHexString", this) as TextBox;
+			
+			//为控件部件添加事件处理程序
+			shadeCanvas.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(shadeCanvas_PreviewMouseLeftButtonDown);
+			shadeCanvas.MouseMove += new MouseEventHandler(shadeCanvas_MouseMove);
+			shadeCanvas.MouseLeftButtonUp += new MouseButtonEventHandler(shadeCanvas_MouseLeftButtonUp);
+			spectrumSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(spectrumSlider_ValueChanged);
+
+			//更新颜色
+			UpdateColor(Color, null);
+		}
+
+		/// <summary>
+		/// 频谱选择器的选择改变时触发
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.Windows.RoutedPropertyChangedEventArgs&lt;System.Double&gt;"/> instance containing the event data.</param>
+		void spectrumSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			//频谱选择已改变，需更新颜色
+			HsvColor hsvColor = lastPreciseColor.HasValue ? lastPreciseColor.Value : HsvColor.FromArgb(Color);
+			hsvColor.H = spectrumSlider.Value;
+			UpdateColor(hsvColor.ToArgb(), hsvColor);
+		}
+
+		/// <summary>
+		/// 渐变选择器中按下鼠标左键时触发
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
+		void shadeCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			Point p = e.GetPosition(shadeCanvas);
+			UpdateColorFromPoint(p);
+			shadeCanvas.CaptureMouse();
+			e.Handled = true;
+		}
+
+		/// <summary>
+		/// 渐变选择器中松开鼠标左键时触发
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
+		void shadeCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			shadeCanvas.ReleaseMouseCapture();
+		}
+
+		/// <summary>
+		/// 渐变选择器中移动鼠标时触发
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.Windows.Input.MouseEventArgs"/> instance containing the event data.</param>
+		void shadeCanvas_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (shadeCanvas.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
+			{
+				Point p = e.GetPosition(shadeCanvas);
+				UpdateColorFromPoint(p);
+			}
+		}
+
+		/// <summary>
+		/// 根据渐变选择器在渐变画布中的位置改变颜色
+		/// </summary>
+		/// <param name="p">渐变选择器的中心相对于渐变画布的坐标</param>
+		protected void UpdateColorFromPoint(Point p)
+		{
+			if (p.X < 0) p.X = 0;
+			if (p.X > shadeCanvas.ActualWidth) p.X = shadeCanvas.ActualWidth;
+			if (p.Y < 0) p.Y = 0;
+			if (p.Y > shadeCanvas.ActualHeight) p.Y = shadeCanvas.ActualHeight;
+
+			//计算新的颜色
+			HsvColor hsvColor = lastPreciseColor.HasValue ? lastPreciseColor.Value : HsvColor.FromArgb(spectrumSlider.SelectedColor);
+			if (!lastPreciseColor.HasValue)
+			{
+				hsvColor.A = (double)Color.A / 255;
+			}
+			hsvColor.S = p.X / shadeCanvas.ActualWidth;
+			hsvColor.V = 1 - p.Y / shadeCanvas.ActualHeight;
+			//更新颜色
+			UpdateColor(hsvColor.ToArgb(), hsvColor);
+		}
+
+		/// <summary>
+		/// 更新颜色
+		/// </summary>
+		/// <param name="newColor">新的颜色</param>
+		/// <param name="preciseColor">如果新的颜色是由一个精确的颜色得来的，则应传递精确颜色值，否则传递null</param>
+		protected void UpdateColor(Color newColor, HsvColor? preciseColor)
+		{
+			if (updatingColor) return;
+			updatingColor = true;
+
+			HsvColor hsvColor = preciseColor.HasValue ? preciseColor.Value : HsvColor.FromArgb(newColor);
+			lastPreciseColor = preciseColor;
+
+			if (shadeCanvas != null)
+			{
+				if (preciseColor == null && hsvColor.S == 0 && hsvColor.V == 0)
+				{
+					Canvas.SetLeft(shadeSelector, shadeCanvas.ActualWidth - shadeSelector.ActualWidth / 2);
+				}
+				else
+				{
+					Canvas.SetLeft(shadeSelector, hsvColor.S * shadeCanvas.ActualWidth - shadeSelector.ActualWidth / 2);
+				}
+				Canvas.SetTop(shadeSelector, (1 - hsvColor.V) * shadeCanvas.ActualHeight - shadeSelector.ActualHeight / 2);
+				if (hsvColor.S > 0)
+				{
+					spectrumSlider.Value = hsvColor.H;
+				}
+			}
+			if (Color == newColor)
+			{
+				Color = newColor;
+				ForceUpdateTextBox();
+			}
+			else
+			{
+				Color = newColor;
+			}
+
+			updatingColor = false;
+		}
+
+		/// <summary>
+		/// 强制更新TextBox中的内容
+		/// </summary>
 		public void ForceUpdateTextBox()
 		{
 			if (tbA != null)
@@ -369,125 +587,6 @@ namespace DoubanFM
 				if (expression != null)
 					expression.UpdateTarget();
 			}
-		}
-
-		private HsvColor? lastPreciseColor;
-
-		private Canvas shadeCanvas;
-		private FrameworkElement shadeSelector;
-		private ColorSpectrumSlider spectrumSlider;
-		private TextBox tbA;
-		private TextBox tbR;
-		private TextBox tbG;
-		private TextBox tbB;
-		private TextBox tbHexString;
-		
-		#region logic
-
-		public override void OnApplyTemplate()
-		{
-			base.OnApplyTemplate();
-
-			shadeCanvas = this.Template.FindName("PART_ColorShadeCanvas", this) as Canvas;
-			shadeSelector = this.Template.FindName("PART_ColorShadeSelector", this) as FrameworkElement;
-			spectrumSlider = this.Template.FindName("PART_ColorSpectrumSlider", this) as ColorSpectrumSlider;
-			tbA = this.Template.FindName("PART_TextBoxA", this) as TextBox;
-			tbR = this.Template.FindName("PART_TextBoxR", this) as TextBox;
-			tbG = this.Template.FindName("PART_TextBoxG", this) as TextBox;
-			tbB = this.Template.FindName("PART_TextBoxB", this) as TextBox;
-			tbHexString = this.Template.FindName("PART_TextBoxHexString", this) as TextBox;
-			
-			shadeCanvas.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(shadeCanvas_PreviewMouseLeftButtonDown);
-			shadeCanvas.MouseMove += new MouseEventHandler(shadeCanvas_MouseMove);
-			shadeCanvas.MouseLeftButtonUp += new MouseButtonEventHandler(shadeCanvas_MouseLeftButtonUp);
-			spectrumSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(spectrumSlider_ValueChanged);
-
-			UpdateColor(Color, null);
-		}
-
-		void spectrumSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-		{
-			HsvColor hsvColor = lastPreciseColor.HasValue ? lastPreciseColor.Value : HsvColor.FromArgb(Color);
-			hsvColor.H = spectrumSlider.Value;
-			UpdateColor(hsvColor.ToArgb(), hsvColor);
-		}
-
-		void shadeCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			Point p = e.GetPosition(shadeCanvas);
-			UpdateColorFromPoint(p);
-			shadeCanvas.CaptureMouse();
-			e.Handled = true;
-		}
-
-		void shadeCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-		{
-			shadeCanvas.ReleaseMouseCapture();
-		}
-
-		void shadeCanvas_MouseMove(object sender, MouseEventArgs e)
-		{
-			if (shadeCanvas.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
-			{
-				Point p = e.GetPosition(shadeCanvas);
-				UpdateColorFromPoint(p);
-			}
-		}
-
-		protected void UpdateColorFromPoint(Point p)
-		{
-			if (p.X < 0) p.X = 0;
-			if (p.X > shadeCanvas.ActualWidth) p.X = shadeCanvas.ActualWidth;
-			if (p.Y < 0) p.Y = 0;
-			if (p.Y > shadeCanvas.ActualHeight) p.Y = shadeCanvas.ActualHeight;
-
-			HsvColor hsvColor = lastPreciseColor.HasValue ? lastPreciseColor.Value : HsvColor.FromArgb(spectrumSlider.SelectedColor);
-			if (!lastPreciseColor.HasValue)
-			{
-				hsvColor.A = (double)Color.A / 255;
-			}
-			hsvColor.S = p.X / shadeCanvas.ActualWidth;
-			hsvColor.V = 1 - p.Y / shadeCanvas.ActualHeight;
-			UpdateColor(hsvColor.ToArgb(), hsvColor);
-		}
-
-		bool updatingColor = false;
-
-		protected void UpdateColor(Color newColor, HsvColor? preciseColor)
-		{
-			if (updatingColor) return;
-			updatingColor = true;
-
-			HsvColor hsvColor = preciseColor.HasValue ? preciseColor.Value : HsvColor.FromArgb(newColor);
-			lastPreciseColor = preciseColor;
-
-			if (shadeCanvas != null)
-			{
-				if (preciseColor == null && hsvColor.S == 0 && hsvColor.V == 0)
-				{
-					Canvas.SetLeft(shadeSelector, shadeCanvas.ActualWidth - shadeSelector.ActualWidth / 2);
-				}
-				else
-				{
-					Canvas.SetLeft(shadeSelector, hsvColor.S * shadeCanvas.ActualWidth - shadeSelector.ActualWidth / 2);
-				}
-				Canvas.SetTop(shadeSelector, (1 - hsvColor.V) * shadeCanvas.ActualHeight - shadeSelector.ActualHeight / 2);
-				if (hsvColor.S > 0)
-				{
-					spectrumSlider.Value = hsvColor.H;
-				}
-			}
-			if (Color == newColor)
-			{
-				Color = newColor;
-				ForceUpdateTextBox();
-			}
-			else
-			{
-				Color = newColor;
-			}
-
-			updatingColor = false;
 		}
 
 		#endregion

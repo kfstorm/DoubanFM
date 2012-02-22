@@ -19,15 +19,13 @@ using System.Windows.Shapes;
 namespace DoubanFM
 {
 	/// <summary>
-	/// Interaction logic for HelpWindow.xaml
+	/// 帮助窗口
 	/// </summary>
 	public partial class HelpWindow : ChildWindowBase
 	{
 		public HelpWindow()
 		{
 			this.InitializeComponent();
-			
-			// Insert code required on object creation below this point.
 		}
 
 		private void Hyperlink_Click(object sender, RoutedEventArgs e)

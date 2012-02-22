@@ -21,7 +21,7 @@ using System.Windows.Shapes;
 namespace DoubanFM
 {
 	/// <summary>
-	/// PopupableColorPicker.xaml 的交互逻辑
+	/// 可弹出的颜色选择器
 	/// </summary>
 	public partial class PopupableColorPicker : UserControl
 	{
@@ -30,8 +30,11 @@ namespace DoubanFM
 			InitializeComponent();
 		}
 
-		#region Color
+		#region Color属性
 
+		/// <summary>
+		/// 选择的颜色
+		/// </summary>
 		public Color Color
 		{
 			get { return (Color)GetValue(ColorProperty); }
@@ -41,15 +44,19 @@ namespace DoubanFM
 		public static readonly DependencyProperty ColorProperty =
 			DependencyProperty.Register("Color", typeof(Color), typeof(PopupableColorPicker), new FrameworkPropertyMetadata(Colors.White, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+		#endregion
 
+		#region IsAlphaEnabled属性
 
+		/// <summary>
+		/// 颜色中是否包含Alpha通道
+		/// </summary>
 		public bool IsAlphaEnabled
 		{
 			get { return (bool)GetValue(IsAlphaEnabledProperty); }
 			set { SetValue(IsAlphaEnabledProperty, value); }
 		}
 
-		// Using a DependencyProperty as the backing store for IsAlphaEnabled.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty IsAlphaEnabledProperty =
 			DependencyProperty.Register("IsAlphaEnabled", typeof(bool), typeof(PopupableColorPicker), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 

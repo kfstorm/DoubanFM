@@ -21,7 +21,7 @@ using DoubanFM.Core;
 namespace DoubanFM
 {
 	/// <summary>
-	/// GeneralSettingWindow.xaml 的交互逻辑
+	/// 常规设置窗口
 	/// </summary>
 	public partial class GeneralSettingWindow : ChildWindowBase
 	{

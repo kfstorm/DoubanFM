@@ -48,7 +48,7 @@ namespace DoubanFM.Core
 		private static void GoogleMusicSearch(string keyword)
 		{
 			Parameters parameters = new Parameters();
-			parameters.Add("q", keyword);
+			parameters["q"] = keyword;
 			string url = ConnectionBase.ConstructUrlWithParameters("http://www.google.cn/music/search", parameters);
 			UrlHelper.OpenLink(url);
 		}
@@ -60,7 +60,7 @@ namespace DoubanFM.Core
 		private static void BaiduTingSearch(string keyword)
 		{
 			Parameters parameters = new Parameters();
-			parameters.Add("key", keyword);
+			parameters["key"] = keyword;
 			string url = ConnectionBase.ConstructUrlWithParameters("http://ting.baidu.com/search", parameters);
 			UrlHelper.OpenLink(url);
 		}

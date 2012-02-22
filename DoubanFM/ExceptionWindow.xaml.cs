@@ -26,11 +26,14 @@ using DoubanFM.Wmi;
 namespace DoubanFM
 {
 	/// <summary>
-	/// ExceptionWindow.xaml 的交互逻辑
+	/// 报错窗口
 	/// </summary>
 	public partial class ExceptionWindow : ChildWindowBase
 	{
 		private object exceptionObject;
+		/// <summary>
+		/// 保存异常信息的对象
+		/// </summary>
 		public object ExceptionObject
 		{
 			get { return exceptionObject; }
@@ -48,9 +51,20 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 异常信息
+		/// </summary>
 		public string ExceptionMessage;
+		/// <summary>
+		/// 系统信息
+		/// </summary>
 		public string SystemInformation = GetSystemInformation();
 
+		/// <summary>
+		/// 根据异常对象获得异常信息
+		/// </summary>
+		/// <param name="exceptionObject">异常对象</param>
+		/// <returns>异常信息</returns>
 		public static string GetExceptionMessage(object exceptionObject)
 		{
 			if (exceptionObject == null) return string.Empty;
@@ -72,6 +86,11 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 根据异常对象获得简化的异常信息
+		/// </summary>
+		/// <param name="exceptionObject">异常对象</param>
+		/// <returns>异常信息</returns>
 		public static string GetShortExceptionMessage(object exceptionObject)
 		{
 			if (exceptionObject is Exception)
@@ -88,6 +107,10 @@ namespace DoubanFM
 			return string.Empty;
 		}
 
+		/// <summary>
+		/// 获取系统信息
+		/// </summary>
+		/// <returns>系统信息</returns>
 		public static string GetSystemInformation()
 		{
 			StringBuilder sb = new StringBuilder();
@@ -198,11 +221,12 @@ namespace DoubanFM
 		{
 			InitializeComponent();
 
-#if DEBUG || TEST
+#if DEBUG || TEST		//调试时不显示发送错误报告的按钮，而是显示查看错误报告的按钮
 			BtnViewExceptionMessage.Visibility = System.Windows.Visibility.Visible;
 			BtnOK.Visibility = System.Windows.Visibility.Collapsed;
 			UserMessagePanel.Visibility = Visibility.Collapsed;
 #endif
+			//当主窗口显示失败时，异常窗口应显示在屏幕中央
 			if (Owner == null)
 			{
 				ShowInTaskbar = true;
@@ -210,6 +234,9 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 发送错误报告
+		/// </summary>
 		private void BtnOK_Click(object sender, RoutedEventArgs e)
 		{
 			BtnOK.IsEnabled = false;
@@ -225,11 +252,11 @@ namespace DoubanFM
 					string versionNumber = assembly.GetName().Version.ToString();
 					
 					Parameters parameters = new Parameters();
-					parameters.Add(new UrlParameter("ProductName", productName));
-					parameters.Add(new UrlParameter("VersionNumber", versionNumber));
-					parameters.Add(new UrlParameter("SystemInformation", SystemInformation));
-					parameters.Add(new UrlParameter("Exception", ExceptionMessage));
-					parameters.Add(new UrlParameter("UserMessage", userMessage));
+					parameters["ProductName"] = productName;
+					parameters["VersionNumber"] = versionNumber;
+					parameters["SystemInformation"] = SystemInformation;
+					parameters["Exception"] = ExceptionMessage;
+					parameters["UserMessage"] = userMessage;
 					string result = new ConnectionBase().Post("http://www.kfstorm.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
 					//string result = new ConnectionBase().Post("http://localhost/phpStudy/ProductManager/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
 					Dispatcher.BeginInvoke(new Action(() =>
@@ -249,6 +276,9 @@ namespace DoubanFM
 			this.Close();
 		}
 
+		/// <summary>
+		/// 查看错误报告
+		/// </summary>
 		private void BtnViewExceptionMessage_Click(object sender, RoutedEventArgs e)
 		{
 			ErrorPicture.Visibility = System.Windows.Visibility.Collapsed;

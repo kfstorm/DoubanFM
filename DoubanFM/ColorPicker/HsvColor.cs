@@ -6,13 +6,35 @@ using System.Windows.Media;
 
 namespace DoubanFM
 {
+	/// <summary>
+	/// 用HSV色彩空间表示的颜色
+	/// </summary>
 	public struct HsvColor
 	{
+		/// <summary>
+		/// 不透明度
+		/// </summary>
 		public double A;
+		/// <summary>
+		/// 色相
+		/// </summary>
 		public double H;
+		/// <summary>
+		/// 饱和度
+		/// </summary>
 		public double S;
+		/// <summary>
+		/// 亮度
+		/// </summary>
 		public double V;
 
+		/// <summary>
+		/// 生成 <see cref="HsvColor"/> struct 的新实例。
+		/// </summary>
+		/// <param name="a">不透明度</param>
+		/// <param name="h">色相</param>
+		/// <param name="s">饱和度</param>
+		/// <param name="v">亮度</param>
 		public HsvColor(double a, double h, double s, double v)
 		{
 			A = a;
@@ -21,6 +43,13 @@ namespace DoubanFM
 			V = v;
 		}
 
+		/// <summary>
+		/// 从Color类的实例生成<see cref="HsvColor"/>的新实例
+		/// </summary>
+		/// <param name="argb">Color类的实例</param>
+		/// <returns>
+		///   <see cref="HsvColor"/>的新实例
+		/// </returns>
 		public static HsvColor FromArgb(Color argb)
 		{
 			double r = argb.R;
@@ -62,6 +91,12 @@ namespace DoubanFM
 			return new HsvColor { A = (double)argb.A / 255, H = h, S = s, V = v / 255 };
 		}
 
+		/// <summary>
+		/// 转换为Color类的新实例
+		/// </summary>
+		/// <returns>
+		/// Color类的新实例
+		/// </returns>
 		public Color ToArgb()
 		{
 			double h = H;

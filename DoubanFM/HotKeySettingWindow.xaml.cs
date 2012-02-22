@@ -20,16 +20,16 @@ using System.Windows.Shapes;
 namespace DoubanFM
 {
 	/// <summary>
-	/// HotKeyWindow.xaml 的交互逻辑
+	/// 热键设置窗口
 	/// </summary>
-	public partial class HotKeyWindow : ChildWindowBase
+	public partial class HotKeySettingWindow : ChildWindowBase
 	{
 		/// <summary>
 		/// 热键设置，关闭窗口前为默认设置，关闭窗口后更新为新设置
 		/// </summary>
 		internal HotKeys HotKeys { get; private set; }
 		
-		internal HotKeyWindow(DoubanFMWindow owner, HotKeys hotKeys)
+		internal HotKeySettingWindow(DoubanFMWindow owner, HotKeys hotKeys)
 		{
 			InitializeComponent();
 

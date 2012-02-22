@@ -60,6 +60,7 @@ namespace DoubanFM
 		/// 从图片中获取背景颜色
 		/// </summary>
 		/// <param name="image">图片</param>
+		/// <param name="callback">计算完成后调用的委托</param>
 		public static void GetImageColorForBackgroundAsync(BitmapSource image, ComputeCompleteCallback callback)
 		{
 			FormatConvertedBitmap bitmap = null;
@@ -70,6 +71,7 @@ namespace DoubanFM
 			bool isFrozen = image.IsFrozen;
 			if (!isFrozen)
 			{
+				//由于image没有冻结，所以image不能跨线程使用，这时要在当前线程中将image转换为另一个位图
 				bitmap = new FormatConvertedBitmap(image, PixelFormats.Rgb24, BitmapPalettes.WebPalette, 0);
 				if (bitmap.CanFreeze) bitmap.Freeze();
 				pixels = new byte[bitmap.PixelHeight * bitmap.PixelWidth * bytesPerPixel];
@@ -81,6 +83,7 @@ namespace DoubanFM
 				{
 					if (isFrozen)
 					{
+						//由于image已经冻结，所以image可以跨线程使用，这时在新线程中将image转换为另一个位图
 						bitmap = new FormatConvertedBitmap(image, PixelFormats.Rgb24, BitmapPalettes.WebPalette, 0);
 						if (bitmap.CanFreeze) bitmap.Freeze();
 						pixels = new byte[bitmap.PixelHeight * bitmap.PixelWidth * bytesPerPixel];
@@ -88,6 +91,8 @@ namespace DoubanFM
 						width = bitmap.PixelWidth;
 						height = bitmap.PixelHeight;
 					}
+
+					//计算颜色的均值
 					int sum = width * height;
 					int r = 0, g = 0, b = 0;
 					int offset = 0;
@@ -105,6 +110,7 @@ namespace DoubanFM
 					b = b / sum;
 					Color color1 = Color.FromRgb((byte)r, (byte)g, (byte)b);
 
+					//计算图片右部的颜色均值
 					r = 0; g = 0; b = 0;
 					int jstart = (int)(width * (1 - RightSideWidth));
 					sum = (width - jstart) * width;
@@ -121,6 +127,8 @@ namespace DoubanFM
 					g = g / sum;
 					b = b / sum;
 					Color color2 = Color.FromRgb((byte)r, (byte)g, (byte)b);
+
+					//根据上面计算出来的两个颜色计算最终颜色
 					HSLColor hsl1 = new HSLColor(color1);
 					HSLColor hsl2 = new HSLColor(color2);
 					hsl1.Hue += 10;

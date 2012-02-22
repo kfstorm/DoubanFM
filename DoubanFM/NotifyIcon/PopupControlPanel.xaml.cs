@@ -23,7 +23,7 @@ using System.Windows.Media.Animation;
 namespace DoubanFM.NotifyIcon
 {
 	/// <summary>
-	/// NotifyIconPopup.xaml 的交互逻辑
+	/// 托盘控制面板
 	/// </summary>
 	public partial class PopupControlPanel : UserControl
 	{
@@ -34,6 +34,9 @@ namespace DoubanFM.NotifyIcon
 			_player = FindResource("Player") as Player;
 		}
 
+		/// <summary>
+		/// 平滑地显示封面
+		/// </summary>
 		public void ShowCoverSmooth()
 		{
 			((Storyboard)FindResource("ShowCoverSmooth")).Begin();

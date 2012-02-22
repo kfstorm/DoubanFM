@@ -26,7 +26,7 @@ using System.Windows.Threading;
 namespace DoubanFM
 {
 	/// <summary>
-	/// LyricsWindow.xaml 的交互逻辑
+	/// 歌词窗口
 	/// </summary>
 	public partial class LyricsWindow : Window
 	{
@@ -83,15 +83,20 @@ namespace DoubanFM
 					| WS.EX.TOOLWINDOW);
 			});
 
+			//更新歌词前景色
 			UpdateForegroundSetting();
+			//更新窗口大小和位置
 			UpdateSizeAndLocation();
 
+			//监听Windows的显示设置，当分辨率改变或任务栏位置和大小改变时，能够调整歌词位置
 			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += delegate { UpdateSizeAndLocation(); };
 			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler((sender, e) =>
 				{
 					if (e.Category == Microsoft.Win32.UserPreferenceCategory.Desktop)
 						UpdateSizeAndLocation();
 				});
+
+			//将歌词窗口的属性与设置绑定
 
 			Binding binding = new Binding();
 			binding.Source = LyricsSetting;
@@ -215,6 +220,10 @@ namespace DoubanFM
 
 		#region 绘制歌词
 
+		#region 字体
+		/// <summary>
+		/// 字体
+		/// </summary>
 		public FontFamily LyricsFontFamily
 		{
 			get { return (FontFamily)GetValue(LyricsFontFamilyProperty); }
@@ -230,7 +239,12 @@ namespace DoubanFM
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
+		#endregion
 
+		#region 字号
+		/// <summary>
+		/// 字号
+		/// </summary>
 		public double LyricsFontSize
 		{
 			get { return (double)GetValue(LyricsFontSizeProperty); }
@@ -247,7 +261,12 @@ namespace DoubanFM
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 			(d as LyricsWindow).UpdateStrokeAndShadow();
 		}
+		#endregion
 
+		#region 粗细
+		/// <summary>
+		/// 粗细
+		/// </summary>
 		public FontWeight LyricsFontWeight
 		{
 			get { return (FontWeight)GetValue(LyricsFontWeightProperty); }
@@ -263,7 +282,12 @@ namespace DoubanFM
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
+		#endregion
 
+		#region 描边粗细
+		/// <summary>
+		/// 描边粗细
+		/// </summary>
 		public double LyricsStrokeWeight
 		{
 			get { return (double)GetValue(LyricsStrokeWeightProperty); }
@@ -277,7 +301,12 @@ namespace DoubanFM
 		{
 			(d as LyricsWindow).UpdateStrokeAndShadow();
 		}
+		#endregion
 
+		#region 歌词文字1
+		/// <summary>
+		/// 歌词文字1
+		/// </summary>
 		public string LyricsText1
 		{
 			get { return (string)GetValue(LyricsText1Property); }
@@ -291,7 +320,12 @@ namespace DoubanFM
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
 		}
+		#endregion
 
+		#region 歌词文字2
+		/// <summary>
+		/// 歌词文字2
+		/// </summary>
 		public string LyricsText2
 		{
 			get { return (string)GetValue(LyricsText2Property); }
@@ -305,7 +339,12 @@ namespace DoubanFM
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
 		}
+		#endregion
 
+		#region 歌词文字3
+		/// <summary>
+		/// 歌词文字3
+		/// </summary>
 		public string LyricsText3
 		{
 			get { return (string)GetValue(LyricsText3Property); }
@@ -319,6 +358,7 @@ namespace DoubanFM
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
+		#endregion
 
 		/// <summary>
 		/// 重绘歌词
@@ -333,6 +373,10 @@ namespace DoubanFM
 				ShadowEffect.Opacity = 1;
 		}
 
+		/// <summary>
+		/// 更新文字外形
+		/// </summary>
+		/// <param name="text">要更新的文字外形</param>
 		public void UpdateText(Path text)
 		{
 			if (text == PathText1)
@@ -351,7 +395,7 @@ namespace DoubanFM
 		}
 
 		/// <summary>
-		/// Create the outline geometry based on the formatted text.
+		/// 根据字符串内容创建几何形状
 		/// </summary>
 		public Geometry CreateText(string text)
 		{
@@ -370,6 +414,9 @@ namespace DoubanFM
 
 		#endregion
 
+		/// <summary>
+		/// 强力置顶所使用的计时器
+		/// </summary>
 		DispatcherTimer timer = new DispatcherTimer();
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)

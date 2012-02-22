@@ -9,7 +9,7 @@ Website : http://www.kfstorm.com
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:DoubanFM"
-	mc:Ignorable="d" x:Class="DoubanFM.HotKeyWindow"
+	mc:Ignorable="d" x:Class="DoubanFM.HotKeySettingWindow"
 	x:Name="window"
 	Title="热键设置" Background="#FF852929">
 	<Window.Resources>

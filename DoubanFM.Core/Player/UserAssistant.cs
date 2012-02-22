@@ -383,13 +383,13 @@ namespace DoubanFM.Core
 			if (CurrentState != State.LoggedOff) return;
 			CurrentState = State.LoggingOn;
 			Parameters parameters = new Parameters();
-			parameters.Add("source", "radio");
-			parameters.Add("alias", Settings.User.Username);
-			parameters.Add("form_password", Settings.User.Password);
-			parameters.Add("captcha_solution", captcha);
-			parameters.Add("captcha_id", captchaId);
+			parameters["source"] = "radio";
+			parameters["alias"] = Settings.User.Username;
+			parameters["form_password"] = Settings.User.Password;
+			parameters["captcha_solution"] = captcha;
+			parameters["captcha_id"] = captchaId;
 			if (Settings.AutoLogOnNextTime)
-				parameters.Add("remember", "on");
+				parameters["remember"] = "on";
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
 					string file = new ConnectionBase().Post("http://douban.fm/j/login", Encoding.UTF8.GetBytes(parameters.ToString()));

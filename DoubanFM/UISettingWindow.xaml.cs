@@ -20,7 +20,7 @@ using System.Windows.Shapes;
 namespace DoubanFM
 {
 	/// <summary>
-	/// UISettingWindow.xaml 的交互逻辑
+	/// 界面设置窗口
 	/// </summary>
 	public partial class UISettingWindow : ChildWindowBase
 	{

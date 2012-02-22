@@ -32,7 +32,7 @@ using DoubanFM.Bass;
 namespace DoubanFM
 {
 	/// <summary>
-	/// DoubanFMWindow.xaml 的交互逻辑
+	/// 豆瓣电台的主窗口
 	/// </summary>
 	public partial class DoubanFMWindow : WindowBase
 	{
@@ -202,6 +202,10 @@ namespace DoubanFM
 			ClearOldTempFiles();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除老版本产生的临时文件完成");
 
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除下载的安装文件");
+			ClearSetupFiles();
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除下载的安装文件完成");
+
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 向播放器添加事件处理程序");
 			AddPlayerEventListener();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 向播放器添加事件处理程序完成");
@@ -271,6 +275,7 @@ namespace DoubanFM
 		/// </summary>
 		void InitBassEngine()
 		{
+			//歌曲播放完毕
 			BassEngine.Instance.TrackEnded += delegate
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲播放完毕");
@@ -279,6 +284,7 @@ namespace DoubanFM
 					_player.CurrentSongFinishedPlaying();
 				}
 			};
+			//音乐加载成功
 			BassEngine.Instance.OpenSucceeded += delegate
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐加载成功");
@@ -286,11 +292,14 @@ namespace DoubanFM
 					TotalTime.Text = TimeSpanToStringConverter.QuickConvert(BassEngine.Instance.ChannelLength);
 				Slider.Maximum = BassEngine.Instance.ChannelLength.TotalSeconds;
 			};
+			//打开音乐失败
 			BassEngine.Instance.OpenFailed += delegate
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 打开音乐失败");
 				_player.MediaFailed();
 			};
+
+			//绑定音量设置
 
 			BassEngine.Instance.Volume = _player.Settings.Volume;
 			BassEngine.Instance.IsMuted = _player.Settings.IsMuted;
@@ -307,6 +316,9 @@ namespace DoubanFM
 			System.Windows.Data.BindingOperations.SetBinding(_player.Settings, Settings.IsMutedProperty, binding2);
 		}
 
+		/// <summary>
+		/// 键盘钩子
+		/// </summary>
 		private KeyboardHook hook;
 		/// <summary>
 		/// 初始化键盘钩子
@@ -318,10 +330,12 @@ namespace DoubanFM
 			{
 				if (this.IsLoaded)
 				{
+					//按下了媒体暂停播放键
 					if (e.Key == Key.MediaPlayPause)
 					{
 						PlayPause();
 					}
+					//按下了媒体下一曲目键
 					else if (e.Key == Key.MediaNextTrack)
 					{
 						Next();
@@ -376,6 +390,7 @@ namespace DoubanFM
 		/// </summary>
 		void AddPlayerEventListener()
 		{
+			//启动播放器完成
 			_player.Initialized += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器完成");
@@ -389,6 +404,7 @@ namespace DoubanFM
 				ShowChannels();
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表完成");
 			});
+			//频道已改变
 			_player.CurrentChannelChanged += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 频道已改变，当前频道为" + _player.CurrentChannel);
@@ -427,9 +443,11 @@ namespace DoubanFM
 						DjChannelClickStoryboard.Begin();
 					}
 				}
+				//更新JumpList
 				if (!_player.CurrentChannel.IsDj)
 					AddChannelToJumpList(_player.CurrentChannel);
 			});
+			//歌曲已改变
 			_player.CurrentSongChanged += new EventHandler((o, e) =>
 			{
 				if (_player.CurrentSong != null)
@@ -443,6 +461,7 @@ namespace DoubanFM
 					BassEngine.Instance.Play();
 				}
 			});
+			//音乐已暂停
 			_player.Paused += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已暂停");
@@ -455,6 +474,7 @@ namespace DoubanFM
 				//NotifyIcon_PlayPause.Image = NotifyIconImage_Play;
 				//HideLyrics();
 			});
+			//音乐已播放
 			_player.Played += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已播放");
@@ -467,6 +487,7 @@ namespace DoubanFM
 				//NotifyIcon_PlayPause.Image = NotifyIconImage_Pause;
 				//if (_player.Settings.ShowLyrics) ShowLyrics();
 			});
+			//音乐已停止
 			_player.Stoped += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已停止");
@@ -474,16 +495,20 @@ namespace DoubanFM
 				VolumeFadeOut.Begin();
 				SetLyrics(null);
 			});
+			//登录失败
 			_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
 			{
+				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录失败");
 				/*if (_player.UserAssistant.HasCaptcha)
 					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
 			});
+			//登录已成功
 			_player.UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录已成功");
 				ShowChannels();
 			});
+			//注销已成功
 			_player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 注销已成功");
@@ -491,7 +516,7 @@ namespace DoubanFM
 					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
 				ShowChannels();
 			});
-
+			//红心状态改变
 			_player.IsLikedChanged += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsLiked ? " 已加红心" : " 已去红心"));
@@ -510,6 +535,7 @@ namespace DoubanFM
 				else
 					LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
 			});
+			//红心功能启用状态改变
 			_player.IsLikedEnabledChanged += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsLikedEnabled ? " 加红心功能已启用" : " 加红心功能已禁用"));
@@ -522,6 +548,7 @@ namespace DoubanFM
 				LikeThumb.IsEnabled = _player.IsLikedEnabled;
 				//NotifyIcon_Heart.Enabled = _player.IsLikedEnabled;
 			});
+			//垃圾桶功能启用状态改变
 			_player.IsNeverEnabledChanged += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsNeverEnabled ? " 垃圾桶功能已启用" : " 垃圾桶功能已禁用"));
@@ -532,6 +559,7 @@ namespace DoubanFM
 				NeverThumb.IsEnabled = _player.IsNeverEnabled;
 				//NotifyIcon_Never.Enabled = _player.IsNeverEnabled;
 			});
+			//获取播放列表失败
 			_player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
 			{
 				string message = "获取播放列表失败：" + e.Msg;
@@ -539,6 +567,7 @@ namespace DoubanFM
 				MessageBox.Show(this, message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
 				this.Close();
 			});
+			//报告播放完毕的信息失败
 			_player.FinishedPlayingReportFailed += new EventHandler<ErrorEventArgs>((o, e) =>
 			{
 				string message = e.GetException().Message;
@@ -650,6 +679,27 @@ namespace DoubanFM
 					}
 					catch { }
 				}
+				string[] exeFiles = Directory.GetFiles(fileFolder, @"DoubanFMSetup*.exe");
+				foreach (var file in exeFiles)
+				{
+					try
+					{
+						File.Delete(file);
+					}
+					catch { }
+				}
+			}
+			catch { }
+		}
+
+		/// <summary>
+		/// 清理自动更新时下载的安装文件
+		/// </summary>
+		void ClearSetupFiles()
+		{
+			try
+			{
+				string fileFolder = Path.Combine(Path.GetTempPath(), "DoubanFM");
 				string[] exeFiles = Directory.GetFiles(fileFolder, @"DoubanFMSetup*.exe");
 				foreach (var file in exeFiles)
 				{
@@ -1047,6 +1097,9 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 暂存正在下载的歌词所对应的歌曲
+		/// </summary>
 		Song downloadingLyrics = null;
 		/// <summary>
 		/// 下载歌词
@@ -1218,6 +1271,9 @@ namespace DoubanFM
 			//timer.Start();			
 		}
 
+		/// <summary>
+		/// 弹出气泡
+		/// </summary>
 		public NotifyIcon.BalloonSongInfo CustomBaloon;
 
 		/// <summary>
@@ -1235,8 +1291,11 @@ namespace DoubanFM
 				bitmap.EndInit();
 				//BitmapImage bitmap = new BitmapImage(new Uri(_player.CurrentSong.Picture));
 				//Debug.WriteLine(_player.CurrentSong.Picture);
+				
+				//判断图片是否正在下载
 				if (bitmap.IsDownloading)
 				{
+					//图片下载完成
 					bitmap.DownloadCompleted += new EventHandler((o, e) =>
 					{
 						if (bitmap.CanFreeze) bitmap.Freeze();
@@ -1261,6 +1320,7 @@ namespace DoubanFM
 							catch { }
 						}));
 					});
+					//图片下载失败
 					bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
 					{
 						Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 封面下载失败");
@@ -1634,6 +1694,9 @@ namespace DoubanFM
 			}
 		}
 
+		/// <summary>
+		/// 当鼠标移出封面时停止计时
+		/// </summary>
 		private void CoverGrid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
 		{
 			_slideCoverRightTimer.Stop();
@@ -1823,7 +1886,7 @@ namespace DoubanFM
 			// 在此处添加事件处理程序实现。
 			ButtonHotKeySettings.IsEnabled = false;
 			HotKeys.UnRegister();
-			HotKeyWindow hotKeyWindow = new HotKeyWindow(this, HotKeys);
+			HotKeySettingWindow hotKeyWindow = new HotKeySettingWindow(this, HotKeys);
 			hotKeyWindow.Closed += new EventHandler((o, ee) =>
 			{
 				ButtonHotKeySettings.IsEnabled = true;
@@ -1916,6 +1979,8 @@ namespace DoubanFM
 			{
 				try
 				{
+					//删除所有设置
+
 					string dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
 					if (Directory.Exists(dataFolder))
 					{
@@ -1926,8 +1991,10 @@ namespace DoubanFM
 						}
 						Directory.Delete(dataFolder);
 					}
+
 					SaveSettings = false;
 					_mappedFile.Dispose();
+					//关闭当前程序并启动一个新的程序
 					App.Current.Shutdown();
 					Process.Start(System.Reflection.Assembly.GetEntryAssembly().GetModules()[0].FullyQualifiedName);
 				}

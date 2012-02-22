@@ -145,8 +145,8 @@
     </Compile>
     <Compile Include="HotKey\HotKeys.cs" />
     <Compile Include="HotKey\HotKeySettingControl.cs" />
-    <Compile Include="HotKeyWindow.xaml.cs">
-      <DependentUpon>HotKeyWindow.xaml</DependentUpon>
+    <Compile Include="HotKeySettingWindow.xaml.cs">
+      <DependentUpon>HotKeySettingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="LyricsSetting.cs" />
     <Compile Include="LyricsSettingWindow.xaml.cs">
@@ -228,7 +228,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HotKeyWindow.xaml">
+    <Page Include="HotKeySettingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -12,6 +12,9 @@ using System.Management;
 
 namespace DoubanFM.Wmi
 {
+	/// <summary>
+	/// 包含音频设备信息的类
+	/// </summary>
 	internal class SoundDevice : WmiBase
 	{
 		public UInt16 Availability;
@@ -38,6 +41,10 @@ namespace DoubanFM.Wmi
 		public string SystemCreationClassName;
 		public string SystemName;
 
+		/// <summary>
+		/// 获取此类的实例
+		/// </summary>
+		/// <returns>此类的实例</returns>
 		internal static SoundDevice[] GetInstances()
 		{
 			return GetInstances<SoundDevice>("Win32_SoundDevice");

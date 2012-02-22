@@ -31,9 +31,9 @@ namespace DoubanFM.Core
 
 			//获取所有可能的歌词
 			Parameters parameters = new Parameters();
-			parameters.Add("Artist", Encode(artist));
-			parameters.Add("Title", Encode(title));
-			parameters.Add("Flag", "0");
+			parameters["Artist"] = Encode(artist);
+			parameters["Title"] = Encode(title);
+			parameters["Flag"] = "0";
 			string url = ConnectionBase.ConstructUrlWithParameters("http://ttlrcct.qianqian.com/dll/lyricsvr.dll?sh", parameters);
 			string file = new ConnectionBase().Get(url);
 
@@ -83,8 +83,8 @@ namespace DoubanFM.Core
 
 			//下载歌词文件
 			Parameters parameters2 = new Parameters();
-			parameters2.Add("Id", selected.Id.ToString());
-			parameters2.Add("Code", VerifyCode(selected.Artist, selected.Title, selected.Id));
+			parameters2["Id"] = selected.Id.ToString();
+			parameters2["Code"] = VerifyCode(selected.Artist, selected.Title, selected.Id);
 			string url2 = ConnectionBase.ConstructUrlWithParameters("http://ttlrcct2.qianqian.com/dll/lyricsvr.dll?dl", parameters2);
 			string file2 = new ConnectionBase().Get(url2);
 

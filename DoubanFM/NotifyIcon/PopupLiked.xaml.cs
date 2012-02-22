@@ -21,7 +21,7 @@ using System.Windows.Shapes;
 namespace DoubanFM.NotifyIcon
 {
 	/// <summary>
-	/// PopupLiked.xaml 的交互逻辑
+	/// 弹出红心
 	/// </summary>
 	public partial class PopupLiked : UserControl
 	{

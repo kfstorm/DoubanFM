@@ -21,7 +21,7 @@ using System.Collections.ObjectModel;
 namespace DoubanFM
 {
 	/// <summary>
-	/// LyricsSettingWindow.xaml 的交互逻辑
+	/// 歌词设置窗口
 	/// </summary>
 	public partial class LyricsSettingWindow : ChildWindowBase
 	{

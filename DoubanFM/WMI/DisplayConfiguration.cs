@@ -12,6 +12,9 @@ using System.Management;
 
 namespace DoubanFM.Wmi
 {
+	/// <summary>
+	/// 包含显卡配置信息的类
+	/// </summary>
 	internal class DisplayConfiguration : WmiBase
 	{
 		public UInt32 BitsPerPel;
@@ -30,6 +33,10 @@ namespace DoubanFM.Wmi
 		public string SettingID;
 		public UInt32 SpecificationVersion;
 
+		/// <summary>
+		/// 获取此类的实例
+		/// </summary>
+		/// <returns>此类的实例</returns>
 		internal static DisplayConfiguration[] GetInstances()
 		{
 			return GetInstances<DisplayConfiguration>("Win32_DisplayConfiguration");

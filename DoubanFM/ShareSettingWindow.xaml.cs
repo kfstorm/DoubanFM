@@ -21,7 +21,7 @@ using System.Collections.ObjectModel;
 namespace DoubanFM
 {
 	/// <summary>
-	/// ShareSettingWindow.xaml 的交互逻辑
+	/// 分享设置窗口
 	/// </summary>
 	public partial class ShareSettingWindow : ChildWindowBase
 	{
@@ -33,6 +33,7 @@ namespace DoubanFM
 
 			this.InitializeComponent();
 
+			//为LbDisplayedSites添加项
 			foreach (var site in Share.GetSortedSites())
 			{
 				if (site != Share.Sites.None)
@@ -43,6 +44,7 @@ namespace DoubanFM
 				}
 			}
 
+			//显示的分享网站有改变
 			LbDisplayedSites.SelectionChanged += delegate
 			{
 				ShareSetting.DisplayedSites = new List<Share.Sites>();
@@ -53,6 +55,7 @@ namespace DoubanFM
 				(Owner as DoubanFMWindow).ApplyShareSetting();
 			};
 
+			//为LbOneKeyShareSites添加项
 			foreach (var site in Share.GetSortedSites())
 			{
 				LbOneKeyShareSites.Items.Add(site);
@@ -60,6 +63,7 @@ namespace DoubanFM
 					LbOneKeyShareSites.SelectedItems.Add(site);
 			}
 
+			//一键分享网站有改变
 			LbOneKeyShareSites.SelectionChanged += delegate
 			{
 				ShareSetting.OneKeyShareSites = new List<Share.Sites>();

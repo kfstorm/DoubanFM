@@ -500,11 +500,11 @@ namespace DoubanFM.Core
 						AppendPlayedSongs("e");
 						ChangeCurrentSong();
 						Parameters parameters = new Parameters();
-						parameters.Add("from", "ie9");
-						parameters.Add("sid", ps.CurrentSong.SongId);
-						parameters.Add("channel", ps.CurrentChannel.Id);
-						parameters.Add("type", "e");
-						parameters.Add("pid", ps.CurrentChannel.ProgramId);
+						parameters["from"] = "ie9";
+						parameters["sid"] = ps.CurrentSong.SongId;
+						parameters["channel"] = ps.CurrentChannel.Id;
+						parameters["type"] = "e";
+						parameters["pid"] = ps.CurrentChannel.ProgramId;
 						string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
 						while (true)
 						{

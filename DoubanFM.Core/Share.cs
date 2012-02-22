@@ -79,6 +79,8 @@ namespace DoubanFM.Core
 
 		public string Text { get; set; }
 
+		public string TextWithoutSource { get; set; }
+
 		public string Url
 		{
 			get
@@ -118,6 +120,7 @@ namespace DoubanFM.Core
 
 			_songInfo = ShareSongInfo.GetInfo(song, channel, cate);
 			Text = GetShareText(_songInfo.SongName, _songInfo.ArtistName, _songInfo.ChannelName, _songInfo.Type);
+			TextWithoutSource = GetShareText(_songInfo.SongName, _songInfo.ArtistName, _songInfo.ChannelName, _songInfo.Type, false);
 		}
 
 		public Share(Player player, Sites site)
@@ -149,93 +152,73 @@ namespace DoubanFM.Core
 			if (Site == null)
 				throw new Exception("没有设定分享网站。");
 			Parameters parameters = new Parameters(true);
-			Parameters tempParas = new Parameters(true);
 			string url = null;
-			string tempurl = null;
-			
+
 			switch (Site)
 			{
 				case Sites.None:
 					throw new InvalidOperationException("复制网址模式不能获取分享链接");
-					//break;
+				//break;
 				case Sites.Douban:
-					parameters.Add("name", _songInfo.SongName);
-					parameters.Add("href", _songInfo.Url);
-					parameters.Add("image", _songInfo.CoverUrl);
-					parameters.Add("text", "");
-					parameters.Add("desc", "（来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - " + _songInfo.ChannelName + "）");
-					parameters.Add("apikey", "079055d6a0d5ddf816b10183e28199e8");
+					parameters["name"] = _songInfo.SongName;
+					parameters["href"] = _songInfo.Url;
+					parameters["image"] = _songInfo.CoverUrl;
+					parameters["text"] = "";
+					parameters["desc"] = "（来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - " + _songInfo.ChannelName + "）";
+					parameters["apikey"] = "0c2e1df44f97c4eb248a59dceec74ec1";
 					url = ConnectionBase.ConstructUrlWithParameters("http://shuo.douban.com/!service/share", parameters);
 					break;
 				case Sites.Weibo:
-					tempParas.Add("appkey", "3163308509");
-					tempParas.Add("url", _songInfo.Url);
-					tempParas.Add("title", Text);
-					tempParas.Add("source", "");
-					tempParas.Add("sourceurl", "");
-					tempParas.Add("content", "utf-8");
-					tempParas.Add("pic", _songInfo.CoverUrl);
-					tempurl = ConnectionBase.ConstructUrlWithParameters("http://v.t.sina.com.cn/share/share.php", tempParas);
-					parameters.Add("type", "redir");
-					parameters.Add("vendor", "bshare_sina");
-					parameters.Add("url", tempurl);
-					url = ConnectionBase.ConstructUrlWithParameters("http://www.douban.com/link2", parameters);
+					parameters["appkey"] = "1075899032";
+					parameters["url"] = _songInfo.Url;
+					parameters["title"] = TextWithoutSource;
+					parameters["content"] = "utf-8";
+					parameters["pic"] = _songInfo.CoverUrl;
+					url = ConnectionBase.ConstructUrlWithParameters("http://v.t.sina.com.cn/share/share.php", parameters);
 					break;
 				case Sites.Msn:
-					tempParas.Add("url", _songInfo.Url);
-					tempParas.Add("title", Text);
-					tempParas.Add("screenshot", _songInfo.CoverUrl);
-					tempurl = ConnectionBase.ConstructUrlWithParameters("http://profile.live.com/badge", tempParas);
-					parameters.Add("type", "redir");
-					parameters.Add("vendor", "bshare_msn");
-					parameters.Add("url", tempurl);
-					url = ConnectionBase.ConstructUrlWithParameters("http://www.douban.com/link2", parameters);
+					parameters["url"] = _songInfo.Url;
+					parameters["title"] = Text;
+					parameters["screenshot"] = _songInfo.CoverUrl;
+					url = ConnectionBase.ConstructUrlWithParameters("http://profile.live.com/badge", parameters);
 					break;
 				case Sites.Kaixin:
-					tempParas.Add("rurl", _songInfo.Url);
-					tempParas.Add("rcontent", "");
-					tempParas.Add("rtitle", Text);
-					tempurl = ConnectionBase.ConstructUrlWithParameters("http://www.kaixin001.com/repaste/bshare.php", tempParas);
-					parameters.Add("type", "redir");
-					parameters.Add("vendor", "bshare_kx");
-					parameters.Add("url", tempurl);
-					url = ConnectionBase.ConstructUrlWithParameters("http://www.douban.com/link2", parameters);
+					parameters["rurl"] = _songInfo.Url;
+					parameters["rcontent"] = "";
+					parameters["rtitle"] = Text;
+					url = ConnectionBase.ConstructUrlWithParameters("http://www.kaixin001.com/repaste/bshare.php", parameters);
 					break;
 				case Sites.Renren:
-					tempParas.Add("url", _songInfo.Url);
-					tempParas.Add("title", Text);
-					tempurl = ConnectionBase.ConstructUrlWithParameters("http://www.connect.renren.com/share/sharer", tempParas);
-					parameters.Add("type", "redir");
-					parameters.Add("vendor", "bshare_renren");
-					parameters.Add("url", tempurl);
-					url = ConnectionBase.ConstructUrlWithParameters("http://www.douban.com/link2", parameters);
+					parameters["url"] = _songInfo.Url;
+					parameters["title"] = Text;
+					url = ConnectionBase.ConstructUrlWithParameters("http://www.connect.renren.com/share/sharer", parameters);
 					break;
 				case Sites.TencentWeibo:
-					parameters.Add("url", _songInfo.Url);
-					parameters.Add("title", Text);
-					parameters.Add("site", "http://www.kfstorm.com/doubanfm");
-					parameters.Add("pic", _songInfo.CoverUrl);
+					parameters["url"] = _songInfo.Url;
+					parameters["title"] = Text;
+					parameters["site"] = "http://www.kfstorm.com/doubanfm";
+					parameters["pic"] = _songInfo.CoverUrl;
+					parameters["appkey"] = "801098586";
 					url = ConnectionBase.ConstructUrlWithParameters("http://v.t.qq.com/share/share.php", parameters);
 					break;
 				case Sites.Fanfou:
-					string fanfouParameters = "?u=" + Uri.EscapeDataString(_songInfo.Url)
-						+ "?t=" + Uri.EscapeDataString(Text)
-						+ "?d=" + Uri.EscapeDataString("")
-						+ "?s=bm";
-					url = "http://fanfou.com/share" + "r" + fanfouParameters;
+					parameters["u"] = _songInfo.Url;
+					parameters["t"] = Text;
+					parameters["s"] = "bm";
+					url = ConnectionBase.ConstructUrlWithParameters("http://fanfou.com/sharer", parameters);
 					break;
 				case Sites.Facebook:
-					parameters.Add("u", _songInfo.Url);
-					parameters.Add("t", Text);
+					parameters["u"] = _songInfo.Url;
+					parameters["t"] = Text;
 					url = ConnectionBase.ConstructUrlWithParameters("http://www.facebook.com/sharer.php", parameters);
 					break;
 				case Sites.Twitter:
-					parameters.Add("status", Text + " " + _songInfo.Url);
+					parameters["status"] = Text + " " + _songInfo.Url;
 					url = ConnectionBase.ConstructUrlWithParameters("http://twitter.com/home", parameters);
 					break;
 				case Sites.Qzone:
-					parameters.Add("url", _songInfo.Url);
-					parameters.Add("title", Text);
+					parameters["url"] = _songInfo.Url;
+					parameters["title"] = Text;
 					url = ConnectionBase.ConstructUrlWithParameters("http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey", parameters);
 					break;
 				default:
@@ -267,18 +250,35 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 获取分享文字
 		/// </summary>
-		static string GetShareText(string songName, string artistName, string channelName, string type)
+		static string GetShareText(string songName, string artistName, string channelName, string type, bool withSource = true)
 		{
-			switch (type)
+			if (withSource)
 			{
-				case "movie-ost":
-					return "我正在收听《" + artistName + "》的电影原声 “" + songName + "” （来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - " + channelName + "）";
-				case "easy":
-					return "我正在收听 " + artistName + " 的乐曲《" + songName + "》（来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - " + channelName + "）";
-				case "dj":
-					return "我正在收听节目 《" + songName + "》- " + channelName + "（来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - DJ兆赫 ）";
-				default:
-					return "我正在收听 " + artistName + " 的单曲《" + songName + "》（来自豆瓣电台客户端【http://kfstorm.com/doubanfm】 - " + channelName + "）";
+				switch (type)
+				{
+					case "movie-ost":
+						return "我正在收听《" + artistName + "》的电影原声 “" + songName + "” （来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - " + channelName + "）";
+					case "easy":
+						return "我正在收听 " + artistName + " 的乐曲《" + songName + "》（来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - " + channelName + "）";
+					case "dj":
+						return "我正在收听节目 《" + songName + "》- " + channelName + "（来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - DJ兆赫 ）";
+					default:
+						return "我正在收听 " + artistName + " 的单曲《" + songName + "》（来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - " + channelName + "）";
+				}
+			}
+			else
+			{
+				switch (type)
+				{
+					case "movie-ost":
+						return "我正在收听《" + artistName + "》的电影原声 “" + songName + "” （来自K.F.Storm豆瓣电台 - " + channelName + "）";
+					case "easy":
+						return "我正在收听 " + artistName + " 的乐曲《" + songName + "》（来自K.F.Storm豆瓣电台 - " + channelName + "）";
+					case "dj":
+						return "我正在收听节目 《" + songName + "》- " + channelName + "（来自K.F.Storm豆瓣电台 - DJ兆赫 ）";
+					default:
+						return "我正在收听 " + artistName + " 的单曲《" + songName + "》（来自K.F.Storm豆瓣电台 - " + channelName + "）";
+				}
 			}
 		}
 	}

@@ -13,6 +13,9 @@ using System.Reflection;
 
 namespace DoubanFM.Wmi
 {
+	/// <summary>
+	/// 包含处理器信息的类
+	/// </summary>
 	internal class Processor : WmiBase
 	{
 		public UInt16 AddressWidth;
@@ -64,6 +67,10 @@ namespace DoubanFM.Wmi
 		public string Version;
 		public UInt32 VoltageCaps;
 
+		/// <summary>
+		/// 获取此类的实例
+		/// </summary>
+		/// <returns>此类的实例</returns>
 		internal static Processor[] GetInstances()
 		{
 			return GetInstances<Processor>("Win32_Processor");

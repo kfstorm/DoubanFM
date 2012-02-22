@@ -23,7 +23,7 @@ using System.Windows.Controls.Primitives;
 namespace DoubanFM.NotifyIcon
 {
 	/// <summary>
-	/// BalloonSongInfo.xaml 的交互逻辑
+	/// 显示歌曲信息的气泡
 	/// </summary>
 	public partial class BalloonSongInfo : UserControl
 	{
@@ -39,6 +39,9 @@ namespace DoubanFM.NotifyIcon
 			e.Handled = true;
 		}
 
+		/// <summary>
+		/// 平滑地显示封面
+		/// </summary>
 		public void ShowCoverSmooth()
 		{
 			((Storyboard)FindResource("ShowCoverSmooth")).Begin();
