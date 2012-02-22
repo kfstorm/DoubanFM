@@ -194,10 +194,13 @@ namespace DoubanFM.Core
 			NextPageLink = null;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state)=>
 				{
+					//构造链接
 					Parameters parameters = new Parameters();
 					parameters["start"] = ((_page - 1) * 15).ToString();
 					parameters["search_text"] = _searchText;
 					string url = ConnectionBase.ConstructUrlWithParameters("http://music.douban.com/subject_search", parameters);
+
+					//获取网页
 					ConnectionBase connection= new ConnectionBase(true);
 					string file = string.Empty;
 					try
@@ -210,6 +213,7 @@ namespace DoubanFM.Core
 						file = new ConnectionBase().Get("http://music.douban.com");
 						file = new ConnectionBase().Get(url);
 					}
+
 					var searhResult = GetSearchItems(file);
 					var previous = GetPreviousPageLink(file);
 					var next = GetNextPageLink(file);

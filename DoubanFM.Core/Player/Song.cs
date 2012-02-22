@@ -75,6 +75,9 @@ namespace DoubanFM.Core
 		/// </summary>
 		public bool Like { get; set; }
 
+		/// <summary>
+		/// 是否是广告
+		/// </summary>
 		public bool IsAd { get { return Type == "T"; } }
 
 		private Song()

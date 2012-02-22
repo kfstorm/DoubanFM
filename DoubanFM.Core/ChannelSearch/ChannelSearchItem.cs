@@ -47,7 +47,16 @@ namespace DoubanFM.Core
 		{
 			get { return Context != null && Context.Length > 0; }
 		}
-		
+
+		/// <summary>
+		/// 生成 <see cref="ChannelSearchItem"/> class 的新实例。
+		/// </summary>
+		/// <param name="title">标题</param>
+		/// <param name="picture">图片</param>
+		/// <param name="link">链接</param>
+		/// <param name="infomations">其他信息</param>
+		/// <param name="isArtist">是否是艺术家</param>
+		/// <param name="context">上下文</param>
 		internal ChannelSearchItem(string title, string picture, string link, string[] infomations, bool isArtist, string context)
 		{
 			Title = title;

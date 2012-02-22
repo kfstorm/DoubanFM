@@ -24,6 +24,7 @@ namespace DoubanFM.Core
         /// 门类名
         /// </summary>
         public string Name { get; private set; }
+
         internal Cate(Json.Cate cate)
         {
             Name = cate.cate;

@@ -40,9 +40,11 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty ShowLyricsProperty = DependencyProperty.Register("ShowLyrics", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty TopMostProperty = DependencyProperty.Register("TopMost", typeof(bool), typeof(Settings));
 		public static readonly DependencyProperty ScaleTransformProperty = DependencyProperty.Register("ScaleTransform", typeof(double), typeof(Settings), new PropertyMetadata(1.0));
-		public static readonly DependencyProperty EnableProxyProperty = DependencyProperty.Register("EnableProxy", typeof(bool), typeof(Settings));
+		public static readonly DependencyProperty ProxyKindProperty = DependencyProperty.Register("ProxyKind", typeof(ProxyKinds), typeof(Settings), new PropertyMetadata(ProxyKinds.Default));
 		public static readonly DependencyProperty ProxyHostProperty = DependencyProperty.Register("ProxyHost", typeof(string), typeof(Settings));
 		public static readonly DependencyProperty ProxyPortProperty = DependencyProperty.Register("ProxyPort", typeof(int), typeof(Settings), new PropertyMetadata(8080));
+		public static readonly DependencyProperty ProxyUsernameProperty = DependencyProperty.Register("ProxyUsername", typeof(string), typeof(Settings));
+		public static readonly DependencyProperty ProxyPasswordProperty = DependencyProperty.Register("ProxyPassword", typeof(string), typeof(Settings));
 		public static readonly DependencyProperty AutoBackgroundProperty = DependencyProperty.Register("AutoBackground", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(Color), typeof(Settings), new PropertyMetadata(ColorConverter.ConvertFromString("#FF1960AF")));
 		public static readonly DependencyProperty FirstTimeProperty = DependencyProperty.Register("FirstTime", typeof(bool), typeof(Settings), new PropertyMetadata(false));
@@ -59,6 +61,27 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty ShowSpectrumProperty = DependencyProperty.Register("ShowSpectrum", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty AdjustVolumeWithMouseWheelProperty = DependencyProperty.Register("AdjustVolumeWithMouseWheel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		
+		#endregion
+
+		#region ProxyKinds
+		/// <summary>
+		/// 代理服务器类型
+		/// </summary>
+		public enum ProxyKinds
+		{
+			/// <summary>
+			/// 默认代理服务器
+			/// </summary>
+			Default = 0,
+			/// <summary>
+			/// 不使用代理服务器
+			/// </summary>
+			None,
+			/// <summary>
+			/// 自定义代理服务器
+			/// </summary>
+			Custom
+		}
 		#endregion
 
 		/// <summary>
@@ -190,12 +213,12 @@ namespace DoubanFM.Core
 			set { SetValue(ScaleTransformProperty, value); }
 		}
 		/// <summary>
-		/// 启用代理
+		/// 代理服务器类型
 		/// </summary>
-		public bool EnableProxy
+		public ProxyKinds ProxyKind
 		{
-			get { return (bool)GetValue(EnableProxyProperty); }
-			set { SetValue(EnableProxyProperty, value); }
+			get { return (ProxyKinds)GetValue(ProxyKindProperty); }
+			set { SetValue(ProxyKindProperty, value); }
 		}
 		/// <summary>
 		/// 代理服务器主机名
@@ -212,6 +235,22 @@ namespace DoubanFM.Core
 		{
 			get { return (int)GetValue(ProxyPortProperty); }
 			set { SetValue(ProxyPortProperty, value); }
+		}
+		/// <summary>
+		/// 代理服务器用户名
+		/// </summary>
+		public string ProxyUsername
+		{
+			get { return (string)GetValue(ProxyUsernameProperty); }
+			set { SetValue(ProxyUsernameProperty, value); }
+		}
+		/// <summary>
+		/// 代理服务器密码
+		/// </summary>
+		public string ProxyPassword
+		{
+			get { return (string)GetValue(ProxyPasswordProperty); }
+			set { SetValue(ProxyPasswordProperty, value); }
 		}
 		/// <summary>
 		/// 自动更换窗口背景
@@ -485,11 +524,18 @@ namespace DoubanFM.Core
 			}
 			try
 			{
-				EnableProxy = info.GetBoolean("EnableProxy");
+				ProxyKind = info.GetBoolean("EnableProxy") ? ProxyKinds.Custom : ProxyKinds.Default;
 			}
 			catch
 			{
-				EnableProxy = def.EnableProxy;
+				try
+				{
+					ProxyKind = (ProxyKinds)info.GetValue("ProxyKind", typeof(ProxyKinds));
+				}
+				catch
+				{
+					ProxyKind = ProxyKinds.Default;
+				}
 			}
 			try
 			{
@@ -506,6 +552,22 @@ namespace DoubanFM.Core
 			catch
 			{
 				ProxyPort = def.ProxyPort;
+			}
+			try
+			{
+				ProxyUsername = info.GetString("ProxyUsername");
+			}
+			catch
+			{
+				ProxyUsername = def.ProxyUsername;
+			}
+			try
+			{
+				ProxyPassword = info.GetString("ProxyPassword");
+			}
+			catch
+			{
+				ProxyPassword = def.ProxyPassword;
 			}
 			try
 			{
@@ -654,9 +716,11 @@ namespace DoubanFM.Core
 			info.AddValue("ShowLyrics", ShowLyrics);
 			info.AddValue("TopMost", TopMost);
 			info.AddValue("ScaleTransform", ScaleTransform);
-			info.AddValue("EnableProxy", EnableProxy);
+			info.AddValue("ProxyKind", ProxyKind);
 			info.AddValue("ProxyHost", ProxyHost);
 			info.AddValue("ProxyPort", ProxyPort);
+			info.AddValue("ProxyUsername", ProxyUsername);
+			info.AddValue("ProxyPassword", ProxyPassword);
 			info.AddValue("AutoBackground", AutoBackground);
 			if (Background != null)
 			{
@@ -697,6 +761,7 @@ namespace DoubanFM.Core
 					settings = (Settings)formatter.Deserialize(stream);
 				}
 				settings.User.Password = Encryption.Decrypt(settings.User.Password);
+				settings.ProxyPassword = Encryption.Decrypt(settings.ProxyPassword);
 			}
 			catch (Exception ex)
 			{
@@ -714,13 +779,16 @@ namespace DoubanFM.Core
 		internal void Save()
 		{
 			string tempPassword = User.Password;
+			string tempProxyPassword = ProxyPassword;
 			if (!RememberPassword)
 				User.Password = "";
 			Channel tempLastChannel = LastChannel;
 			if (!RememberLastChannel) LastChannel = null;
+
 			try
 			{
 				User.Password = Encryption.Encrypt(User.Password);
+				ProxyPassword = Encryption.Encrypt(ProxyPassword);
 				if (!Directory.Exists(_dataFolder))
 					Directory.CreateDirectory(_dataFolder);
 				using (FileStream stream = File.OpenWrite(Path.Combine(_dataFolder, "Settings.dat")))
@@ -730,7 +798,9 @@ namespace DoubanFM.Core
 				}
 			}
 			catch { }
+
 			User.Password = tempPassword;
+			ProxyPassword = tempProxyPassword;
 			LastChannel = tempLastChannel;
 		}
 	}

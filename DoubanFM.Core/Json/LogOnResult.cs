@@ -14,18 +14,33 @@ using System.IO;
 
 namespace DoubanFM.Core.Json
 {
+	/// <summary>
+	/// JSON格式的登录结果
+	/// </summary>
 	[DataContract]
 	public class LogOnResult
 	{
+		/// <summary>
+		/// 用户信息
+		/// </summary>
 		[DataMember]
 		public UserInfo user_info { get; set; }
 
+		/// <summary>
+		/// 是否发生错误
+		/// </summary>
 		[DataMember]
 		public bool r { get; set; }
 
+		/// <summary>
+		/// 错误信息
+		/// </summary>
 		[DataMember]
 		public string err_msg { get; set; }
-		
+
+		/// <summary>
+		/// 错误代码
+		/// </summary>
 		[DataMember]
 		public int err_no { get; set; }
 

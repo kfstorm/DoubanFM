@@ -270,7 +270,7 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 检查更新失败
 		/// </summary>
-		/// <param name="error">The error.</param>
+		/// <param name="error">异常信息</param>
 		void CheckFailed(Exception error)
 		{
 			LastError = error;
@@ -280,7 +280,7 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 有新版本
 		/// </summary>
-		/// <param name="products">The products.</param>
+		/// <param name="products">版本列表</param>
 		void HasNewVersion(Products products)
 		{
 			NewerProducts = products;

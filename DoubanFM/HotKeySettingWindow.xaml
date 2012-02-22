@@ -31,7 +31,7 @@ Website : http://www.kfstorm.com
 		<local:HotKeySettingControl Command="Next" Height="20" Margin="0,2">
 			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="下一首"/></TextBlock>
 		</local:HotKeySettingControl>
-		<TextBlock Margin="0,2">（多媒体键“播放/暂停”和“下一首”已自动设置）</TextBlock>
+		<TextBlock FontSize="11" Margin="0,2">多媒体键“播放/暂停”和“下一首”已自动设置</TextBlock>
 		<local:HotKeySettingControl Command="ShowMinimize" Height="20" Margin="0,2">
 			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="显示/最小化"/></TextBlock>
 		</local:HotKeySettingControl>
@@ -56,7 +56,7 @@ Website : http://www.kfstorm.com
 		<local:HotKeySettingControl Command="MuteSwitch" Height="20" Margin="0,2">
 			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="静音切换"/></TextBlock>
 		</local:HotKeySettingControl>
-		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="40" Margin="0,2">
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="40" Margin="5">
 			<Button x:Name="Ok" Click="Ok_Click" Style="{DynamicResource OKButtonStyle}"/>
 			<Button x:Name="Cancel" Margin="20,0,0,0" Click="Cancel_Click" Style="{DynamicResource CancelButtonStyle}"/>
 		</StackPanel>

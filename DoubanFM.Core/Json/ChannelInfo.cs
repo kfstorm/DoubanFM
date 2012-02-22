@@ -66,11 +66,14 @@ namespace DoubanFM.Core.Json
 			List<Cate> ret = new List<Cate>();
 			try
 			{
+				//从HTML代码中提取channelInfo.dj部分的内容，并生成ChannelInfoDotDj的实例
 				Match match = Regex.Match(html, @"channelInfo\.dj\s*=\s*(\[.*\]);", RegexOptions.IgnoreCase);
 				DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ChannelInfoDotDj));
 				ChannelInfoDotDj cidd = null;
 				using (MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(match.Groups[1].Value)))
 					cidd = (ChannelInfoDotDj)ser.ReadObject(ms);
+
+				//从HTML代码中提取subChannelInfo部分的内容，并生成List<SubDjCate>的实例
 				Match match2 = Regex.Match(html, @"subChannelInfo\s*=\s*({.*});", RegexOptions.IgnoreCase);
 				List<SubDjCate> subdjcates = new List<SubDjCate>();
 				using (var reader = JsonReaderWriterFactory.CreateJsonReader(Encoding.Unicode.GetBytes(match2.Groups[1].Value), System.Xml.XmlDictionaryReaderQuotas.Max))
@@ -99,6 +102,7 @@ namespace DoubanFM.Core.Json
 					}
 				}
 
+				//将cidd与subdjcates综合起来，生成Cate[]的实例
 				foreach (DjChannel djchannel in cidd)
 				{
 					foreach (SubDjCate subdjcate in subdjcates)
@@ -136,13 +140,18 @@ namespace DoubanFM.Core.Json
 			try
 			{
 				html = html.Replace("&amp;", "&");
+
+				//获得公共兆赫的信息
 				Match match = Regex.Match(html, @"var\s*channelInfo\s*=\s*({.*}),", RegexOptions.IgnoreCase);
 				ChannelInfo ci = ChannelInfo.FromJson(match.Groups[1].Value);
+				
+				//获得DJ兆赫的信息
 				ci.Dj = GetDjCates(html);
 
+				//添加私人兆赫和红心兆赫
 				ci.personal = new Cate[1];
 				ci.personal[0] = new Cate();
-				ci.personal[0].cate = "私人兆赫";
+				ci.personal[0].cate = "我的电台";
 				ci.personal[0].channels = new Channel[2];
 
 				ci.personal[0].channels[0] = new Channel();

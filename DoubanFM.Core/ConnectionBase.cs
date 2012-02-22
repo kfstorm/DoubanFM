@@ -25,7 +25,7 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// Cookie
 		/// </summary>
-		public static CookieContainer cc;
+		public static CookieContainer Cookie;
 		/// <summary>
 		/// 默认HTTP头：UserAgent
 		/// </summary>
@@ -42,10 +42,6 @@ namespace DoubanFM.Core
 		/// 默认编码
 		/// </summary>
 		public static Encoding DefaultEncoding = Encoding.UTF8;
-		/// <summary>
-		/// 空Cookie
-		/// </summary>
-		public static CookieContainer DefaultCookie = new CookieContainer(1000, 1000, 100000);
 		/// <summary>
 		/// 你懂的……
 		/// </summary>
@@ -65,7 +61,7 @@ namespace DoubanFM.Core
 
 		static ConnectionBase()
 		{
-			if (!LoadCookies()) cc = DefaultCookie;
+			if (!LoadCookies()) ClearCookie();
 		}
 
 		public ConnectionBase(bool throwException, string userAgent, string accept, string contentType, Encoding encoding)
@@ -108,7 +104,7 @@ namespace DoubanFM.Core
 				request.AllowAutoRedirect = true;
 				request.ContentLength = content.Length;
 				request.ContentType = contentType;
-				request.CookieContainer = cc;
+				request.CookieContainer = Cookie;
 				request.KeepAlive = true;
 				request.Method = "POST";
 				request.Referer = referer;
@@ -168,7 +164,7 @@ namespace DoubanFM.Core
 				HttpWebRequest request = WebRequest.Create(getUri) as HttpWebRequest;
 				request.Accept = accept;
 				request.AllowAutoRedirect = true;
-				request.CookieContainer = cc;
+				request.CookieContainer = Cookie;
 				request.KeepAlive = true;
 				request.Method = "GET";
 				request.Referer = referer;
@@ -217,7 +213,7 @@ namespace DoubanFM.Core
 				using (FileStream stream = File.OpenRead(Path.Combine(DataFolder, "cookies.dat")))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
-					cc = (CookieContainer)formatter.Deserialize(stream);
+					Cookie = (CookieContainer)formatter.Deserialize(stream);
 				}
 			}
 			catch
@@ -239,7 +235,7 @@ namespace DoubanFM.Core
 				using (FileStream stream = File.OpenWrite(Path.Combine(DataFolder, "cookies.dat")))
 				{
 					BinaryFormatter formatter = new BinaryFormatter();
-					formatter.Serialize(stream, cc);
+					formatter.Serialize(stream, Cookie);
 				}
 			}
 
@@ -264,26 +260,53 @@ namespace DoubanFM.Core
 		}
 
 		/// <summary>
-		/// 设置代理
+		/// 清除Cookie
 		/// </summary>
-		/// <param name="host">主机名</param>
-		/// <param name="port">端口</param>
-		public static void SetProxy(string host, int port)
+		public static void ClearCookie()
 		{
+			Cookie = new CookieContainer(1000, 1000, 100000);
+		}
+
+		/// <summary>
+		/// 设置代理服务器
+		/// </summary>
+		/// <param name="host">主机</param>
+		/// <param name="port">端口</param>
+		/// <param name="username">用户名</param>
+		/// <param name="password">密码</param>
+		public static void SetProxy(string host, int port, string username = null, string password = null)
+		{
+			if (string.IsNullOrEmpty(host))
+				throw new ArgumentException("主机不能为空", "host");
+			if (string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+				throw new ArgumentException("填写密码后用户名不能为空", "username");
+			if (string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(username))
+				throw new ArgumentException("填写用户名后密码不能为空", "password");
 			WebRequest.DefaultWebProxy = new WebProxy(host, port);
+			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+			{
+				WebRequest.DefaultWebProxy.Credentials = new NetworkCredential(username, password);
+			}
 		}
 		/// <summary>
 		/// 使用默认代理
 		/// </summary>
-		public static void ResetProxy()
+		public static void UseDefaultProxy()
 		{
 			WebRequest.DefaultWebProxy = WebRequest.GetSystemWebProxy();
 		}
 		
+		/// <summary>
+		/// 不使用任何代理服务器设置
+		/// </summary>
+		public static void DontUseProxy()
+		{
+			WebRequest.DefaultWebProxy = null;
+		}
 	}
 
 	/// <summary>
-	/// 多个URL参数
+	/// 代表URL地址中的参数
 	/// </summary>
 	public class Parameters : Dictionary<string, string>
 	{
@@ -293,7 +316,7 @@ namespace DoubanFM.Core
 		public bool AddEmptyParameter { get; set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Parameters"/> class.
+		/// 生成 <see cref="Parameters"/> class 的新实例。
 		/// </summary>
 		/// <param name="addEmptyParameter">是否添加空参数</param>
 		public Parameters(bool addEmptyParameter = false)

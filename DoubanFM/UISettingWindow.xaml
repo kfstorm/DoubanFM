@@ -60,22 +60,25 @@ Website : http://www.kfstorm.com
 			</GroupBox>
 			<GroupBox Margin="0,2">
 				<GroupBox.Header>
-					<CheckBox IsChecked="{Binding Settings.ShowSpectrum, Source={StaticResource Player}}">频谱（会占用一定CPU）</CheckBox>
+					<CheckBox IsChecked="{Binding Settings.ShowSpectrum, Source={StaticResource Player}}">频谱</CheckBox>
 				</GroupBox.Header>
-				<Grid IsEnabled="{Binding Settings.ShowSpectrum, Source={StaticResource Player}}">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="120"/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<TextBlock VerticalAlignment="Center" Margin="5,0">透明度</TextBlock>
-					<Slider Grid.Column="1" Value="{Binding Settings.SpectrumTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01" Margin="0,2"/>
-					<TextBlock Grid.Row="1" VerticalAlignment="Center" Margin="5,0">颜色</TextBlock>
-					<local:PopupableColorPicker Grid.Row="1" Grid.Column="1" Margin="0,2" Height="24" Color="{Binding Settings.SpectrumColor, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}" IsAlphaEnabled="False"/>
-				</Grid>
+				<StackPanel>
+					<Label FontSize="11">会占用一定CPU</Label>
+					<Grid IsEnabled="{Binding Settings.ShowSpectrum, Source={StaticResource Player}}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="120"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<TextBlock VerticalAlignment="Center" Margin="5,0">透明度</TextBlock>
+						<Slider Grid.Column="1" Value="{Binding Settings.SpectrumTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01" Margin="0,2"/>
+						<TextBlock Grid.Row="1" VerticalAlignment="Center" Margin="5,0">颜色</TextBlock>
+						<local:PopupableColorPicker Grid.Row="1" Grid.Column="1" Margin="0,2" Height="24" Color="{Binding Settings.SpectrumColor, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}" IsAlphaEnabled="False"/>
+					</Grid>
+				</StackPanel>
 			</GroupBox>
 		</StackPanel>
 	</Grid>

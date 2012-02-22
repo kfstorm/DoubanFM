@@ -41,9 +41,31 @@ namespace DoubanFM.Core
 		/// </summary>
 		public Settings Settings { get; internal set; }
 		/// <summary>
-		///  状态枚举
+		///  登录状态
 		/// </summary>
-		public enum State { Unknown, LoggedOff, LoggingOn, LoggedOn, LoggingOff };
+		public enum State
+		{
+			/// <summary>
+			/// 未知
+			/// </summary>
+			Unknown,
+			/// <summary>
+			/// 已注销
+			/// </summary>
+			LoggedOff,
+			/// <summary>
+			/// 正在登录
+			/// </summary>
+			LoggingOn,
+			/// <summary>
+			/// 已登录
+			/// </summary>
+			LoggedOn,
+			/// <summary>
+			/// 正在注销
+			/// </summary>
+			LoggingOff
+		};
 		/// <summary>
 		/// 当前状态
 		/// </summary>
@@ -186,18 +208,13 @@ namespace DoubanFM.Core
 
 		#endregion
 
-		#region 私用变量
+		#region 私有变量
 
 		/// <summary>
 		/// 验证码ID
 		/// </summary>
 		private string captchaId;
 		
-		///// <summary>
-		///// 注销链接
-		///// </summary>
-		//private string _logOffLink;
-
 		#endregion
 
 		#region 成员方法
@@ -232,18 +249,15 @@ namespace DoubanFM.Core
 		}
 
 		/// <summary>
-		/// 更新
+		/// 根据douban.fm的主页的HTML代码更新登录状态
 		/// </summary>
 		/// <param name="html">HTML文件</param>
 		internal void Update(string html)
 		{
-			//captchaId = GetCaptchaId(html);          //目前从http://douban.fm登录肯定不需要验证码，所以这里注释掉
-			//_logOffLink = GetLogOffLink(html);
-			//System.Diagnostics.Debug.WriteLine("注销链接：");
-			//System.Diagnostics.Debug.WriteLine(_logOffLink);
 			string s = null;
 			if (!string.IsNullOrEmpty(html))
 			{
+				//获取昵称和播放记录
 				Match match = Regex.Match(html, @"var\s*globalConfig\s*=\s*{\s*uid\s*:\s*'(\d*)'", RegexOptions.IgnoreCase);
 				s = match.Groups[1].Value;
 				Match match2 = Regex.Match(html, @"id=""fm-user"">(?!{{)(.*)<i></i></a>", RegexOptions.None);
@@ -258,6 +272,7 @@ namespace DoubanFM.Core
 				int banned = 0;
 				int.TryParse(match5.Groups[1].Value, out banned);
 
+				//更改属性
 				Dispatcher.Invoke(new Action(() =>
 				{
 					/*System.Diagnostics.Debug.WriteLine("**********************************************************************");
@@ -294,13 +309,12 @@ namespace DoubanFM.Core
 					}));
 		}
 		/// <summary>
-		/// 更新登录结果
+		/// 根据服务器返回的登录结果更新登录状态
 		/// </summary>
 		internal void UpdateWhenLogOn(Json.LogOnResult result)
 		{
 			if (result != null && result.r == false && result.user_info != null)
 			{
-				//_logOffLink = "http://douban.fm/partner/logout?source=radio&ck=" + result.user_info.ck + "&no_login=y";
 				Dispatcher.Invoke(new Action(() =>
 				{
 					//System.Diagnostics.Debug.WriteLine("注销链接：");
@@ -342,42 +356,10 @@ namespace DoubanFM.Core
 					else CurrentState = State.LoggedOff;
 				}));
 		}
-		///// <summary>
-		///// 刷新登录页面
-		///// </summary>
-		//public void Refresh()
-		//{
-		//    ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-		//        {
-		//            string file = new ConnectionBase().Get("https://www.douban.com/accounts");
-		//            Dispatcher.Invoke(new Action(() => { UpdateWhenLogOn(file); }));
-		//        }));
-		//}
-		///// <summary>
-		///// 获取验证码ID
-		///// </summary>
-		///// <param name="html">HTML文件</param>
-		///// <returns></returns>
-		//string GetCaptchaId(string html)
-		//{
-		//    if (html == null) return null;
-		//    Match match = Regex.Match(html, "<img src=\"http[s]?://www\\.douban\\.com/misc/captcha\\?id=(\\w*)", RegexOptions.IgnoreCase);
-		//    return match.Groups[1].Value;
-		//}
-		///// <summary>
-		///// 获取注销链接
-		///// </summary>
-		///// <param name="html">HTML文件</param>
-		///// <returns></returns>
-		//static string GetLogOffLink(string html)
-		//{
-		//    if (html == null) return null;
-		//    Match match = Regex.Match(html, "\"(http://.*logout[^\\s]*)\"", RegexOptions.IgnoreCase);
-		//    return match.Groups[1].Value;
-		//}
 		/// <summary>
 		/// 登录
 		/// </summary>
+		/// <param name="captcha">用户填写的验证码</param>
 		public void LogOn(string captcha = null)
 		{
 			if (CurrentState != State.LoggedOff) return;
@@ -406,8 +388,8 @@ namespace DoubanFM.Core
 		{
 			if (CurrentState != State.LoggedOn) return;
 			CurrentState = State.LoggingOff;
-			ConnectionBase.cc = new System.Net.CookieContainer(1000, 1000, 100000);
-			//_logOffLink = string.Empty;
+			//仅仅是清除Cookie而已
+			ConnectionBase.ClearCookie();
 			Settings.User.Nickname = string.Empty;
 			Settings.User.Played = 0;
 			Settings.User.Liked = 0;
@@ -417,13 +399,6 @@ namespace DoubanFM.Core
 			ErrorNo = 0;
 		}
 
-		///// <summary>
-		///// 强制注销，非后台
-		///// </summary>
-		//internal void ForceLogOff()
-		//{
-		//    LogOff();
-		//}
 		#endregion
 	}
 }

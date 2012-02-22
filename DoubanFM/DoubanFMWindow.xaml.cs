@@ -562,7 +562,7 @@ namespace DoubanFM
 			//获取播放列表失败
 			_player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
 			{
-				string message = "获取播放列表失败：" + e.Msg;
+				string message = "获取播放列表失败：" + e.Message;
 				Debug.WriteLine(message);
 				MessageBox.Show(this, message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
 				this.Close();
@@ -921,34 +921,27 @@ namespace DoubanFM
 		{
 			try
 			{
-				if (_player.Settings.EnableProxy)
+				switch (_player.Settings.ProxyKind)
 				{
-					if (_player.Settings.ProxyHost != null)
-						if (_player.Settings.ProxyHost.Contains(':'))
-							throw new ArgumentException("主机不能包含符号:");
-					ConnectionBase.SetProxy(_player.Settings.ProxyHost == null ? string.Empty : _player.Settings.ProxyHost, _player.Settings.ProxyPort);
-				}
-				else
-					ConnectionBase.ResetProxy();
-
-				if (_player.Settings.EnableProxy)
-				{
-					BassEngine.Instance.SetProxy(_player.Settings.ProxyHost, _player.Settings.ProxyPort, null, null);
-				}
-				else
-				{
-					BassEngine.Instance.UseDefaultProxy();
+					case Settings.ProxyKinds.Default:
+						ConnectionBase.UseDefaultProxy();
+						BassEngine.Instance.UseDefaultProxy();
+						break;
+					case Settings.ProxyKinds.None:
+						ConnectionBase.DontUseProxy();
+						BassEngine.Instance.DontUseProxy();
+						break;
+					case Settings.ProxyKinds.Custom:
+						ConnectionBase.SetProxy(_player.Settings.ProxyHost, _player.Settings.ProxyPort, _player.Settings.ProxyUsername, _player.Settings.ProxyPassword);
+						BassEngine.Instance.SetProxy(_player.Settings.ProxyHost, _player.Settings.ProxyPort, _player.Settings.ProxyUsername, _player.Settings.ProxyPassword);
+						break;
+					default:
+						break;
 				}
 			}
 			catch (Exception ex)
 			{
-				StringBuilder sb = new StringBuilder();
-				while (ex != null)
-				{
-					sb.AppendLine(ex.Message);
-					ex = ex.InnerException;
-				}
-				MessageBox.Show(this, sb.ToString(), "代理设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(this, ex.Message, "代理设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 		/// <summary>

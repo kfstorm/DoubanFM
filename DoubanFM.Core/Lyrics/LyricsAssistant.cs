@@ -15,7 +15,7 @@ using System.Xml.Serialization;
 namespace DoubanFM.Core
 {
 	/// <summary>
-	/// 用于搜索歌词的工具
+	/// 用于搜索歌词的工具，使用千千静听的歌词服务器
 	/// </summary>
 	public static class LyricsAssistant
 	{
@@ -88,7 +88,7 @@ namespace DoubanFM.Core
 			string url2 = ConnectionBase.ConstructUrlWithParameters("http://ttlrcct2.qianqian.com/dll/lyricsvr.dll?dl", parameters2);
 			string file2 = new ConnectionBase().Get(url2);
 
-			//生成LyricsParser类
+			//生成Lyrics的实例
 			if (string.IsNullOrEmpty(file2)) return null;
 			try
 			{

@@ -11,6 +11,9 @@ using System.Text;
 
 namespace DoubanFM.Core
 {
+	/// <summary>
+	/// 播放列表
+	/// </summary>
 	public class PlayList : List<Song>
 	{
 		/// <summary>
@@ -41,9 +44,10 @@ namespace DoubanFM.Core
 		/// <param name="channel">频道</param>
 		/// <param name="operationType">操作类型</param>
 		/// <param name="history">播放历史</param>
-		/// <returns></returns>
+		/// <returns>播放列表</returns>
 		internal static PlayList GetPlayList(string context, string songId, Channel channel, string operationType, string history)
 		{
+			//构造链接
 			Parameters parameters = new Parameters();
 			parameters["from"] = "ie9";
 			parameters["context"] = context;
@@ -54,25 +58,38 @@ namespace DoubanFM.Core
 			parameters["type"] = operationType;
 			parameters["h"] = history;
 			string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
+
+			//获取列表
 			string json = new ConnectionBase().Get(url, @"application/json, text/javascript, */*; q=0.01", @"http://douban.fm");
 			var jsonPlayList = Json.PlayList.FromJson(json);
-			if (jsonPlayList != null && jsonPlayList.r != 0)
+			if (jsonPlayList != null && jsonPlayList.r)
 				RaiseGetPlayListFailedEvent(json);
 			PlayList pl = new PlayList(jsonPlayList);
+
+			//将小图更换为大图
 			foreach (var song in pl)
 			{
 				song.Picture = song.Picture.Replace("/mpic/", "/lpic/").Replace("//otho.", "//img3.");
 			}
-			pl.RemoveAll(new Predicate<Song>(song => { return song.IsAd; }));		//去广告
+
+			//去广告
+			pl.RemoveAll(new Predicate<Song>(song => { return song.IsAd; }));
+
 			return pl;
 		}
 
+		/// <summary>
+		/// 播放列表的事件参数
+		/// </summary>
 		public class PlayListEventArgs : EventArgs
 		{
-			public string Msg { get; private set; }
-			internal PlayListEventArgs(string msg)
+			/// <summary>
+			/// 消息
+			/// </summary>
+			public string Message { get; private set; }
+			internal PlayListEventArgs(string message)
 			{
-				Msg = msg;
+				Message = message;
 			}
 		}
 	}

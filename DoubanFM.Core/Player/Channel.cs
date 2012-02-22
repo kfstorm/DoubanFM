@@ -118,12 +118,25 @@ namespace DoubanFM.Core
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// 私人兆赫的频道ID
+		/// </summary>
 		internal const string PersonalId = "0";
+		/// <summary>
+		/// 红心兆赫的频道ID
+		/// </summary>
 		internal const string RedHeartId = "-3";
+		/// <summary>
+		/// DJ兆赫的频道ID
+		/// </summary>
 		internal const string DjId = "dj";
 
-		public static readonly Channel PersonalChannel = new Channel(PersonalId, "私人兆赫", null);
-		
+		/// <summary>
+		/// 创建作为当前实例副本的新对象。
+		/// </summary>
+		/// <returns>
+		/// 作为此实例副本的新对象。
+		/// </returns>
 		public object Clone()
 		{
 			return this.MemberwiseClone();

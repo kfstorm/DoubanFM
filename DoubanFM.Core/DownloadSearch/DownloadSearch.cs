@@ -12,7 +12,7 @@ using System.Text;
 namespace DoubanFM.Core
 {
 	/// <summary>
-	/// 下载搜索
+	/// 提供下载搜索的功能
 	/// </summary>
 	public static class DownloadSearch
 	{
@@ -71,7 +71,7 @@ namespace DoubanFM.Core
 		/// <param name="title">标题</param>
 		/// <param name="artist">艺术家</param>
 		/// <param name="album">专辑</param>
-		/// <returns></returns>
+		/// <returns>用于搜索的关键词</returns>
 		private static string GetKeyword(string title, string artist, string album)
 		{
 			if (album.EndsWith("..."))
@@ -94,13 +94,16 @@ namespace DoubanFM.Core
 			}
 		}
 
+		/// <summary>
+		/// 各种括号
+		/// </summary>
 		private static readonly List<char> brackets = new List<char> { '(', '（', '[', '【'};
 			
 		/// <summary>
 		/// 剔除括号内的内容
 		/// </summary>
 		/// <param name="someString">任意字符串</param>
-		/// <returns></returns>
+		/// <returns>剔除括号后的内容</returns>
 		private static string TrimBrackets(string someString)
 		{
 			int index;

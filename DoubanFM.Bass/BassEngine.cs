@@ -412,15 +412,18 @@ namespace DoubanFM.Bass
 		/// <param name="port">端口</param>
 		/// <param name="username">用户名</param>
 		/// <param name="password">密码</param>
-		public void SetProxy(string host, int? port, string username, string password)
+		public void SetProxy(string host, int port, string username = null, string password = null)
 		{
 			//Debug.WriteLine("已调用BassEngine.SetProxy()");
 			if (proxyHandle != IntPtr.Zero)
+			{
 				Marshal.FreeHGlobal(proxyHandle);
-			proxyHandle = IntPtr.Zero;
+				proxyHandle = IntPtr.Zero;
+			}
 
 			//格式：user:pass@server:port
 			StringBuilder sb = new StringBuilder();
+
 			//有用户名和密码的情形
 			if (!string.IsNullOrEmpty(username))
 			{
@@ -430,74 +433,72 @@ namespace DoubanFM.Bass
 				sb.Append(":");
 				sb.Append(password);
 			}
-			//没有用户名和密码的情形
-			if (sb.Length == 0)
-			{
-				if (string.IsNullOrEmpty(host))
-					throw new ArgumentException("主机为空", "host");
-				if (!port.HasValue)
-					throw new ArgumentException("端口号为空", "port");
-			}
+
+			if (string.IsNullOrEmpty(host))
+				throw new ArgumentException("主机为空", "host");
 			sb.Append("@");
-			//指定了主机和端口号的情形
-			if (!string.IsNullOrEmpty(host) && port.HasValue)
-			{
-				if (host.Contains(':'))
-					throw new ArgumentException("主机不能包含符号:");
-				sb.Append("http://");
-				sb.Append(host);
-				sb.Append(":");
-				sb.Append(port);
-			}
+
+			//添加主机和端口号
+			if (host.Contains(':'))
+				throw new ArgumentException("主机不能包含符号:", "host");
+			sb.Append("http://");
+			sb.Append(host);
+			sb.Append(":");
+			sb.Append(port);
+
 			string proxyString = sb.ToString();
 
 			//将String转换为字符数组
-			proxyHandle = Marshal.StringToHGlobalUni(proxyString);
+			proxyHandle = Marshal.StringToHGlobalAnsi(proxyString);
 
 			//设置代理服务器
 			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
 			if (!result)
 			{
-				throw new Exception("设置BassEngine的代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+				throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
 		}
 
 		/// <summary>
-		/// 使用默认代理服务器设置
+		/// 使用默认代理服务器
 		/// </summary>
 		public void UseDefaultProxy()
 		{
 			//Debug.WriteLine("已调用BassEngine.UseDefaultProxy()");
 			//释放代理服务器设置的非托管资源句柄
 			if (proxyHandle != IntPtr.Zero)
+			{
 				Marshal.FreeHGlobal(proxyHandle);
-			proxyHandle = IntPtr.Zero;
+				proxyHandle = IntPtr.Zero;
+			}
 			
 			//用长度为0的字符串来设置
 			proxyHandle = Marshal.StringToHGlobalAnsi(string.Empty);
 			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
 			if (!result)
 			{
-				throw new Exception("设置BassEngine的代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+				throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
 		}
 
 		/// <summary>
-		/// 不使用任何代理服务器设置
+		/// 不使用任何代理服务器（不知道为什么总会失败）
 		/// </summary>
 		public void DontUseProxy()
 		{
 			//Debug.WriteLine("已调用BassEngine.DontUseProxy()");
 			//释放代理服务器设置的非托管资源句柄
 			if (proxyHandle != IntPtr.Zero)
+			{
 				Marshal.FreeHGlobal(proxyHandle);
-			proxyHandle = IntPtr.Zero;
+				proxyHandle = IntPtr.Zero;
+			}
 
 			//用空指针来设置
 			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, IntPtr.Zero);
 			if (!result)
 			{
-				throw new Exception("设置BassEngine的代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+				throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
 		}
 		#endregion

@@ -22,28 +22,41 @@ Website : http://www.kfstorm.com
 				<CheckBox Margin="0,2" x:Name="CbSearchBaiduTing" Click="CbSearchBaiduTing_Click">搜索百度听</CheckBox>
 			</StackPanel>
 		</GroupBox>
-		<GroupBox Header="代理设置" Margin="0,2">
+		<GroupBox Header="代理服务器" Margin="0,2">
 			<StackPanel>
-				<Grid>
+				<Grid Margin="2">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition/>
+						<ColumnDefinition Width="0"/>	<!--目前代码有问题，无法设置为不使用代理，所以这里把它隐藏掉-->
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<CheckBox x:Name="CbEnableProxy" Content="启用代理" IsChecked="{Binding Settings.EnableProxy, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center"/>
-					<Button x:Name="BtnApplyProxy" HorizontalAlignment="Right" Grid.Column="1" Height="30" Width="100" Margin="0,2" Click="BtnApplyProxy_Click">应用代理设置</Button>
+					<RadioButton x:Name="RbDefaultProxy" Click="ProxyKindChanged">系统默认</RadioButton>
+					<RadioButton Grid.Column="1" x:Name="RbNoProxy" Click="ProxyKindChanged">无</RadioButton>
+					<RadioButton Grid.Column="2" x:Name="RbCustomProxy" Click="ProxyKindChanged">自定义</RadioButton>
 				</Grid>
-				<Grid>
+				<Grid x:Name="CustomProxyPanel" IsEnabled="{Binding IsChecked, ElementName=RbCustomProxy}" Margin="2">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition/>
 						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<Label>代理主机：</Label>
-					<TextBox x:Name="TbHost" Grid.Column="1" Text="{Binding Settings.ProxyHost, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=CbEnableProxy}" Height="20"/>
-					<Label Grid.Column="2" Margin="10,0,0,0">端口：</Label>
-					<TextBox x:Name="TbPort" Grid.Column="3" Width="50" Text="{Binding Settings.ProxyPort, Mode=TwoWay, Source={StaticResource Player}}" IsEnabled="{Binding IsChecked, ElementName=CbEnableProxy}" Height="20" MaxLength="10"/>
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<Label>主机</Label>
+					<TextBox x:Name="TbHost" Grid.Column="1" Text="{Binding Settings.ProxyHost, Mode=TwoWay, Source={StaticResource Player}}" Height="20"/>
+					<Label Grid.Column="2" Margin="10,0,0,0">端口</Label>
+					<TextBox x:Name="TbPort" Grid.Column="3" Text="{Binding Settings.ProxyPort, Mode=TwoWay, Source={StaticResource Player}}" Height="20" MaxLength="10"/>
+					<Label Grid.Row="1">用户名</Label>
+					<TextBox x:Name="TbProxyUsername" Grid.Row="1" Grid.Column="1" Text="{Binding Settings.ProxyUsername, Mode=TwoWay, Source={StaticResource Player}}" Height="20"/>
+					<Label Grid.Row="1" Grid.Column="2" Margin="10,0,0,0">密码</Label>
+					<PasswordBox x:Name="PbProxyPassword" Grid.Row="1" Grid.Column="3" PasswordChanged="PbProxyPassword_PasswordChanged" Height="20"/>
+					<Label Grid.Row="2" Grid.ColumnSpan="4" FontSize="11">如果代理服务器不使用用户名和密码，请留空。</Label>
 				</Grid>
+				<Button x:Name="BtnApplyProxy" HorizontalAlignment="Right" Grid.Column="1" Height="30" Margin="0,2" Click="BtnApplyProxy_Click">现在就应用代理设置</Button>
 			</StackPanel>
 		</GroupBox>
 	</StackPanel>

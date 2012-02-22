@@ -67,20 +67,44 @@ namespace DoubanFM.Core
 			Qzone
 		}
 
+		/// <summary>
+		/// 存储了各个网站的名称
+		/// </summary>
 		public static readonly Dictionary<Sites, string> SiteName;
 
+		/// <summary>
+		/// 分享的歌曲
+		/// </summary>
 		public Song Song { get; private set; }
 
+		/// <summary>
+		/// 歌曲所在的频道
+		/// </summary>
 		public Channel Channel { get; private set; }
 
+		/// <summary>
+		/// 频道所在的门类
+		/// </summary>
 		public Cate Cate { get; private set; }
 
+		/// <summary>
+		/// 分享的网站
+		/// </summary>
 		public Sites? Site { get; set; }
 
+		/// <summary>
+		/// 分享的内容
+		/// </summary>
 		public string Text { get; set; }
 
+		/// <summary>
+		/// 分享的内容（不包含软件的下载地址）
+		/// </summary>
 		public string TextWithoutSource { get; set; }
 
+		/// <summary>
+		/// 分享的链接
+		/// </summary>
 		public string Url
 		{
 			get
@@ -89,6 +113,9 @@ namespace DoubanFM.Core
 			}
 		}
 
+		/// <summary>
+		/// 包含了分享需要的歌曲信息
+		/// </summary>
 		private ShareSongInfo _songInfo;
 
 		static Share()
@@ -107,6 +134,13 @@ namespace DoubanFM.Core
 			SiteName.Add(Sites.None, "*复制网址到剪贴板*");
 		}
 
+		/// <summary>
+		/// 生成 <see cref="Share"/> class 的新实例。
+		/// </summary>
+		/// <param name="song">歌曲</param>
+		/// <param name="channel">频道</param>
+		/// <param name="cate">门类</param>
+		/// <param name="site">网站</param>
 		public Share(Song song, Channel channel, Cate cate, Sites site)
 		{
 			if (song == null)
@@ -123,14 +157,29 @@ namespace DoubanFM.Core
 			TextWithoutSource = GetShareText(_songInfo.SongName, _songInfo.ArtistName, _songInfo.ChannelName, _songInfo.Type, false);
 		}
 
+		/// <summary>
+		/// 生成 <see cref="Share"/> class 的新实例。
+		/// </summary>
+		/// <param name="player">播放器</param>
+		/// <param name="site">网站</param>
 		public Share(Player player, Sites site)
 			: this(player.CurrentSong, player.CurrentChannel, player.CurrentDjCate, site)
 		{ }
 
+		/// <summary>
+		/// 生成 <see cref="Share"/> class 的新实例。
+		/// </summary>
+		/// <param name="song">歌曲</param>
+		/// <param name="channel">频道</param>
+		/// <param name="cate">门类</param>
 		public Share(Song song, Channel channel, Cate cate)
 			: this(song, channel, cate, Sites.None)
 		{ }
 
+		/// <summary>
+		/// 生成 <see cref="Share"/> class 的新实例。
+		/// </summary>
+		/// <param name="player">播放器</param>
 		public Share(Player player)
 			: this(player, Sites.None)
 		{ }
@@ -174,7 +223,7 @@ namespace DoubanFM.Core
 					parameters["title"] = TextWithoutSource;
 					parameters["content"] = "utf-8";
 					parameters["pic"] = _songInfo.CoverUrl;
-					url = ConnectionBase.ConstructUrlWithParameters("http://v.t.sina.com.cn/share/share.php", parameters);
+					url = ConnectionBase.ConstructUrlWithParameters("http://service.t.sina.com.cn/share/share.php", parameters);
 					break;
 				case Sites.Msn:
 					parameters["url"] = _songInfo.Url;

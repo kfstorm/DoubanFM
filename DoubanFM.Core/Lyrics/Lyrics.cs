@@ -126,6 +126,7 @@ namespace DoubanFM.Core
 			foreach (var keyvalue in Dictionary)
 			{
 				{
+					//分析时间
 					Match mc = Regex.Match(keyvalue.Key, @"\[(?'minutes'\d+):(?'seconds'\d+(\.\d+)?)\]", RegexOptions.None);
 					if (mc.Success)
 					{
@@ -137,6 +138,7 @@ namespace DoubanFM.Core
 					}
 				}
 				{
+					//分析歌词的附带属性
 					Match mc = Regex.Match(keyvalue.Key, @"\[(?'title'.+?):(?'content'.*)\]", RegexOptions.None);
 					if (mc.Success)
 					{

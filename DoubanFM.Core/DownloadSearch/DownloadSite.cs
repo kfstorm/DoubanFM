@@ -11,6 +11,9 @@ using System.Text;
 
 namespace DoubanFM.Core
 {
+	/// <summary>
+	/// 提供音乐下载的网站
+	/// </summary>
 	[Flags]
 	public enum DownloadSite
 	{

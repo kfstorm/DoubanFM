@@ -20,8 +20,11 @@ namespace DoubanFM.Core.Json
     [DataContract]
     class PlayList
     {
+		/// <summary>
+		/// 是否发生错误
+		/// </summary>
         [DataMember]
-        public int r { get; set; }
+        public bool r { get; set; }
         /// <summary>
         /// 播放列表里的歌曲
         /// </summary>

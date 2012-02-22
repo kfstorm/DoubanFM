@@ -25,12 +25,32 @@ namespace DoubanFM
 	/// </summary>
 	public partial class GeneralSettingWindow : ChildWindowBase
 	{
+		Player player;
+
 		public GeneralSettingWindow()
 		{
 			InitializeComponent();
+			player = (Player)FindResource("Player");
 
 			CbSearchGoogleMusic.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.GoogleMusic);
 			CbSearchBaiduTing.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.BaiduTing);
+
+			switch (player.Settings.ProxyKind)
+			{
+				case Settings.ProxyKinds.Default:
+					RbDefaultProxy.IsChecked = true;
+					break;
+				case Settings.ProxyKinds.None:
+					RbNoProxy.IsChecked = true;
+					break;
+				case Settings.ProxyKinds.Custom:
+					RbCustomProxy.IsChecked = true;
+					break;
+				default:
+					break;
+			}
+
+			PbProxyPassword.Password = player.Settings.ProxyPassword;
 		}
 
 		private void BtnApplyProxy_Click(object sender, RoutedEventArgs e)
@@ -60,6 +80,29 @@ namespace DoubanFM
 			{
 				DownloadSearch.Settings.DownloadSite &= ~DownloadSite.BaiduTing;
 			}
+		}
+
+		private void ProxyKindChanged(object sender, RoutedEventArgs e)
+		{
+			Settings.ProxyKinds newKind = Settings.ProxyKinds.Default;
+			if (RbNoProxy.IsChecked == true)
+			{
+				newKind = Settings.ProxyKinds.None;
+			}
+			if (RbCustomProxy.IsChecked == true)
+			{
+				newKind = Settings.ProxyKinds.Custom;
+			}
+			
+			if (player.Settings.ProxyKind != newKind)
+			{
+				player.Settings.ProxyKind = newKind;
+			}
+		}
+
+		private void PbProxyPassword_PasswordChanged(object sender, RoutedEventArgs e)
+		{
+			player.Settings.ProxyPassword = PbProxyPassword.Password;
 		}
 	}
 }

@@ -41,6 +41,15 @@ namespace DoubanFM.Core
 		/// </summary>
 		public string CoverUrl { get; set; }
 
+		/// <summary>
+		/// 生成 <see cref="ShareSongInfo"/> class 的新实例。
+		/// </summary>
+		/// <param name="songName">歌曲标题（或者DJ节目名称）</param>
+		/// <param name="artistName">表演者</param>
+		/// <param name="channelName">频道名称（或者DJ频道名称）</param>
+		/// <param name="url">分享的电台链接</param>
+		/// <param name="type">音乐类型</param>
+		/// <param name="coverUrl">封面地址</param>
 		internal ShareSongInfo(string songName, string artistName, string channelName, string url, string type, string coverUrl)
 		{
 			SongName = songName;
