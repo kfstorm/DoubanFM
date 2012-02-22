@@ -20,34 +20,101 @@ namespace DoubanFM.Bass
 	public class BassEngine : WPFSoundVisualizationLib.ISpectrumPlayer, INotifyPropertyChanged, IDisposable
 	{
 		#region Fields
+		/// <summary>
+		/// BassEngine的唯一实例
+		/// </summary>
 		private static BassEngine instance;
+		/// <summary>
+		/// 用于更新播放进度的计时器
+		/// </summary>
 		private readonly DispatcherTimer positionTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
 		private readonly int maxFFT = (int)(Un4seen.Bass.BASSData.BASS_DATA_AVAILABLE | Un4seen.Bass.BASSData.BASS_DATA_FFT4096);
+		/// <summary>
+		/// 当播放结束时调用
+		/// </summary>
 		private readonly Un4seen.Bass.SYNCPROC endTrackSyncProc;
 		private int sampleFrequency = 44100;
+		/// <summary>
+		/// 当前流的句柄
+		/// </summary>
 		private int activeStreamHandle;
+		/// <summary>
+		/// 可以使用播放命令
+		/// </summary>
 		private bool canPlay;
+		/// <summary>
+		/// 可以使用暂停命令
+		/// </summary>
 		private bool canPause;
+		/// <summary>
+		/// 是否正在播放
+		/// </summary>
 		private bool isPlaying;
+		/// <summary>
+		/// 可以使用停止命令
+		/// </summary>
 		private bool canStop;
+		/// <summary>
+		/// 音频长度
+		/// </summary>
 		private TimeSpan channelLength = TimeSpan.Zero;
+		/// <summary>
+		/// 当前播放进度
+		/// </summary>
 		private TimeSpan currentChannelPosition = TimeSpan.Zero;
 		private bool inChannelSet;
 		private bool inChannelTimerUpdate;
+		/// <summary>
+		/// 用于异步打开网络音频文件的线程
+		/// </summary>
 		private Thread onlineFileWorker;
-		enum PendingOperation { None = 0, Play, Pause };
+		/// <summary>
+		/// 待执行的命令
+		/// </summary>
+		enum PendingOperation
+		{
+			/// <summary>
+			/// 无
+			/// </summary>
+			None = 0,
+			/// <summary>
+			/// 播放
+			/// </summary>
+			Play,
+			/// <summary>
+			/// 暂停
+			/// </summary>
+			Pause
+		};
+		/// <summary>
+		/// 待执行的命令，当打开网络上的音频时非常有用
+		/// </summary>
 		private PendingOperation pendingOperation = PendingOperation.None;
+		/// <summary>
+		/// 音量
+		/// </summary>
 		private double volume;
+		/// <summary>
+		/// 是否静音
+		/// </summary>
 		private bool isMuted;
+		/// <summary>
+		/// 代理服务器设置的非托管资源句柄
+		/// </summary>
 		private IntPtr proxyHandle = IntPtr.Zero;
+		/// <summary>
+		/// 保存正在打开的文件的地址，当短时间内多次打开网络文件时，这个字段保存最后一次打开的文件，可以使其他打开文件的操作失效
+		/// </summary>
 		private string openningFile = null;
 		#endregion
 
 		#region Constructor
 		static BassEngine()
 		{
+			//注册Bass.Net，不注册就会弹出一个启动画面
 			Un4seen.Bass.BassNet.Registration("yk000123@sina.com", "2X34201017282922");
 
+			//判断当前系统是32位系统还是64位系统，并加载对应版本的bass.dll
 			string targetPath;
 			if (Un4seen.Bass.Utils.Is64Bit)
 				targetPath = Path.Combine(Path.GetDirectoryName(typeof(BassEngine).Assembly.GetModules()[0].FullyQualifiedName), "x64");
@@ -65,6 +132,7 @@ namespace DoubanFM.Bass
 		private BassEngine()
 		{
 			Initialize();
+			//设置播放结束的回调
 			endTrackSyncProc = EndTrack;
 		}
 		#endregion
@@ -143,7 +211,7 @@ namespace DoubanFM.Bass
 
 		#region Public Methods
 		/// <summary>
-		/// 停止
+		/// 停止当前音频，并释放资源
 		/// </summary>
 		public void Stop()
 		{
@@ -169,7 +237,7 @@ namespace DoubanFM.Bass
 		}
 
 		/// <summary>
-		/// 暂停
+		/// 暂停当前音频
 		/// </summary>
 		public void Pause()
 		{
@@ -189,7 +257,7 @@ namespace DoubanFM.Bass
 		}
 
 		/// <summary>
-		/// 播放
+		/// 播放当前音频
 		/// </summary>
 		public void Play()
 		{
@@ -351,8 +419,9 @@ namespace DoubanFM.Bass
 				Marshal.FreeHGlobal(proxyHandle);
 			proxyHandle = IntPtr.Zero;
 
-			//user:pass@server:port
+			//格式：user:pass@server:port
 			StringBuilder sb = new StringBuilder();
+			//有用户名和密码的情形
 			if (!string.IsNullOrEmpty(username))
 			{
 				if (string.IsNullOrEmpty(password))
@@ -361,6 +430,7 @@ namespace DoubanFM.Bass
 				sb.Append(":");
 				sb.Append(password);
 			}
+			//没有用户名和密码的情形
 			if (sb.Length == 0)
 			{
 				if (string.IsNullOrEmpty(host))
@@ -369,6 +439,7 @@ namespace DoubanFM.Bass
 					throw new ArgumentException("端口号为空", "port");
 			}
 			sb.Append("@");
+			//指定了主机和端口号的情形
 			if (!string.IsNullOrEmpty(host) && port.HasValue)
 			{
 				if (host.Contains(':'))
@@ -380,10 +451,11 @@ namespace DoubanFM.Bass
 			}
 			string proxyString = sb.ToString();
 
-			// set it
+			//将String转换为字符数组
 			proxyHandle = Marshal.StringToHGlobalUni(proxyString);
-			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
 
+			//设置代理服务器
+			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
 			if (!result)
 			{
 				throw new Exception("设置BassEngine的代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
@@ -396,13 +468,33 @@ namespace DoubanFM.Bass
 		public void UseDefaultProxy()
 		{
 			//Debug.WriteLine("已调用BassEngine.UseDefaultProxy()");
+			//释放代理服务器设置的非托管资源句柄
 			if (proxyHandle != IntPtr.Zero)
 				Marshal.FreeHGlobal(proxyHandle);
 			proxyHandle = IntPtr.Zero;
 			
+			//用长度为0的字符串来设置
 			proxyHandle = Marshal.StringToHGlobalAnsi(string.Empty);
 			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
+			if (!result)
+			{
+				throw new Exception("设置BassEngine的代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+			}
+		}
 
+		/// <summary>
+		/// 不使用任何代理服务器设置
+		/// </summary>
+		public void DontUseProxy()
+		{
+			//Debug.WriteLine("已调用BassEngine.DontUseProxy()");
+			//释放代理服务器设置的非托管资源句柄
+			if (proxyHandle != IntPtr.Zero)
+				Marshal.FreeHGlobal(proxyHandle);
+			proxyHandle = IntPtr.Zero;
+
+			//用空指针来设置
+			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, IntPtr.Zero);
 			if (!result)
 			{
 				throw new Exception("设置BassEngine的代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
@@ -411,6 +503,9 @@ namespace DoubanFM.Bass
 		#endregion
 
 		#region Event Handleres
+		/// <summary>
+		/// 更新播放进度
+		/// </summary>
 		private void positionTimer_Tick(object sender, EventArgs e)
 		{
 			if (ActiveStreamHandle == 0)
@@ -428,7 +523,7 @@ namespace DoubanFM.Bass
 
 		#region Private Utility Methods
 		/// <summary>
-		/// 初始化
+		/// 初始化BassEngine
 		/// </summary>
 		private void Initialize()
 		{
@@ -511,6 +606,9 @@ namespace DoubanFM.Bass
 		#endregion
 
 		#region Callbacks
+		/// <summary>
+		/// 播放完毕
+		/// </summary>
 		private void EndTrack(int handle, int channel, int data, IntPtr user)
 		{
 			Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -583,6 +681,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 可以使用播放命令
+		/// </summary>
 		public bool CanPlay
 		{
 			get { return canPlay; }
@@ -595,6 +696,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 可以使用暂停命令
+		/// </summary>
 		public bool CanPause
 		{
 			get { return canPause; }
@@ -607,6 +711,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 可以使用停止命令
+		/// </summary>
 		public bool CanStop
 		{
 			get { return canStop; }
@@ -619,6 +726,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 是否正在播放
+		/// </summary>
 		public bool IsPlaying
 		{
 			get { return isPlaying; }
@@ -632,6 +742,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 音量
+		/// </summary>
 		public double Volume
 		{
 			get { return volume; }
@@ -647,6 +760,9 @@ namespace DoubanFM.Bass
 			}
 		}
 
+		/// <summary>
+		/// 是否静音
+		/// </summary>
 		public bool IsMuted
 		{
 			get { return isMuted; }
@@ -663,24 +779,42 @@ namespace DoubanFM.Bass
 		#endregion
 
 		#region Events
+		/// <summary>
+		/// 当播放完毕时发生。
+		/// </summary>
 		public event EventHandler TrackEnded;
 
+		/// <summary>
+		/// 引发播放完毕事件
+		/// </summary>
 		void RaiseTrackEndedEvent()
 		{
 			if (TrackEnded != null)
 				TrackEnded(this, EventArgs.Empty);
 		}
 
+		/// <summary>
+		/// 当打开音频文件失败时发生。
+		/// </summary>
 		public event EventHandler OpenFailed;
 
+		/// <summary>
+		/// 引发打开音频文件失败事件
+		/// </summary>
 		void RaiseOpenFailedEvent()
 		{
 			if (OpenFailed != null)
 				OpenFailed(this, EventArgs.Empty);
 		}
 
+		/// <summary>
+		/// 当打开音频文件成功时发生。
+		/// </summary>
 		public event EventHandler OpenSucceeded;
 
+		/// <summary>
+		/// 引发打开音频文件成功事件
+		/// </summary>
 		void RaiseOpenSucceededEvent()
 		{
 			if (OpenSucceeded != null)
