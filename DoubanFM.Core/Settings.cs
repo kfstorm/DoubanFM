@@ -60,6 +60,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty SpectrumTransparencyProperty = DependencyProperty.Register("SpectrumTransparency", typeof(double), typeof(Settings), new PropertyMetadata(0.0));
 		public static readonly DependencyProperty ShowSpectrumProperty = DependencyProperty.Register("ShowSpectrum", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty AdjustVolumeWithMouseWheelProperty = DependencyProperty.Register("AdjustVolumeWithMouseWheel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		public static readonly DependencyProperty UserKeyProperty = DependencyProperty.Register("UserKey", typeof(string), typeof(Settings), new PropertyMetadata(Guid.NewGuid().ToString("N")));
 		
 		#endregion
 
@@ -378,6 +379,15 @@ namespace DoubanFM.Core
 		}
 
 		/// <summary>
+		/// 标识一个使用本软件的用户
+		/// </summary>
+		public string UserKey
+		{
+			get { return (string)GetValue(UserKeyProperty); }
+			set { SetValue(UserKeyProperty, value); }
+		}
+
+		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
 		private static string _dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
@@ -689,6 +699,14 @@ namespace DoubanFM.Core
 			{
 				AdjustVolumeWithMouseWheel = def.AdjustVolumeWithMouseWheel;
 			}
+			try
+			{
+				UserKey = info.GetString("UserKey");
+			}
+			catch
+			{
+				UserKey = def.UserKey;
+			}
 
 			//向下兼容
 			if (!AutoBackground && Background.A != 255)
@@ -745,6 +763,7 @@ namespace DoubanFM.Core
 			info.AddValue("SpectrumTransparency", SpectrumTransparency);
 			info.AddValue("ShowSpectrum", ShowSpectrum);
 			info.AddValue("AdjustVolumeWithMouseWheel", AdjustVolumeWithMouseWheel);
+			info.AddValue("UserKey", UserKey);
 		}
 
 		/// <summary>
