@@ -482,7 +482,7 @@ namespace DoubanFM.Bass
 		}
 
 		/// <summary>
-		/// 不使用任何代理服务器（不知道为什么总会失败）
+		/// 不使用任何代理服务器
 		/// </summary>
 		public void DontUseProxy()
 		{
@@ -493,12 +493,12 @@ namespace DoubanFM.Bass
 				Marshal.FreeHGlobal(proxyHandle);
 				proxyHandle = IntPtr.Zero;
 			}
-
 			//用空指针来设置
 			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, IntPtr.Zero);
 			if (!result)
 			{
-				throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+				//bass.dll中BASS_SetConfigPtr函数返回的其实是代理字符串指针，所以设置为NULL时会返回NULL，被Bass.Net封装后就永远返回false。
+				//throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
 		}
 		#endregion

@@ -27,7 +27,7 @@ Website : http://www.kfstorm.com
 				<Grid Margin="2">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition/>
-						<ColumnDefinition Width="0"/>	<!--目前代码有问题，无法设置为不使用代理，所以这里把它隐藏掉-->
+						<ColumnDefinition/><!-- Width="0"/>	目前代码有问题，无法设置为不使用代理，所以这里把它隐藏掉-->
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					<RadioButton x:Name="RbDefaultProxy" Click="ProxyKindChanged">系统默认</RadioButton>
