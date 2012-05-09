@@ -179,10 +179,6 @@ Website : http://www.kfstorm.com
 					<Paragraph Style="{StaticResource TextStyleKey}">一般情况下是因为你在浏览器中注销过豆瓣的帐号导致的，豆瓣规定得很严，只要在一个地方注销了，所有已登录的地方都会注销（比如同时使用多个浏览器登录豆瓣，然后在其中一个浏览器注销掉，这时其他浏览器也会注销），本软件也不例外。所以只能尽量避免在任何地方注销豆瓣了。</Paragraph>
 				</Section>
 				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">为什么搜索出的频道分享到人人网时会提示“对不起，您的分享内容不适合在网站发布”？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">因为搜索出的频道的分享链接比较特殊，有:和|这两个符号，人人网会认为这是非法网址。目前没有解决办法。</Paragraph>
-				</Section>
-				<Section>
 					<Paragraph Style="{StaticResource Header1StyleKey}">程序崩溃了……</Paragraph>
 					<Paragraph Style="{StaticResource TextStyleKey}">如果发生了程序崩溃的情况，请
 						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">向我反应</Hyperlink> ，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。
@@ -210,8 +206,6 @@ Website : http://www.kfstorm.com
 						<LineBreak/>
 						网页版FAQ：
 						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/</Hyperlink>
-						<LineBreak/>
-						QQ群：190056088
 						<LineBreak/>
 						豆瓣FM官方网站：
 						<Hyperlink Tag="http://douban.fm" Style="{StaticResource HyperlinkStyleKey}">http://douban.fm</Hyperlink>

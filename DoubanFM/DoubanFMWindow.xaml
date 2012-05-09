@@ -305,6 +305,10 @@ Website : http://www.kfstorm.com
 										</DataTemplate>
 									</ListBox.ItemTemplate>
 								</ListBox>
+								<StackPanel TextElement.FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" TextOptions.TextFormattingMode="Ideal" Opacity="{Binding Opacity, ElementName=DjCates}" RenderTransform="{Binding RenderTransform, ElementName=DjCates}">
+									<TextBlock HorizontalAlignment="Center">DJ兆赫很快回归</TextBlock>
+									<TextBlock HorizontalAlignment="Center">敬请期待</TextBlock>
+								</StackPanel>
 								<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0">
 									<ListBox.RenderTransform>
 										<TransformGroup>
