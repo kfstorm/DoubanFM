@@ -18,6 +18,7 @@ using DoubanFM.Core;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading;
 
 namespace DoubanFM
 {
@@ -26,8 +27,22 @@ namespace DoubanFM
 	/// </summary>
 	public partial class App : Application
 	{
+		Mutex mutex;
+
 		public App()
 		{
+			//只允许运行一个实例
+			bool createdNew = false;
+			mutex = new Mutex(true, "{DBFE3F28-BA77-4FF6-9EBF-4FED90151A3E}", out createdNew);
+			if (!createdNew)
+			{
+				Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
+				if (channel != null) WriteChannelToMappedFile(channel);
+				Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
+				Shutdown(0);
+				return;
+			}
+
 			//设置调试输出
 			Debug.AutoFlush = true;
 			Debug.Listeners.Add(new TextWriterTraceListener("DoubanFM.log"));
@@ -44,33 +59,35 @@ namespace DoubanFM
 				Debug.WriteLine("**********************************************************************");
 				Debug.WriteLine("豆瓣电台出现错误：" + App.GetPreciseTime(DateTime.Now));
 				Debug.WriteLine("**********************************************************************");
-				
-				Dispatcher.Invoke(new Action(() =>
-					{
-						try
-						{
-							DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
-							if (mainWindow != null)
-							{
-								Player player = FindResource("Player") as Player;
-								if (player != null) player.SaveSettings(true);
-								if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
-								if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
-								if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
-								if (mainWindow.NotifyIcon != null) mainWindow.NotifyIcon.Dispose();
-							}
-						}
-						catch { }
 
-						var window = new ExceptionWindow();
-						window.ExceptionObject = e.ExceptionObject;
-						window.ShowDialog();
-					}));
+				Dispatcher.Invoke(new Action(() =>
+				{
+					try
+					{
+						DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
+						if (mainWindow != null)
+						{
+							Player player = FindResource("Player") as Player;
+							if (player != null) player.SaveSettings(true);
+							if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
+							if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
+							if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
+							if (mainWindow.NotifyIcon != null) mainWindow.NotifyIcon.Dispose();
+						}
+					}
+					catch { }
+
+					var window = new ExceptionWindow();
+					window.ExceptionObject = e.ExceptionObject;
+					window.ShowDialog();
+				}));
 				Process.GetCurrentProcess().Kill();
 			});
 
 			Exit += new ExitEventHandler((sender, e) =>
 			{
+				mutex.Close();
+				mutex = null;
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 程序结束，返回代码为" + e.ApplicationExitCode);
 			});
 
@@ -83,16 +100,6 @@ namespace DoubanFM
 			 * 这样就能强制Global User Interface在FlowDocument上使用大陆的字形。
 			 * */
 			FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.Name)));
-
-			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
-			//只允许运行一个实例
-			if (HasAnotherInstance())
-			{
-				if (channel != null) WriteChannelToMappedFile(channel);
-				Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
-				Shutdown(0);
-				return;
-			}
 		}
 
 		/// <summary>
@@ -109,22 +116,6 @@ namespace DoubanFM
 		/// 内存映射文件的文件名
 		/// </summary>
 		public static string _mappedFileName = "{04EFCEB4-F10A-403D-9824-1E685C4B7961}";
-		
-		/// <summary>
-		/// 检测是否有另一个实例正在运行
-		/// </summary>
-		protected bool HasAnotherInstance()
-		{
-			try
-			{
-				MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName);
-				return mappedFile != null;
-			}
-			catch
-			{
-				return false;
-			}
-		}
 
 		/// <summary>
 		/// 将频道写入内存映射文件

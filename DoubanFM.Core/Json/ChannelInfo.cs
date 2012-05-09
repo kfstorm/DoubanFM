@@ -139,14 +139,35 @@ namespace DoubanFM.Core.Json
 		{
 			try
 			{
-				html = html.Replace("&amp;", "&");
+				//html = html.Replace("&amp;", "&");
+
+				////获得公共兆赫的信息
+				//Match match = Regex.Match(html, @"var\s*channelInfo\s*=\s*({.*}),", RegexOptions.IgnoreCase);
+				//ChannelInfo ci = ChannelInfo.FromJson(match.Groups[1].Value);
+				
+				////获得DJ兆赫的信息
+				//ci.Dj = GetDjCates(html);
 
 				//获得公共兆赫的信息
-				Match match = Regex.Match(html, @"var\s*channelInfo\s*=\s*({.*}),", RegexOptions.IgnoreCase);
-				ChannelInfo ci = ChannelInfo.FromJson(match.Groups[1].Value);
-				
-				//获得DJ兆赫的信息
-				ci.Dj = GetDjCates(html);
+				ChannelInfo ci = new ChannelInfo();
+				ci.pppublic = new Cate[] { new Cate { cate = "未知类别", channels = new Channel[] { } } };
+				ci.Dj = new Cate[] { };
+				Match mc = Regex.Match(html, @"channels:\s*'([^']*)'");
+				if (mc != null && mc.Success)
+				{
+					try
+					{
+						DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Channel[]));
+						using (MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(Uri.UnescapeDataString(mc.Groups[1].Value))))
+						{
+							List<Channel> channels = ((Channel[])ser.ReadObject(stream)).ToList();
+							channels.RemoveAll(channel => { return channel.channel_id == "0" || channel.channel_id == "-3"; });
+							ci.pppublic[0].channels = channels.ToArray();
+						}
+
+					}
+					catch { }
+				}
 
 				//添加私人兆赫和红心兆赫
 				ci.personal = new Cate[1];
