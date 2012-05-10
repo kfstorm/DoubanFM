@@ -38,32 +38,41 @@ namespace DoubanFM.Core
         {
             if (ci == null) return;
 			List<Channel> list1 = new List<Channel>();
-			foreach (var channel in ci.personal)
+			if (ci.personal != null)
 			{
-				Channel ch = new Channel(channel);
-				if (ch.IsEffective)
+				foreach (var channel in ci.personal)
 				{
-					list1.Add(ch);
+					Channel ch = new Channel(channel);
+					if (ch.IsEffective)
+					{
+						list1.Add(ch);
+					}
 				}
 			}
             Personal = list1;
 			List<Channel> list2 = new List<Channel>();
-			foreach (var channel in ci.Public)
+			if (ci.Public != null)
 			{
-				Channel ch = new Channel(channel);
-				if (ch.IsEffective)
+				foreach (var channel in ci.Public)
 				{
-					list2.Add(ch);
+					Channel ch = new Channel(channel);
+					if (ch.IsEffective)
+					{
+						list2.Add(ch);
+					}
 				}
 			}
             Public = list2;
 			List<Channel> list3 = new List<Channel>();
-			foreach (var channel in ci.dj)
+			if (ci.dj != null)
 			{
-				Channel ch = new Channel(channel);
-				if (ch.IsEffective)
+				foreach (var channel in ci.dj)
 				{
-					list3.Add(ch);
+					Channel ch = new Channel(channel);
+					if (ch.IsEffective)
+					{
+						list3.Add(ch);
+					}
 				}
 			}
             Dj = list3;
