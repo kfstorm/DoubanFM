@@ -28,7 +28,6 @@ namespace DoubanFM.Core
 	{
 		(d as Player).RaiseCurrentSongChangedEvent();
 	})));
-		public static readonly DependencyProperty CurrentDjCateProperty = DependencyProperty.Register("CurrentDjCate", typeof(Cate), typeof(Player));
 		public static readonly DependencyProperty IsLikedProperty = DependencyProperty.Register("IsLiked", typeof(bool), typeof(Player),
 			new PropertyMetadata(new PropertyChangedCallback((o, e) =>
 			{
@@ -71,14 +70,11 @@ namespace DoubanFM.Core
 				if (value == null)
 					throw new Exception("频道不能设为空");
 				if (value.IsPersonal && !value.IsSpecial && !UserAssistant.IsLoggedOn) return;	//没登录时不能使用私人频道
+				if (!value.IsSpecial && !ChannelInfo.Personal.Contains(value) && !ChannelInfo.Public.Contains(value) && !ChannelInfo.Dj.Contains(value)) return;		//除特殊频道外，无法播放频道列表中不存在的频道
 				//if (CurrentChannel != null && CurrentChannel.IsSpecial && !value.IsSpecial)     //由特殊模式转为普通模式
 					CurrentSong = null;
 				if (CurrentChannel != value)
 				{
-					if (!value.IsDj) CurrentDjCate = null;
-					if ((value.IsDj && (CurrentDjCate == null || !CurrentDjCate.Channels.Contains(value)))
-						|| (!value.IsDj && CurrentDjCate != null))
-						throw new Exception("在改变CurrentDjCate前改变了CurrentChannel");
 					Channel lastChannel = CurrentChannel;
 					SetValue(CurrentChannelProperty, value);
 					RaiseStopedEvent();
@@ -89,14 +85,6 @@ namespace DoubanFM.Core
 					RaiseCurrentChannelChangedEvent();
 				}
 			}
-		}
-		/// <summary>
-		/// 当前DJ门类
-		/// </summary>
-		public Cate CurrentDjCate
-		{
-			get { return (Cate)GetValue(CurrentDjCateProperty); }
-			set { SetValue(CurrentDjCateProperty, value); }
 		}
 		/// <summary>
 		/// 当前歌曲
@@ -194,17 +182,9 @@ namespace DoubanFM.Core
 		#region 成员变量
 
 		/// <summary>
-		/// 已播放音乐的列表
-		/// </summary>
-		private Queue<Song> _playedSongs = new Queue<Song>();
-		/// <summary>
 		/// 待播放音乐的列表
 		/// </summary>
 		private Queue<Song> _playListSongs = new Queue<Song>();
-		/// <summary>
-		/// 播放历史的字符串表示
-		/// </summary>
-		private Queue<string> _playedSongsString = new Queue<string>();
 		/// <summary>
 		/// 上次暂停的时间
 		/// </summary>
@@ -226,15 +206,6 @@ namespace DoubanFM.Core
 
 		#region 事件
 
-		/// <summary>
-		/// 当DJ频道播放完毕时发生。
-		/// </summary>
-		public event EventHandler DjChannelFinishedPlaying;
-		private void RaiseDjChannelFinishedPlayingEvent()
-		{
-			if (DjChannelFinishedPlaying != null)
-				DjChannelFinishedPlaying(this, EventArgs.Empty);
-		}
 		/// <summary>
 		/// 当当前频道改变时发生。
 		/// </summary>
@@ -362,8 +333,8 @@ namespace DoubanFM.Core
 			//频道改变时更新红心和垃圾桶的启用状态
 			CurrentChannelChanged += new EventHandler((o, e) =>
 			{
-				IsLikedEnabled = !CurrentChannel.IsDj;
-				IsNeverEnabled = !CurrentChannel.IsDj && UserAssistant.IsLoggedOn;
+				IsLikedEnabled = true;
+				IsNeverEnabled = UserAssistant.IsLoggedOn;
 			});
 
 			//歌曲改变时更新红心状态
@@ -373,20 +344,6 @@ namespace DoubanFM.Core
 				{
 					IsLiked = CurrentSong.Like;
 				}
-			});
-
-			//DJ频道播放完毕时自动播放下一个频道
-			DjChannelFinishedPlaying += new EventHandler((o, e) =>
-			{
-				foreach (var channel in CurrentDjCate.Channels)
-					if (CurrentChannel == channel)
-					{
-						if (CurrentChannel == CurrentDjCate.Channels.Last())
-							CurrentChannel = CurrentDjCate.Channels.First();
-						else
-							CurrentChannel = CurrentDjCate.Channels.ElementAt(CurrentDjCate.Channels.ToList().IndexOf(CurrentChannel) + 1);
-						return;
-					}
 			});
 
 			//登录成功后更新垃圾桶启用状态
@@ -400,7 +357,7 @@ namespace DoubanFM.Core
 			{
 				IsNeverEnabled = false;
 				if (CurrentChannel.IsPersonal && !CurrentChannel.IsSpecial)
-					CurrentChannel = ChannelInfo.Public.First().Channels.First();
+					CurrentChannel = ChannelInfo.Public.First();
 			});
 
 			//获取播放列表失败后引发事件
@@ -418,19 +375,28 @@ namespace DoubanFM.Core
 			Debug.WriteLine(DateTime.Now + " 播放器核心初始化中");
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					//获取频道信息
 					ChannelInfo channelInfo = null;
 					string file = null;
-					while (true)
+					while (string.IsNullOrEmpty(file))
 					{
 						Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
 						file = new ConnectionBase().Get("http://douban.fm");
 						Debug.WriteLine(DateTime.Now + " 刷新完成");
-						channelInfo = new ChannelInfo(Json.ChannelInfo.FromHtml(file));
-						if (!channelInfo.IsEffective)
+					}
+
+					//更新用户的登录状态
+					UserAssistant.Update(file);
+
+					while (true)
+					{
+						Debug.WriteLine(DateTime.Now + " 获取频道列表……");
+						file = new ConnectionBase().Get("http://doubanfmcloud-channelinfo.stor.sinaapp.com/channelinfo");
+						Debug.WriteLine(DateTime.Now + " 获取频道列表完成");
+						if (string.IsNullOrEmpty(file)) continue;
+						channelInfo = new ChannelInfo(Json.ChannelInfo.FromJson(file));
+						if (channelInfo == null || !channelInfo.IsEffective)
 						{
-							Debug.WriteLine(DateTime.Now + " 获取频道列表失败，获取结果为：");
-							Debug.WriteLine(file == null ? string.Empty : file);
+							Debug.WriteLine(DateTime.Now + " 获取频道列表失败");
 							TakeABreak();
 						}
 						else
@@ -439,10 +405,7 @@ namespace DoubanFM.Core
 							break;
 						}
 					}
-
-					//更新用户的登录状态
-					UserAssistant.Update(file);
-
+					
 					Dispatcher.Invoke(new Action(() =>
 						{
 							/**
@@ -473,24 +436,25 @@ namespace DoubanFM.Core
 					selected = true;
 				else if (firstChannel.IsDj)
 				{
-					foreach (Cate djCate in ChannelInfo.Dj)
-						foreach (Channel channel in djCate.Channels)
-							if (channel == firstChannel)
-							{
-								CurrentDjCate = djCate;
-								selected = true;
-							}
+					foreach (Channel channel in ChannelInfo.Dj)
+						if (channel == firstChannel)
+						{
+							selected = true;
+						}
 				}
 				else
-					foreach (Cate cate in ChannelInfo.Public)
-						foreach (Channel channel in cate.Channels)
-							if (channel == firstChannel)
-								selected = true;
+				{
+					foreach (Channel channel in ChannelInfo.Public)
+						if (channel == firstChannel)
+						{
+							selected = true;
+						}
+				}
 				if (selected)
 					CurrentChannel = firstChannel;
 			}
 			if (CurrentChannel == null)
-				CurrentChannel = ChannelInfo.Public.First().Channels.First();
+				CurrentChannel = ChannelInfo.Public.First();
 		}
 
 		#endregion
@@ -505,41 +469,11 @@ namespace DoubanFM.Core
 		public void CurrentSongFinishedPlaying()
 		{
 			RaiseStopedEvent();
-			if (UserAssistant.IsLoggedOn && !CurrentChannel.IsDj)
+			if (UserAssistant.IsLoggedOn)
 			{
 				++Settings.User.Played;
 			}
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-				{
-					lock (workLock)
-					{
-						PlayerState ps = GetPlayerState();
-						AppendPlayedSongs("e");
-						ChangeCurrentSong();
-						Parameters parameters = new Parameters();
-						parameters["from"] = "ie9";
-						parameters["sid"] = ps.CurrentSong.SongId;
-						parameters["channel"] = ps.CurrentChannel.Id;
-						parameters["type"] = "e";
-						parameters["pid"] = ps.CurrentChannel.ProgramId;
-						string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
-						while (true)
-						{
-							string result = new ConnectionBase().Get(url, "*/*", "http://douban.fm");
-							if (string.IsNullOrEmpty(result))
-							{
-								TakeABreak();
-								continue;
-							}
-							if (!ps.CurrentChannel.IsDj && result != "\"ok\"")
-								Dispatcher.Invoke(new Action(() =>
-									{
-										RaiseFinishedPlayingReportFailedEvent(new ErrorEventArgs(new Exception("发送播放完成消息时出错，返回内容：" + result)));
-									}));
-							else break;
-						}
-					}
-				}));
+			ChangeToNextSong("e");
 		}
 		/// <summary>
 		/// 媒体加载失败时请调用此方法
@@ -550,30 +484,7 @@ namespace DoubanFM.Core
 		{
 			if (CurrentSong == null) return;
 			if (_skipping) return;
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-			{
-				lock (workLock)
-				{
-					_skipping = true;
-					AppendPlayedSongs("s");
-					PlayList pl = null;
-					PlayerState ps = GetPlayerState();
-					while (true)
-					{
-						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "s", PlayedSongsToString());
-						if (!ps.CurrentChannel.IsDj && pl.Count == 0) TakeABreak();
-						else break;
-					}
-					PlayerState ps2 = GetPlayerState();
-					if (ps.CurrentChannel == ps2.CurrentChannel)
-					{
-						if (!ps.CurrentChannel.IsDj)
-							ChangePlayListSongs(pl);
-						ChangeCurrentSong();
-					}
-					_skipping = false;
-				}
-			}));
+			ChangeToNextSong("s");
 		}
 		/// <summary>
 		/// 跳过当前歌曲
@@ -585,30 +496,7 @@ namespace DoubanFM.Core
 			if (CurrentSong == null) return;
 			if (_skipping) return;
 			RaiseStopedEvent();
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-				{
-					lock (workLock)
-					{
-						_skipping = true;
-						AppendPlayedSongs("s");
-						PlayList pl = null;
-						PlayerState ps = GetPlayerState();
-						while (true)
-						{
-							pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "s", PlayedSongsToString());
-							if (!ps.CurrentChannel.IsDj && pl.Count == 0) TakeABreak();
-							else break;
-						}
-						PlayerState ps2 = GetPlayerState();
-						if (ps.CurrentChannel == ps2.CurrentChannel)
-						{
-							if (!ps.CurrentChannel.IsDj)
-								ChangePlayListSongs(pl);
-							ChangeCurrentSong();
-						}
-						_skipping = false;
-					}
-				}));
+			ChangeToNextSong("s");
 		}
 		/// <summary>
 		/// 喜欢这首歌
@@ -616,32 +504,13 @@ namespace DoubanFM.Core
 		void Like()
 		{
 			if (CurrentSong == null) return;
-			if (CurrentChannel.IsDj) return;
 			if (CurrentSong.Like) return;
 			CurrentSong.Like = true;
 			if (UserAssistant.IsLoggedOn)
 			{
 				++Settings.User.Liked;
 			}
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-			{
-				lock (workLock)
-				{
-					PlayList pl = null;
-					PlayerState ps = GetPlayerState();
-					while (true)
-					{
-						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "r", PlayedSongsToString());
-						if (pl.Count == 0) TakeABreak();
-						else break;
-					}
-					PlayerState ps2 = GetPlayerState();
-					if (ps.CurrentChannel == ps2.CurrentChannel)
-					{
-						ChangePlayListSongs(pl);
-					}
-				}
-			}));
+			Report("r", false);
 		}
 		/// <summary>
 		/// 不喜欢这首歌
@@ -649,32 +518,13 @@ namespace DoubanFM.Core
 		void Unlike()
 		{
 			if (CurrentSong == null) return;
-			if (CurrentChannel.IsDj) return;
 			if (!CurrentSong.Like) return;
 			CurrentSong.Like = false;
 			if (UserAssistant.IsLoggedOn)
 			{
 				--Settings.User.Liked;
 			}
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-			{
-				lock (workLock)
-				{
-					PlayList pl = null;
-					PlayerState ps = GetPlayerState();
-					while (true)
-					{
-						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "u", PlayedSongsToString());
-						if (pl.Count == 0) TakeABreak();
-						else break;
-					}
-					PlayerState ps2 = GetPlayerState();
-					if (ps.CurrentChannel == ps2.CurrentChannel)
-					{
-						ChangePlayListSongs(pl);
-					}
-				}
-			}));
+			Report("u", false);
 		}
 		/// <summary>
 		/// 对当前音乐标记不再播放
@@ -684,36 +534,14 @@ namespace DoubanFM.Core
 		public void Never()
 		{
 			if (CurrentSong == null) return;
-			if (CurrentChannel.IsDj) return;
 			if (_neverring) return;
 			RaiseStopedEvent();
 			if (UserAssistant.IsLoggedOn)
 			{
 				++Settings.User.Banned;
 			}
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-			{
-				lock (workLock)
-				{
-					_neverring = true;
-					AppendPlayedSongs("b");
-					PlayList pl = null;
-					PlayerState ps = GetPlayerState();
-					while (true)
-					{
-						pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "b", PlayedSongsToString());
-						if (pl.Count == 0) TakeABreak();
-						else break;
-					}
-					PlayerState ps2 = GetPlayerState();
-					if (ps.CurrentChannel == ps2.CurrentChannel)
-					{
-						ChangePlayListSongs(pl);
-						ChangeCurrentSong();
-					}					
-					_neverring = false;
-				}
-			}));
+
+			ChangeToNextSong("b");
 		}
 		/// <summary>
 		/// 暂停
@@ -735,29 +563,10 @@ namespace DoubanFM.Core
 			RaisePlayedEvent();
 			/* 由于豆瓣电台的音乐地址都是临时的，所以超过一定时间后按道理应该立即重新获取一个全新的播放列表，
 			 * 但考虑到播放体验的流畅性，这里仍然播放当前的音乐，但是_playListSongs要更换，
-			 * 所以这里只是复制了一下NewPlayList()的代码，然后把ChangeCurrentSong();这句话删除掉
 			 * */
-			if ((DateTime.Now - _pauseTime).TotalMinutes > 30 && !CurrentChannel.IsDj)
+			if ((DateTime.Now - _pauseTime).TotalMinutes > 30)
 			{
-				ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-				{
-					lock (workLock)
-					{
-						PlayList pl = null;
-						PlayerState ps = GetPlayerState();
-						while (true)
-						{
-							pl = PlayList.GetPlayList(ps.CurrentChannel.Context, null, ps.CurrentChannel, "n", PlayedSongsToString());
-							if (pl.Count == 0) TakeABreak();
-							else break;
-						}
-						PlayerState ps2 = GetPlayerState();
-						if (ps.CurrentChannel == ps2.CurrentChannel)
-						{
-							ChangePlayListSongs(pl);
-						}
-					}
-				}));
+				Report("n", false);
 			}
 		}
 
@@ -765,18 +574,6 @@ namespace DoubanFM.Core
 
 		#region 成员方法
 
-		/// <summary>
-		/// 当预加载音乐完成后，可调用此方法改变下一首音乐的文件地址
-		/// </summary>
-		public void ChangeNextSongUrl(string address)
-		{
-			if (string.IsNullOrEmpty(address)) return;
-			lock (_playListSongs)
-			{
-				if (_playListSongs.Count == 0) return;
-				_playListSongs.First().FileUrl = address;
-			}
-		}
 		/// <summary>
 		/// 获取下一首音乐的URL
 		/// </summary>
@@ -845,56 +642,63 @@ namespace DoubanFM.Core
 		void NewPlayList()          //根据douban.fm的网络传输观察，只有全新的播放列表才利用context信息，其他播放列表请求都不传输context
 		{
 			if (!IsInitialized) return;
+			ChangeToNextSong("n");
+		}
+
+		void Report(string type, bool changeCurrentSong = true)
+		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 			{
-				PlayList pl = null;
-				PlayerState ps = GetPlayerState();
-				while(true)
+				lock (workLock)
 				{
-					pl = PlayList.GetPlayList(ps.CurrentChannel.Context, null, ps.CurrentChannel, "n", PlayedSongsToString());
-					if (pl.Count == 0) TakeABreak();
-					else break;
-				}
-				PlayerState ps2 = GetPlayerState();
-				if (ps.CurrentChannel == ps2.CurrentChannel)
-				{
-					ChangePlayListSongs(pl);
-					ChangeCurrentSong();
+					if (type == "s")
+					{
+						_skipping = true;
+					}
+					if (type == "b")
+					{
+						_neverring = true;
+					}
+					PlayList pl = null;
+					PlayerState ps = GetPlayerState();
+					while (true)
+					{
+						pl = PlayList.GetPlayList(null, ps.CurrentSong == null ? null : ps.CurrentSong.SongId, ps.CurrentChannel, type);
+						if ((type == "p" || type == "n") && pl.Count == 0) TakeABreak();
+						else if (type == "e") break;
+						else if (ps.CurrentChannel.IsDj) break;
+						else if (pl.Count == 0) TakeABreak();
+						else break;
+					}
+					PlayerState ps2 = GetPlayerState();
+					if (ps.CurrentChannel == ps2.CurrentChannel)
+					{
+						if (pl.Count > 0)
+						{
+							ChangePlayListSongs(pl);
+						}
+						if (changeCurrentSong)
+						{
+							ChangeCurrentSong();
+						}
+					}
+					if (type == "s")
+					{
+						_skipping = false;
+					}
+					if (type == "b")
+					{
+						_neverring = false;
+					}
 				}
 			}));
 		}
-		/// <summary>
-		/// 增加已播放音乐的记录
-		/// </summary>
-		/// <param name="operationType">操作类型</param>
-		void AppendPlayedSongs(string operationType)
+
+		void ChangeToNextSong(string type)
 		{
-			PlayerState ps = GetPlayerState();
-			if (ps.CurrentSong == null) return;
-			lock (_playedSongs) lock (_playedSongsString)
-				{
-					_playedSongs.Enqueue(ps.CurrentSong);
-					_playedSongsString.Enqueue("|" + ps.CurrentSong.SongId + ":" + operationType);
-					while (_playedSongs.Count > 20)
-					{
-						_playedSongs.Dequeue();
-						_playedSongsString.Dequeue();
-					}
-				}
+			Report(type);
 		}
-		/// <summary>
-		/// 将已播放音乐的记录转换成字符串
-		/// </summary>
-		string PlayedSongsToString()
-		{
-			lock (_playedSongsString)
-			{
-				StringBuilder sb = new StringBuilder();
-				foreach (var s in _playedSongsString)
-					sb.Append(s);
-				return sb.ToString();
-			}
-		}
+
 		/// <summary>
 		/// 更换播放列表队列
 		/// </summary>
@@ -913,40 +717,21 @@ namespace DoubanFM.Core
 		/// </summary>
 		void ChangeCurrentSong()
 		{
+			PlayList pl = null;
 			PlayerState ps = GetPlayerState();
-			if (_playListSongs.Count == 0 && ps.CurrentChannel.IsDj)
-				Dispatcher.Invoke(new Action(() => { RaiseDjChannelFinishedPlayingEvent(); }));
-			else
+			while (_playListSongs.Count == 0)
 			{
-				while (_playListSongs.Count == 0)
-				{
+				pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "p");
+				if (pl.Count == 0)
 					TakeABreak();
+				else
+				{
+					ChangePlayListSongs(pl);
+					break;
 				}
-				lock (_playListSongs)
-					Dispatcher.Invoke(new Action(() => { CurrentSong = _playListSongs.Dequeue(); }));
-				CheckPlayListSongsLength();
 			}
-		}
-		/// <summary>
-		/// 检查播放列表的长度，若为0，则请求一个新播放列表
-		/// type=p
-		/// PlayOut
-		/// </summary>
-		void CheckPlayListSongsLength()
-		{
-			PlayerState ps = GetPlayerState();
-			if (_playListSongs.Count == 0 && !ps.CurrentChannel.IsDj)
-				ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-					{
-						PlayList pl = null;
-						while (true)
-						{
-							pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "p", PlayedSongsToString());
-							if (pl.Count == 0) TakeABreak();
-							else break;
-						}
-						ChangePlayListSongs(pl);
-					}));
+			lock (_playListSongs)
+				Dispatcher.Invoke(new Action(() => { CurrentSong = _playListSongs.Dequeue(); }));
 		}
 		/// <summary>
 		/// 网络发送间歇

@@ -26,18 +26,30 @@ namespace DoubanFM.Core
 		/// </summary>
 		public string Name { get; private set; }
 		/// <summary>
-		/// DJ频道特有的属性，节目ID（Program ID?）
-		/// </summary>
-		public string ProgramId { get; private set; }
-		/// <summary>
 		/// 上下文
 		/// </summary>
 		public string Context { get; private set; }
 
 		/// <summary>
+		/// 是否是有效的频道
+		/// </summary>
+		public bool IsEffective { get { return !string.IsNullOrEmpty(Id) && !string.IsNullOrEmpty(Name); } }
+
+		/// <summary>
 		/// 是否是DJ频道
 		/// </summary>
-		public bool IsDj { get { return Id == DjId; } }
+		public bool IsDj
+		{
+			get
+			{
+				int x = 0;
+				if (!int.TryParse(Id, out x))
+				{
+					return false;
+				}
+				return x >= 1000000;
+			}
+		}
 		/// <summary>
 		/// 是否是私人频道
 		/// </summary>
@@ -55,14 +67,12 @@ namespace DoubanFM.Core
 		{
 			Id = channel.channel_id;
 			Name = channel.name;
-			ProgramId = channel.pid;
 		}
 
-		internal Channel(string id, string name, string programId, string context = null)
+		internal Channel(string id, string name, string context = null)
 		{
 			Id = id;
 			Name = name;
-			ProgramId = programId;
 			Context = context;
 		}
 
@@ -81,9 +91,8 @@ namespace DoubanFM.Core
 					{
 						string id = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 1)));
 						string name = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 2)));
-						string programId = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 3)));
-						string context = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 4)));
-						return new Channel(id, name, programId, context);
+						string context = Encoding.Unicode.GetString(Convert.FromBase64String(args.ElementAt(index + 3)));
+						return new Channel(id, name, context);
 					}
 					catch { }
 			}
@@ -108,10 +117,6 @@ namespace DoubanFM.Core
 			sb.Append("\" ");
 
 			sb.Append("\"");
-			sb.Append(Convert.ToBase64String(Encoding.Unicode.GetBytes(ProgramId == null ? "" : ProgramId)));
-			sb.Append("\" ");
-
-			sb.Append("\"");
 			sb.Append(Convert.ToBase64String(Encoding.Unicode.GetBytes(Context == null ? "" : Context)));
 			sb.Append("\" ");
 
@@ -126,10 +131,6 @@ namespace DoubanFM.Core
 		/// 红心兆赫的频道ID
 		/// </summary>
 		internal const string RedHeartId = "-3";
-		/// <summary>
-		/// DJ兆赫的频道ID
-		/// </summary>
-		internal const string DjId = "dj";
 
 		/// <summary>
 		/// 创建作为当前实例副本的新对象。
@@ -152,7 +153,7 @@ namespace DoubanFM.Core
 		}
 		public override int GetHashCode()
 		{
-			return Id.GetHashCode() ^ Name.GetHashCode() ^ (string.IsNullOrEmpty(ProgramId) ? 0 : ProgramId.GetHashCode()) ^ (string.IsNullOrEmpty(Context) ? 0 : Context.GetHashCode());
+			return Id.GetHashCode() ^ Name.GetHashCode() ^ (string.IsNullOrEmpty(Context) ? 0 : Context.GetHashCode());
 		}
 
 		public bool Equals(Channel other)
@@ -161,9 +162,7 @@ namespace DoubanFM.Core
 				return false;
 			if (Object.ReferenceEquals(this, other))
 				return true;
-			return Id == other.Id && Name == other.Name &&
-				((string.IsNullOrEmpty(ProgramId) && string.IsNullOrEmpty(other.ProgramId)) || ProgramId == other.ProgramId) &&
-				((string.IsNullOrEmpty(Context) && string.IsNullOrEmpty(other.Context)) || Context == other.Context);
+			return Id == other.Id && Name == other.Name && ((string.IsNullOrEmpty(Context) && string.IsNullOrEmpty(other.Context)) || Context == other.Context);
 		}
 
 		public static bool operator ==(Channel lhs, Channel rhs)

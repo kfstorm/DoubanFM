@@ -19,15 +19,15 @@ namespace DoubanFM.Core
         /// <summary>
         /// 私人频道
         /// </summary>
-        public IEnumerable<Cate> Personal { get; private set; }
+        public IEnumerable<Channel> Personal { get; private set; }
         /// <summary>
         /// 公共频道
         /// </summary>
-        public IEnumerable<Cate> Public { get; private set; }
+		public IEnumerable<Channel> Public { get; private set; }
         /// <summary>
         /// DJ频道
         /// </summary>
-        public IEnumerable<Cate> Dj { get; private set; }
+		public IEnumerable<Channel> Dj { get; private set; }
 
         /// <summary>
         /// 是否是有效的频道列表
@@ -37,17 +37,35 @@ namespace DoubanFM.Core
         internal ChannelInfo(Json.ChannelInfo ci)
         {
             if (ci == null) return;
-            List<Cate> list1 = new List<Cate>();
-            foreach (var cate in ci.personal)
-                list1.Add(new Cate(cate));
+			List<Channel> list1 = new List<Channel>();
+			foreach (var channel in ci.personal)
+			{
+				Channel ch = new Channel(channel);
+				if (ch.IsEffective)
+				{
+					list1.Add(ch);
+				}
+			}
             Personal = list1;
-            List<Cate> list2 = new List<Cate>();
-            foreach (var cate in ci.pppublic)
-                list2.Add(new Cate(cate));
+			List<Channel> list2 = new List<Channel>();
+			foreach (var channel in ci.Public)
+			{
+				Channel ch = new Channel(channel);
+				if (ch.IsEffective)
+				{
+					list2.Add(ch);
+				}
+			}
             Public = list2;
-            List<Cate> list3 = new List<Cate>();
-            foreach (var cate in ci.Dj)
-                list3.Add(new Cate(cate));
+			List<Channel> list3 = new List<Channel>();
+			foreach (var channel in ci.dj)
+			{
+				Channel ch = new Channel(channel);
+				if (ch.IsEffective)
+				{
+					list3.Add(ch);
+				}
+			}
             Dj = list3;
         }
     }

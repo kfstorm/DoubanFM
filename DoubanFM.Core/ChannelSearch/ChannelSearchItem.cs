@@ -73,7 +73,7 @@ namespace DoubanFM.Core
 		/// <returns></returns>
 		public Channel GetChannel()
 		{
-			if (CanContextPlay) return new Channel(Channel.PersonalId, Title, null, Context);
+			if (CanContextPlay) return new Channel(Channel.PersonalId, Title, Context);
 			else return null;
 		}
 	}

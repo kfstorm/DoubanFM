@@ -96,9 +96,6 @@ Website : http://www.kfstorm.com
 			<Storyboard Storyboard.TargetName="PublicChannels">
 				<StaticResource ResourceKey="HideChannelList"/>
 			</Storyboard>
-			<Storyboard Storyboard.TargetName="DjCates">
-				<StaticResource ResourceKey="HideChannelList"/>
-			</Storyboard>
 			<Storyboard Storyboard.TargetName="DjChannels">
 				<StaticResource ResourceKey="HideChannelList"/>
 			</Storyboard>
@@ -110,9 +107,6 @@ Website : http://www.kfstorm.com
 			<Storyboard Storyboard.TargetName="PublicChannels">
 				<StaticResource ResourceKey="ShowChannelList"/>
 			</Storyboard>
-			<Storyboard Storyboard.TargetName="DjCates">
-				<StaticResource ResourceKey="HideChannelList"/>
-			</Storyboard>
 			<Storyboard Storyboard.TargetName="DjChannels">
 				<StaticResource ResourceKey="HideChannelList"/>
 			</Storyboard>
@@ -122,23 +116,6 @@ Website : http://www.kfstorm.com
 				<StaticResource ResourceKey="HideChannelList"/>
 			</Storyboard>
 			<Storyboard Storyboard.TargetName="PublicChannels">
-				<StaticResource ResourceKey="HideChannelList"/>
-			</Storyboard>
-			<Storyboard Storyboard.TargetName="DjCates">
-				<StaticResource ResourceKey="ShowChannelList"/>
-			</Storyboard>
-			<Storyboard Storyboard.TargetName="DjChannels">
-				<StaticResource ResourceKey="HideChannelList"/>
-			</Storyboard>
-		</Storyboard>
-		<Storyboard x:Key="DjChannelClickStoryboard">
-			<Storyboard Storyboard.TargetName="PersonalChannels">
-				<StaticResource ResourceKey="HideChannelList"/>
-			</Storyboard>
-			<Storyboard Storyboard.TargetName="PublicChannels">
-				<StaticResource ResourceKey="HideChannelList"/>
-			</Storyboard>
-			<Storyboard Storyboard.TargetName="DjCates">
 				<StaticResource ResourceKey="HideChannelList"/>
 			</Storyboard>
 			<Storyboard Storyboard.TargetName="DjChannels">
@@ -262,7 +239,7 @@ Website : http://www.kfstorm.com
 										</EventTrigger>
 									</RadioButton.Triggers>
 								</RadioButton>
-								<RadioButton x:Name="ButtonDjCates" Grid.Column="2" Margin="5" Content="DJ兆赫" Click="ButtonDjCates_Click" Style="{StaticResource ChannelCategoryStyle}">
+								<RadioButton x:Name="ButtonDj" Grid.Column="2" Margin="5" Content="DJ兆赫" Style="{StaticResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard Storyboard="{StaticResource DjClickStoryboard}"/>																	</EventTrigger>
@@ -290,7 +267,7 @@ Website : http://www.kfstorm.com
 										</TransformGroup>
 									</ListBox.RenderTransform>
 								</ListBox>
-								<ListBox x:Name="DjCates" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjCates_SelectionChanged" Opacity="0">
+								<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0">
 									<ListBox.RenderTransform>
 										<TransformGroup>
 											<ScaleTransform/>
@@ -304,20 +281,6 @@ Website : http://www.kfstorm.com
 											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
 										</DataTemplate>
 									</ListBox.ItemTemplate>
-								</ListBox>
-								<StackPanel TextElement.FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" TextOptions.TextFormattingMode="Ideal" Opacity="{Binding Opacity, ElementName=DjCates}" RenderTransform="{Binding RenderTransform, ElementName=DjCates}">
-									<TextBlock HorizontalAlignment="Center">DJ兆赫很快回归</TextBlock>
-									<TextBlock HorizontalAlignment="Center">敬请期待</TextBlock>
-								</StackPanel>
-								<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0">
-									<ListBox.RenderTransform>
-										<TransformGroup>
-											<ScaleTransform/>
-											<SkewTransform/>
-											<RotateTransform/>
-											<TranslateTransform/>
-										</TransformGroup>
-									</ListBox.RenderTransform>
 								</ListBox>
 							</Grid>
 						</Grid>

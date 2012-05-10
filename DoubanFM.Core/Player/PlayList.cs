@@ -21,6 +21,9 @@ namespace DoubanFM.Core
 		/// </summary>
 		internal static event EventHandler<PlayListEventArgs> GetPlayListFailed;
 
+		static Random random = new Random();
+		static byte[] bytes = new byte[8];
+
 		private static void RaiseGetPlayListFailedEvent(string json)
 		{
 			if (GetPlayListFailed != null)
@@ -45,18 +48,18 @@ namespace DoubanFM.Core
 		/// <param name="operationType">操作类型</param>
 		/// <param name="history">播放历史</param>
 		/// <returns>播放列表</returns>
-		internal static PlayList GetPlayList(string context, string songId, Channel channel, string operationType, string history)
+		internal static PlayList GetPlayList(string context, string songId, Channel channel, string operationType)
 		{
 			//构造链接
 			Parameters parameters = new Parameters();
-			parameters["from"] = "ie9";
+			parameters["from"] = "mainsite";
 			parameters["context"] = context;
 			parameters["sid"] = songId;
 			parameters["channel"] = channel.Id;
-			if (channel.IsDj)
-				parameters["pid"] = channel.ProgramId;
 			parameters["type"] = operationType;
-			parameters["h"] = history;
+			random.NextBytes(bytes);
+			parameters["r"] = (BitConverter.ToUInt64(bytes, 0) % 0xFFFFFFFFFF).ToString("x10");
+
 			string url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/j/mine/playlist", parameters);
 
 			//获取列表

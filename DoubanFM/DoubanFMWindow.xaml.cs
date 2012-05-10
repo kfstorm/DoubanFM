@@ -53,7 +53,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 各种无法在XAML里直接启动的Storyboard
 		/// </summary>
-		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, DjChannelClickStoryboard, VolumeFadeOut, VolumeFadeIn, VolumeDirectIn, EnhancementsPanelShow, EnhancementsPanelHide;
+		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, VolumeFadeOut, VolumeFadeIn, VolumeDirectIn, EnhancementsPanelShow, EnhancementsPanelHide;
 		/// <summary>
 		/// 滑动封面的计时器
 		/// </summary>
@@ -413,10 +413,7 @@ namespace DoubanFM
 				if (!_player.CurrentChannel.IsPublic)
 					PublicChannels.SelectedItem = null;
 				if (!_player.CurrentChannel.IsDj)
-				{
-					DjCates.SelectedItem = null;
 					DjChannels.SelectedItem = null;
-				}
 				if (!_player.CurrentChannel.IsSpecial)
 					SearchResultList.SelectedItem = null;
 				if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != (Channel)PersonalChannels.SelectedItem)
@@ -431,21 +428,15 @@ namespace DoubanFM
 					ButtonPublic.IsChecked = true;
 					//PublicClickStoryboard.Begin();
 				}
-				if (_player.CurrentChannel.IsDj && DjCates.Items.Contains(_player.CurrentDjCate))
+				if (_player.CurrentChannel.IsDj && _player.CurrentChannel != (Channel)DjChannels.SelectedItem)
 				{
-					DjCates.SelectedItem = _player.CurrentDjCate;
-					if (DjChannels.Items.Contains(_player.CurrentChannel) && (Channel)DjChannels.SelectedItem != _player.CurrentChannel)
-					{
-						DjChannels.SelectedItem = _player.CurrentChannel;
-						ButtonPersonal.IsChecked = false;
-						ButtonPublic.IsChecked = false;
-						ButtonDjCates.IsChecked = false;
-						DjChannelClickStoryboard.Begin();
-					}
+					DjChannels.SelectedItem = _player.CurrentChannel;
+					ButtonDj.IsChecked = true;
+					//DjClickStoryboard.Begin();
 				}
 				//更新JumpList
-				if (!_player.CurrentChannel.IsDj)
-					AddChannelToJumpList(_player.CurrentChannel);
+				//if (!_player.CurrentChannel.IsDj)
+				AddChannelToJumpList(_player.CurrentChannel);
 			});
 			//歌曲已改变
 			_player.CurrentSongChanged += new EventHandler((o, e) =>
@@ -590,7 +581,6 @@ namespace DoubanFM
 			SlideCoverRightStoryboard = (Storyboard)FindResource("SlideCoverRightStoryboard");
 			SlideCoverLeftStoryboard = (Storyboard)FindResource("SlideCoverLeftStoryboard");
 			ChangeSongInfoStoryboard = (Storyboard)FindResource("ChangeSongInfoStoryboard");
-			DjChannelClickStoryboard = (Storyboard)FindResource("DjChannelClickStoryboard");
 			VolumeFadeOut = (Storyboard)FindResource("VolumeFadeOut");
 			VolumeFadeIn = (Storyboard)FindResource("VolumeFadeIn");
 			VolumeDirectIn = (Storyboard)FindResource("VolumeDirectIn");
@@ -1179,19 +1169,17 @@ namespace DoubanFM
 		{
 			ObservableCollection<Channel> PersonalChannelsItem = new ObservableCollection<Channel>();
 			if (_player.UserAssistant.IsLoggedOn)
-				foreach (Cate cate in _player.ChannelInfo.Personal)
-					foreach (Channel channel in cate.Channels)
-						PersonalChannelsItem.Add(channel);
+				foreach (Channel channel in _player.ChannelInfo.Personal)
+					PersonalChannelsItem.Add(channel);
 			ObservableCollection<Channel> PublicChannelsItem = new ObservableCollection<Channel>();
-			foreach (Cate cate in _player.ChannelInfo.Public)
-				foreach (Channel channel in cate.Channels)
+			foreach (Channel channel in _player.ChannelInfo.Public)
 					PublicChannelsItem.Add(channel);
-			ObservableCollection<Cate> DjCatesItem = new ObservableCollection<Cate>();
-			foreach (Cate djcate in _player.ChannelInfo.Dj)
-				DjCatesItem.Add(djcate);
+			ObservableCollection<Channel> DjChannelsItem = new ObservableCollection<Channel>();
+			foreach (Channel channel in _player.ChannelInfo.Dj)
+				DjChannelsItem.Add(channel);
 			PersonalChannels.ItemsSource = PersonalChannelsItem;
 			PublicChannels.ItemsSource = PublicChannelsItem;
-			DjCates.ItemsSource = DjCatesItem;
+			DjChannels.ItemsSource = DjChannelsItem;
 		}
 		/// <summary>
 		/// 更新界面内容，主要是音乐信息。换音乐时自动调用。
@@ -1582,30 +1570,8 @@ namespace DoubanFM
 		{
 			if (DjChannels.SelectedItem != null)
 			{
-				_player.CurrentDjCate = (Cate)DjCates.SelectedItem;
 				_player.CurrentChannel = (Channel)DjChannels.SelectedItem;
 			}
-		}
-		/// <summary>
-		/// 当用户选择某DJ频道时，切换到DJ节目列表
-		/// </summary>
-		private void DjCates_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			if (DjCates.SelectedItem != null)
-			{
-				DjChannels.ItemsSource = ((Cate)DjCates.SelectedItem).Channels;
-				ButtonPersonal.IsChecked = false;
-				ButtonPublic.IsChecked = false;
-				ButtonDjCates.IsChecked = false;
-				DjChannelClickStoryboard.Begin();
-			}
-		}
-		/// <summary>
-		/// 当用户在按钮“DJ兆赫”上点击时，去除DjCates的选择，以便再次点击“DJ兆赫”时仍然可以选择刚才的项目
-		/// </summary>
-		private void ButtonDjCates_Click(object sender, RoutedEventArgs e)
-		{
-			DjCates.SelectedItem = null;
 		}
 		/// <summary>
 		/// 鼠标左键点击封面时滑动封面

@@ -48,23 +48,17 @@
   <ItemGroup>
     <Compile Include="DownloadSearch\DownloadSearch.cs" />
     <Compile Include="DownloadSearch\DownloadSite.cs" />
-    <Compile Include="Player\Cate.cs" />
     <Compile Include="Player\Channel.cs" />
     <Compile Include="Player\ChannelInfo.cs" />
     <Compile Include="ConnectionBase.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="Feedback.cs" />
-    <Compile Include="Json\Cate.cs" />
     <Compile Include="Json\Channel.cs" />
     <Compile Include="Json\ChannelInfo.cs" />
-    <Compile Include="Json\ChannelInfoDotDj.cs" />
-    <Compile Include="Json\DjChannel.cs" />
     <Compile Include="Json\LogOnResult.cs" />
     <Compile Include="Json\PlayList.cs" />
     <Compile Include="Json\PlayRecord.cs" />
     <Compile Include="Json\Song.cs" />
-    <Compile Include="Json\SubDjCate.cs" />
-    <Compile Include="Json\SubDjChannel.cs" />
     <Compile Include="Json\UserInfo.cs" />
     <Compile Include="Lyrics\Lyrics.cs" />
     <Compile Include="Lyrics\LyricsAssistant.cs" />

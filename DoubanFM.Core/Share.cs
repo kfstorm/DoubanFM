@@ -83,11 +83,6 @@ namespace DoubanFM.Core
 		public Channel Channel { get; private set; }
 
 		/// <summary>
-		/// 频道所在的门类
-		/// </summary>
-		public Cate Cate { get; private set; }
-
-		/// <summary>
 		/// 分享的网站
 		/// </summary>
 		public Sites? Site { get; set; }
@@ -139,9 +134,8 @@ namespace DoubanFM.Core
 		/// </summary>
 		/// <param name="song">歌曲</param>
 		/// <param name="channel">频道</param>
-		/// <param name="cate">门类</param>
 		/// <param name="site">网站</param>
-		public Share(Song song, Channel channel, Cate cate, Sites site)
+		public Share(Song song, Channel channel, Sites site)
 		{
 			if (song == null)
 				throw new ArgumentNullException("song");
@@ -149,12 +143,11 @@ namespace DoubanFM.Core
 				throw new ArgumentNullException("channel");
 			Song = song;
 			Channel = channel;
-			Cate = cate;
 			Site = site;
 
-			_songInfo = ShareSongInfo.GetInfo(song, channel, cate);
-			Text = GetShareText(_songInfo.SongName, _songInfo.ArtistName, _songInfo.ChannelName, _songInfo.Type);
-			TextWithoutSource = GetShareText(_songInfo.SongName, _songInfo.ArtistName, _songInfo.ChannelName, _songInfo.Type, false);
+			_songInfo = ShareSongInfo.GetInfo(song, channel);
+			Text = GetShareText(_songInfo.SongName, _songInfo.ArtistName, _songInfo.ChannelName);
+			TextWithoutSource = GetShareText(_songInfo.SongName, _songInfo.ArtistName, _songInfo.ChannelName, false);
 		}
 
 		/// <summary>
@@ -163,7 +156,7 @@ namespace DoubanFM.Core
 		/// <param name="player">播放器</param>
 		/// <param name="site">网站</param>
 		public Share(Player player, Sites site)
-			: this(player.CurrentSong, player.CurrentChannel, player.CurrentDjCate, site)
+			: this(player.CurrentSong, player.CurrentChannel, site)
 		{ }
 
 		/// <summary>
@@ -171,9 +164,8 @@ namespace DoubanFM.Core
 		/// </summary>
 		/// <param name="song">歌曲</param>
 		/// <param name="channel">频道</param>
-		/// <param name="cate">门类</param>
-		public Share(Song song, Channel channel, Cate cate)
-			: this(song, channel, cate, Sites.None)
+		public Share(Song song, Channel channel)
+			: this(song, channel, Sites.None)
 		{ }
 
 		/// <summary>
@@ -213,7 +205,7 @@ namespace DoubanFM.Core
 					parameters["href"] = _songInfo.Url;
 					parameters["image"] = _songInfo.CoverUrl;
 					parameters["text"] = "";
-					parameters["desc"] = "（来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - " + _songInfo.ChannelName + "）";
+					parameters["desc"] = GetShareTextPartTwo(_songInfo.ChannelName);
 					parameters["apikey"] = "0c2e1df44f97c4eb248a59dceec74ec1";
 					url = ConnectionBase.ConstructUrlWithParameters("http://shuo.douban.com/!service/share", parameters);
 					break;
@@ -238,9 +230,12 @@ namespace DoubanFM.Core
 					url = ConnectionBase.ConstructUrlWithParameters("http://www.kaixin001.com/repaste/bshare.php", parameters);
 					break;
 				case Sites.Renren:
-					parameters["url"] = _songInfo.Url;
-					parameters["title"] = Text;
-					url = ConnectionBase.ConstructUrlWithParameters("http://www.connect.renren.com/share/sharer", parameters);
+					parameters["resourceUrl"] = _songInfo.Url;
+					parameters["title"] = GetShareTextPartOne(_songInfo.SongName, _songInfo.ArtistName);;
+					parameters["pic"] = _songInfo.CoverUrl;
+					parameters["description"] = GetShareTextPartTwo(_songInfo.ChannelName);
+					parameters["charset"] = "utf-8";
+					url = ConnectionBase.ConstructUrlWithParameters("http://widget.renren.com/dialog/share", parameters);
 					break;
 				case Sites.TencentWeibo:
 					parameters["url"] = _songInfo.Url;
@@ -299,36 +294,20 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 获取分享文字
 		/// </summary>
-		static string GetShareText(string songName, string artistName, string channelName, string type, bool withSource = true)
+		static string GetShareText(string songName, string artistName, string channelName, bool withSource = true)
 		{
-			if (withSource)
-			{
-				switch (type)
-				{
-					case "movie-ost":
-						return "我正在收听《" + artistName + "》的电影原声 “" + songName + "” （来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - " + channelName + "）";
-					case "easy":
-						return "我正在收听 " + artistName + " 的乐曲《" + songName + "》（来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - " + channelName + "）";
-					case "dj":
-						return "我正在收听节目 《" + songName + "》- " + channelName + "（来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - DJ兆赫 ）";
-					default:
-						return "我正在收听 " + artistName + " 的单曲《" + songName + "》（来自K.F.Storm豆瓣电台【http://kfstorm.com/doubanfm】 - " + channelName + "）";
-				}
-			}
-			else
-			{
-				switch (type)
-				{
-					case "movie-ost":
-						return "我正在收听《" + artistName + "》的电影原声 “" + songName + "” （来自K.F.Storm豆瓣电台 - " + channelName + "）";
-					case "easy":
-						return "我正在收听 " + artistName + " 的乐曲《" + songName + "》（来自K.F.Storm豆瓣电台 - " + channelName + "）";
-					case "dj":
-						return "我正在收听节目 《" + songName + "》- " + channelName + "（来自K.F.Storm豆瓣电台 - DJ兆赫 ）";
-					default:
-						return "我正在收听 " + artistName + " 的单曲《" + songName + "》（来自K.F.Storm豆瓣电台 - " + channelName + "）";
-				}
-			}
+
+			return GetShareTextPartOne(songName, artistName) + " " + GetShareTextPartTwo(channelName, withSource);
+		}
+
+		static string GetShareTextPartOne(string songName, string artistName)
+		{
+			return "我正在收听 《" + songName + "》 - " + artistName;
+		}
+
+		static string GetShareTextPartTwo(string channelName, bool withSource = true)
+		{
+			return "（来自K.F.Storm豆瓣电台" + (withSource ? "【http://kfstorm.com/doubanfm】" : string.Empty) + " - " + channelName + "）";
 		}
 	}
 }

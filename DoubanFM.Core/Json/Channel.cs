@@ -28,10 +28,5 @@ namespace DoubanFM.Core.Json
         /// </summary>
         [DataMember]
         public string name { get; set; }
-        /// <summary>
-        /// DJ频道特有的属性，节目ID（Program ID?）
-        /// </summary>
-        [DataMember]
-        public string pid { get; set; }
     }
 }

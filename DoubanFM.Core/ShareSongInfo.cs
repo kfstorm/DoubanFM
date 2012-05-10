@@ -33,10 +33,6 @@ namespace DoubanFM.Core
 		/// </summary>
 		public string Url { get; set; }
 		/// <summary>
-		/// 音乐类型
-		/// </summary>
-		public string Type { get; set; }
-		/// <summary>
 		/// 封面地址
 		/// </summary>
 		public string CoverUrl { get; set; }
@@ -48,15 +44,13 @@ namespace DoubanFM.Core
 		/// <param name="artistName">表演者</param>
 		/// <param name="channelName">频道名称（或者DJ频道名称）</param>
 		/// <param name="url">分享的电台链接</param>
-		/// <param name="type">音乐类型</param>
 		/// <param name="coverUrl">封面地址</param>
-		internal ShareSongInfo(string songName, string artistName, string channelName, string url, string type, string coverUrl)
+		internal ShareSongInfo(string songName, string artistName, string channelName, string url, string coverUrl)
 		{
 			SongName = songName;
 			ArtistName = artistName;
 			ChannelName = channelName;
 			Url = string.IsNullOrEmpty(url) ? "http://douban.fm" : url;
-			Type = type;
 			CoverUrl = coverUrl;
 		}
 
@@ -65,62 +59,32 @@ namespace DoubanFM.Core
 		/// </summary>
 		/// <param name="song">歌曲</param>
 		/// <param name="channel">频道（或者DJ节目）</param>
-		/// <param name="cate">DJ频道</param>
-		internal static ShareSongInfo GetInfo(Song song, Channel channel, Cate cate)
+		/// <returns></returns>
+		internal static ShareSongInfo GetInfo(Song song, Channel channel)
 		{
-			string songName = null;
-			string channelName = null;
-			string type = null;
+			string songName = song.Title;
+			string channelName = channel.Name; ;
 			string url = null;
-			if (channel.IsDj)
+			Parameters parameters = new Parameters();
+			parameters["cid"] = channel.Id;
+			if (!song.IsAd)
 			{
-				songName = channel.Name;
-				channelName = cate.Name;
-				Parameters parameters = new Parameters();
-				parameters["cid"] = channel.Id;
-				parameters["pid"] = channel.ProgramId;
-				url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/", parameters);
+				parameters["start"] = song.SongId + "g" + song.SSId + "g" + channel.Id;
+				//url = "http://douban.fm/?start=" + song.SongId + "g" + song.SSId + "g" + channel.Id + "&cid=" + channel.Id;
 			}
 			else
 			{
-				songName = song.Title;
-				channelName = channel.Name;
-				Parameters parameters = new Parameters();
-				if (!song.IsAd)
-				{
-					parameters["start"] = song.SongId + "g" + song.SSId + "g" + channel.Id;
-					parameters["cid"] = channel.Id;
-					//url = "http://douban.fm/?start=" + song.SongId + "g" + song.SSId + "g" + channel.Id + "&cid=" + channel.Id;
-				}
-				else
-				{
-					parameters["daid"] = song.SongId;
-					parameters["cid"] = channel.Id;
-					//url = "http://douban.fm/?daid=" + song.SongId + "&cid=" + channel.Id;
-				}
-				if (channel.IsSpecial)
-				{
-					parameters["context"] = channel.Context;
-					//url += "&context=" + channel.Context;
-				}
-				url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/", parameters);
+				parameters["daid"] = song.SongId;
+				//url = "http://douban.fm/?daid=" + song.SongId + "&cid=" + channel.Id;
 			}
-
-			switch (channelName)
+			if (channel.IsSpecial)
 			{
-				case "电影原声":
-					type = "movie-ost";
-					break;
-				case "轻音乐":
-					type = "easy";
-					break;
-				default:
-					type = "single";
-					break;
+				parameters["context"] = channel.Context;
+				//url += "&context=" + channel.Context;
 			}
-			if (channel.IsDj) type = "dj";
+			url = ConnectionBase.ConstructUrlWithParameters("http://douban.fm/", parameters);
 
-			return new ShareSongInfo(songName, song.Artist, channelName, url, type, song.Picture);
+			return new ShareSongInfo(songName, song.Artist, channelName, url, song.Picture);
 		}
 	}
 }
