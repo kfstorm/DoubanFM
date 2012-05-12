@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("K.F.Storm")]
 [assembly: AssemblyProduct("豆瓣电台")]
-[assembly: AssemblyCopyright("Copyright ©  2011")]
+[assembly: AssemblyCopyright("Copyright ©  2011 - 2012 K.F.Storm")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
