@@ -288,7 +288,7 @@ namespace DoubanFM.Bass
 			Stop();
 			pendingOperation = PendingOperation.None;
 
-			int handle = Un4seen.Bass.Bass.BASS_StreamCreateFile(filename, 0, 0, Un4seen.Bass.BASSFlag.BASS_SAMPLE_FLOAT | Un4seen.Bass.BASSFlag.BASS_STREAM_PRESCAN);
+            int handle = Un4seen.Bass.Bass.BASS_StreamCreateFile(filename, 0, 0, Un4seen.Bass.BASSFlag.BASS_DEFAULT);
 
 			if (handle != 0)
 			{
@@ -344,7 +344,7 @@ namespace DoubanFM.Bass
 
 			onlineFileWorker = new Thread(new ThreadStart(() =>
 				{
-					int handle = Un4seen.Bass.Bass.BASS_StreamCreateURL(url, 0, Un4seen.Bass.BASSFlag.BASS_SAMPLE_FLOAT | Un4seen.Bass.BASSFlag.BASS_STREAM_PRESCAN, null, IntPtr.Zero);
+					int handle = Un4seen.Bass.Bass.BASS_StreamCreateURL(url, 0, Un4seen.Bass.BASSFlag.BASS_DEFAULT, null, IntPtr.Zero);
 					
 					Application.Current.Dispatcher.BeginInvoke(new Action(() =>
 						{

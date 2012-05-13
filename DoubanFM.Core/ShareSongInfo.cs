@@ -66,7 +66,7 @@ namespace DoubanFM.Core
 			string channelName = channel.Name; ;
 			string url = null;
 			Parameters parameters = new Parameters();
-			parameters["cid"] = channel.Id;
+			parameters["cid"] = channel.IsRedHeart ? Channel.PersonalId : channel.Id;
 			if (!song.IsAd)
 			{
 				parameters["start"] = song.SongId + "g" + song.SSId + "g" + channel.Id;

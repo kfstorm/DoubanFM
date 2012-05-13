@@ -1,11 +1,11 @@
-±¾Èí¼þÎª¶¹°êFM£¨http://douban.fm£©µÄµÚÈý·½¿Í»§¶Ë£¬·þÎñÆ÷¹é¶¹°êËùÓÐ£¬·Ç±¾Èí¼þ×÷Õß¡£±¾Èí¼þÖÐËùÓÐÀ´×ÔÍøÂçµÄÒôÀÖÓë×¨¼­·âÃæµÄ°æÈ¨¹é¶¹°ê¼°ÏàÓ¦µÄÒôÀÖ¹«Ë¾ËùÓÐ¡£
+ï»¿æœ¬è½¯ä»¶ä¸ºè±†ç“£FMï¼ˆhttp://douban.fmï¼‰çš„ç¬¬ä¸‰æ–¹å®¢æˆ·ç«¯ï¼ŒæœåŠ¡å™¨å½’è±†ç“£æ‰€æœ‰ï¼Œéžæœ¬è½¯ä»¶ä½œè€…ã€‚æœ¬è½¯ä»¶ä¸­æ‰€æœ‰æ¥è‡ªç½‘ç»œçš„éŸ³ä¹ä¸Žä¸“è¾‘å°é¢çš„ç‰ˆæƒå½’è±†ç“£åŠç›¸åº”çš„éŸ³ä¹å…¬å¸æ‰€æœ‰ã€‚
 
-±¾Èí¼þµÄÍ¨ÖªÇøÓòÍ¼±êÊ¹ÓÃÁËPhilipp SumiµÄhardcodet.net NotifyIcon for WPFµÚÈý·½¿â£¨http://www.hardcodet.net/projects/wpf-notifyicon£©£¬²¢¶ÔÆä×öÁËÐ¡·ùÐÞ¸Ä¡£
+æœ¬è½¯ä»¶çš„é€šçŸ¥åŒºåŸŸå›¾æ ‡ä½¿ç”¨äº†Philipp Sumiçš„hardcodet.net NotifyIcon for WPFç¬¬ä¸‰æ–¹åº“ï¼ˆhttp://www.hardcodet.net/projects/wpf-notifyiconï¼‰ï¼Œå¹¶å¯¹å…¶åšäº†å°å¹…ä¿®æ”¹ã€‚
 
-±¾Èí¼þÖÐµÄÒôÆµ²¥·Å¼¼ÊõÊ¹ÓÃµÄÊÇBASS£¨http://www.un4seen.com/£©¡£
+æœ¬è½¯ä»¶ä¸­çš„éŸ³é¢‘æ’­æ”¾æŠ€æœ¯ä½¿ç”¨çš„æ˜¯BASSï¼ˆhttp://www.un4seen.com/ï¼‰ã€‚
 
-±¾Èí¼þÖÐµÄÆµÆ×ÏÔÊ¾Ê¹ÓÃÁËWPF Sound Visualization Library£¨http://wpfsvl.codeplex.com/£©¡£
+æœ¬è½¯ä»¶ä¸­çš„é¢‘è°±æ˜¾ç¤ºä½¿ç”¨äº†WPF Sound Visualization Libraryï¼ˆhttp://wpfsvl.codeplex.com/ï¼‰ã€‚
 
 Copyright (C) 2011-2012 K.F.Storm
 
-Èí¼þÖ÷Ò³£ºhttp://www.kfstorm.com/blog/doubanfm
+è½¯ä»¶ä¸»é¡µï¼šhttp://www.kfstorm.com/blog/doubanfm

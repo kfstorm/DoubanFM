@@ -55,6 +55,10 @@ namespace DoubanFM.Core
 		/// </summary>
 		public bool IsPersonal { get { return Id == PersonalId || Id == RedHeartId; } }
 		/// <summary>
+		/// 是否是红心频道
+		/// </summary>
+		public bool IsRedHeart { get { return Id == RedHeartId; } }
+		/// <summary>
 		/// 是否是公共频道
 		/// </summary>
 		public bool IsPublic { get { return !IsDj && !IsPersonal; } }
@@ -126,11 +130,11 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 私人兆赫的频道ID
 		/// </summary>
-		internal const string PersonalId = "0";
+		public const string PersonalId = "0";
 		/// <summary>
 		/// 红心兆赫的频道ID
 		/// </summary>
-		internal const string RedHeartId = "-3";
+		public const string RedHeartId = "-3";
 
 		/// <summary>
 		/// 创建作为当前实例副本的新对象。
