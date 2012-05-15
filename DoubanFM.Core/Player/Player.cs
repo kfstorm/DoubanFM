@@ -377,11 +377,16 @@ namespace DoubanFM.Core
 				{
 					ChannelInfo channelInfo = null;
 					string file = null;
-					while (string.IsNullOrEmpty(file))
+					while (true)
 					{
 						Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
 						file = new ConnectionBase().Get("http://douban.fm");
 						Debug.WriteLine(DateTime.Now + " 刷新完成");
+						if (!string.IsNullOrEmpty(file))
+						{
+							break;
+						}
+						TakeABreak();
 					}
 
 					//更新用户的登录状态
@@ -392,7 +397,11 @@ namespace DoubanFM.Core
 						Debug.WriteLine(DateTime.Now + " 获取频道列表……");
 						file = new ConnectionBase().Get("http://doubanfmcloud-channelinfo.stor.sinaapp.com/channelinfo");
 						Debug.WriteLine(DateTime.Now + " 获取频道列表完成");
-						if (string.IsNullOrEmpty(file)) continue;
+						if (string.IsNullOrEmpty(file))
+						{
+							TakeABreak();
+							continue;
+						}
 						channelInfo = new ChannelInfo(Json.ChannelInfo.FromJson(file));
 						if (channelInfo == null || !channelInfo.IsEffective)
 						{
@@ -663,7 +672,7 @@ namespace DoubanFM.Core
 					PlayerState ps = GetPlayerState();
 					while (true)
 					{
-						pl = PlayList.GetPlayList(null, ps.CurrentSong == null ? null : ps.CurrentSong.SongId, ps.CurrentChannel, type);
+						pl = PlayList.GetPlayList(ps.CurrentSong, ps.CurrentChannel, type);
 						if ((type == "p" || type == "n") && pl.Count == 0) TakeABreak();
 						else if (type == "e") break;
 						else if (ps.CurrentChannel.IsDj) break;
@@ -721,7 +730,7 @@ namespace DoubanFM.Core
 			PlayerState ps = GetPlayerState();
 			while (_playListSongs.Count == 0)
 			{
-				pl = PlayList.GetPlayList(null, ps.CurrentSong.SongId, ps.CurrentChannel, "p");
+				pl = PlayList.GetPlayList(ps.CurrentSong, ps.CurrentChannel, "p");
 				if (pl.Count == 0)
 					TakeABreak();
 				else

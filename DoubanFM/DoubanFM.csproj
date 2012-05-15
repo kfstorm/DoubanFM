@@ -79,6 +79,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Key.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -111,12 +114,13 @@
     <Compile Include="Interop\DWM_THUMBNAIL_PROPERTIES.cs" />
     <Compile Include="Interop\GWL.cs" />
     <Compile Include="Interop\HOOKPROC.cs" />
+    <Compile Include="Interop\HWND.cs" />
     <Compile Include="Interop\KBDLLHOOKSTRUCT.cs" />
     <Compile Include="Interop\MARGINS.cs" />
+    <Compile Include="Interop\NativeMethods.cs" />
     <Compile Include="Interop\RECT.cs" />
-    <Compile Include="Interop\WH.cs" />
-    <Compile Include="Interop\HWND.cs" />
     <Compile Include="Interop\SWP.cs" />
+    <Compile Include="Interop\WH.cs" />
     <Compile Include="Interop\WM.cs" />
     <Compile Include="Interop\WS.cs" />
     <Compile Include="ShadowWindow.xaml.cs">
@@ -133,7 +137,6 @@
     <Compile Include="HotKey\HookEventArgs.cs" />
     <Compile Include="HotKey\HotKey.cs" />
     <Compile Include="HotKey\KeyboardHook.cs" />
-    <Compile Include="Interop\NativeMethods.cs" />
     <Compile Include="NotifyIcon\PopupControlPanel.xaml.cs">
       <DependentUpon>PopupControlPanel.xaml</DependentUpon>
     </Compile>
@@ -285,6 +288,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

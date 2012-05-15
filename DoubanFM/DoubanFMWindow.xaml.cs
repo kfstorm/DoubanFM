@@ -482,6 +482,17 @@ namespace DoubanFM
 			_player.Stoped += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已停止");
+				//关闭当前气泡
+				if (NotifyIcon.CustomBalloon != null)
+				{
+					var balloon = NotifyIcon.CustomBalloon.Child as BalloonSongInfo;
+					if (balloon != null)
+					{
+						balloon.ClearBindings();
+					}
+				}
+				NotifyIcon.CloseBalloon();
+
 				stoped = true;
 				VolumeFadeOut.Begin();
 				SetLyrics(null);
@@ -1219,15 +1230,24 @@ namespace DoubanFM
 				NotifyIcon.ToolTipText = text + dotdotdot;
 			}
 
-			if (_player.Settings.ShowBalloonWhenSongChanged && !NotifyIcon.TrayPopupResolved.IsOpen && !NotifyIcon.TrayToolTipResolved.IsOpen)
+			//延迟弹出气泡
+			CustomBaloon = null;
+			Song lastSong = _player.CurrentSong;
+			var timer = new DispatcherTimer();
+			timer.Interval = TimeSpan.FromSeconds(2);
+			timer.Tick += delegate
 			{
-				CustomBaloon = new NotifyIcon.BalloonSongInfo();
-				NotifyIcon.ShowCustomBalloon(CustomBaloon, System.Windows.Controls.Primitives.PopupAnimation.Fade, 5000);
-			}
-			else
-			{
-				CustomBaloon = null;
-			}
+				if (_player.Settings.ShowBalloonWhenSongChanged && !NotifyIcon.TrayPopupResolved.IsOpen && !NotifyIcon.TrayToolTipResolved.IsOpen)
+				{
+					if (!stoped && CustomBaloon == null && _player.CurrentSong == lastSong)
+					{
+						CustomBaloon = new NotifyIcon.BalloonSongInfo();
+						NotifyIcon.ShowCustomBalloon(CustomBaloon, System.Windows.Controls.Primitives.PopupAnimation.Fade, 5000);
+					}
+				}
+				timer.Stop();
+			};
+			timer.Start();
 
 			//ChannelTextBlock.Text = _player.CurrentChannel.Name;
 			TotalTime.Text = TimeSpanToStringConverter.QuickConvert(_player.CurrentSong.Length);

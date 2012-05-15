@@ -63,10 +63,10 @@ Website : http://www.kfstorm.com
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
-					<TextBlock Text="{Binding CurrentChannel, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" TextTrimming="CharacterEllipsis"/>
-					<TextBlock Grid.Row="1" FontSize="20" Text="{Binding CurrentSong.Title, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-					<TextBlock Grid.Row="2" FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
-					<TextBlock Grid.Row="3" FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
+					<TextBlock x:Name="TbChannel" Text="{Binding CurrentChannel, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" TextTrimming="CharacterEllipsis"/>
+					<TextBlock x:Name="TbTitle" Grid.Row="1" FontSize="20" Text="{Binding CurrentSong.Title, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+					<TextBlock x:Name="TbArtist" Grid.Row="2" FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
+					<TextBlock x:Name="TbAlbum" Grid.Row="3" FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
 				</Grid>
 			</Grid>
 		</Grid>

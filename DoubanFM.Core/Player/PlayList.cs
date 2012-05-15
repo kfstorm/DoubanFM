@@ -48,13 +48,13 @@ namespace DoubanFM.Core
 		/// <param name="operationType">操作类型</param>
 		/// <param name="history">播放历史</param>
 		/// <returns>播放列表</returns>
-		internal static PlayList GetPlayList(string context, string songId, Channel channel, string operationType)
+		internal static PlayList GetPlayList(Song song, Channel channel, string operationType)
 		{
 			//构造链接
 			Parameters parameters = new Parameters();
 			parameters["from"] = "mainsite";
-			parameters["context"] = context;
-			parameters["sid"] = songId;
+			parameters["context"] = channel.Context;
+			parameters["sid"] = song != null ? song.SongId : null;
 			parameters["channel"] = channel.Id;
 			parameters["type"] = operationType;
 			random.NextBytes(bytes);
@@ -70,13 +70,13 @@ namespace DoubanFM.Core
 			PlayList pl = new PlayList(jsonPlayList);
 
 			//将小图更换为大图
-			foreach (var song in pl)
+			foreach (var s in pl)
 			{
-				song.Picture = song.Picture.Replace("/mpic/", "/lpic/").Replace("//otho.", "//img3.");
+				s.Picture = s.Picture.Replace("/mpic/", "/lpic/").Replace("//otho.", "//img3.");
 			}
 
 			//去广告
-			pl.RemoveAll(new Predicate<Song>(song => { return song.IsAd; }));
+			pl.RemoveAll(new Predicate<Song>(s => { return s.IsAd; }));
 
 			return pl;
 		}

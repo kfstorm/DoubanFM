@@ -56,5 +56,27 @@ namespace DoubanFM.NotifyIcon
 		{
 			((DoubanFMWindow)App.Current.MainWindow).ShowFront();
 		}
+
+		/// <summary>
+		/// 清除歌曲和频道的绑定
+		/// </summary>
+		public void ClearBindings()
+		{
+			var tempSource = Cover.Source;
+			BindingOperations.ClearBinding(Cover, Image.SourceProperty);
+			Cover.Source = tempSource;
+			var tempText = TbChannel.Text;
+			BindingOperations.ClearBinding(TbChannel, TextBlock.TextProperty);
+			TbChannel.Text = tempText;
+			tempText = TbTitle.Text;
+			BindingOperations.ClearBinding(TbTitle, TextBlock.TextProperty);
+			TbTitle.Text = tempText;
+			tempText = TbArtist.Text;
+			BindingOperations.ClearBinding(TbArtist, TextBlock.TextProperty);
+			TbArtist.Text = tempText;
+			tempText = TbAlbum.Text;
+			BindingOperations.ClearBinding(TbAlbum, TextBlock.TextProperty);
+			TbAlbum.Text = tempText;
+		}
 	}
 }
