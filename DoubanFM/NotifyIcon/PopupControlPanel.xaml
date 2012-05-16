@@ -68,7 +68,7 @@ Website : http://www.kfstorm.com
 					</Grid.ColumnDefinitions>
 					<Grid Width="{Binding ActualHeight, ElementName=SongPanel}" Height="{Binding Width}" Margin="0,0,10,0">
 						<Image Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" Stretch="UniformToFill"/>
-						<Image x:Name="Cover" Source="{Binding CurrentSong.Picture, Source={StaticResource Player}}" Stretch="UniformToFill"/>
+						<Image x:Name="Cover" Source="{Binding CurrentSong.Picture, Source={StaticResource Player}}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/>
 					</Grid>
 					<Grid x:Name="SongInfo" Grid.Column="1">
 						<Grid.RowDefinitions>
