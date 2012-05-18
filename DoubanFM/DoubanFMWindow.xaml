@@ -246,7 +246,7 @@ Website : http://www.kfstorm.com
 									</RadioButton.Triggers>
 								</RadioButton>
 							</Grid>
-							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" d:IsHidden="True">
+							<Grid x:Name="ChannelsContentGrid" Grid.Row="1">
 								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Panel.ZIndex="1">
 									<ListBox.RenderTransform>
 										<TransformGroup>
@@ -267,7 +267,15 @@ Website : http://www.kfstorm.com
 										</TransformGroup>
 									</ListBox.RenderTransform>
 								</ListBox>
-								<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0">
+								<Grid Margin="5" Height="30" VerticalAlignment="Top" Opacity="{Binding Opacity, ElementName=DjChannels}" Panel.ZIndex="{Binding (Panel.ZIndex), ElementName=DjChannels}" RenderTransform="{Binding RenderTransform, ElementName=DjChannels}">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition/>
+										<ColumnDefinition Width="Auto"/>
+									</Grid.ColumnDefinitions>
+									<TextBox x:Name="TbSearchDj" Height="20"/>
+									<Button x:Name="BtnSearchDj" Grid.Column="1" Margin="10,0,0,0" Click="BtnSearchDj_Click" IsDefault="True" Style="{StaticResource SearchStyle}"/>
+								</Grid>
+								<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0" Margin="0,40,0,0">
 									<ListBox.RenderTransform>
 										<TransformGroup>
 											<ScaleTransform/>

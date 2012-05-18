@@ -412,28 +412,7 @@ namespace DoubanFM
 			_player.CurrentChannelChanged += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 频道已改变，当前频道为" + _player.CurrentChannel);
-				Channel PersonalOld = PersonalChannels.SelectedItem as Channel;
-				Channel PublicOld = PublicChannels.SelectedItem as Channel;
-				Channel DjOld = DjChannels.SelectedItem as Channel;
-				PersonalChannels.SelectedItem = PersonalChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
-				PublicChannels.SelectedItem = PublicChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
-				DjChannels.SelectedItem = DjChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
-				SearchResultList.SelectedItem = SearchResultList.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
-				Channel PersonalNew = PersonalChannels.SelectedItem as Channel;
-				Channel PublicNew = PublicChannels.SelectedItem as Channel;
-				Channel DjNew = DjChannels.SelectedItem as Channel;
-				if (PersonalNew != null && PersonalNew != PersonalOld )
-				{
-					ButtonPersonal.IsChecked = true;
-				}
-				else if (PublicNew != null && PublicNew != PublicOld)
-				{
-					ButtonPublic.IsChecked = true;
-				}
-				else if (DjNew != null && DjNew != DjOld)
-				{
-					ButtonDj.IsChecked = true;
-				}
+				ChangeChosenChannelList();
 				//更新JumpList
 				//if (!_player.CurrentChannel.IsDj)
 				AddChannelToJumpList(_player.CurrentChannel);
@@ -1179,14 +1158,7 @@ namespace DoubanFM
 		private void ShowChannels()
 		{
 			RefreshMyChannels();
-			ObservableCollection<Channel> PublicChannelsItem = new ObservableCollection<Channel>();
-			foreach (Channel channel in _player.ChannelInfo.Public)
-					PublicChannelsItem.Add(channel);
-			ObservableCollection<Channel> DjChannelsItem = new ObservableCollection<Channel>();
-			foreach (Channel channel in _player.ChannelInfo.Dj)
-				DjChannelsItem.Add(channel);
-			PublicChannels.ItemsSource = PublicChannelsItem;
-			DjChannels.ItemsSource = DjChannelsItem;
+			PublicChannels.ItemsSource = new ObservableCollection<Channel>(_player.ChannelInfo.Public);
 		}
 		/// <summary>
 		/// 刷新“我的电台”列表
@@ -1200,6 +1172,63 @@ namespace DoubanFM
 			foreach (Channel channel in _player.Settings.FavoriteChannels)
 				PersonalChannelsItem.Add(channel);
 			PersonalChannels.ItemsSource = PersonalChannelsItem;
+		}
+		/// <summary>
+		/// 更换选中的频道列表
+		/// </summary>
+		private void ChangeChosenChannelList()
+		{
+			Channel PersonalOld = PersonalChannels.SelectedItem as Channel;
+			Channel PublicOld = PublicChannels.SelectedItem as Channel;
+			Channel DjOld = DjChannels.SelectedItem as Channel;
+			PersonalChannels.SelectedItem = PersonalChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+			PublicChannels.SelectedItem = PublicChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+			DjChannels.SelectedItem = DjChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+			SearchResultList.SelectedItem = SearchResultList.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+			Channel PersonalNew = PersonalChannels.SelectedItem as Channel;
+			Channel PublicNew = PublicChannels.SelectedItem as Channel;
+			Channel DjNew = DjChannels.SelectedItem as Channel;
+			if (PersonalNew != null && PersonalNew == PersonalOld) return;
+			if (PublicNew != null && PublicNew == PublicOld) return;
+			if (DjNew != null && DjNew == DjOld) return;
+
+			if (PersonalNew != null)
+			{
+				ButtonPersonal.IsChecked = true;
+			}
+			else if (PublicNew != null)
+			{
+				ButtonPublic.IsChecked = true;
+			}
+			else if (DjNew != null)
+			{
+				ButtonDj.IsChecked = true;
+			}
+		}
+		/// <summary>
+		/// 显示DJ兆赫列表
+		/// </summary>
+		/// <param name="searchText">搜索的文本</param>
+		private void ShowDjChannels(string searchText)
+		{
+			string[] words = null;
+			if (searchText != null)
+			{
+				words = (from word in searchText.Split() where word.Length > 0 select word).ToArray();
+			}
+			if (searchText == null || words.Length == 0)
+			{
+				DjChannels.ItemsSource = new ObservableCollection<Channel>(_player.ChannelInfo.Dj);
+			}
+			else
+			{
+				DjChannels.ItemsSource = new ObservableCollection<Channel>(
+					from channel in _player.ChannelInfo.Dj
+					where words.All(word => channel.Name.Contains(word))
+					select channel);
+			}
+
+			GC.Collect();
 		}
 		/// <summary>
 		/// 更新界面内容，主要是音乐信息。换音乐时自动调用。
@@ -2063,6 +2092,11 @@ namespace DoubanFM
 				}
 				e.Handled = true;
 			}
+		}
+
+		private void BtnSearchDj_Click(object sender, RoutedEventArgs e)
+		{
+			ShowDjChannels(TbSearchDj.Text);
 		}
 
 		#endregion
