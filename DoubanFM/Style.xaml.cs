@@ -38,12 +38,13 @@ namespace DoubanFM
 			}
 		}
 
-		private void Channel_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		private void Channel_MouseEnter(object sender, MouseEventArgs e)
 		{
-			e.Handled = true;
+			Player player = (Player)App.Current.FindResource("Player");
+			GetCheckBox(sender).IsChecked = player.CanRemoveFromFavorites(GetChannel(sender));
 		}
 
-		private static Channel GetContextMenuChannel(object sender)
+		private static Channel GetChannel(object sender)
 		{
 			if (sender == null) return null;
 			var dataContext = ((FrameworkElement)sender).DataContext;
@@ -54,41 +55,23 @@ namespace DoubanFM
 			return dataContext as Channel;
 		}
 
-		private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+		private static CheckBox GetCheckBox(object sender)
 		{
-			Channel channel = GetContextMenuChannel(sender);
+			return (CheckBox)((Control)sender).Template.FindName("CbFavorite", sender as FrameworkElement);
+		}
+
+		private void CbFavorite_Click(object sender, RoutedEventArgs e)
+		{
+			Channel channel = GetChannel(sender);
 			Player player = (Player)App.Current.FindResource("Player");
-			if (!player.CanAddToFavorites(channel))
+			if (((CheckBox)sender).IsChecked == true)
 			{
-				((MenuItem)((ContextMenu)sender).Items[0]).IsEnabled = false;
+				player.AddToFavorites(channel);
 			}
 			else
 			{
-				((MenuItem)((ContextMenu)sender).Items[0]).IsEnabled = true;
+				player.RemoveFromFavorites(channel);
 			}
-			if (!player.CanRemoveFromFavorites(channel))
-			{
-				((MenuItem)((ContextMenu)sender).Items[1]).IsEnabled = false;
-			}
-			else
-			{
-				((MenuItem)((ContextMenu)sender).Items[1]).IsEnabled = true;
-			}
-		}
-
-		private void MIAddToFavorite_Click(object sender, RoutedEventArgs e)
-		{
-			Channel channel = GetContextMenuChannel(sender);
-			Player player = (Player)App.Current.FindResource("Player");
-			player.AddToFavorites(channel);
-			(Application.Current.MainWindow as DoubanFMWindow).RefreshMyChannels();
-		}
-
-		private void MIRemoveFromFavorite_Click(object sender, RoutedEventArgs e)
-		{
-			Channel channel = GetContextMenuChannel(sender);
-			Player player = (Player)App.Current.FindResource("Player");
-			player.RemoveFromFavorites(channel);
 			(Application.Current.MainWindow as DoubanFMWindow).RefreshMyChannels();
 		}
 	}

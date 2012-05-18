@@ -20,6 +20,7 @@ Website : http://www.kfstorm.com
 	<local:BoolReverseConverter x:Key="BoolReverseConverter"/>
 	<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 	<local:BoolReverseToVisibilityConverter x:Key="BoolReverseToVisibilityConverter"/>
+	<local:ChannelToCanFavoriteVisibilityConverter x:Key="ChannelToCanFavoriteVisibilityConverter"/>
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 	<LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
 		<GradientStop Color="#FFE93613" Offset="0" PresentationOptions:Freeze="True"/>
@@ -206,6 +207,52 @@ Website : http://www.kfstorm.com
 			</Setter.Value>
 		</Setter>
 	</Style>
+	<Style x:Key="FavoriteStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
+		<Setter Property="BorderBrush" Value="#7FFFFFFF"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Viewbox>
+						<Canvas Width="128" Height="256" Clip="F1 M 0,0L 128,0L 128,256L 0,256L 0,0">
+							<Path Width="128" Height="256" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="{TemplateBinding BorderBrush}" Data="F1 M 0,0L 128,0L 128,256L 64,192L 0,256L 0,0 Z M 16,16L 16,216L 64,168L 112,216L 112,16L 16,16 Z "/>
+							<Path Width="96" Height="200" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 16,16L 112,16L 112,216L 64,168L 16,216L 16,16 Z "/>
+							<Path x:Name="PWhite" Width="128" Height="256" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="{TemplateBinding BorderBrush}" Data="F1 M 0,0L 128,0L 128,256L 64,192L 0,256L 0,0 Z" Visibility="Hidden"/>
+						</Canvas>
+					</Viewbox>
+					<ControlTemplate.Triggers>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked" Value="True"/>
+								<Condition Property="IsMouseOver" Value="False"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="Visibility" TargetName="PWhite" Value="Visible"/>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked" Value="True"/>
+								<Condition Property="IsPressed" Value="True"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="Visibility" TargetName="PWhite" Value="Visible"/>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsChecked" Value="False">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsChecked" Value="True">
+				<Setter Property="Foreground" Value="#7FFFFFFF"/>
+			</Trigger>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="BorderBrush" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="BorderBrush" Value="#7FFFFFFF"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
 	<Style x:Key="ChannelStyle" TargetType="{x:Type ListBoxItem}">
 		<Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
 		<!--<Setter Property="FontSize" Value="20"/>-->
@@ -216,17 +263,11 @@ Website : http://www.kfstorm.com
 		<Setter Property="MinHeight" Value="70"/>
 		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-		<EventSetter Event="PreviewMouseRightButtonDown" Handler="Channel_PreviewMouseRightButtonDown"/>
+		<EventSetter Event="MouseEnter" Handler="Channel_MouseEnter"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ListBoxItem}">
 					<Grid x:Name="grid" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
-						<Grid.ContextMenu>
-							<ContextMenu Opened="ContextMenu_Opened">
-								<MenuItem x:Name="MIAddToFavorite" Header="收藏" Click="MIAddToFavorite_Click"/>
-								<MenuItem x:Name="MIRemoveFromFavorite" Header="取消收藏" Click="MIRemoveFromFavorite_Click"/>
-							</ContextMenu>
-						</Grid.ContextMenu>
 						<Grid.RenderTransform>
 							<TransformGroup>
 								<ScaleTransform/>
@@ -245,6 +286,15 @@ Website : http://www.kfstorm.com
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
 										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
@@ -254,6 +304,15 @@ Website : http://www.kfstorm.com
 										</DoubleAnimationUsingKeyFrames>
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.2"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
 										</DoubleAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
@@ -284,6 +343,16 @@ Website : http://www.kfstorm.com
 						</VisualStateManager.VisualStateGroups>
 						<ContentPresenter x:Name="contentPresenter" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 						<Border x:Name="border1" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent"/>
+						<CheckBox x:Name="CbFavorite" Width="16" Height="32" Margin="0,-2,8,0" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0" Visibility="{Binding Converter={StaticResource ChannelToCanFavoriteVisibilityConverter}}" Style="{StaticResource FavoriteStyle}" Click="CbFavorite_Click">
+							<CheckBox.OpacityMask>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="White"/>
+									<GradientStop Offset="0" Color="White"/>
+									<GradientStop Offset="0" Color="Transparent"/>
+									<GradientStop Offset="1" Color="Transparent"/>
+								</LinearGradientBrush>
+							</CheckBox.OpacityMask>
+						</CheckBox>
 					</Grid>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsMouseOver" Value="True">
@@ -477,17 +546,11 @@ Website : http://www.kfstorm.com
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-		<EventSetter Event="PreviewMouseRightButtonDown" Handler="Channel_PreviewMouseRightButtonDown"/>
+		<EventSetter Event="MouseEnter" Handler="Channel_MouseEnter"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ListBoxItem}">
 					<Grid x:Name="grid" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
-						<Grid.ContextMenu>
-							<ContextMenu Opened="ContextMenu_Opened">
-								<MenuItem x:Name="MIAddToFavorite" Header="收藏" Click="MIAddToFavorite_Click"/>
-								<MenuItem x:Name="MIRemoveFromFavorite" Header="取消收藏" Click="MIRemoveFromFavorite_Click"/>
-							</ContextMenu>
-						</Grid.ContextMenu>
 						<Grid.RenderTransform>
 							<TransformGroup>
 								<ScaleTransform/>
@@ -506,6 +569,15 @@ Website : http://www.kfstorm.com
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
 										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
@@ -515,6 +587,15 @@ Website : http://www.kfstorm.com
 										</DoubleAnimationUsingKeyFrames>
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
 										</DoubleAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
@@ -545,6 +626,16 @@ Website : http://www.kfstorm.com
 						</VisualStateManager.VisualStateGroups>
 						<ContentPresenter x:Name="contentPresenter" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 						<Border x:Name="border1" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent"/>
+						<CheckBox x:Name="CbFavorite" Width="16" Height="32" Margin="0,-2,16,0" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0" Visibility="{Binding Converter={StaticResource ChannelToCanFavoriteVisibilityConverter}}" Style="{StaticResource FavoriteStyle}" Click="CbFavorite_Click">
+							<CheckBox.OpacityMask>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="White"/>
+									<GradientStop Offset="0" Color="White"/>
+									<GradientStop Offset="0" Color="Transparent"/>
+									<GradientStop Offset="1" Color="Transparent"/>
+								</LinearGradientBrush>
+							</CheckBox.OpacityMask>
+						</CheckBox>
 					</Grid>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsMouseOver" Value="True">

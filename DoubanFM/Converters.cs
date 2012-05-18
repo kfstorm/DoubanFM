@@ -421,5 +421,25 @@ namespace DoubanFM
 		}
 	}
 
+	/// <summary>
+	/// 根据频道确定能否使用收藏功能
+	/// </summary>
+	public class ChannelToCanFavoriteVisibilityConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			Core.Channel channel = value as Core.Channel;
+			if (channel == null)
+			{
+				channel = (value as Core.ChannelSearchItem).GetChannel();
+			}
+			bool canFavorite = canFavorite = !channel.IsPersonal || channel.IsSpecial;
+			return canFavorite ? Visibility.Visible : Visibility.Collapsed;
+		}
 
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
