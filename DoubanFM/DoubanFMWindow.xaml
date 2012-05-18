@@ -225,14 +225,14 @@ Website : http://www.kfstorm.com
 									<ColumnDefinition/>
 									<ColumnDefinition/>
 								</Grid.ColumnDefinitions>
-								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="我的电台" IsEnabled="{Binding Source={StaticResource Player}, Path=UserAssistant.IsLoggedOn}" Style="{StaticResource ChannelCategoryStyle}">
+								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="我的电台" IsChecked="True" Style="{StaticResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard Storyboard="{StaticResource PersonalClickStoryboard}"/>
 										</EventTrigger>
 									</RadioButton.Triggers>
 								</RadioButton>
-								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" IsChecked="True" Content="公共兆赫" Style="{StaticResource ChannelCategoryStyle}">
+								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" Content="公共兆赫" Style="{StaticResource ChannelCategoryStyle}">
 									<RadioButton.Triggers>
 										<EventTrigger RoutedEvent="RadioButton.Checked">
 											<BeginStoryboard Storyboard="{StaticResource PublicClickStoryboard}"/>
@@ -247,7 +247,7 @@ Website : http://www.kfstorm.com
 								</RadioButton>
 							</Grid>
 							<Grid x:Name="ChannelsContentGrid" Grid.Row="1" d:IsHidden="True">
-								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Opacity="0">
+								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Panel.ZIndex="1">
 									<ListBox.RenderTransform>
 										<TransformGroup>
 											<ScaleTransform/>
@@ -257,7 +257,7 @@ Website : http://www.kfstorm.com
 										</TransformGroup>
 									</ListBox.RenderTransform>
 								</ListBox>
-								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Panel.ZIndex="1">
+								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Opacity="0">
 									<ListBox.RenderTransform>
 										<TransformGroup>
 											<ScaleTransform/>

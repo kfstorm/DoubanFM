@@ -762,6 +762,62 @@ namespace DoubanFM.Core
 				Dispatcher.Invoke(new Action(() => { ps = GetPlayerState(); }));
 			return ps;
 		}
+		/// <summary>
+		/// 是否可以加入收藏
+		/// </summary>
+		/// <param name="channel">频道</param>
+		public bool CanAddToFavorites(Channel channel)
+		{
+			if (!IsInitialized || channel == null) return false;
+			if (channel.IsPersonal && !channel.IsSpecial)
+				return false;
+			return !Settings.FavoriteChannels.Contains(channel);
+		}
+		/// <summary>
+		/// 是否可以取消收藏
+		/// </summary>
+		/// <param name="channel">频道</param>
+		public bool CanRemoveFromFavorites(Channel channel)
+		{
+			if (!IsInitialized || channel == null) return false;
+			if (channel.IsPersonal && !channel.IsSpecial)
+				return false;
+			return Settings.FavoriteChannels.Contains(channel);
+		}
+		/// <summary>
+		/// 将频道加入收藏
+		/// </summary>
+		/// <param name="channel">频道</param>
+		/// <returns>是否成功</returns>
+		public bool AddToFavorites(Channel channel)
+		{
+			if (!CanAddToFavorites(channel))
+			{
+				return false;
+			}
+			else
+			{
+				Settings.FavoriteChannels.Add(channel);
+				return true;
+			}
+		}
+		/// <summary>
+		/// 将频道从收藏中删除
+		/// </summary>
+		/// <param name="channel">频道</param>
+		/// <returns>是否成功</returns>
+		public bool RemoveFromFavorites(Channel channel)
+		{
+			if (!CanRemoveFromFavorites(channel))
+			{
+				return false;
+			}
+			else
+			{
+				Settings.FavoriteChannels.Remove(channel);
+				return true;
+			}
+		}
 
 		#endregion
 

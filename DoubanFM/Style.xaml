@@ -216,10 +216,17 @@ Website : http://www.kfstorm.com
 		<Setter Property="MinHeight" Value="70"/>
 		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<EventSetter Event="PreviewMouseRightButtonDown" Handler="Channel_PreviewMouseRightButtonDown"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ListBoxItem}">
 					<Grid x:Name="grid" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
+						<Grid.ContextMenu>
+							<ContextMenu Opened="ContextMenu_Opened">
+								<MenuItem x:Name="MIAddToFavorite" Header="收藏" Click="MIAddToFavorite_Click"/>
+								<MenuItem x:Name="MIRemoveFromFavorite" Header="取消收藏" Click="MIRemoveFromFavorite_Click"/>
+							</ContextMenu>
+						</Grid.ContextMenu>
 						<Grid.RenderTransform>
 							<TransformGroup>
 								<ScaleTransform/>
@@ -293,6 +300,7 @@ Website : http://www.kfstorm.com
 		<Setter Property="AlternationCount" Value="12"/>
 		<Setter Property="ItemContainerStyle" Value="{StaticResource ChannelStyle}"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
 		<Setter Property="ItemsPanel">
 			<Setter.Value>
 				<ItemsPanelTemplate>
@@ -469,10 +477,17 @@ Website : http://www.kfstorm.com
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
 		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<EventSetter Event="PreviewMouseRightButtonDown" Handler="Channel_PreviewMouseRightButtonDown"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ListBoxItem}">
 					<Grid x:Name="grid" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
+						<Grid.ContextMenu>
+							<ContextMenu Opened="ContextMenu_Opened">
+								<MenuItem x:Name="MIAddToFavorite" Header="收藏" Click="MIAddToFavorite_Click"/>
+								<MenuItem x:Name="MIRemoveFromFavorite" Header="取消收藏" Click="MIRemoveFromFavorite_Click"/>
+							</ContextMenu>
+						</Grid.ContextMenu>
 						<Grid.RenderTransform>
 							<TransformGroup>
 								<ScaleTransform/>

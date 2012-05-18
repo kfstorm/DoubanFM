@@ -61,6 +61,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty ShowSpectrumProperty = DependencyProperty.Register("ShowSpectrum", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty AdjustVolumeWithMouseWheelProperty = DependencyProperty.Register("AdjustVolumeWithMouseWheel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty UserKeyProperty = DependencyProperty.Register("UserKey", typeof(string), typeof(Settings), new PropertyMetadata(Guid.NewGuid().ToString("N")));
+		public static readonly DependencyProperty FavoriteChannelsProperty = DependencyProperty.Register("FavoriteChannels", typeof(List<Channel>), typeof(Settings), new PropertyMetadata(new List<Channel>()));
 		
 		#endregion
 
@@ -388,6 +389,15 @@ namespace DoubanFM.Core
 		}
 
 		/// <summary>
+		/// 收藏的频道
+		/// </summary>
+		public List<Channel> FavoriteChannels
+		{
+			get { return (List<Channel>)GetValue(FavoriteChannelsProperty); }
+			set { SetValue(FavoriteChannelsProperty, value); }
+		}
+
+		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
 		private static string _dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
@@ -707,6 +717,14 @@ namespace DoubanFM.Core
 			{
 				UserKey = def.UserKey;
 			}
+			try
+			{
+				FavoriteChannels = (List<Channel>)info.GetValue("FavoriteChannels", typeof(List<Channel>));
+			}
+			catch
+			{
+				FavoriteChannels = def.FavoriteChannels;
+			}
 
 			//向下兼容
 			if (!AutoBackground && Background.A != 255)
@@ -764,6 +782,7 @@ namespace DoubanFM.Core
 			info.AddValue("ShowSpectrum", ShowSpectrum);
 			info.AddValue("AdjustVolumeWithMouseWheel", AdjustVolumeWithMouseWheel);
 			info.AddValue("UserKey", UserKey);
+			info.AddValue("FavoriteChannels", FavoriteChannels);
 		}
 
 		/// <summary>

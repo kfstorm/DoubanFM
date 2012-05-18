@@ -402,37 +402,37 @@ namespace DoubanFM
 
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表");
 				ShowChannels();
+				if (PersonalChannels.Items.Count == 0)
+				{
+					ButtonPublic.IsChecked = true;
+				}
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表完成");
 			});
 			//频道已改变
 			_player.CurrentChannelChanged += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 频道已改变，当前频道为" + _player.CurrentChannel);
-				if (!_player.CurrentChannel.IsPersonal || _player.CurrentChannel.IsSpecial)
-					PersonalChannels.SelectedItem = null;
-				if (!_player.CurrentChannel.IsPublic)
-					PublicChannels.SelectedItem = null;
-				if (!_player.CurrentChannel.IsDj)
-					DjChannels.SelectedItem = null;
-				if (!_player.CurrentChannel.IsSpecial)
-					SearchResultList.SelectedItem = null;
-				if (_player.CurrentChannel.IsPersonal && !_player.CurrentChannel.IsSpecial && _player.CurrentChannel != (Channel)PersonalChannels.SelectedItem)
+				Channel PersonalOld = PersonalChannels.SelectedItem as Channel;
+				Channel PublicOld = PublicChannels.SelectedItem as Channel;
+				Channel DjOld = DjChannels.SelectedItem as Channel;
+				PersonalChannels.SelectedItem = PersonalChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+				PublicChannels.SelectedItem = PublicChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+				DjChannels.SelectedItem = DjChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+				SearchResultList.SelectedItem = SearchResultList.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+				Channel PersonalNew = PersonalChannels.SelectedItem as Channel;
+				Channel PublicNew = PublicChannels.SelectedItem as Channel;
+				Channel DjNew = DjChannels.SelectedItem as Channel;
+				if (PersonalNew != null && PersonalNew != PersonalOld )
 				{
-					PersonalChannels.SelectedItem = _player.CurrentChannel;
 					ButtonPersonal.IsChecked = true;
-					//PersonalClickStoryboard.Begin();
 				}
-				if (_player.CurrentChannel.IsPublic && _player.CurrentChannel != (Channel)PublicChannels.SelectedItem)
+				else if (PublicNew != null && PublicNew != PublicOld)
 				{
-					PublicChannels.SelectedItem = _player.CurrentChannel;
 					ButtonPublic.IsChecked = true;
-					//PublicClickStoryboard.Begin();
 				}
-				if (_player.CurrentChannel.IsDj && _player.CurrentChannel != (Channel)DjChannels.SelectedItem)
+				else if (DjNew != null && DjNew != DjOld)
 				{
-					DjChannels.SelectedItem = _player.CurrentChannel;
 					ButtonDj.IsChecked = true;
-					//DjClickStoryboard.Begin();
 				}
 				//更新JumpList
 				//if (!_player.CurrentChannel.IsDj)
@@ -508,7 +508,7 @@ namespace DoubanFM
 			_player.UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录已成功");
-				ShowChannels();
+				RefreshMyChannels();
 			});
 			//注销已成功
 			_player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
@@ -516,7 +516,7 @@ namespace DoubanFM
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 注销已成功");
 				/*if (_player.UserAssistant.HasCaptcha)
 					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
-				ShowChannels();
+				RefreshMyChannels();
 			});
 			//红心状态改变
 			_player.IsLikedChanged += new EventHandler((o, e) =>
@@ -1178,19 +1178,28 @@ namespace DoubanFM
 		/// </summary>
 		private void ShowChannels()
 		{
-			ObservableCollection<Channel> PersonalChannelsItem = new ObservableCollection<Channel>();
-			if (_player.UserAssistant.IsLoggedOn)
-				foreach (Channel channel in _player.ChannelInfo.Personal)
-					PersonalChannelsItem.Add(channel);
+			RefreshMyChannels();
 			ObservableCollection<Channel> PublicChannelsItem = new ObservableCollection<Channel>();
 			foreach (Channel channel in _player.ChannelInfo.Public)
 					PublicChannelsItem.Add(channel);
 			ObservableCollection<Channel> DjChannelsItem = new ObservableCollection<Channel>();
 			foreach (Channel channel in _player.ChannelInfo.Dj)
 				DjChannelsItem.Add(channel);
-			PersonalChannels.ItemsSource = PersonalChannelsItem;
 			PublicChannels.ItemsSource = PublicChannelsItem;
 			DjChannels.ItemsSource = DjChannelsItem;
+		}
+		/// <summary>
+		/// 刷新“我的电台”列表
+		/// </summary>
+		public void RefreshMyChannels()
+		{
+			ObservableCollection<Channel> PersonalChannelsItem = new ObservableCollection<Channel>();
+			if (_player.UserAssistant.IsLoggedOn)
+				foreach (Channel channel in _player.ChannelInfo.Personal)
+					PersonalChannelsItem.Add(channel);
+			foreach (Channel channel in _player.Settings.FavoriteChannels)
+				PersonalChannelsItem.Add(channel);
+			PersonalChannels.ItemsSource = PersonalChannelsItem;
 		}
 		/// <summary>
 		/// 更新界面内容，主要是音乐信息。换音乐时自动调用。
