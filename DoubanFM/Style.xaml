@@ -208,6 +208,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="FavoriteStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
+		<Setter Property="ToolTip" Value="收藏"/>
 		<Setter Property="BorderBrush" Value="#7FFFFFFF"/>
 		<Setter Property="Template">
 			<Setter.Value>
@@ -244,6 +245,7 @@ Website : http://www.kfstorm.com
 			</Trigger>
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="Foreground" Value="#7FFFFFFF"/>
+				<Setter Property="ToolTip" Value="取消收藏"/>
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="BorderBrush" Value="#7F000000"/>
@@ -305,14 +307,22 @@ Website : http://www.kfstorm.com
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.2"/>
 										</DoubleAnimationUsingKeyFrames>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite">
-											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
 										</DoubleAnimationUsingKeyFrames>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
-											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
+												<EasingDoubleKeyFrame.EasingFunction>
+													<CircleEase EasingMode="EaseOut"/>
+												</EasingDoubleKeyFrame.EasingFunction>
+											</EasingDoubleKeyFrame>
 										</DoubleAnimationUsingKeyFrames>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
-											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
+												<EasingDoubleKeyFrame.EasingFunction>
+													<CircleEase EasingMode="EaseOut"/>
+												</EasingDoubleKeyFrame.EasingFunction>
+											</EasingDoubleKeyFrame>
 										</DoubleAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
@@ -588,14 +598,22 @@ Website : http://www.kfstorm.com
 										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
 											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.1"/>
 										</DoubleAnimationUsingKeyFrames>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite">
-											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
 										</DoubleAnimationUsingKeyFrames>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
-											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
+												<EasingDoubleKeyFrame.EasingFunction>
+													<CircleEase EasingMode="EaseOut"/>
+												</EasingDoubleKeyFrame.EasingFunction>
+											</EasingDoubleKeyFrame>
 										</DoubleAnimationUsingKeyFrames>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
-											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
+												<EasingDoubleKeyFrame.EasingFunction>
+													<CircleEase EasingMode="EaseOut"/>
+												</EasingDoubleKeyFrame.EasingFunction>
+											</EasingDoubleKeyFrame>
 										</DoubleAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
