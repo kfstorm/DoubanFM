@@ -1211,6 +1211,7 @@ namespace DoubanFM
 		/// <param name="searchText">搜索的文本</param>
 		private void ShowDjChannels(string searchText)
 		{
+			if (!_player.IsInitialized) return;			//电台未初始化完成
 			string[] words = null;
 			if (searchText != null)
 			{
