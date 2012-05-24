@@ -54,7 +54,11 @@ namespace DoubanFM.Aero
 			bb.fEnable = true;
 			bb.hRegionBlur = NativeMethods.CreateRectRgn(0, 0, (int)window.ActualWidth, (int)window.ActualHeight);
 
-			NativeMethods.DwmEnableBlurBehindWindow(hwnd, ref bb);
+			try
+			{
+				NativeMethods.DwmEnableBlurBehindWindow(hwnd, ref bb);
+			}
+			catch { }
 			//»ØÊÕ¾ä±ú
 			NativeMethods.DeleteObject(bb.hRegionBlur);
 			

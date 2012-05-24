@@ -546,7 +546,7 @@ namespace DoubanFM.Bass
 			}
 			else
 			{
-				throw new Exception("Bass initialization error : " + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+				throw new Exception("音频组件初始化失败： " + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
 
 			Un4seen.Bass.Bass.BASS_SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_TIMEOUT, 15000);
