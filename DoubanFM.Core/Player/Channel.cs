@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DoubanFM.Core
 {
@@ -101,6 +102,28 @@ namespace DoubanFM.Core
 					catch { }
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// 由命令行参数构造Channel（简单版本，不适用于复杂的命令行）
+		/// </summary>
+		/// <param name="args">命令行</param>
+		/// <returns></returns>
+		public static Channel FromCommandLineArgs(string commandLine)
+		{
+			List<string> args = new List<string>();
+			MatchCollection mc = Regex.Matches(commandLine, @"""(.*?)""|([^""\s]+)");
+			foreach (Match ma in mc)
+			{
+				for (int i = 1; i < ma.Groups.Count; ++i)
+				{
+					if (ma.Groups[i].Success)
+					{
+						args.Add(ma.Groups[i].Value);
+					}
+				}
+			}
+			return FromCommandLineArgs(args);
 		}
 
 		/// <summary>

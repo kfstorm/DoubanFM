@@ -412,6 +412,7 @@ namespace DoubanFM
 			_player.CurrentChannelChanged += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 频道已改变，当前频道为" + _player.CurrentChannel);
+				CloseCurrentBalloon();
 				ChangeChosenChannelList();
 				//更新JumpList
 				//if (!_player.CurrentChannel.IsDj)
@@ -420,6 +421,7 @@ namespace DoubanFM
 			//歌曲已改变
 			_player.CurrentSongChanged += new EventHandler((o, e) =>
 			{
+				CloseCurrentBalloon();
 				if (_player.CurrentSong != null)
 				{
 					Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲已改变，当前歌曲为" + _player.CurrentSong);
@@ -461,16 +463,7 @@ namespace DoubanFM
 			_player.Stoped += new EventHandler((o, e) =>
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已停止");
-				//关闭当前气泡
-				if (NotifyIcon.CustomBalloon != null)
-				{
-					var balloon = NotifyIcon.CustomBalloon.Child as BalloonSongInfo;
-					if (balloon != null)
-					{
-						balloon.ClearBindings();
-					}
-				}
-				NotifyIcon.CloseBalloon();
+				CloseCurrentBalloon();
 
 				stoped = true;
 				VolumeFadeOut.Begin();
@@ -603,16 +596,27 @@ namespace DoubanFM
 			checkMappedFileTimer.Interval = TimeSpan.FromMilliseconds(50);
 			checkMappedFileTimer.Tick += new EventHandler((o, e) =>
 			{
-				Channel ch = LoadChannelFromMappedFile();
-				if (ch != null)
+				string content = App.ReadStringFromMappedFile();
+				if (content.Length > 0)
 				{
-					ClearMappedFile();
-					if (_player.IsInitialized) _player.CurrentChannel = ch;
-					else _player.Settings.LastChannel = ch;
+					if (content == "-show")
+					{
+						ShowFront();
+					}
+					else
+					{
+						Channel ch = Channel.FromCommandLineArgs(content);
+						if (ch != null)
+						{
+							if (_player.IsInitialized) _player.CurrentChannel = ch;
+							else _player.Settings.LastChannel = ch;
+						}
+					}
+					App.ClearMappedFile();
 				}
 			});
 			_mappedFile = MemoryMappedFile.CreateOrOpen(App._mappedFileName, 10240);
-			ClearMappedFile();
+			App.ClearMappedFile();
 			checkMappedFileTimer.Start();
 		}
 		/// <summary>
@@ -1118,40 +1122,6 @@ namespace DoubanFM
 			});
 			update.Show();
 		}
-
-		/// <summary>
-		/// 从内存映射文件加载频道
-		/// </summary>
-		Channel LoadChannelFromMappedFile()
-		{
-			try
-			{
-				using (Stream stream = _mappedFile.CreateViewStream())
-				{
-					BinaryFormatter formatter = new BinaryFormatter();
-					return formatter.Deserialize(stream) as Channel;
-				}
-			}
-			catch
-			{
-				return null;
-			}
-		}
-		/// <summary>
-		/// 清除内存映射文件的内容
-		/// </summary>
-		void ClearMappedFile()
-		{
-			try
-			{
-				using (Stream stream = _mappedFile.CreateViewStream())
-				{
-					BinaryFormatter formatter = new BinaryFormatter();
-					formatter.Serialize(stream, 0);
-				}
-			}
-			catch { }
-		}
 		/// <summary>
 		/// 显示频道列表
 		/// </summary>
@@ -1315,6 +1285,22 @@ namespace DoubanFM
 		/// 弹出气泡
 		/// </summary>
 		public NotifyIcon.BalloonSongInfo CustomBaloon;
+
+		/// <summary>
+		/// 关闭当前气泡
+		/// </summary>
+		private void CloseCurrentBalloon()
+		{
+			if (NotifyIcon.CustomBalloon != null)
+			{
+				var balloon = NotifyIcon.CustomBalloon.Child as BalloonSongInfo;
+				if (balloon != null)
+				{
+					balloon.ClearBindings();
+				}
+			}
+			NotifyIcon.CloseBalloon();
+		}
 
 		/// <summary>
 		/// 更改封面

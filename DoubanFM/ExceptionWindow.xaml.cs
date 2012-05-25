@@ -247,18 +247,11 @@ namespace DoubanFM
 				string userMessage = TbUserMessage.Text;
 				ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					Assembly assembly = Assembly.GetEntryAssembly();
-					string productName = ((AssemblyProductAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyProductAttribute))).Product;
-					string versionNumber = assembly.GetName().Version.ToString();
-					
-					Parameters parameters = new Parameters();
-					parameters["ProductName"] = productName;
-					parameters["VersionNumber"] = versionNumber;
-					parameters["SystemInformation"] = SystemInformation;
-					parameters["Exception"] = ExceptionMessage;
-					parameters["UserMessage"] = userMessage;
-					string result = new ConnectionBase().Post("http://www.kfstorm.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
-					//string result = new ConnectionBase().Post("http://localhost/phpStudy/ProductManager/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
+					try
+					{
+						SendReport(ExceptionMessage, userMessage, SystemInformation);
+					}
+					catch { }
 					Dispatcher.BeginInvoke(new Action(() =>
 						{
 							this.Close();
@@ -274,6 +267,22 @@ namespace DoubanFM
 		private void BtnCannel_Click(object sender, RoutedEventArgs e)
 		{
 			this.Close();
+		}
+
+		public static string SendReport(string exceptionMessage, string userMessage, string systemInformation)
+		{
+			Assembly assembly = Assembly.GetEntryAssembly();
+			string productName = ((AssemblyProductAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyProductAttribute))).Product;
+			string versionNumber = assembly.GetName().Version.ToString();
+
+			Parameters parameters = new Parameters();
+			parameters["ProductName"] = productName;
+			parameters["VersionNumber"] = versionNumber;
+			parameters["SystemInformation"] = systemInformation;
+			parameters["Exception"] = exceptionMessage;
+			parameters["UserMessage"] = userMessage;
+			string result = new ConnectionBase().Post("http://www.kfstorm.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
+			return result;
 		}
 
 		/// <summary>

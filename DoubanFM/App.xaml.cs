@@ -28,7 +28,8 @@ namespace DoubanFM
 	public partial class App : Application
 	{
 		Mutex mutex;
-
+		object exceptionObject = null;
+		
 		public App()
 		{
 			//只允许运行一个实例
@@ -37,7 +38,18 @@ namespace DoubanFM
 			if (!createdNew)
 			{
 				Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
-				if (channel != null) WriteChannelToMappedFile(channel);
+				try
+				{
+					if (channel != null)
+					{
+						WriteStringToMappedFile(channel.ToCommandLineArgs());
+					}
+					else
+					{
+						WriteStringToMappedFile("-show");
+					}
+				}
+				catch { }
 				Debug.WriteLine("检测到已有一个豆瓣电台在运行，程序将关闭");
 				Shutdown(0);
 				return;
@@ -56,38 +68,56 @@ namespace DoubanFM
 			//出现未处理的异常时，弹出错误报告窗口，让用户发送错误报告
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((sender, e) =>
 			{
-				Debug.WriteLine("**********************************************************************");
-				Debug.WriteLine("豆瓣电台出现错误：" + App.GetPreciseTime(DateTime.Now));
-				Debug.WriteLine("**********************************************************************");
-
-				Dispatcher.Invoke(new Action(() =>
+				if (mutex != null)
 				{
-					try
-					{
-						DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
-						if (mainWindow != null)
-						{
-							Player player = FindResource("Player") as Player;
-							if (player != null) player.SaveSettings(true);
-							if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
-							if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
-							if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
-							if (mainWindow.NotifyIcon != null) mainWindow.NotifyIcon.Dispose();
-						}
-					}
-					catch { }
+					mutex.Close();
+					mutex = null;
+				}
+				if (exceptionObject == null)
+				{
+					exceptionObject = e.ExceptionObject;
+					Debug.WriteLine("**********************************************************************");
+					Debug.WriteLine("豆瓣电台出现错误：" + App.GetPreciseTime(DateTime.Now));
+					Debug.WriteLine("**********************************************************************");
 
-					var window = new ExceptionWindow();
-					window.ExceptionObject = e.ExceptionObject;
-					window.ShowDialog();
-				}));
-				Process.GetCurrentProcess().Kill();
+					Dispatcher.Invoke(new Action(() =>
+					{
+						try
+						{
+							DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
+							if (mainWindow != null)
+							{
+								Player player = FindResource("Player") as Player;
+								if (player != null) player.SaveSettings(true);
+								if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
+								if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
+								if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
+								if (mainWindow.NotifyIcon != null) mainWindow.NotifyIcon.Dispose();
+							}
+							var window = new ExceptionWindow();
+							window.ExceptionObject = exceptionObject;
+							window.ShowDialog();
+							Process.GetCurrentProcess().Kill();
+						}
+						catch
+						{
+							SendReport();
+						}
+					}));
+				}
+				else
+				{
+					SendReport();
+				}
 			});
 
 			Exit += new ExitEventHandler((sender, e) =>
 			{
-				mutex.Close();
-				mutex = null;
+				if (mutex != null)
+				{
+					mutex.Close();
+					mutex = null;
+				}
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 程序结束，返回代码为" + e.ApplicationExitCode);
 			});
 
@@ -118,21 +148,72 @@ namespace DoubanFM
 		public static string _mappedFileName = "{04EFCEB4-F10A-403D-9824-1E685C4B7961}";
 
 		/// <summary>
-		/// 将频道写入内存映射文件
+		/// 将字符串写入内存映射文件
 		/// </summary>
-		protected void WriteChannelToMappedFile(Channel channel)
+		internal static void WriteStringToMappedFile(string content)
 		{
-			if (channel != null)
-				try
+			using (MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName))
+			{
+				using (Stream stream = mappedFile.CreateViewStream())
 				{
-					using (MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName))
-					using (Stream stream = mappedFile.CreateViewStream())
+					using (StreamWriter writer = new StreamWriter(stream))
 					{
-						BinaryFormatter formatter = new BinaryFormatter();
-						formatter.Serialize(stream, channel);
+						writer.WriteLine(content);
 					}
 				}
-				catch { }
+			}
+		}
+
+		/// <summary>
+		/// 从内存映射文件中读入字符串
+		/// </summary>
+		internal static string ReadStringFromMappedFile()
+		{
+			using (MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName))
+			{
+				using (Stream stream = mappedFile.CreateViewStream())
+				{
+					using (StreamReader reader = new StreamReader(stream))
+					{
+						return reader.ReadLine();
+					}
+				}
+			}
+		}
+		/// <summary>
+		/// 清除内存映射文件
+		/// </summary>
+		internal static void ClearMappedFile()
+		{
+			using (MemoryMappedFile mappedFile = MemoryMappedFile.OpenExisting(_mappedFileName))
+			{
+				using (Stream stream = mappedFile.CreateViewStream())
+				{
+					using (StreamWriter writer = new StreamWriter(stream))
+					{
+						writer.WriteLine("");
+					}
+				}
+			}
+		}
+
+		private void SendReport()
+		{
+			if (exceptionObject != null)
+			{
+				lock (exceptionObject)
+				{
+					try
+					{
+						string exceptionMessage = ExceptionWindow.GetExceptionMessage(exceptionObject);
+						string userMessage = string.Empty;
+						string systemInformation = ExceptionWindow.GetSystemInformation();
+						ExceptionWindow.SendReport(exceptionMessage, userMessage, systemInformation);
+					}
+					catch { }
+					Process.GetCurrentProcess().Kill();
+				}
+			}
 		}
 	}
 }

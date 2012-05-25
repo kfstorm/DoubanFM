@@ -66,22 +66,19 @@ namespace DoubanFM.Core
 			get { return (Channel)GetValue(CurrentChannelProperty); }
 			set
 			{
-				if (!IsInitialized) return;
-				if (value == null)
-					throw new Exception("频道不能设为空");
-				if (value.IsPersonal && !value.IsSpecial && !UserAssistant.IsLoggedOn) return;	//没登录时不能使用私人频道
-				if (!value.IsSpecial && !ChannelInfo.Personal.Contains(value) && !ChannelInfo.Public.Contains(value) && !ChannelInfo.Dj.Contains(value)) return;		//除特殊频道外，无法播放频道列表中不存在的频道
-				//if (CurrentChannel != null && CurrentChannel.IsSpecial && !value.IsSpecial)     //由特殊模式转为普通模式
-					CurrentSong = null;
 				if (CurrentChannel != value)
 				{
-					Channel lastChannel = CurrentChannel;
-					SetValue(CurrentChannelProperty, value);
+					if (!IsInitialized) return;
+					if (value == null)
+						throw new Exception("频道不能设为空");
+					if (value.IsPersonal && !value.IsSpecial && !UserAssistant.IsLoggedOn) return;	//没登录时不能使用私人频道
+					if (!value.IsSpecial && !ChannelInfo.Personal.Contains(value) && !ChannelInfo.Public.Contains(value) && !ChannelInfo.Dj.Contains(value)) return;		//除特殊频道外，无法播放频道列表中不存在的频道
 					RaiseStopedEvent();
+					Channel lastChannel = CurrentChannel;
+					CurrentSong = null;
+					SetValue(CurrentChannelProperty, value);
 					Settings.LastChannel = CurrentChannel;
-					//if (CurrentChannel.IsSpecial || CurrentChannel.IsDj || CurrentSong == null || lastChannel.IsDj)
-						NewPlayList();
-					//else Skip();
+					NewPlayList();
 					RaiseCurrentChannelChangedEvent();
 				}
 			}
