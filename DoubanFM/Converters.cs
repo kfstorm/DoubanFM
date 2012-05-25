@@ -433,6 +433,10 @@ namespace DoubanFM
 			{
 				channel = (value as Core.ChannelSearchItem).GetChannel();
 			}
+			if (channel == null)
+			{
+				return Visibility.Collapsed;
+			}
 			bool canFavorite = canFavorite = !channel.IsPersonal || channel.IsSpecial;
 			return canFavorite ? Visibility.Visible : Visibility.Collapsed;
 		}

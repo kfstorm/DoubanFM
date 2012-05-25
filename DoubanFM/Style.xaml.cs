@@ -41,7 +41,11 @@ namespace DoubanFM
 		private void Channel_MouseEnter(object sender, MouseEventArgs e)
 		{
 			Player player = (Player)App.Current.FindResource("Player");
-			GetCheckBox(sender).IsChecked = player.CanRemoveFromFavorites(GetChannel(sender));
+			Channel channel = GetChannel(sender);
+			if (channel != null)
+			{
+				GetCheckBox(sender).IsChecked = player.CanRemoveFromFavorites(channel);
+			}
 		}
 
 		private static Channel GetChannel(object sender)
@@ -63,6 +67,7 @@ namespace DoubanFM
 		private void CbFavorite_Click(object sender, RoutedEventArgs e)
 		{
 			Channel channel = GetChannel(sender);
+			if (channel == null) return;
 			Player player = (Player)App.Current.FindResource("Player");
 			if (((CheckBox)sender).IsChecked == true)
 			{
