@@ -107,6 +107,18 @@ namespace DoubanFM
 			return string.Empty;
 		}
 
+		private static string GetAssemblyVersion(Type type)
+		{
+			try
+			{
+				return type.Assembly.GetName().Version.ToString();
+			}
+			catch
+			{
+				return "无";
+			}
+		}
+
 		/// <summary>
 		/// 获取系统信息
 		/// </summary>
@@ -114,6 +126,11 @@ namespace DoubanFM
 		public static string GetSystemInformation()
 		{
 			StringBuilder sb = new StringBuilder();
+			sb.AppendLine("DoubanFM.exe版本：" + GetAssemblyVersion(typeof(App)));
+			sb.AppendLine("DoubanFM.Core.dll版本：" + GetAssemblyVersion(typeof(Player)));
+			sb.AppendLine("DoubanFM.Bass.dll版本：" + GetAssemblyVersion(typeof(Bass.BassEngine)));
+			sb.AppendLine("NotifyIconWpf.dll版本：" + GetAssemblyVersion(typeof(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon)));
+
 			try
 			{
 				var os = DoubanFM.Wmi.OperatingSystem.GetInstance();
