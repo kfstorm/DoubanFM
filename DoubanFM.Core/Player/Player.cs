@@ -370,24 +370,29 @@ namespace DoubanFM.Core
 		{
 			if (IsInitialized) return;
 			Debug.WriteLine(DateTime.Now + " 播放器核心初始化中");
+			bool lastTimeLoggedOn = Settings.LastTimeLoggedOn;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
 					ChannelInfo channelInfo = null;
 					string file = null;
-					while (true)
+					//如果用户上次退出软件时处于未登录状态，则启动时不更新登录状态
+					if (lastTimeLoggedOn)
 					{
-						Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
-						file = new ConnectionBase().Get("http://douban.fm");
-						Debug.WriteLine(DateTime.Now + " 刷新完成");
-						if (!string.IsNullOrEmpty(file))
+						while (true)
 						{
-							break;
+							Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
+							file = new ConnectionBase().Get("http://douban.fm/settings/profile");
+							Debug.WriteLine(DateTime.Now + " 刷新完成");
+							if (!string.IsNullOrEmpty(file))
+							{
+								break;
+							}
+							TakeABreak();
 						}
-						TakeABreak();
-					}
 
-					//更新用户的登录状态
-					UserAssistant.Update(file);
+						//更新用户的登录状态
+						UserAssistant.Update(file);
+					}
 
 					while (true)
 					{
@@ -419,7 +424,7 @@ namespace DoubanFM.Core
 							但Cookie还在，如果不清除Cookie，第一次登录会失败，清除后第一次登录也能成功
 							 * */
 							if (UserAssistant.CurrentState != Core.UserAssistant.State.LoggedOn)
-								ConnectionBase.ClearCookie();
+								UserAssistant.LogOff();
 							ChannelInfo = channelInfo;
 							IsInitialized = true;
 							Debug.WriteLine(DateTime.Now + " 播放器核心初始化完成");
@@ -631,7 +636,7 @@ namespace DoubanFM.Core
 			{
 				SaveSettings();
 				if (UserAssistant.IsLoggedOn && !Settings.AutoLogOnNextTime)
-					ConnectionBase.ClearCookie();
+					UserAssistant.LogOff();
 				SaveCookies();
 			}
 			disposed = true;

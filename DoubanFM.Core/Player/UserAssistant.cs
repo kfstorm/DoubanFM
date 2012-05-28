@@ -74,35 +74,39 @@ namespace DoubanFM.Core
 			get { return (State)GetValue(StateProperty); }
 			set
 			{
-				State lastState = CurrentState;
-				SetValue(StateProperty, value);
-				SetValue(IsLoggedOnProperty, CurrentState == State.LoggedOn);
-				SetValue(IsLoggedOffProperty, CurrentState == State.LoggedOff);
-				SetValue(IsLoggingOnProperty, CurrentState == State.LoggingOn);
-				SetValue(IsLoggingOffProperty, CurrentState == State.LoggingOff);
-				ShowLogOnFailedHint = false;
-				if (lastState == State.LoggingOn)
-					if (CurrentState == State.LoggedOn)
-						RaiseLogOnSucceedEvent();
-					else if (CurrentState == State.LoggedOff)
+				if (CurrentState != value)
+				{
+					State lastState = CurrentState;
+					SetValue(StateProperty, value);
+					SetValue(IsLoggedOnProperty, CurrentState == State.LoggedOn);
+					SetValue(IsLoggedOffProperty, CurrentState == State.LoggedOff);
+					SetValue(IsLoggingOnProperty, CurrentState == State.LoggingOn);
+					SetValue(IsLoggingOffProperty, CurrentState == State.LoggingOff);
+					Settings.LastTimeLoggedOn = IsLoggedOn;
+					ShowLogOnFailedHint = false;
+					if (lastState == State.LoggingOn)
+						if (CurrentState == State.LoggedOn)
+							RaiseLogOnSucceedEvent();
+						else if (CurrentState == State.LoggedOff)
+						{
+							ShowLogOnFailedHint = true;
+							RaiseLogOnFailedEvent();
+						}
+					if (lastState == State.LoggingOff)
+						if (CurrentState == State.LoggedOff)
+							RaiseLogOffSucceedEvent();
+						else if (CurrentState == State.LoggedOn)
+							RaiseLogOffFailedEvent();
+					//假定登录时始终需要验证码
+					if (lastState == State.LoggingOn && CurrentState == State.LoggedOff) // && (HasCaptcha || ErrorNo == 1011))
 					{
-						ShowLogOnFailedHint = true;
-						RaiseLogOnFailedEvent();
+						UpdateCaptcha();
 					}
-				if (lastState == State.LoggingOff)
-					if (CurrentState == State.LoggedOff)
-						RaiseLogOffSucceedEvent();
-					else if (CurrentState == State.LoggedOn)
-						RaiseLogOffFailedEvent();
-				//假定登录时始终需要验证码
-				if (lastState == State.LoggingOn && CurrentState == State.LoggedOff) // && (HasCaptcha || ErrorNo == 1011))
-				{
-					UpdateCaptcha();
-				}
-				//假定登录时始终需要验证码
-				else if (lastState == State.LoggingOff && CurrentState == State.LoggedOff)// && HasCaptcha)
-				{
-					UpdateCaptcha();
+					//假定登录时始终需要验证码
+					else if (lastState == State.LoggingOff && CurrentState == State.LoggedOff)// && HasCaptcha)
+					{
+						UpdateCaptcha();
+					}
 				}
 			}
 		}
@@ -254,12 +258,9 @@ namespace DoubanFM.Core
 		/// <param name="html">HTML文件</param>
 		internal void Update(string html)
 		{
-			string s = null;
 			if (!string.IsNullOrEmpty(html))
 			{
 				//获取昵称和播放记录
-				Match match = Regex.Match(html, @"var\s*globalConfig\s*=\s*{\s*uid\s*:\s*'(\d*)'", RegexOptions.IgnoreCase);
-				s = match.Groups[1].Value;
 				Match match2 = Regex.Match(html, @"id=""fm-user"">(?!{{)(.*)<i></i></a>", RegexOptions.None);
 				string nickname = match2.Groups[1].Value;
 				Match match3 = Regex.Match(html, @"累积收听.*?(\d+).*?首");
@@ -282,7 +283,7 @@ namespace DoubanFM.Core
 					System.Diagnostics.Debug.Unindent();
 					System.Diagnostics.Debug.WriteLine("**********************************************************************");
 					*/
-					if (!string.IsNullOrEmpty(s))
+					if (!string.IsNullOrEmpty(nickname))
 					{
 						Settings.User.Nickname = nickname;
 						Settings.User.Played = played;
@@ -386,8 +387,10 @@ namespace DoubanFM.Core
 		/// </summary>
 		public void LogOff()
 		{
-			if (CurrentState != State.LoggedOn) return;
-			CurrentState = State.LoggingOff;
+			if (CurrentState == State.LoggedOn)
+			{
+				CurrentState = State.LoggingOff;
+			}
 			//仅仅是清除Cookie而已
 			ConnectionBase.ClearCookie();
 			Settings.User.Nickname = string.Empty;

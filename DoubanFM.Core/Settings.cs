@@ -62,6 +62,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty AdjustVolumeWithMouseWheelProperty = DependencyProperty.Register("AdjustVolumeWithMouseWheel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty UserKeyProperty = DependencyProperty.Register("UserKey", typeof(string), typeof(Settings), new PropertyMetadata(Guid.NewGuid().ToString("N")));
 		public static readonly DependencyProperty FavoriteChannelsProperty = DependencyProperty.Register("FavoriteChannels", typeof(List<Channel>), typeof(Settings), new PropertyMetadata(new List<Channel>()));
+		public static readonly DependencyProperty LastTimeLoggedOnProperty = DependencyProperty.Register("LastTimeLoggedOn", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 		
 		#endregion
 
@@ -398,6 +399,15 @@ namespace DoubanFM.Core
 		}
 
 		/// <summary>
+		/// 最后一次是否成功登录
+		/// </summary>
+		public bool LastTimeLoggedOn
+		{
+			get { return (bool)GetValue(LastTimeLoggedOnProperty); }
+			set { SetValue(LastTimeLoggedOnProperty, value); }
+		}
+
+		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
 		private static string _dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
@@ -709,6 +719,7 @@ namespace DoubanFM.Core
 			{
 				AdjustVolumeWithMouseWheel = def.AdjustVolumeWithMouseWheel;
 			}
+			bool isFirstTime = false;
 			try
 			{
 				UserKey = info.GetString("UserKey");
@@ -716,6 +727,7 @@ namespace DoubanFM.Core
 			catch
 			{
 				UserKey = def.UserKey;
+				isFirstTime = true;
 			}
 			try
 			{
@@ -724,6 +736,21 @@ namespace DoubanFM.Core
 			catch
 			{
 				FavoriteChannels = def.FavoriteChannels;
+			}
+			if (isFirstTime)
+			{
+				LastTimeLoggedOn = false;
+			}
+			else
+			{
+				try
+				{
+					LastTimeLoggedOn = info.GetBoolean("LastTimeLoggedOn");
+				}
+				catch
+				{
+					LastTimeLoggedOn = def.LastTimeLoggedOn;
+				}
 			}
 
 			//向下兼容
@@ -783,6 +810,7 @@ namespace DoubanFM.Core
 			info.AddValue("AdjustVolumeWithMouseWheel", AdjustVolumeWithMouseWheel);
 			info.AddValue("UserKey", UserKey);
 			info.AddValue("FavoriteChannels", FavoriteChannels);
+			info.AddValue("LastTimeLoggedOn", LastTimeLoggedOn);
 		}
 
 		/// <summary>
