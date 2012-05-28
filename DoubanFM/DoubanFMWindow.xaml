@@ -160,6 +160,7 @@ Website : http://www.kfstorm.com
 		<local:OpacityToTransparencyConverter x:Key="OpacityToTransparencyConverter"/>
 		<local:ToTransparentColorConverter x:Key="ToTransparentColorConverter"/>
 		<local:TransparencyToOpacityAndPreventFullTransparentConverter x:Key="TransparencyToOpacityAndPreventFullTransparentConverter"/>
+		<local:TextBoxHintConverter x:Key="TextBoxHintConverter"/>
 		<Storyboard x:Key="EnhancementsPanelShow">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="EnhancementsPanel">
 				<EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="1"/>
@@ -213,194 +214,218 @@ Website : http://www.kfstorm.com
 			</Grid.ColumnDefinitions>
 			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1" ClipToBounds="True">
 				<TabControl x:Name="ControlPanel" Style="{StaticResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}" SelectionChanged="ControlPanel_SelectionChanged">
-					<TabItem Header="{StaticResource TabItemChannels}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
-						<Grid x:Name="ChannelsGrid">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="40"/>
-								<RowDefinition/>
-							</Grid.RowDefinitions>
-							<Grid Background="#4E000000">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<RadioButton x:Name="ButtonPersonal" Margin="5" Content="我的电台" IsChecked="True" Style="{StaticResource ChannelCategoryStyle}">
-									<RadioButton.Triggers>
-										<EventTrigger RoutedEvent="RadioButton.Checked">
-											<BeginStoryboard Storyboard="{StaticResource PersonalClickStoryboard}"/>
-										</EventTrigger>
-									</RadioButton.Triggers>
-								</RadioButton>
-								<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" Content="公共兆赫" Style="{StaticResource ChannelCategoryStyle}">
-									<RadioButton.Triggers>
-										<EventTrigger RoutedEvent="RadioButton.Checked">
-											<BeginStoryboard Storyboard="{StaticResource PublicClickStoryboard}"/>
-										</EventTrigger>
-									</RadioButton.Triggers>
-								</RadioButton>
-								<RadioButton x:Name="ButtonDj" Grid.Column="2" Margin="5" Content="DJ兆赫" Style="{StaticResource ChannelCategoryStyle}">
-									<RadioButton.Triggers>
-										<EventTrigger RoutedEvent="RadioButton.Checked">
-											<BeginStoryboard Storyboard="{StaticResource DjClickStoryboard}"/>																	</EventTrigger>
-									</RadioButton.Triggers>
-								</RadioButton>
+					<TabItem Header="{StaticResource TabItemChannels}">
+						<Grid>
+							<Grid x:Name="ChannelsGrid" Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="40"/>
+									<RowDefinition/>
+								</Grid.RowDefinitions>
+								<Grid Background="#4E000000">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition/>
+										<ColumnDefinition/>
+										<ColumnDefinition/>
+									</Grid.ColumnDefinitions>
+									<RadioButton x:Name="ButtonPersonal" Margin="5" Content="我的电台" IsChecked="True" Style="{StaticResource ChannelCategoryStyle}">
+										<RadioButton.Triggers>
+											<EventTrigger RoutedEvent="RadioButton.Checked">
+												<BeginStoryboard Storyboard="{StaticResource PersonalClickStoryboard}"/>
+											</EventTrigger>
+										</RadioButton.Triggers>
+									</RadioButton>
+									<RadioButton x:Name="ButtonPublic" Grid.Column="1" Margin="5" Content="公共兆赫" Style="{StaticResource ChannelCategoryStyle}">
+										<RadioButton.Triggers>
+											<EventTrigger RoutedEvent="RadioButton.Checked">
+												<BeginStoryboard Storyboard="{StaticResource PublicClickStoryboard}"/>
+											</EventTrigger>
+										</RadioButton.Triggers>
+									</RadioButton>
+									<RadioButton x:Name="ButtonDj" Grid.Column="2" Margin="5" Content="DJ兆赫" Style="{StaticResource ChannelCategoryStyle}">
+										<RadioButton.Triggers>
+											<EventTrigger RoutedEvent="RadioButton.Checked">
+												<BeginStoryboard Storyboard="{StaticResource DjClickStoryboard}"/>
+											</EventTrigger>
+										</RadioButton.Triggers>
+									</RadioButton>
+								</Grid>
+								<Grid x:Name="ChannelsContentGrid" Grid.Row="1" TextOptions.TextFormattingMode="Ideal">
+									<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Panel.ZIndex="1">
+										<ListBox.RenderTransform>
+											<TransformGroup>
+												<ScaleTransform/>
+												<SkewTransform/>
+												<RotateTransform/>
+												<TranslateTransform/>
+											</TransformGroup>
+										</ListBox.RenderTransform>
+									</ListBox>
+									<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Opacity="0">
+										<ListBox.RenderTransform>
+											<TransformGroup>
+												<ScaleTransform/>
+												<SkewTransform/>
+												<RotateTransform/>
+												<TranslateTransform/>
+											</TransformGroup>
+										</ListBox.RenderTransform>
+									</ListBox>
+									<Grid Margin="5" Height="30" VerticalAlignment="Top" Opacity="{Binding Opacity, ElementName=DjChannels}" Panel.ZIndex="{Binding (Panel.ZIndex), ElementName=DjChannels}" RenderTransform="{Binding RenderTransform, ElementName=DjChannels}">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition/>
+											<ColumnDefinition Width="Auto"/>
+										</Grid.ColumnDefinitions>
+										<TextBox x:Name="TbSearchDj" Height="20"/>
+										<TextBlock x:Name="TbSearchDjHint" Height="{Binding ActualHeight, ElementName=TbSearchDj}" Margin="{Binding Margin, ElementName=TbSearchDj}" Padding="{Binding Padding, ElementName=TbSearchDj}" Foreground="Black" IsHitTestVisible="False" Opacity="0.5" Text="点击搜索列出所有频道">
+											<TextBlock.Visibility>
+												<MultiBinding Converter="{StaticResource TextBoxHintConverter}">
+													<Binding Path="IsFocused" ElementName="TbSearchDj"/>
+													<Binding Path="Text" ElementName="TbSearchDj"/>
+												</MultiBinding>
+											</TextBlock.Visibility>
+										</TextBlock>
+										<Button x:Name="BtnSearchDj" Grid.Column="1" Margin="10,0,0,0" Click="BtnSearchDj_Click" IsDefault="True" Style="{StaticResource SearchStyle}"/>
+									</Grid>
+									<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0" Margin="0,40,0,0">
+										<ListBox.RenderTransform>
+											<TransformGroup>
+												<ScaleTransform/>
+												<SkewTransform/>
+												<RotateTransform/>
+												<TranslateTransform/>
+											</TransformGroup>
+										</ListBox.RenderTransform>
+										<ListBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
+											</DataTemplate>
+										</ListBox.ItemTemplate>
+									</ListBox>
+								</Grid>
 							</Grid>
-							<Grid x:Name="ChannelsContentGrid" Grid.Row="1">
-								<ListBox x:Name="PersonalChannels" SelectionChanged="PersonalChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Panel.ZIndex="1">
-									<ListBox.RenderTransform>
-										<TransformGroup>
-											<ScaleTransform/>
-											<SkewTransform/>
-											<RotateTransform/>
-											<TranslateTransform/>
-										</TransformGroup>
-									</ListBox.RenderTransform>
-								</ListBox>
-								<ListBox x:Name="PublicChannels" SelectionChanged="PublicChannels_SelectionChanged" Style="{StaticResource ChannelsStyle}" Opacity="0">
-									<ListBox.RenderTransform>
-										<TransformGroup>
-											<ScaleTransform/>
-											<SkewTransform/>
-											<RotateTransform/>
-											<TranslateTransform/>
-										</TransformGroup>
-									</ListBox.RenderTransform>
-								</ListBox>
-								<Grid Margin="5" Height="30" VerticalAlignment="Top" Opacity="{Binding Opacity, ElementName=DjChannels}" Panel.ZIndex="{Binding (Panel.ZIndex), ElementName=DjChannels}" RenderTransform="{Binding RenderTransform, ElementName=DjChannels}">
+							<Grid Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BoolReverseToVisibilityConverter}}">
+								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍后"/>
+							</Grid>
+						</Grid>
+					</TabItem>
+					<TabItem Header="{StaticResource TabItemSearch}">
+						<Grid>
+							<Grid Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition/>
+									<RowDefinition Height="40"/>
+								</Grid.RowDefinitions>
+								<Grid Margin="10" Height="30">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition/>
 										<ColumnDefinition Width="Auto"/>
 									</Grid.ColumnDefinitions>
-									<TextBox x:Name="TbSearchDj" Height="20"/>
-									<Button x:Name="BtnSearchDj" Grid.Column="1" Margin="10,0,0,0" Click="BtnSearchDj_Click" IsDefault="True" Style="{StaticResource SearchStyle}"/>
+									<TextBox x:Name="SearchText" Height="20" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}"/>
+									<Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsDefault="True" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}" Style="{StaticResource SearchStyle}"/>
 								</Grid>
-								<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0" Margin="0,40,0,0">
-									<ListBox.RenderTransform>
-										<TransformGroup>
-											<ScaleTransform/>
-											<SkewTransform/>
-											<RotateTransform/>
-											<TranslateTransform/>
-										</TransformGroup>
-									</ListBox.RenderTransform>
-									<ListBox.ItemTemplate>
-										<DataTemplate>
-											<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10"/>
-										</DataTemplate>
-									</ListBox.ItemTemplate>
-								</ListBox>
-							</Grid>
-						</Grid>
-					</TabItem>
-					<TabItem Header="{StaticResource TabItemSearch}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
-						<Grid>
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition/>
-								<RowDefinition Height="40"/>
-							</Grid.RowDefinitions>
-							<Grid Margin="10" Height="30">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition/>
-									<ColumnDefinition Width="Auto"/>
-								</Grid.ColumnDefinitions>
-								<TextBox x:Name="SearchText" Height="20" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}"/>
-								<Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsDefault="True" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}" Style="{StaticResource SearchStyle}"/>
-							</Grid>
-							<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{StaticResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=ChannelSearch.SearchResult}" />
-							<Label Grid.Row="1" Visibility="{Binding Converter={StaticResource BoolReverseToVisibilityConverter}, Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}" HorizontalAlignment="Center" VerticalAlignment="Center">正在搜索...</Label>
-							<StackPanel Grid.Row="1" Visibility="{Binding Path=ChannelSearch.ShowNoResultHint, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}" Height="Auto" VerticalAlignment="Center">
-								<Label HorizontalAlignment="Center">搜索结果与music.douban.com保持一致</Label>
-								<StackPanel Visibility="{Binding Converter={StaticResource BoolToVisibilityConverter}, Source={StaticResource Player}, Path=Settings.IsSearchFilterEnabled}">
-									<Label HorizontalAlignment="Center">您开启了自动剔除无法收听的项目</Label>
-									<Label HorizontalAlignment="Center">可能下一页就会有结果哦</Label>
+								<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{StaticResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=ChannelSearch.SearchResult}" />
+								<Label Grid.Row="1" Visibility="{Binding Converter={StaticResource BoolReverseToVisibilityConverter}, Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}" HorizontalAlignment="Center" VerticalAlignment="Center">正在搜索...</Label>
+								<StackPanel Grid.Row="1" Visibility="{Binding Path=ChannelSearch.ShowNoResultHint, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}" Height="Auto" VerticalAlignment="Center">
+									<Label HorizontalAlignment="Center">搜索结果与music.douban.com保持一致</Label>
+									<StackPanel Visibility="{Binding Converter={StaticResource BoolToVisibilityConverter}, Source={StaticResource Player}, Path=Settings.IsSearchFilterEnabled}">
+										<Label HorizontalAlignment="Center">您开启了自动剔除无法收听的项目</Label>
+										<Label HorizontalAlignment="Center">可能下一页就会有结果哦</Label>
+									</StackPanel>
 								</StackPanel>
-							</StackPanel>
-							<StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Height="30">
-								<Button x:Name="PreviousPage" Click="PreviousPage_Click" IsEnabled="{Binding Path=ChannelSearch.IsPreviousPageEnabled, Source={StaticResource Player}}" Style="{StaticResource PreviousPageStyle}"/>
-								<Border Width="20"/>
-								<Button x:Name="NextPage" Click="NextPage_Click" IsEnabled="{Binding Path=ChannelSearch.IsNextPageEnabled, Source={StaticResource Player}}" Style="{StaticResource NextPageStyle}"/>
-							</StackPanel>
+								<StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Height="30">
+									<Button x:Name="PreviousPage" Click="PreviousPage_Click" IsEnabled="{Binding Path=ChannelSearch.IsPreviousPageEnabled, Source={StaticResource Player}}" Style="{StaticResource PreviousPageStyle}"/>
+									<Border Width="20"/>
+									<Button x:Name="NextPage" Click="NextPage_Click" IsEnabled="{Binding Path=ChannelSearch.IsNextPageEnabled, Source={StaticResource Player}}" Style="{StaticResource NextPageStyle}"/>
+								</StackPanel>
+							</Grid>
+							<Grid Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BoolReverseToVisibilityConverter}}">
+								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍后"/>
+							</Grid>
 						</Grid>
 					</TabItem>
-					<TabItem x:Name="Account" Header="{StaticResource TabItemAccount}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsInitialized}">
+					<TabItem x:Name="Account" Header="{StaticResource TabItemAccount}">
 						<Grid>
-							<Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
-								<DockPanel Margin="20">
-									<StackPanel DockPanel.Dock="Top">
-										<Grid>
-											<Grid.RowDefinitions>
-												<RowDefinition/> 					
-												<RowDefinition/> 					
-												<RowDefinition Height="Auto"/> 					
-											</Grid.RowDefinitions> 
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="70"/>
-												<ColumnDefinition/>
-											</Grid.ColumnDefinitions>
-											<TextBlock VerticalAlignment="Center" Text="邮箱/用户名"/>
-											<TextBlock VerticalAlignment="Center" Grid.Row="1" Text="密码" Margin="0,2"/>
-											<TextBox x:Name="TbUsername" Grid.Column="1" Text="{Binding Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
-											<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="0,2" PasswordChanged="PbPassword_PasswordChanged" />
-											<TextBlock Grid.Row="2" VerticalAlignment="Center" Text="验证码" Visibility="{Binding Visibility, ElementName=CaptchaText}"/>
-											<TextBox x:Name="CaptchaText" Grid.Row="2" Grid.Column="1" Margin="0,2" Visibility="{Binding UserAssistant.HasCaptcha, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
-										</Grid>
-										<Button x:Name="ButtonRefreshCaptcha" Grid.Column="2" Click="ButtonRefreshCaptcha_Click" Padding="0" Height="40" BorderThickness="0" ToolTip="点击刷新验证码" IsTabStop="False" Visibility="{Binding Visibility, ElementName=CaptchaText}" Margin="0,2" Cursor="Hand">
-											<Image x:Name="Captcha" Stretch="Fill" Source="{Binding UserAssistant.CaptchaUrl, Source={StaticResource Player}}"/>
-										</Button>
-										<StackPanel Margin="0,2">
-											<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding UserAssistant.ShowLogOnFailedHint, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}" Margin="0,2"/>
-											<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Right" Width="100" Height="40" FontSize="16" Margin="0,5"/>
-										</StackPanel>
+							<Grid x:Name="AccountPanel" Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
+								<Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
+									<DockPanel Margin="20">
+										<StackPanel DockPanel.Dock="Top">
+											<Grid>
+												<Grid.RowDefinitions>
+													<RowDefinition/> 					
+													<RowDefinition/> 					
+													<RowDefinition Height="Auto"/> 					
+												</Grid.RowDefinitions> 
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="70"/>
+													<ColumnDefinition/>
+												</Grid.ColumnDefinitions>
+												<TextBlock VerticalAlignment="Center" Text="邮箱/用户名"/>
+												<TextBlock VerticalAlignment="Center" Grid.Row="1" Text="密码" Margin="0,2"/>
+												<TextBox x:Name="TbUsername" Grid.Column="1" Text="{Binding Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
+												<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="0,2" PasswordChanged="PbPassword_PasswordChanged" />
+												<TextBlock Grid.Row="2" VerticalAlignment="Center" Text="验证码" Visibility="{Binding Visibility, ElementName=CaptchaText}"/>
+												<TextBox x:Name="CaptchaText" Grid.Row="2" Grid.Column="1" Margin="0,2" Visibility="{Binding UserAssistant.HasCaptcha, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+											</Grid>
+											<Button x:Name="ButtonRefreshCaptcha" Grid.Column="2" Click="ButtonRefreshCaptcha_Click" Padding="0" Height="40" BorderThickness="0" ToolTip="点击刷新验证码" IsTabStop="False" Visibility="{Binding Visibility, ElementName=CaptchaText}" Margin="0,2" Cursor="Hand">
+												<Image x:Name="Captcha" Stretch="Fill" Source="{Binding UserAssistant.CaptchaUrl, Source={StaticResource Player}}"/>
+											</Button>
+											<StackPanel Margin="0,2">
+												<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding UserAssistant.ShowLogOnFailedHint, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}" Margin="0,2"/>
+												<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Right" Width="100" Height="40" FontSize="16" Margin="0,5"/>
+											</StackPanel>
 										
+										</StackPanel>
+										<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+											<Button x:Name="ButtonSignUp" Content="注册" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Height="30" Click="ButtonSignUp_Click" Margin="0,5"/>
+											<Grid VerticalAlignment="Bottom" Width="210">
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition/>
+													<ColumnDefinition/>
+												</Grid.ColumnDefinitions>
+												<CheckBox x:Name="CheckBoxRememberPassword" VerticalAlignment="Center" HorizontalAlignment="Center" Content="记住密码" IsChecked="{Binding Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
+												<CheckBox Grid.Column="1" x:Name="CheckBoxAutoLogOnNextTime" VerticalAlignment="Center" HorizontalAlignment="Center" Content="下次自动登录" IsChecked="{Binding Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
+											</Grid>
+										</StackPanel>
+									</DockPanel>
+								</Grid>
+								<Grid x:Name="LogOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOn, Source={StaticResource Player}}">
+									<Grid.RowDefinitions>
+										<RowDefinition/>
+										<RowDefinition Height="Auto"/>
+										<RowDefinition/>
+										<RowDefinition/>
+									</Grid.RowDefinitions>
+									<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Settings.User.Nickname, Source={StaticResource Player}}" FontSize="24"/>
+									<StackPanel Grid.Row="1" VerticalAlignment="Center" TextElement.FontSize="14">
+										<TextBlock HorizontalAlignment="Center">
+											<Hyperlink x:Name="HlPlayed" Click="HlPlayed_Click" Foreground="White">
+												<Run Text="{Binding Settings.User.Played, Source={StaticResource Player}, StringFormat=累积收听{0}首}"/>
+											</Hyperlink>
+										</TextBlock>
+										<TextBlock HorizontalAlignment="Center">
+											<Hyperlink x:Name="HlLiked" Click="HlLiked_Click" Foreground="White">
+												<Run Text="{Binding Settings.User.Liked, Source={StaticResource Player}, StringFormat=加红心{0}首}"/>
+											</Hyperlink>
+										</TextBlock>
+										<TextBlock HorizontalAlignment="Center">
+											<Hyperlink x:Name="HlBanned" Click="HlBanned_Click" Foreground="White">
+												<Run Text="{Binding Settings.User.Banned, Source={StaticResource Player}, StringFormat={}{0}首不再播放}"/>
+											</Hyperlink>
+										</TextBlock>
 									</StackPanel>
-									<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
-										<Button x:Name="ButtonSignUp" Content="注册" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Height="30" Click="ButtonSignUp_Click" Margin="0,5"/>
-										<Grid VerticalAlignment="Bottom" Width="210">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition/>
-												<ColumnDefinition/>
-											</Grid.ColumnDefinitions>
-											<CheckBox x:Name="CheckBoxRememberPassword" VerticalAlignment="Center" HorizontalAlignment="Center" Content="记住密码" IsChecked="{Binding Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
-											<CheckBox Grid.Column="1" x:Name="CheckBoxAutoLogOnNextTime" VerticalAlignment="Center" HorizontalAlignment="Center" Content="下次自动登录" IsChecked="{Binding Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
-										</Grid>
-									</StackPanel>
-								</DockPanel>
+									<Label Grid.Row="2" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="已登录"/>
+									<Button Grid.Row="3" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销" FontSize="16"/>
+								</Grid>
+								<Grid x:Name="LoggingOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOn, Source={StaticResource Player}}">
+									<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在登录"/>
+								</Grid>
+								<Grid x:Name="LoggingOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOff, Source={StaticResource Player}}">
+									<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在注销"/>
+								</Grid>
 							</Grid>
-							<Grid x:Name="LogOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOn, Source={StaticResource Player}}">
-								<Grid.RowDefinitions>
-									<RowDefinition/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition/>
-									<RowDefinition/>
-								</Grid.RowDefinitions>
-								<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Settings.User.Nickname, Source={StaticResource Player}}" FontSize="24"/>
-								<StackPanel Grid.Row="1" VerticalAlignment="Center" TextElement.FontSize="14">
-									<TextBlock HorizontalAlignment="Center">
-										<Hyperlink x:Name="HlPlayed" Click="HlPlayed_Click" Foreground="White">
-											<Run Text="{Binding Settings.User.Played, Source={StaticResource Player}, StringFormat=累积收听{0}首}"/>
-										</Hyperlink>
-									</TextBlock>
-									<TextBlock HorizontalAlignment="Center">
-										<Hyperlink x:Name="HlLiked" Click="HlLiked_Click" Foreground="White">
-											<Run Text="{Binding Settings.User.Liked, Source={StaticResource Player}, StringFormat=加红心{0}首}"/>
-										</Hyperlink>
-									</TextBlock>
-									<TextBlock HorizontalAlignment="Center">
-										<Hyperlink x:Name="HlBanned" Click="HlBanned_Click" Foreground="White">
-											<Run Text="{Binding Settings.User.Banned, Source={StaticResource Player}, StringFormat={}{0}首不再播放}"/>
-										</Hyperlink>
-									</TextBlock>
-								</StackPanel>
-								<Label Grid.Row="2" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="已登录"/>
-								<Button Grid.Row="3" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="注销" FontSize="16"/>
-							</Grid>
-							<Grid x:Name="LoggingOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOn, Source={StaticResource Player}}">
-								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在登录"/>
-							</Grid>
-							<Grid x:Name="LoggingOffPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOff, Source={StaticResource Player}}">
-								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="正在注销"/>
+							<Grid Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BoolReverseToVisibilityConverter}}">
+								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍后"/>
 							</Grid>
 						</Grid>
 					</TabItem>

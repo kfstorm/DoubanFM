@@ -256,7 +256,7 @@ Website : http://www.kfstorm.com
 		</Style.Triggers>
 	</Style>
 	<Style x:Key="ChannelStyle" TargetType="{x:Type ListBoxItem}">
-		<Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
+		<!--<Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>-->
 		<!--<Setter Property="FontSize" Value="20"/>-->
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="HorizontalContentAlignment" Value="Center"/>
