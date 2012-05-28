@@ -230,7 +230,8 @@ namespace DoubanFM.Core
 			parameters["ProductName"] = ProductName;
 			parameters["VersionNumber"] = VersionNumber;
 			parameters["UserKey"] = Settings.UserKey;
-			string url = ConnectionBase.ConstructUrlWithParameters("http://www.kfstorm.com/products/check.php", parameters);
+			string url = ConnectionBase.ConstructUrlWithParameters("http://doubanfmcloud.sinaapp.com/products/check.php", parameters);
+			//string url = ConnectionBase.ConstructUrlWithParameters("http://www.kfstorm.com/products/check.php", parameters);
 			//string url = ConnectionBase.ConstructUrlWithParameters("http://localhost/phpStudy/ProductManager/check.php", parameters);
 			Now = State.Checking;
 			UpdateWork work = new UpdateWork(new ThreadStart(() =>

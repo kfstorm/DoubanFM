@@ -58,7 +58,6 @@
     <Compile Include="Player\ChannelInfo.cs" />
     <Compile Include="ConnectionBase.cs" />
     <Compile Include="Encryption.cs" />
-    <Compile Include="Feedback.cs" />
     <Compile Include="Json\Channel.cs" />
     <Compile Include="Json\ChannelInfo.cs" />
     <Compile Include="Json\LogOnResult.cs" />

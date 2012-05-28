@@ -298,7 +298,7 @@ namespace DoubanFM
 			parameters["SystemInformation"] = systemInformation;
 			parameters["Exception"] = exceptionMessage;
 			parameters["UserMessage"] = userMessage;
-			string result = new ConnectionBase().Post("http://www.kfstorm.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
+			string result = new ConnectionBase().Post("http://doubanfmcloud.sinaapp.com/products/errorfeedback.php", Encoding.UTF8.GetBytes(parameters.ToString()));
 			return result;
 		}
 
