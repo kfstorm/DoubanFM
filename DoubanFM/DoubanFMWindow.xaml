@@ -304,7 +304,7 @@ Website : http://www.kfstorm.com
 								</Grid>
 							</Grid>
 							<Grid Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BoolReverseToVisibilityConverter}}">
-								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍后"/>
+								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍候"/>
 							</Grid>
 						</Grid>
 					</TabItem>
@@ -340,7 +340,7 @@ Website : http://www.kfstorm.com
 								</StackPanel>
 							</Grid>
 							<Grid Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BoolReverseToVisibilityConverter}}">
-								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍后"/>
+								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍候"/>
 							</Grid>
 						</Grid>
 					</TabItem>
@@ -425,7 +425,7 @@ Website : http://www.kfstorm.com
 								</Grid>
 							</Grid>
 							<Grid Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BoolReverseToVisibilityConverter}}">
-								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍后"/>
+								<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="请稍候"/>
 							</Grid>
 						</Grid>
 					</TabItem>
