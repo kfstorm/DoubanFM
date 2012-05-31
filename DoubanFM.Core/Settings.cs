@@ -719,7 +719,6 @@ namespace DoubanFM.Core
 			{
 				AdjustVolumeWithMouseWheel = def.AdjustVolumeWithMouseWheel;
 			}
-			bool isFirstTime = false;
 			try
 			{
 				UserKey = info.GetString("UserKey");
@@ -727,7 +726,6 @@ namespace DoubanFM.Core
 			catch
 			{
 				UserKey = def.UserKey;
-				isFirstTime = true;
 			}
 			try
 			{
@@ -737,22 +735,14 @@ namespace DoubanFM.Core
 			{
 				FavoriteChannels = def.FavoriteChannels;
 			}
-			if (isFirstTime)
+			try
 			{
-				LastTimeLoggedOn = false;
+				LastTimeLoggedOn = info.GetBoolean("LastTimeLoggedOn");
 			}
-			else
+			catch
 			{
-				try
-				{
-					LastTimeLoggedOn = info.GetBoolean("LastTimeLoggedOn");
-				}
-				catch
-				{
-					LastTimeLoggedOn = def.LastTimeLoggedOn;
-				}
+				LastTimeLoggedOn = true;
 			}
-
 			//向下兼容
 			if (!AutoBackground && Background.A != 255)
 			{
