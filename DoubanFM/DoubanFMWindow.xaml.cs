@@ -1285,6 +1285,11 @@ namespace DoubanFM
 					if (!stoped && CustomBaloon == null && _player.CurrentSong == lastSong)
 					{
 						CustomBaloon = new NotifyIcon.BalloonSongInfo();
+						var image = CustomBaloon.Cover.Source as BitmapSource;
+						if (image != null && !image.IsDownloading)
+						{
+							CustomBaloon.Cover.Opacity = 1;
+						}
 						NotifyIcon.ShowCustomBalloon(CustomBaloon, System.Windows.Controls.Primitives.PopupAnimation.Fade, 5000);
 					}
 				}
@@ -1336,86 +1341,69 @@ namespace DoubanFM
 			NotifyIcon.CloseBalloon();
 		}
 
+		BitmapImage bitmap;
+		bool downloadFailed = false;
+		bool shouldSwitchCover = false;
+		/// <summary>
+		/// 封面下载成功时调用以更换封面
+		/// </summary>
+		void OnCoverDownloadCompleted()
+		{
+			if (!shouldSwitchCover) return;
+			if (downloadFailed)
+			{
+				if (bitmap != null && bitmap.UriSource != null && bitmap.UriSource.AbsoluteUri != new Uri(_player.CurrentSong.Picture).AbsoluteUri) return;
+				shouldSwitchCover = false;
+				bitmap = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
+				if (bitmap.CanFreeze) bitmap.Freeze();
+				ChangeBackground(bitmap);
+				SwitchCover(bitmap);
+			}
+			else
+			{
+				if (bitmap == null) return;
+				if (bitmap.CanFreeze) bitmap.Freeze();
+				if (bitmap.UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
+				{
+					shouldSwitchCover = false;
+					ChangeBackground(bitmap);
+					SwitchCover(bitmap);
+
+					((NotifyIcon.BalloonSongInfo)NotifyIcon.TrayToolTip).ShowCoverSmooth();
+					((NotifyIcon.PopupControlPanel)NotifyIcon.TrayPopup).ShowCoverSmooth();
+					if (CustomBaloon != null)
+					{
+						CustomBaloon.ShowCoverSmooth();
+					}
+				}
+			}
+		}
 		/// <summary>
 		/// 更改封面
 		/// </summary>
 		void ChangeCover()
 		{
+			shouldSwitchCover = false;
+			downloadFailed = false;
 			try
 			{
+				bitmap = new BitmapImage();
+				//图片下载失败
+				bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
+				{
+					downloadFailed = true;
+				});
 				//似乎豆瓣的图片有问题，所以这里不直接用Uri构造一个BitmapImage
-				BitmapImage bitmap = new BitmapImage();
 				bitmap.BeginInit();
 				bitmap.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
 				bitmap.UriSource = new Uri(_player.CurrentSong.Picture);
 				bitmap.EndInit();
-				//BitmapImage bitmap = new BitmapImage(new Uri(_player.CurrentSong.Picture));
-				//Debug.WriteLine(_player.CurrentSong.Picture);
-				
-				//判断图片是否正在下载
-				if (bitmap.IsDownloading)
-				{
-					//图片下载完成
-					bitmap.DownloadCompleted += new EventHandler((o, e) =>
-					{
-						if (bitmap.CanFreeze) bitmap.Freeze();
-						//Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 封面下载成功");
-						Dispatcher.Invoke(new Action(() =>
-						{
-							try
-							{
-								if (((BitmapImage)o).UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
-								{
-									ChangeBackground((BitmapImage)o);
-									SwitchCover((BitmapImage)o);
-
-									((NotifyIcon.BalloonSongInfo)NotifyIcon.TrayToolTip).ShowCoverSmooth();
-									((NotifyIcon.PopupControlPanel)NotifyIcon.TrayPopup).ShowCoverSmooth();
-									if (CustomBaloon != null)
-									{
-										CustomBaloon.ShowCoverSmooth();
-									}
-								}
-							}
-							catch { }
-						}));
-					});
-					//图片下载失败
-					bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
-					{
-						Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 封面下载失败");
-						Dispatcher.Invoke(new Action(() =>
-						{
-							try
-							{
-								if (((BitmapImage)o).UriSource.AbsoluteUri.ToString() == new Uri(_player.CurrentSong.Picture).AbsoluteUri.ToString())
-								{
-									BitmapImage bitmapDefault = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
-									if (bitmapDefault.CanFreeze) bitmapDefault.Freeze();
-									ChangeBackground(bitmapDefault);
-									SwitchCover(bitmapDefault);
-
-									if (CustomBaloon != null)
-										CustomBaloon = null;
-								}
-							}
-							catch { }
-						}));
-					});
-				}
-				else
-				{
-					if (bitmap.CanFreeze) bitmap.Freeze();
-					ChangeBackground(bitmap);
-					SwitchCover(bitmap);
-				}
+				shouldSwitchCover = true;
 			}
 			catch
 			{
-				BitmapImage bitmap = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
-				if (bitmap.CanFreeze) bitmap.Freeze();
-				ChangeBackground(bitmap);
-				SwitchCover(bitmap);
+				downloadFailed = true;
+				shouldSwitchCover = true;
 			}
 		}
 		/// <summary>
@@ -1502,6 +1490,11 @@ namespace DoubanFM
 			{
 				isEnhancementsPanelShowing = false;
 				EnhancementsPanelHide.Begin();
+			}
+
+			if (shouldSwitchCover && (bitmap == null || !bitmap.IsDownloading))
+			{
+				OnCoverDownloadCompleted();
 			}
 		}
 		///// <summary>
