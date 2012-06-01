@@ -286,7 +286,7 @@ Website : http://www.kfstorm.com
 										</TextBlock>
 										<Button x:Name="BtnSearchDj" Grid.Column="1" Margin="10,0,0,0" Click="BtnSearchDj_Click" IsDefault="True" Style="{StaticResource SearchStyle}"/>
 									</Grid>
-									<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0" Margin="0,40,0,0">
+									<ListBox x:Name="DjChannels" Style="{StaticResource ChannelsStyle}" SelectionChanged="DjChannels_SelectionChanged" Opacity="0" Margin="0,40,0,0" ScrollViewer.ScrollChanged="DjChannels_ScrollChanged">
 										<ListBox.RenderTransform>
 											<TransformGroup>
 												<ScaleTransform/>

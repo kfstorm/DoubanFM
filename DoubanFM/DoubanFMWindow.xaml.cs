@@ -28,6 +28,7 @@ using System.Text;
 using DoubanFM.NotifyIcon;
 using System.Windows.Data;
 using DoubanFM.Bass;
+using System.Collections.Generic;
 
 namespace DoubanFM
 {
@@ -596,24 +597,28 @@ namespace DoubanFM
 			checkMappedFileTimer.Interval = TimeSpan.FromMilliseconds(50);
 			checkMappedFileTimer.Tick += new EventHandler((o, e) =>
 			{
-				string content = App.ReadStringFromMappedFile();
-				if (content.Length > 0)
+				try
 				{
-					if (content == "-show")
+					string content = App.ReadStringFromMappedFile();
+					if (content.Length > 0)
 					{
-						ShowFront();
-					}
-					else
-					{
-						Channel ch = Channel.FromCommandLineArgs(content);
-						if (ch != null)
+						if (content == "-show")
 						{
-							if (_player.IsInitialized) _player.CurrentChannel = ch;
-							else _player.Settings.LastChannel = ch;
+							ShowFront();
 						}
+						else
+						{
+							Channel ch = Channel.FromCommandLineArgs(content);
+							if (ch != null)
+							{
+								if (_player.IsInitialized) _player.CurrentChannel = ch;
+								else _player.Settings.LastChannel = ch;
+							}
+						}
+						App.ClearMappedFile();
 					}
-					App.ClearMappedFile();
 				}
+				catch { }
 			});
 			_mappedFile = MemoryMappedFile.CreateOrOpen(App._mappedFileName, 10240);
 			App.ClearMappedFile();
@@ -1175,11 +1180,15 @@ namespace DoubanFM
 				ButtonDj.IsChecked = true;
 			}
 		}
+
+		List<Channel> filteredDjChannels = new List<Channel>();
+		int showedDjChannelsCount = 0;
+
 		/// <summary>
 		/// 显示DJ兆赫列表
 		/// </summary>
 		/// <param name="searchText">搜索的文本</param>
-		private void ShowDjChannels(string searchText)
+		private void ShowDjChannels(string searchText, int count = 10)
 		{
 			if (!_player.IsInitialized) return;			//电台未初始化完成
 			string[] words = null;
@@ -1187,20 +1196,45 @@ namespace DoubanFM
 			{
 				words = (from word in searchText.Split() where word.Length > 0 select word).ToArray();
 			}
-			if (searchText == null || words.Length == 0)
+			filteredDjChannels.Clear();
+			filteredDjChannels.AddRange(
+				from channel in _player.ChannelInfo.Dj
+				where words.All(word => channel.Name.Contains(word))
+				select channel);
+
+			ScrollViewer scrollViewer = FindVisualChild<ScrollViewer>(DjChannels);
+			if (scrollViewer != null)
 			{
-				DjChannels.ItemsSource = new ObservableCollection<Channel>(_player.ChannelInfo.Dj);
+				scrollViewer.ScrollToTop();
 			}
-			else
-			{
-				DjChannels.ItemsSource = new ObservableCollection<Channel>(
-					from channel in _player.ChannelInfo.Dj
-					where words.All(word => channel.Name.Contains(word))
-					select channel);
-			}
+			var collection = new ObservableCollection<Channel>(filteredDjChannels.Take(count));
+			DjChannels.ItemsSource = collection;
+			showedDjChannelsCount = collection.Count;
 
 			GC.Collect();
 		}
+
+		private childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
+		{
+			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+			{
+				DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+				if (child != null && child is childItem)
+				{
+					return (childItem)child;
+				}
+				else
+				{
+					childItem childOfChild = FindVisualChild<childItem>(child);
+					if (childOfChild != null)
+					{
+						return childOfChild;
+					}
+				}
+			}
+			return null;
+		}
+
 		/// <summary>
 		/// 更新界面内容，主要是音乐信息。换音乐时自动调用。
 		/// </summary>
@@ -2084,6 +2118,23 @@ namespace DoubanFM
 		private void BtnSearchDj_Click(object sender, RoutedEventArgs e)
 		{
 			ShowDjChannels(TbSearchDj.Text);
+		}
+
+		private void DjChannels_ScrollChanged(object sender, ScrollChangedEventArgs e)
+		{
+			//Debug.WriteLine(string.Format("VerticalOffset: {0} ViewportHeight: {1} ExtentHeight: {2}", e.VerticalOffset, e.ViewportHeight, e.ExtentHeight));
+			if (e.VerticalOffset + e.ViewportHeight >= e.ExtentHeight)
+			{
+				var source = DjChannels.ItemsSource as ObservableCollection<Channel>;
+				if (source != null)
+				{
+					for (int i = showedDjChannelsCount; i < filteredDjChannels.Count && i < showedDjChannelsCount + 10; ++i)
+					{
+						source.Add(filteredDjChannels[i]);
+					}
+					showedDjChannelsCount = source.Count;
+				}
+			}
 		}
 
 		#endregion
