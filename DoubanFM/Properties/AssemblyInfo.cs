@@ -7,8 +7,8 @@ using System.Windows;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("DoubanFM")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("豆瓣电台")]
+[assembly: AssemblyDescription("豆瓣电台")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("K.F.Storm")]
 [assembly: AssemblyProduct("豆瓣电台")]

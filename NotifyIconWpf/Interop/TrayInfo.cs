@@ -65,10 +65,11 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
     private static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
 
     [DllImport("shell32.dll")]
-    private static extern UInt32 SHAppBarMessage(UInt32 dwMessage, ref APPBARDATA data);
+	private static extern IntPtr SHAppBarMessage(UInt32 dwMessage, ref APPBARDATA data);
 
     [DllImport("user32.dll")]
-    private static extern Int32 SystemParametersInfo(UInt32 uiAction, UInt32 uiParam,
+	[return: MarshalAs(UnmanagedType.Bool)]
+	private static extern bool SystemParametersInfo(UInt32 uiAction, UInt32 uiParam,
                                                      IntPtr pvParam, UInt32 fWinIni);
 
 
@@ -94,13 +95,13 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
     {
       get
       {
-        Int32 bResult = 0;
+        bool bResult = false;
         var rc = new RECT();
         IntPtr rawRect = Marshal.AllocHGlobal(Marshal.SizeOf(rc));
         bResult = SystemParametersInfo(SPI_GETWORKAREA, 0, rawRect, 0);
         rc = (RECT) Marshal.PtrToStructure(rawRect, rc.GetType());
 
-        if (bResult == 1)
+        if (bResult)
         {
           Marshal.FreeHGlobal(rawRect);
           return new Rectangle(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
@@ -121,9 +122,9 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
 
       if (hWnd != IntPtr.Zero)
       {
-        UInt32 uResult = SHAppBarMessage(ABM_GETTASKBARPOS, ref m_data);
+        IntPtr result = SHAppBarMessage(ABM_GETTASKBARPOS, ref m_data);
 
-        if (uResult != 1)
+        if (result == IntPtr.Zero)
         {
           throw new Exception("Failed to communicate with the given AppBar");
         }

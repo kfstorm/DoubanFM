@@ -70,18 +70,21 @@ namespace DoubanFM
 		}
 
 		/// <summary>
+		/// 当前是否正在拖拽窗口
+		/// </summary>
+		protected bool IsDraging = false;
+		/// <summary>
 		/// 支持拖拽窗口
 		/// </summary>
-		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+		protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
 		{
-			//如果不加try catch语句，在点击封面打开资料页面时很容易报错
-			try
+			base.OnMouseMove(e);
+			if (System.Windows.Input.Mouse.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
 			{
-				this.DragMove();
+				IsDraging = true;
+				DragMove();
+				IsDraging = false;
 			}
-			catch { }
-
-			base.OnMouseLeftButtonDown(e);
 		}
 
 		/// <summary>

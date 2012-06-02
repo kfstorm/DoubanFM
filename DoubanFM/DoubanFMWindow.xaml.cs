@@ -1648,9 +1648,10 @@ namespace DoubanFM
 		/// <summary>
 		/// 鼠标左键点击封面时滑动封面
 		/// </summary>
-		private void CoverGrid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		private void CoverGrid_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			base.OnMouseLeftButtonUp(e);
+			if (IsDraging) return;
+			if (e.GetPosition(CoverGrid) == new Point(0, 0)) return;		//狂甩窗口时可能会触发MouseLeftButtonUp事件……
 			if (!_player.Settings.SlideCoverWhenMouseMove || !_player.Settings.OpenAlbumInfoWhenClickCover || _player.CurrentSong == null)
 			{
 				Point leftLocation = e.GetPosition(LeftPanel);
@@ -1686,12 +1687,18 @@ namespace DoubanFM
 
 		void SlideCoverRightTimer_Tick(object sender, EventArgs e)
 		{
-			SlideCoverRightStoryboard.Begin();
+			if (!IsDraging && Mouse.LeftButton != MouseButtonState.Pressed)
+			{
+				SlideCoverRightStoryboard.Begin();
+			}
 			_slideCoverRightTimer.Stop();
 		}
 		void SlideCoverLeftTimer_Tick(object sender, EventArgs e)
 		{
-			SlideCoverLeftStoryboard.Begin();
+			if (!IsDraging && Mouse.LeftButton != MouseButtonState.Pressed)
+			{
+				SlideCoverLeftStoryboard.Begin();
+			}
 			_slideCoverLeftTimer.Stop();
 		}
 
@@ -1700,7 +1707,7 @@ namespace DoubanFM
 		/// </summary>
 		private void CoverGrid_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
 		{
-			base.OnMouseMove(e);
+			if (IsDraging) return;
 			if (_player.Settings.SlideCoverWhenMouseMove)
 			{
 				Point leftLocation = e.GetPosition(LeftPanel);
