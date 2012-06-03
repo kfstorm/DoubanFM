@@ -58,7 +58,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 滑动封面的计时器
 		/// </summary>
-		private DispatcherTimer _slideCoverRightTimer, _slideCoverLeftTimer;
+		private DispatcherTimer _slideCoverRightTimer, _slideCoverLeftTimer, _leftPanelMouseLeaveTimer;
 		/// <summary>
 		/// 当前显示的封面
 		/// </summary>
@@ -587,6 +587,9 @@ namespace DoubanFM
 			_slideCoverLeftTimer = new DispatcherTimer();
 			_slideCoverLeftTimer.Interval = new TimeSpan(5000000);
 			_slideCoverLeftTimer.Tick += new EventHandler(SlideCoverLeftTimer_Tick);
+			_leftPanelMouseLeaveTimer = new DispatcherTimer();
+			_leftPanelMouseLeaveTimer.Interval = TimeSpan.FromSeconds(1);
+			_leftPanelMouseLeaveTimer.Tick += _leftPanelMouseLeaveTimer_Tick;
 		}
 		/// <summary>
 		/// 定时检查内存映射文件，看是否需要更换频道
@@ -1352,7 +1355,7 @@ namespace DoubanFM
 			if (!shouldSwitchCover) return;
 			if (downloadFailed)
 			{
-				if (bitmap != null && bitmap.UriSource != null && bitmap.UriSource.AbsoluteUri != new Uri(_player.CurrentSong.Picture).AbsoluteUri) return;
+				if (bitmap != null && bitmap.UriSource != null && _player.CurrentSong != null && _player.CurrentSong.FileUrl != null && bitmap.UriSource.AbsoluteUri != new Uri(_player.CurrentSong.Picture).AbsoluteUri) return;
 				shouldSwitchCover = false;
 				bitmap = new BitmapImage(new Uri("pack://application:,,,/DoubanFM;component/Images/DoubanFM_NoCover.png"));
 				if (bitmap.CanFreeze) bitmap.Freeze();
@@ -1363,7 +1366,7 @@ namespace DoubanFM
 			{
 				if (bitmap == null) return;
 				if (bitmap.CanFreeze) bitmap.Freeze();
-				if (bitmap.UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
+				if (bitmap.UriSource != null && _player.CurrentSong != null && _player.CurrentSong.FileUrl != null && bitmap.UriSource.AbsoluteUri == new Uri(_player.CurrentSong.Picture).AbsoluteUri)
 				{
 					shouldSwitchCover = false;
 					ChangeBackground(bitmap);
@@ -1391,7 +1394,10 @@ namespace DoubanFM
 				//图片下载失败
 				bitmap.DownloadFailed += new EventHandler<ExceptionEventArgs>((o, e) =>
 				{
-					downloadFailed = true;
+					if (o == bitmap)
+					{
+						downloadFailed = true;
+					}
 				});
 				//似乎豆瓣的图片有问题，所以这里不直接用Uri构造一个BitmapImage
 				bitmap.BeginInit();
@@ -2135,6 +2141,22 @@ namespace DoubanFM
 					showedDjChannelsCount = source.Count;
 				}
 			}
+		}
+
+		private void LeftPanel_MouseLeave(object sender, MouseEventArgs e)
+		{
+			_leftPanelMouseLeaveTimer.Start();
+		}
+		
+		private void LeftPanel_MouseEnter(object sender, MouseEventArgs e)
+		{
+			_leftPanelMouseLeaveTimer.Stop();
+		}
+
+		private void _leftPanelMouseLeaveTimer_Tick(object sender, EventArgs e)
+		{
+			SlideCoverLeftStoryboard.Begin();
+			_leftPanelMouseLeaveTimer.Stop();
 		}
 
 		#endregion

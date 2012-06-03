@@ -74,15 +74,35 @@ namespace DoubanFM
 		/// </summary>
 		protected bool IsDraging = false;
 		/// <summary>
+		/// 是否按下了鼠标左键（不要用Mouse.LeftButton去检测）
+		/// </summary>
+		bool pressed = false;
+		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+		{
+			pressed = true;
+			base.OnMouseLeftButtonDown(e);
+		}
+		protected override void OnMouseRightButtonUp(System.Windows.Input.MouseButtonEventArgs e)
+		{
+			pressed = false;
+			base.OnMouseRightButtonUp(e);
+		}
+		protected override void OnMouseLeave(System.Windows.Input.MouseEventArgs e)
+		{
+			pressed = false;
+			base.OnMouseLeave(e);
+		}
+		/// <summary>
 		/// 支持拖拽窗口
 		/// </summary>
 		protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
 		{
 			base.OnMouseMove(e);
-			if (System.Windows.Input.Mouse.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+			if (!IsDraging && pressed && System.Windows.Input.Mouse.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
 			{
 				IsDraging = true;
 				DragMove();
+				pressed = false;
 				IsDraging = false;
 			}
 		}

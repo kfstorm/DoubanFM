@@ -208,7 +208,12 @@ namespace DoubanFM
 						string exceptionMessage = ExceptionWindow.GetExceptionMessage(exceptionObject);
 						string userMessage = string.Empty;
 						string systemInformation = ExceptionWindow.GetSystemInformation();
+#if DEBUG || TEST
+						Debug.WriteLine(systemInformation);
+						Debug.WriteLine(exceptionMessage);
+#else
 						ExceptionWindow.SendReport(exceptionMessage, userMessage, systemInformation);
+#endif
 					}
 					catch { }
 					Process.GetCurrentProcess().Kill();

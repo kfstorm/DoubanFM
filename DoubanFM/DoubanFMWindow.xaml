@@ -212,7 +212,7 @@ Website : http://www.kfstorm.com
 				<ColumnDefinition Width="300" />
 				<ColumnDefinition Width="300"/>
 			</Grid.ColumnDefinitions>
-			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1" ClipToBounds="True">
+			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1" ClipToBounds="True" MouseLeave="LeftPanel_MouseLeave" MouseEnter="LeftPanel_MouseEnter">
 				<TabControl x:Name="ControlPanel" Style="{StaticResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}" SelectionChanged="ControlPanel_SelectionChanged">
 					<TabItem Header="{StaticResource TabItemChannels}">
 						<Grid>
