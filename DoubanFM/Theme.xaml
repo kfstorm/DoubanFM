@@ -289,6 +289,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="Background" Value="#BFFFFFFF"/>
+		<Setter Property="Padding" Value="1"/>
 	</Style>
 	<Style TargetType="{x:Type PasswordBox}">
 		<Setter Property="Template">
@@ -314,6 +315,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 		<Setter Property="Background" Value="#BFFFFFFF"/>
 		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Padding" Value="1"/>
 	</Style>
 	<Style TargetType="{x:Type GroupBox}">
 		<Setter Property="Template">

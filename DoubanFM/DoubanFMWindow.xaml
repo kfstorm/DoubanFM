@@ -275,8 +275,8 @@ Website : http://www.kfstorm.com
 											<ColumnDefinition/>
 											<ColumnDefinition Width="Auto"/>
 										</Grid.ColumnDefinitions>
-										<TextBox x:Name="TbSearchDj" Height="20"/>
-										<TextBlock x:Name="TbSearchDjHint" Height="{Binding ActualHeight, ElementName=TbSearchDj}" Margin="{Binding Margin, ElementName=TbSearchDj}" Padding="{Binding Padding, ElementName=TbSearchDj}" Foreground="Black" IsHitTestVisible="False" Opacity="0.5" Text="点击搜索列出所有频道">
+										<TextBox x:Name="TbSearchDj" VerticalAlignment="Center"/>
+										<TextBlock x:Name="TbSearchDjHint" Margin="{Binding Margin, ElementName=TbSearchDj}" Padding="{Binding Padding, ElementName=TbSearchDj}" Foreground="Black" IsHitTestVisible="False" Opacity="0.5" Text="点击搜索列出所有频道" VerticalAlignment="Center">
 											<TextBlock.Visibility>
 												<MultiBinding Converter="{StaticResource TextBoxHintConverter}">
 													<Binding Path="IsFocused" ElementName="TbSearchDj"/>
@@ -321,7 +321,7 @@ Website : http://www.kfstorm.com
 										<ColumnDefinition/>
 										<ColumnDefinition Width="Auto"/>
 									</Grid.ColumnDefinitions>
-									<TextBox x:Name="SearchText" Height="20" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}"/>
+									<TextBox x:Name="SearchText" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}" VerticalAlignment="Center" SnapsToDevicePixels="True"/>
 									<Button x:Name="Search" Grid.Column="1" Margin="10,0,0,0" Click="Search_Click" IsDefault="True" IsEnabled="{Binding Source={StaticResource Player}, Path=ChannelSearch.IsSearchFinished}" Style="{StaticResource SearchStyle}"/>
 								</Grid>
 								<ListBox x:Name="SearchResultList" Grid.Row="1" Style="{StaticResource SearchResultListStyle}" SelectionChanged="SearchResultList_SelectionChanged" ItemsSource="{Binding Source={StaticResource Player}, Path=ChannelSearch.SearchResult}" />
