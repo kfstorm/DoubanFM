@@ -43,8 +43,12 @@ Website : http://www.kfstorm.com
 					<RadioButton Grid.Column="1" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Content="双行歌词" Margin="0,2"/>
 				</Grid>
 				<StackPanel Margin="0,2">
-					<CheckBox IsChecked="{Binding LyricsSetting.ForceTopMost, ElementName=Window}" Margin="0,2">强力置顶</CheckBox>
-					<TextBlock FontSize="11" TextWrapping="Wrap">开启强力置顶可有效解决桌面歌词置顶失效的问题，但玩较老的全屏游戏时桌面歌词会覆盖在游戏之上；若不开启强力置顶，当某些程序置顶时，桌面歌词的置顶可能会失效，这时可以先关闭桌面歌词，再打开，即可恢复置顶。</TextBlock>
+					<CheckBox IsChecked="{Binding LyricsSetting.ForceTopMost, ElementName=Window}" Margin="0,2">
+						强力置顶
+						<CheckBox.ToolTip>
+							开启强力置顶可有效解决桌面歌词置顶失效的问题，但玩较老的全屏游戏时桌面歌词会覆盖在游戏之上；若不开启强力置顶，当某些程序置顶时，桌面歌词的置顶可能会失效，这时可以先关闭桌面歌词，再打开，即可恢复置顶。
+						</CheckBox.ToolTip>
+					</CheckBox>
 				</StackPanel>
 				<Grid>
 					<Grid.RowDefinitions>

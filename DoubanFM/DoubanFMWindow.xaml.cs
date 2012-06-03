@@ -1110,10 +1110,12 @@ namespace DoubanFM
 		/// <param name="updater">指定的更新器</param>
 		void ShowUpdateWindow(Updater updater = null)
 		{
+			CheckUpdate.IsEnabled = false;
 			UpdateWindow update = new UpdateWindow(updater);
 			update.Closed += new EventHandler((o, e) =>
 			{
 				CheckUpdate.IsEnabled = true;
+				_leftPanelMouseLeaveTimer.Start();
 				if (update.Updater.Now == Updater.State.DownloadCompleted)
 				{
 					App.Current.Exit += new ExitEventHandler((oo, ee) =>
@@ -1781,7 +1783,6 @@ namespace DoubanFM
 
 		private void CheckUpdate_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			CheckUpdate.IsEnabled = false;
 			ShowUpdateWindow();
 		}
 
@@ -1892,16 +1893,16 @@ namespace DoubanFM
 		{
 			ButtonGeneralSetting.IsEnabled = false;
 			GeneralSettingWindow window = new GeneralSettingWindow();
+			window.Closed += delegate { ButtonGeneralSetting.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
 			window.Show();
-			window.Closed += delegate { ButtonGeneralSetting.IsEnabled = true; };
 		}
 
 		private void ButtonUISetting_Click(object sender, RoutedEventArgs e)
 		{
 			ButtonUISetting.IsEnabled = false;
 			UISettingWindow window = new UISettingWindow();
+			window.Closed += delegate { ButtonUISetting.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
 			window.Show();
-			window.Closed += delegate { ButtonUISetting.IsEnabled = true; };
 		}
 
 		private void LyricsSetting_Click(object sender, RoutedEventArgs e)
@@ -1913,16 +1914,16 @@ namespace DoubanFM
 				binding.Source = _player.Settings;
 				window.CbShowLyrics.SetBinding(CheckBox.IsCheckedProperty, binding);
 			}
+			window.Closed += delegate { ButtonLyricsSetting.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
 			window.Show();
-			window.Closed += delegate { ButtonLyricsSetting.IsEnabled = true; };
 		}
 
 		private void ButtonShareSetting_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			ButtonShareSetting.IsEnabled = false;
 			ShareSettingWindow window = new ShareSettingWindow(ShareSetting);
+			window.Closed += delegate { ButtonShareSetting.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
 			window.Show();
-			window.Closed += delegate { ButtonShareSetting.IsEnabled = true; };
 		}
 
 		private void ButtonHotKeySettings_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -1934,6 +1935,7 @@ namespace DoubanFM
 			hotKeyWindow.Closed += new EventHandler((o, ee) =>
 			{
 				ButtonHotKeySettings.IsEnabled = true;
+				_leftPanelMouseLeaveTimer.Start();
 				HotKeys = hotKeyWindow.HotKeys;
 				AddLogicToHotKeys(HotKeys);
 				HotKeys.Register(this);
@@ -1971,7 +1973,7 @@ namespace DoubanFM
 		{
 			BtnHelp.IsEnabled = false;
 			HelpWindow window = new HelpWindow();
-			window.Closed += delegate { BtnHelp.IsEnabled = true; };
+			window.Closed += delegate { BtnHelp.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
 			window.Show();
 		}
 
@@ -2017,8 +2019,10 @@ namespace DoubanFM
 			Core.UrlHelper.OpenLink("http://www.douban.com/accounts/register");
 		}
 
+		bool resetting = false;
 		private void BtnResetSettings_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
+			resetting = true;
 			if (MessageBox.Show("确定要重置所有设置吗？\n重置后软件将自动重启。", "请注意", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
 			{
 				try
@@ -2047,6 +2051,8 @@ namespace DoubanFM
 					MessageBox.Show(ex.Message, "重置设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 			}
+			resetting = false;
+			_leftPanelMouseLeaveTimer.Start();
 		}
 
 		private void BtnDownloadSearch_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -2145,18 +2151,27 @@ namespace DoubanFM
 
 		private void LeftPanel_MouseLeave(object sender, MouseEventArgs e)
 		{
-			_leftPanelMouseLeaveTimer.Start();
+			if (NoChildren()) _leftPanelMouseLeaveTimer.Start();
 		}
-		
+
 		private void LeftPanel_MouseEnter(object sender, MouseEventArgs e)
 		{
 			_leftPanelMouseLeaveTimer.Stop();
 		}
-
 		private void _leftPanelMouseLeaveTimer_Tick(object sender, EventArgs e)
 		{
-			SlideCoverLeftStoryboard.Begin();
+			if (NoChildren())
+			{
+				SlideCoverLeftStoryboard.Begin();
+			}
 			_leftPanelMouseLeaveTimer.Stop();
+		}
+		private bool NoChildren()
+		{
+			if (resetting) return false;
+			List<Window> children = OwnedWindows.OfType<Window>().ToList();
+			children.RemoveAll(win => win is ShadowWindow);
+			return children.Count == 0;
 		}
 
 		#endregion
