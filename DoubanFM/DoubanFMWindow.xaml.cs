@@ -185,63 +185,21 @@ namespace DoubanFM
 
 		public DoubanFMWindow()
 		{
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 进入主窗口构造方法");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " InitializeComponent");
 			InitializeComponent();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " InitializeComponent完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化成员变量");
 			InitMemberVariables();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化成员变量完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置");
 			InitPlayerSettings();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化播放器设置完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除老版本产生的临时文件");
 			ClearOldTempFiles();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除老版本产生的临时文件完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除下载的安装文件");
 			ClearSetupFiles();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 清除下载的安装文件完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 向播放器添加事件处理程序");
+			InitBass();
 			AddPlayerEventListener();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 向播放器添加事件处理程序完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化托盘图标");
 			InitNotifyIcon();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化托盘图标完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer");
 			InitTimers();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化Timer完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件");
 			CheckMappedFile();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化内存映射文件完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 检查自动更新");
 			CheckUpdateOnStartup();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 检查自动更新完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化歌词");
 			InitLyrics();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化歌词完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化分享设置");
 			InitShareSetting();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化分享设置完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化窗口背景");
 			InitBackground();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化窗口背景完成");
-
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化键盘钩子");
 			InitKeyboardHook();
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化键盘钩子完成");
 		}
 
 		/// <summary>
@@ -269,6 +227,8 @@ namespace DoubanFM
 					this.Left = SystemParameters.WorkArea.Right - 50;
 				if (this.Top + 50 > SystemParameters.WorkArea.Bottom)
 					this.Top = SystemParameters.WorkArea.Bottom - 50;
+				if (this.Left < 0) this.Left = 0;
+				if (this.Top < 0) this.Top = 0;
 			}
 		}
 		/// <summary>
@@ -375,6 +335,22 @@ namespace DoubanFM
 				binding.Source = this;
 				binding.Path = new PropertyPath(DoubanFMWindow.OriginalBackgroundColorProperty);
 				BindingOperations.SetBinding(SolidBackground, SolidColorBrush.ColorProperty, binding);
+			}
+		}
+
+		/// <summary>
+		/// 初始化BASS
+		/// </summary>
+		private void InitBass()
+		{
+			try
+			{
+				Bass.BassEngine.ExplicitInitialize();
+			}
+			catch (Bass.BassInitializationFailureException ex)
+			{
+				MessageBox.Show(ex.Message, null, MessageBoxButton.OK, MessageBoxImage.Error);
+				App.Current.Shutdown(0);
 			}
 		}
 

@@ -147,16 +147,6 @@ namespace DoubanFM
 			 * 这样就能强制Global User Interface在FlowDocument上使用大陆的字形。
 			 * */
 			FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.Name)));
-
-			try
-			{
-				Bass.BassEngine.ExplicitInitialize();
-			}
-			catch (Bass.BassInitializationFailureException ex)
-			{
-				MessageBox.Show(ex.Message, null, MessageBoxButton.OK, MessageBoxImage.Error);
-				Shutdown(0);
-			}
 		}
 
 		/// <summary>

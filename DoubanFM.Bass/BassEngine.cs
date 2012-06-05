@@ -541,7 +541,13 @@ namespace DoubanFM.Bass
 
 			IsPlaying = false;
 
-			if (Un4seen.Bass.Bass.BASS_Init(-1, 44100, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero))
+			IntPtr handle = IntPtr.Zero;
+			if (Application.Current.MainWindow != null)
+			{
+				handle = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
+			}
+			
+			if (Un4seen.Bass.Bass.BASS_Init(-1, 44100, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, handle))
 			{
 #if DEBUG
 				Un4seen.Bass.BASS_INFO info = new Un4seen.Bass.BASS_INFO();
