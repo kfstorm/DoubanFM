@@ -136,7 +136,11 @@ namespace DoubanFM
 				var os = DoubanFM.Wmi.OperatingSystem.GetInstance();
 				sb.AppendLine("操作系统：" + string.Format("{0} ({1})", os.Caption, Environment.OSVersion));
 			}
-			catch { }
+			catch
+			{
+				try { sb.AppendLine("操作系统：" + Environment.OSVersion); }
+				catch { }
+			}
 			try
 			{
 				sb.AppendLine("工作目录：" + Environment.CurrentDirectory);

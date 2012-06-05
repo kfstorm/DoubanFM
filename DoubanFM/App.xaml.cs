@@ -80,6 +80,23 @@ namespace DoubanFM
 					Debug.WriteLine("豆瓣电台出现错误：" + App.GetPreciseTime(DateTime.Now));
 					Debug.WriteLine("**********************************************************************");
 
+					try
+					{
+						StringBuilder sb = new StringBuilder();
+						sb.AppendLine(DateTime.Now.ToString());
+						sb.AppendLine(ExceptionWindow.GetSystemInformation());
+						sb.AppendLine(ExceptionWindow.GetExceptionMessage(exceptionObject));
+						
+						string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台\error.log");
+						string directory = Path.GetDirectoryName(path);
+						if (!Directory.Exists(directory))
+						{
+							Directory.CreateDirectory(directory);
+						}
+						File.WriteAllText(path, sb.ToString());
+					}
+					catch { }
+					
 					Dispatcher.Invoke(new Action(() =>
 					{
 						try
