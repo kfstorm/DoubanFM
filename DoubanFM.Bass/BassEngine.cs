@@ -207,6 +207,14 @@ namespace DoubanFM.Bass
 				return instance;
 			}
 		}
+		/// <summary>
+		/// 显式初始化
+		/// </summary>
+		public static void ExplicitInitialize()
+		{
+			if (instance == null)
+				instance = new BassEngine();
+		}
 		#endregion
 
 		#region Public Methods
@@ -533,10 +541,7 @@ namespace DoubanFM.Bass
 
 			IsPlaying = false;
 
-			Window mainWindow = Application.Current.MainWindow;
-			WindowInteropHelper interopHelper = new WindowInteropHelper(mainWindow);
-
-			if (Un4seen.Bass.Bass.BASS_Init(-1, 44100, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, interopHelper.Handle))
+			if (Un4seen.Bass.Bass.BASS_Init(-1, 44100, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero))
 			{
 #if DEBUG
 				Un4seen.Bass.BASS_INFO info = new Un4seen.Bass.BASS_INFO();
@@ -546,9 +551,9 @@ namespace DoubanFM.Bass
 			}
 			else
 			{
-				throw new Exception("音频组件初始化失败： " + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+				throw new BassInitializationFailureException(Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
-
+			
 			Un4seen.Bass.Bass.BASS_SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_TIMEOUT, 15000);
 		}
 
