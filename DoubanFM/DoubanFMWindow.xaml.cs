@@ -223,12 +223,14 @@ namespace DoubanFM
 				this.Top = _player.Settings.LocationTop;
 
 				//防止调整分辨率后窗口超出屏幕
-				if (this.Left + 50 > SystemParameters.WorkArea.Right)
-					this.Left = SystemParameters.WorkArea.Right - 50;
-				if (this.Top + 50 > SystemParameters.WorkArea.Bottom)
-					this.Top = SystemParameters.WorkArea.Bottom - 50;
-				if (this.Left < 0) this.Left = 0;
-				if (this.Top < 0) this.Top = 0;
+				if (this.Left + 300 > SystemParameters.WorkArea.Right)
+					this.Left = SystemParameters.WorkArea.Right - 300;
+				if (this.Top + 300 > SystemParameters.WorkArea.Bottom)
+					this.Top = SystemParameters.WorkArea.Bottom - 300;
+				if (this.Left < SystemParameters.WorkArea.Left)
+					this.Left = SystemParameters.WorkArea.Left;
+				if (this.Top < SystemParameters.WorkArea.Top)
+					this.Top = SystemParameters.WorkArea.Top;
 			}
 		}
 		/// <summary>
