@@ -17,8 +17,12 @@ Website : http://www.kfstorm.com
 	<UserControl.Resources>
 		<Storyboard x:Key="ShowCoverSmooth">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Cover">
-				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
 				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="HideCover">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Cover">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="OnVolumeControlMouseEnter">
@@ -68,7 +72,7 @@ Website : http://www.kfstorm.com
 					</Grid.ColumnDefinitions>
 					<Grid Width="{Binding ActualHeight, ElementName=SongPanel}" Height="{Binding Width}" Margin="0,0,10,0">
 						<Image Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" Stretch="UniformToFill"/>
-						<Image x:Name="Cover" Source="{Binding CurrentSong.Picture, Source={StaticResource Player}}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/>
+						<Image x:Name="Cover" Source="{Binding CurrentSong.Picture, Source={StaticResource Player}}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0"/>
 					</Grid>
 					<Grid x:Name="SongInfo" Grid.Column="1">
 						<Grid.RowDefinitions>

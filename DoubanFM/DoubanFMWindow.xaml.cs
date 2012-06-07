@@ -1256,6 +1256,8 @@ namespace DoubanFM
 				NotifyIcon.ToolTipText = text + dotdotdot;
 			}
 
+			((NotifyIcon.PopupControlPanel)NotifyIcon.TrayPopup).HideCover();
+
 			//延迟弹出气泡
 			CustomBaloon = null;
 			Song lastSong = _player.CurrentSong;

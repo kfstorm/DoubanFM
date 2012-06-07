@@ -41,6 +41,13 @@ namespace DoubanFM.NotifyIcon
 		{
 			((Storyboard)FindResource("ShowCoverSmooth")).Begin();
 		}
+		/// <summary>
+		/// 隐藏封面
+		/// </summary>
+		public void HideCover()
+		{
+			((Storyboard)FindResource("HideCover")).Begin();
+		}
 
 		private Player _player;
 
