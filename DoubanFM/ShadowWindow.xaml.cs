@@ -123,6 +123,7 @@ namespace DoubanFM
 					Init(owner);
 				};
 			}
+			this.LocationChanged += ShadowWindow_LocationChanged;
 		}
 
 		/// <summary>
@@ -172,10 +173,27 @@ namespace DoubanFM
 			this.Height = Owner.ActualHeight + 24 + 24;
 		}
 
+		bool isOwnerLocationChanged = false;
+		object lockObject = new object();
+
 		void Owner_LocationChanged(object sender, EventArgs e)
 		{
-			this.Left = Owner.Left - 24;
-			this.Top = Owner.Top - 24;
+			lock (lockObject)
+			{
+				isOwnerLocationChanged = true;
+				this.Left = Owner.Left - 24;
+				this.Top = Owner.Top - 24;
+				isOwnerLocationChanged = false;
+			}
+		}
+
+		void ShadowWindow_LocationChanged(object sender, EventArgs e)
+		{
+			if (!isOwnerLocationChanged)
+			{
+				this.Left = Owner.Left - 24;
+				this.Top = Owner.Top - 24;
+			}
 		}
 
 		void Owner_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
