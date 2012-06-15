@@ -103,7 +103,7 @@ namespace DoubanFM.Core
 			}
 			try
 			{
-				Password = info.GetString("Password");
+				Password = Encryption.Decrypt(info.GetString("Password"));
 			}
 			catch
 			{
@@ -147,7 +147,7 @@ namespace DoubanFM.Core
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("Username", Username);
-			info.AddValue("Password", Password);
+			info.AddValue("Password", Encryption.Encrypt(Password ?? string.Empty));
 			info.AddValue("Nickname", Nickname);
 			info.AddValue("Played", Played);
 			info.AddValue("Liked", Liked);

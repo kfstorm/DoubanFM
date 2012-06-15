@@ -593,7 +593,7 @@ namespace DoubanFM.Core
 			}
 			try
 			{
-				ProxyPassword = info.GetString("ProxyPassword");
+				ProxyPassword = Encryption.Decrypt(info.GetString("ProxyPassword"));
 			}
 			catch
 			{
@@ -773,7 +773,7 @@ namespace DoubanFM.Core
 			info.AddValue("ProxyHost", ProxyHost);
 			info.AddValue("ProxyPort", ProxyPort);
 			info.AddValue("ProxyUsername", ProxyUsername);
-			info.AddValue("ProxyPassword", ProxyPassword);
+			info.AddValue("ProxyPassword", Encryption.Encrypt(ProxyPassword ?? string.Empty));
 			info.AddValue("AutoBackground", AutoBackground);
 			if (Background != null)
 			{
@@ -816,8 +816,6 @@ namespace DoubanFM.Core
 					BinaryFormatter formatter = new BinaryFormatter();
 					settings = (Settings)formatter.Deserialize(stream);
 				}
-				settings.User.Password = Encryption.Decrypt(settings.User.Password);
-				settings.ProxyPassword = Encryption.Decrypt(settings.ProxyPassword);
 			}
 			catch (Exception ex)
 			{
@@ -835,7 +833,6 @@ namespace DoubanFM.Core
 		internal void Save()
 		{
 			string tempPassword = User.Password;
-			string tempProxyPassword = ProxyPassword;
 			if (!RememberPassword)
 				User.Password = "";
 			Channel tempLastChannel = LastChannel;
@@ -843,8 +840,6 @@ namespace DoubanFM.Core
 
 			try
 			{
-				User.Password = Encryption.Encrypt(User.Password);
-				ProxyPassword = Encryption.Encrypt(ProxyPassword);
 				if (!Directory.Exists(_dataFolder))
 					Directory.CreateDirectory(_dataFolder);
 				using (FileStream stream = File.OpenWrite(Path.Combine(_dataFolder, "Settings.dat")))
@@ -856,7 +851,6 @@ namespace DoubanFM.Core
 			catch { }
 
 			User.Password = tempPassword;
-			ProxyPassword = tempProxyPassword;
 			LastChannel = tempLastChannel;
 		}
 	}

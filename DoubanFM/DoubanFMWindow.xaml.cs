@@ -177,7 +177,7 @@ namespace DoubanFM
 		///// </summary>
 		//private DateTime _lastTimeChangeSong = DateTime.MaxValue;
 
-		public bool SaveSettings = true;
+		public bool willSaveSettings = true;
 
 		#endregion
 
@@ -1218,6 +1218,27 @@ namespace DoubanFM
 			return null;
 		}
 
+		public void SaveSettings()
+		{
+			if (!willSaveSettings) return;
+			if (HotKeys != null)
+			{
+				HotKeys.Save();
+			}
+			if (_lyricsSetting != null)
+			{
+				_lyricsSetting.Save();
+			}
+			if (ShareSetting != null)
+			{
+				ShareSetting.Save();
+			}
+			if (_player != null)
+			{
+				_player.SaveSettings();
+			}
+		}
+
 		/// <summary>
 		/// 更新界面内容，主要是音乐信息。换音乐时自动调用。
 		/// </summary>
@@ -1534,26 +1555,12 @@ namespace DoubanFM
 			if (HotKeys != null)
 			{
 				HotKeys.UnRegister();
-				if (SaveSettings)
-				{
-					HotKeys.Save();
-				}
-			}
-			if (SaveSettings)
-			{
-				if (_lyricsSetting != null)
-				{
-					_lyricsSetting.Save();
-				}
-				if (ShareSetting != null)
-				{
-					ShareSetting.Save();
-				}
 			}
 			if (NotifyIcon != null)
 				NotifyIcon.Dispose();
 			if (_player != null)
-				_player.Dispose(SaveSettings);
+				_player.Dispose();
+			SaveSettings();
 		}
 		/// <summary>
 		/// 更新密码
@@ -2003,6 +2010,7 @@ namespace DoubanFM
 		private void BtnResetSettings_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			resetting = true;
+
 			if (MessageBox.Show("确定要重置所有设置吗？\n重置后软件将自动重启。", "请注意", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
 			{
 				try
@@ -2020,7 +2028,7 @@ namespace DoubanFM
 						Directory.Delete(dataFolder);
 					}
 
-					SaveSettings = false;
+					willSaveSettings = false;
 					_mappedFile.Dispose();
 					//关闭当前程序并启动一个新的程序
 					App.Current.Shutdown();
@@ -2031,6 +2039,69 @@ namespace DoubanFM
 					MessageBox.Show(ex.Message, "重置设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 			}
+
+			resetting = false;
+			_leftPanelMouseLeaveTimer.Start();
+		}
+
+		private void BtnExportSettings_Click(object sender, RoutedEventArgs e)
+		{
+			resetting = true;
+
+			Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+			dialog.AddExtension = true;
+			//dialog.CheckPathExists = true;
+			dialog.DefaultExt = ".zip";
+			dialog.Filter = "zip文件|*.zip";
+			dialog.FileName = "DoubanFMSettings.zip";
+			if (dialog.ShowDialog(this) == true)
+			{
+				try
+				{
+					SaveSettings();
+					string directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
+					FilePackage.CreatePackage(dialog.FileName, directory, "Settings.dat", "cookies.dat", "LyricsSetting.dat", "HotKeys.dat", "ShareSetting.dat");
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+			}
+
+			resetting = false;
+			_leftPanelMouseLeaveTimer.Start();
+		}
+
+		private void BtnImportSettings_Click(object sender, RoutedEventArgs e)
+		{
+			resetting = true;
+
+			Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+			dialog.AddExtension = true;
+			dialog.CheckFileExists = true;
+			dialog.DefaultExt = ".zip";
+			dialog.Filter = "zip文件|*.zip";
+			dialog.FileName = "DoubanFMSettings.zip";
+			if (dialog.ShowDialog(this) == true)
+			{
+				string currentDirectory = Environment.CurrentDirectory;
+				try
+				{
+					string directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
+					FilePackage.ExtractPackage(dialog.FileName, directory);
+
+					willSaveSettings = false;
+					_mappedFile.Dispose();
+					//关闭当前程序并启动一个新的程序
+					App.Current.Shutdown();
+					Process.Start(System.Reflection.Assembly.GetEntryAssembly().GetModules()[0].FullyQualifiedName);
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
+			}
+
 			resetting = false;
 			_leftPanelMouseLeaveTimer.Start();
 		}
@@ -2156,5 +2227,5 @@ namespace DoubanFM
 
 		#endregion
 
-	}
+		}
 }

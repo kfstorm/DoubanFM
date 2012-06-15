@@ -608,12 +608,10 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 保存偏好设置
 		/// </summary>
-		/// <param name="includeCookie">是否包括Cookie</param>
-		public void SaveSettings(bool includeCookie = false)
+		public void SaveSettings()
 		{
 			Settings.Save();
-			if (includeCookie)
-				SaveCookies();
+			SaveCookies();
 		}
 		/// <summary>
 		/// 保存Cookies
@@ -629,21 +627,12 @@ namespace DoubanFM.Core
 		/// 执行与释放或重置非托管资源相关的应用程序定义的任务。
 		/// </summary>
 		/// <param name="saveSettings">是否保存设置</param>
-		public void Dispose(bool saveSettings)
-		{
-			if (disposed) return;
-			if (saveSettings)
-			{
-				SaveSettings();
-				if (UserAssistant.IsLoggedOn && !Settings.AutoLogOnNextTime)
-					UserAssistant.LogOff();
-				SaveCookies();
-			}
-			disposed = true;
-		}
 		public void Dispose()
 		{
-			Dispose(true);
+			if (disposed) return;
+			if (UserAssistant.IsLoggedOn && !Settings.AutoLogOnNextTime)
+				UserAssistant.LogOff();
+			disposed = true;
 		}
 		/// <summary>
 		/// 获取全新的播放列表

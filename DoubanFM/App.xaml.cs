@@ -105,7 +105,7 @@ namespace DoubanFM
 							if (mainWindow != null)
 							{
 								Player player = FindResource("Player") as Player;
-								if (player != null) player.SaveSettings(true);
+								if (player != null) player.SaveSettings();
 								if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
 								if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
 								if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();

@@ -453,7 +453,11 @@ Website : http://www.kfstorm.com
 								<Button Grid.Row="6" x:Name="ButtonHotKeySettings" Click="ButtonHotKeySettings_Click" Content="热键设置"/>
 								<Button Grid.Row="8" x:Name="ButtonShareSetting" Content="分享设置" Click="ButtonShareSetting_Click"/>
 							</Grid>
-							<Button x:Name="BtnResetSettings" Grid.Row="1" Width="100" Content="重置所有设置" Click="BtnResetSettings_Click"/>
+							<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+								<Button x:Name="BtnImportSettings" Content="导入" MinWidth="50" Click="BtnImportSettings_Click" Margin="0,0,10,0"/>
+								<Button x:Name="BtnExportSettings" Content="导出" MinWidth="50" Click="BtnExportSettings_Click" Margin="0,0,10,0"/>
+								<Button x:Name="BtnResetSettings" Content="重置" MinWidth="50" Click="BtnResetSettings_Click"/>
+							</StackPanel>
 						</Grid>			
 					</TabItem>
 					<TabItem Header="{StaticResource TabItemInfo}">

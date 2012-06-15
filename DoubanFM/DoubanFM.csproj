@@ -110,6 +110,7 @@
     <Compile Include="ColorPicker\PopupableColorPicker.xaml.cs">
       <DependentUpon>PopupableColorPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FilePackage.cs" />
     <Compile Include="Interop\DWM_BLURBEHIND.cs" />
     <Compile Include="Interop\DWM_THUMBNAIL_PROPERTIES.cs" />
     <Compile Include="Interop\GWL.cs" />
