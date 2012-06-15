@@ -1174,15 +1174,16 @@ namespace DoubanFM
 		private void ShowDjChannels(string searchText, int count = 10)
 		{
 			if (!_player.IsInitialized) return;			//电台未初始化完成
-			string[] words = null;
+			string[] words = new string[0];
 			if (searchText != null)
 			{
+				searchText = searchText.ToLower();
 				words = (from word in searchText.Split() where word.Length > 0 select word).ToArray();
 			}
 			filteredDjChannels.Clear();
 			filteredDjChannels.AddRange(
 				from channel in _player.ChannelInfo.Dj
-				where words.All(word => channel.Name.Contains(word))
+				where words.All(word => channel.Name.ToLower().Contains(word))
 				select channel);
 
 			ScrollViewer scrollViewer = FindVisualChild<ScrollViewer>(DjChannels);
