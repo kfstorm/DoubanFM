@@ -129,9 +129,9 @@ namespace DoubanFM.Bass
 			//...
 		}
 
-		private BassEngine()
+		private BassEngine(DeviceInfo? deviceInfo = null)
 		{
-			Initialize();
+			Initialize(deviceInfo);
 			//设置播放结束的回调
 			endTrackSyncProc = EndTrack;
 		}
@@ -210,14 +210,77 @@ namespace DoubanFM.Bass
 		/// <summary>
 		/// 显式初始化
 		/// </summary>
-		public static void ExplicitInitialize()
+		public static void ExplicitInitialize(DeviceInfo? deviceInfo = null)
 		{
 			if (instance == null)
-				instance = new BassEngine();
+				instance = new BassEngine(deviceInfo);
 		}
 		#endregion
 
 		#region Public Methods
+
+		/// <summary>
+		/// 获取设备列表
+		/// </summary>
+		/// <returns></returns>
+		public static DeviceInfo[] GetDeviceInfos()
+		{
+			List<DeviceInfo> results = new List<DeviceInfo>();
+			var devices = Un4seen.Bass.Bass.BASS_GetDeviceInfos().ToList();
+			foreach (var device in devices)
+			{
+				if (device.IsEnabled && devices.IndexOf(device) != 0)
+				{
+					results.Add(new DeviceInfo { ID = device.id, Name = device.name, Driver = device.driver });
+				}
+			}
+			return results.ToArray();
+		}
+		/// <summary>
+		/// 更换设备
+		/// </summary>
+		public void ChangeDevice(DeviceInfo? device)
+		{
+			int deviceNO = FindDevice(device);
+			int oldDeviceNO = Un4seen.Bass.Bass.BASS_GetDevice();
+			if (oldDeviceNO != deviceNO)
+			{
+				if (!Un4seen.Bass.Bass.BASS_GetDeviceInfo(deviceNO).IsInitialized)
+				{
+					IntPtr handle = IntPtr.Zero;
+					if (Application.Current.MainWindow != null)
+					{
+						handle = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
+					}
+					if (!Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, handle))
+					{
+						throw new Exception(Un4seen.Bass.Bass.BASS_ErrorGetCode().ToString());
+					}
+				}
+				if (activeStreamHandle != 0)
+				{
+					if (!Un4seen.Bass.Bass.BASS_ChannelSetDevice(activeStreamHandle, deviceNO))
+					{
+						throw new Exception(Un4seen.Bass.Bass.BASS_ErrorGetCode().ToString());
+					}
+				}
+				if (!Un4seen.Bass.Bass.BASS_SetDevice(oldDeviceNO))
+				{
+					throw new Exception(Un4seen.Bass.Bass.BASS_ErrorGetCode().ToString());
+				}
+				if (!Un4seen.Bass.Bass.BASS_Free())
+				{
+					throw new Exception(Un4seen.Bass.Bass.BASS_ErrorGetCode().ToString());
+				}
+				if (!Un4seen.Bass.Bass.BASS_SetDevice(deviceNO))
+				{
+					throw new Exception(Un4seen.Bass.Bass.BASS_ErrorGetCode().ToString());
+				}
+				
+			}
+			Device = device;
+		}
+
 		/// <summary>
 		/// 停止当前音频，并释放资源
 		/// </summary>
@@ -532,9 +595,77 @@ namespace DoubanFM.Bass
 
 		#region Private Utility Methods
 		/// <summary>
+		/// 查找设备的序号
+		/// </summary>
+		/// <param name="device">要查找的设备</param>
+		/// <param name="returnDefault">当找不到设备时，是否返回默认设备的序号</param>
+		/// <returns></returns>
+		private static int FindDevice(DeviceInfo? device, bool returnDefault = false)
+		{
+
+
+			if (device.HasValue)
+			{
+				int deviceNO = -1;
+				var devices = Un4seen.Bass.Bass.BASS_GetDeviceInfos();
+				var filteredDevices = from d in devices where d.id != null && d.id == device.Value.ID select Array.IndexOf(devices, d);
+				if (filteredDevices.Count() == 1)
+				{
+					deviceNO = filteredDevices.First();
+				}
+				if (deviceNO == -1)
+				{
+					filteredDevices = from d in devices where d.name == device.Value.Name select Array.IndexOf(devices, d);
+					if (filteredDevices.Count() == 1)
+					{
+						deviceNO = filteredDevices.First();
+					}
+				}
+				if (deviceNO == -1)
+				{
+					filteredDevices = from d in devices where d.driver == device.Value.Driver select Array.IndexOf(devices, d);
+					if (filteredDevices.Count() == 1)
+					{
+						deviceNO = filteredDevices.First();
+					}
+				}
+				if (deviceNO == -1 && returnDefault)
+				{
+					return FindDefaultDevice();
+				}
+				else if (deviceNO != -1)
+				{
+					return deviceNO;
+				}
+				else
+				{
+					throw new Exception("找不到此设备：" + device.Value.Name);
+				}
+			}
+			else
+			{
+				return FindDefaultDevice();
+			}
+		}
+
+		/// <summary>
+		/// 返回默认设备的序号
+		/// </summary>
+		/// <returns></returns>
+		private static int FindDefaultDevice()
+		{
+			var devices = Un4seen.Bass.Bass.BASS_GetDeviceInfos();
+			for (int i = 0; i < devices.Length; ++i)
+			{
+				if (devices[i].IsDefault) return i;
+			}
+			throw new Exception("没有默认设备");
+		}
+
+		/// <summary>
 		/// 初始化BassEngine
 		/// </summary>
-		private void Initialize()
+		private void Initialize(DeviceInfo? device = null)
 		{
 			positionTimer.Interval = TimeSpan.FromMilliseconds(50);
 			positionTimer.Tick += positionTimer_Tick;
@@ -546,20 +677,35 @@ namespace DoubanFM.Bass
 			{
 				handle = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
 			}
-			
-			if (Un4seen.Bass.Bass.BASS_Init(-1, 44100, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, handle))
+
+			int deviceNO = FindDevice(device, true);
+			if (!Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, handle))
 			{
-#if DEBUG
-				Un4seen.Bass.BASS_INFO info = new Un4seen.Bass.BASS_INFO();
-				Un4seen.Bass.Bass.BASS_GetInfo(info);
-				Debug.WriteLine(info.ToString());
-#endif
+				var error = Un4seen.Bass.Bass.BASS_ErrorGetCode();
+				int count = Un4seen.Bass.Bass.BASS_GetDeviceCount();
+				for (deviceNO = -1; deviceNO < count; ++deviceNO)
+				{
+					if (deviceNO != 0 && Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, handle))
+					{
+						break;
+					}
+				}
+				if (deviceNO == count)
+				{
+					throw new BassInitializationFailureException(error);
+				}
+			}
+
+			if (device == null && deviceNO == FindDefaultDevice())
+			{
+				Device = null;
 			}
 			else
 			{
-				throw new BassInitializationFailureException(Un4seen.Bass.Bass.BASS_ErrorGetCode());
+				var info = Un4seen.Bass.Bass.BASS_GetDeviceInfo(Un4seen.Bass.Bass.BASS_GetDevice());
+				Device = new DeviceInfo { Driver = info.driver, Name = info.name, ID = info.id };
 			}
-			
+
 			Un4seen.Bass.Bass.BASS_SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_TIMEOUT, 15000);
 		}
 
@@ -788,6 +934,11 @@ namespace DoubanFM.Bass
 				}
 			}
 		}
+
+		/// <summary>
+		/// 设备（空代表默认设备）
+		/// </summary>
+		public DeviceInfo? Device { get; private set; }
 		#endregion
 
 		#region Events

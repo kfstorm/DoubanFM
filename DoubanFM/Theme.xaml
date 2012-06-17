@@ -607,6 +607,7 @@ Website : http://www.kfstorm.com
 			</Setter.Value>
 		</Setter>
 		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 		<Setter Property="BorderThickness" Value="0"/>
 		<Style.Triggers>
 			<Trigger Property="IsMouseOver" Value="True">

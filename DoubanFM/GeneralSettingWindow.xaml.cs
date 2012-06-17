@@ -51,6 +51,20 @@ namespace DoubanFM
 			}
 
 			PbProxyPassword.Password = player.Settings.ProxyPassword;
+
+			CbOutputDevice.Items.Add("默认");
+			foreach (var device in Bass.BassEngine.GetDeviceInfos())
+			{
+				CbOutputDevice.Items.Add(device);
+			}
+			if (Bass.BassEngine.Instance.Device == null)
+			{
+				CbOutputDevice.SelectedIndex = 0;
+			}
+			else
+			{
+				CbOutputDevice.SelectedItem = Bass.BassEngine.Instance.Device;
+			}
 		}
 
 		private void BtnApplyProxy_Click(object sender, RoutedEventArgs e)
@@ -103,6 +117,29 @@ namespace DoubanFM
 		private void PbProxyPassword_PasswordChanged(object sender, RoutedEventArgs e)
 		{
 			player.Settings.ProxyPassword = PbProxyPassword.Password;
+		}
+
+		private void CbOutputDevice_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			try
+			{
+				if (e.AddedItems.Count > 0 && e.AddedItems[0] is Bass.DeviceInfo)
+				{
+					(Application.Current.MainWindow as DoubanFMWindow).ChangeOutputDevice((Bass.DeviceInfo)e.AddedItems[0]);
+				}
+				else
+				{
+					(Application.Current.MainWindow as DoubanFMWindow).ChangeOutputDevice(null);
+				}
+			}
+			catch (Exception ex)
+			{
+				if (e.RemovedItems.Count > 0)
+				{
+					CbOutputDevice.SelectedItem = e.RemovedItems[0];
+				}
+				MessageBox.Show(ex.Message, null, MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 	}
 }

@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="BassEngine.cs" />
     <Compile Include="BassInitializationFailureException.cs" />
+    <Compile Include="DeviceInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

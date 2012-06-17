@@ -347,7 +347,8 @@ namespace DoubanFM
 		{
 			try
 			{
-				Bass.BassEngine.ExplicitInitialize();
+				Bass.BassEngine.ExplicitInitialize(_player.Settings.Device);
+				_player.Settings.Device = Bass.BassEngine.Instance.Device;
 			}
 			catch (Bass.BassInitializationFailureException ex)
 			{
@@ -884,6 +885,15 @@ namespace DoubanFM
 		#endregion
 
 		#region 其他
+		/// <summary>
+		/// 更换输出设备
+		/// </summary>
+		/// <param name="device">设备</param>
+		internal void ChangeOutputDevice(DeviceInfo? device)
+		{
+			Bass.BassEngine.Instance.ChangeDevice(device);
+			_player.Settings.Device = Bass.BassEngine.Instance.Device;
+		}
 		/// <summary>
 		/// 应用当前代理设置
 		/// </summary>
@@ -1839,9 +1849,6 @@ namespace DoubanFM
 			InitProxy();
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化代理设置完成");
 
-			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
-			_player.Initialize();
-
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置");
 			//加载热键设置
 			HotKeys = HotKeys.Load();
@@ -1875,6 +1882,9 @@ namespace DoubanFM
 			_progressRefreshTimer.Start();
 
 			lastTimeRightPanelMouseMove = DateTime.Now;
+
+			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器");
+			_player.Initialize();
 		}
 
 		private void ButtonGeneralSetting_Click(object sender, RoutedEventArgs e)

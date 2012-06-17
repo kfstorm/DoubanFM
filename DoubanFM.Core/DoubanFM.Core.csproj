@@ -87,6 +87,12 @@
     <Compile Include="Player\UserAssistant.cs" />
     <Compile Include="UrlHelper.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DoubanFM.Bass\DoubanFM.Bass.csproj">
+      <Project>{62324cfd-03ff-44b4-9204-66bae86972b6}</Project>
+      <Name>DoubanFM.Bass</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

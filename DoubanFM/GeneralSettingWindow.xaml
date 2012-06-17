@@ -14,6 +14,14 @@ Website : http://www.kfstorm.com
 		<CheckBox x:Name="CheckBoxAdjustVolumeWithMouseWheel" Content="鼠标滚轮调节音量" IsChecked="{Binding Settings.AdjustVolumeWithMouseWheel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+		<Grid Margin="0,2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Margin="0,0,10,0" VerticalAlignment="Center">输出设备</TextBlock>
+			<ComboBox x:Name="CbOutputDevice" Grid.Column="1" SelectionChanged="CbOutputDevice_SelectionChanged"/>
+		</Grid>
 		<GroupBox Margin="0,2" Header="下载搜索设置">
 			<StackPanel>
 				<CheckBox Margin="0,2" IsChecked="{Binding Settings.SearchAlbum, Source={StaticResource Player}}">搜索下载时包括专辑信息</CheckBox>

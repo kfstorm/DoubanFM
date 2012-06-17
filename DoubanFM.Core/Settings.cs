@@ -13,6 +13,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Media;
+using DoubanFM.Bass;
 
 namespace DoubanFM.Core
 {
@@ -63,7 +64,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty UserKeyProperty = DependencyProperty.Register("UserKey", typeof(string), typeof(Settings), new PropertyMetadata(Guid.NewGuid().ToString("N")));
 		public static readonly DependencyProperty FavoriteChannelsProperty = DependencyProperty.Register("FavoriteChannels", typeof(List<Channel>), typeof(Settings), new PropertyMetadata(new List<Channel>()));
 		public static readonly DependencyProperty LastTimeLoggedOnProperty = DependencyProperty.Register("LastTimeLoggedOn", typeof(bool), typeof(Settings), new PropertyMetadata(false));
-		
+		public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceInfo?), typeof(Settings), new PropertyMetadata(null));
 		#endregion
 
 		#region ProxyKinds
@@ -408,6 +409,15 @@ namespace DoubanFM.Core
 		}
 
 		/// <summary>
+		/// 设备（空代表默认设备）
+		/// </summary>
+		public DeviceInfo? Device
+		{
+			get { return (DeviceInfo?)GetValue(DeviceProperty); }
+			set { SetValue(DeviceProperty, value); }
+		}
+
+		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
 		private static string _dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
@@ -422,140 +432,41 @@ namespace DoubanFM.Core
 			: this("", "") { }
 
 		protected Settings(SerializationInfo info, StreamingContext context)
+			:this()
 		{
-			Settings def = new Settings();
-			try
-			{
-				User = (User)info.GetValue("User", typeof(User));
-			}
-			catch
-			{
-				User = def.User;
-			}
-			try
-			{
-				RememberPassword = info.GetBoolean("RememberPassword");
-			}
-			catch
-			{
-				RememberPassword = def.RememberPassword;
-			}
-			try
-			{
-				AutoLogOnNextTime = info.GetBoolean("AutoLogOnNextTime");
-			}
-			catch
-			{
-				AutoLogOnNextTime = def.AutoLogOnNextTime;
-			}
-			try
-			{
-				RememberLastChannel = info.GetBoolean("RememberLastChannel");
-			}
-			catch
-			{
-				RememberLastChannel = def.RememberLastChannel;
-			}
-			try
-			{
-				LastChannel = (Channel)info.GetValue("LastChannel", typeof(Channel));
-			}
-			catch
-			{
-				LastChannel = def.LastChannel;
-			}
-			try
-			{
-				IsMuted = info.GetBoolean("IsMuted");
-			}
-			catch
-			{
-				IsMuted = def.IsMuted;
-			}
-			try
-			{
-				Volume = info.GetDouble("Volume");
-			}
-			catch
-			{
-				Volume = def.Volume;
-			}
-			try
-			{
-				SlideCoverWhenMouseMove = info.GetBoolean("SlideCoverWhenMouseMove");
-			}
-			catch
-			{
-				SlideCoverWhenMouseMove = def.SlideCoverWhenMouseMove;
-			}
-			try
-			{
-				AlwaysShowNotifyIcon = info.GetBoolean("AlwaysShowNotifyIcon");
-			}
-			catch
-			{
-				AlwaysShowNotifyIcon = def.AlwaysShowNotifyIcon;
-			}
-			try
-			{
-				AutoUpdate = info.GetBoolean("AutoUpdate");
-			}
-			catch
-			{
-				AutoUpdate = def.AutoUpdate;
-			}
-			try
-			{
-				LastTimeCheckUpdate = info.GetDateTime("LastTimeCheckUpdate");
-			}
-			catch
-			{
-				LastTimeCheckUpdate = def.LastTimeCheckUpdate;
-			}
-			try
-			{
-				OpenAlbumInfoWhenClickCover = info.GetBoolean("OpenAlbumInfoWhenClickCover");
-			}
-			catch
-			{
-				OpenAlbumInfoWhenClickCover = def.OpenAlbumInfoWhenClickCover;
-			}
-			try
-			{
-				IsSearchFilterEnabled = info.GetBoolean("IsSearchFilterEnabled");
-			}
-			catch
-			{
-				IsSearchFilterEnabled = def.IsSearchFilterEnabled;
-			}
-			try
-			{
-				ShowLyrics = info.GetBoolean("ShowLyrics");
-			}
-			catch
-			{
-				ShowLyrics = def.ShowLyrics;
-			}
-			try
-			{
-				TopMost = info.GetBoolean("TopMost");
-			}
-			catch
-			{
-				TopMost = def.TopMost;
-			}
-			try
-			{
-				ScaleTransform = info.GetDouble("ScaleTransform");
-			}
-			catch
-			{
-				ScaleTransform = def.ScaleTransform;
-			}
-			try
-			{
-				ProxyKind = info.GetBoolean("EnableProxy") ? ProxyKinds.Custom : ProxyKinds.Default;
-			}
+			try { User = (User)info.GetValue("User", typeof(User)); }
+			catch { }
+			try { RememberPassword = info.GetBoolean("RememberPassword"); }
+			catch { }
+			try { AutoLogOnNextTime = info.GetBoolean("AutoLogOnNextTime"); }
+			catch { }
+			try { RememberLastChannel = info.GetBoolean("RememberLastChannel"); }
+			catch { }
+			try { LastChannel = (Channel)info.GetValue("LastChannel", typeof(Channel)); }
+			catch { }
+			try { IsMuted = info.GetBoolean("IsMuted"); }
+			catch { }
+			try { Volume = info.GetDouble("Volume"); }
+			catch { }
+			try { SlideCoverWhenMouseMove = info.GetBoolean("SlideCoverWhenMouseMove"); }
+			catch { }
+			try { AlwaysShowNotifyIcon = info.GetBoolean("AlwaysShowNotifyIcon"); }
+			catch { }
+			try { AutoUpdate = info.GetBoolean("AutoUpdate"); }
+			catch { }
+			try { LastTimeCheckUpdate = info.GetDateTime("LastTimeCheckUpdate"); }
+			catch { }
+			try { OpenAlbumInfoWhenClickCover = info.GetBoolean("OpenAlbumInfoWhenClickCover"); }
+			catch { }
+			try { IsSearchFilterEnabled = info.GetBoolean("IsSearchFilterEnabled"); }
+			catch { }
+			try { ShowLyrics = info.GetBoolean("ShowLyrics"); }
+			catch { }
+			try { TopMost = info.GetBoolean("TopMost"); }
+			catch { }
+			try { ScaleTransform = info.GetDouble("ScaleTransform"); }
+			catch { }
+			try { ProxyKind = info.GetBoolean("EnableProxy") ? ProxyKinds.Custom : ProxyKinds.Default; }
 			catch
 			{
 				try
@@ -567,182 +478,53 @@ namespace DoubanFM.Core
 					ProxyKind = ProxyKinds.Default;
 				}
 			}
-			try
-			{
-				ProxyHost = info.GetString("ProxyHost");
-			}
-			catch
-			{
-				ProxyHost = def.ProxyHost;
-			}
-			try
-			{
-				ProxyPort = info.GetInt32("ProxyPort");
-			}
-			catch
-			{
-				ProxyPort = def.ProxyPort;
-			}
-			try
-			{
-				ProxyUsername = info.GetString("ProxyUsername");
-			}
-			catch
-			{
-				ProxyUsername = def.ProxyUsername;
-			}
-			try
-			{
-				ProxyPassword = Encryption.Decrypt(info.GetString("ProxyPassword"));
-			}
-			catch
-			{
-				ProxyPassword = def.ProxyPassword;
-			}
-			try
-			{
-				AutoBackground = info.GetBoolean("AutoBackground");
-			}
-			catch
-			{
-				AutoBackground = def.AutoBackground;
-			}
-			try
-			{
-				Background = (Color)ColorConverter.ConvertFromString(info.GetString("Background"));
-			}
-			catch
-			{
-				Background = def.Background;
-			}
-			try
-			{
-				FirstTime = info.GetBoolean("FirstTime");
-			}
-			catch
-			{
-				FirstTime = def.FirstTime;
-			}
-			try
-			{
-				MainWindowFont = new FontFamily(info.GetString("MainWindowFont"));
-			}
-			catch
-			{
-				MainWindowFont = def.MainWindowFont;
-			}
-			try
-			{
-				ShowBalloonWhenSongChanged = info.GetBoolean("ShowBalloonWhenSongChanged");
-			}
-			catch
-			{
-				ShowBalloonWhenSongChanged = def.ShowBalloonWhenSongChanged;
-			}
-			try
-			{
-				BackgroundTransparency = info.GetDouble("BackgroundTransparency");
-			}
-			catch
-			{
-				BackgroundTransparency = def.BackgroundTransparency;
-			}
-			try
-			{
-				DownloadSite = (DownloadSite)info.GetValue("DownloadSite", typeof(DownloadSite));
-			}
-			catch
-			{
-				DownloadSite = def.DownloadSite;
-			}
-			try
-			{
-				TrimBrackets = info.GetBoolean("TrimBrackets");
-			}
-			catch
-			{
-				TrimBrackets = def.TrimBrackets;
-			}
-			try
-			{
-				SearchAlbum = info.GetBoolean("SearchAlbum");
-			}
-			catch
-			{
-				SearchAlbum = def.SearchAlbum;
-			}
-			try
-			{
-				LocationLeft = info.GetDouble("LocationLeft");
-			}
-			catch
-			{
-				LocationLeft = def.LocationLeft;
-			}
-			try
-			{
-				LocationTop = info.GetDouble("LocationTop");
-			}
-			catch
-			{
-				LocationTop = def.LocationTop;
-			}
-			try
-			{
-				SpectrumColor = (Color)ColorConverter.ConvertFromString(info.GetString("SpectrumColor"));
-			}
-			catch
-			{
-				SpectrumColor = def.SpectrumColor;
-			}
-			try
-			{
-				SpectrumTransparency = info.GetDouble("SpectrumTransparency");
-			}
-			catch
-			{
-				SpectrumTransparency = def.SpectrumTransparency;
-			}
-			try
-			{
-				ShowSpectrum = info.GetBoolean("ShowSpectrum");
-			}
-			catch
-			{
-				ShowSpectrum = def.ShowSpectrum;
-			}
-			try
-			{
-				AdjustVolumeWithMouseWheel = info.GetBoolean("AdjustVolumeWithMouseWheel");
-			}
-			catch
-			{
-				AdjustVolumeWithMouseWheel = def.AdjustVolumeWithMouseWheel;
-			}
-			try
-			{
-				UserKey = info.GetString("UserKey");
-			}
-			catch
-			{
-				UserKey = def.UserKey;
-			}
-			try
-			{
-				FavoriteChannels = (List<Channel>)info.GetValue("FavoriteChannels", typeof(List<Channel>));
-			}
-			catch
-			{
-				FavoriteChannels = def.FavoriteChannels;
-			}
-			try
-			{
-				LastTimeLoggedOn = info.GetBoolean("LastTimeLoggedOn");
-			}
-			catch
-			{
-				LastTimeLoggedOn = true;
-			}
+			try { ProxyHost = info.GetString("ProxyHost"); }
+			catch { }
+			try { ProxyPort = info.GetInt32("ProxyPort"); }
+			catch { }
+			try { ProxyUsername = info.GetString("ProxyUsername"); }
+			catch { }
+			try { ProxyPassword = Encryption.Decrypt(info.GetString("ProxyPassword")); }
+			catch { }
+			try { AutoBackground = info.GetBoolean("AutoBackground"); }
+			catch { }
+			try { Background = (Color)ColorConverter.ConvertFromString(info.GetString("Background")); }
+			catch { }
+			try { FirstTime = info.GetBoolean("FirstTime"); }
+			catch { }
+			try { MainWindowFont = new FontFamily(info.GetString("MainWindowFont")); }
+			catch { }
+			try { ShowBalloonWhenSongChanged = info.GetBoolean("ShowBalloonWhenSongChanged"); }
+			catch { }
+			try { BackgroundTransparency = info.GetDouble("BackgroundTransparency"); }
+			catch { }
+			try { DownloadSite = (DownloadSite)info.GetValue("DownloadSite", typeof(DownloadSite)); }
+			catch { }
+			try { TrimBrackets = info.GetBoolean("TrimBrackets"); }
+			catch { }
+			try { SearchAlbum = info.GetBoolean("SearchAlbum"); }
+			catch { }
+			try { LocationLeft = info.GetDouble("LocationLeft"); }
+			catch { }
+			try { LocationTop = info.GetDouble("LocationTop"); }
+			catch { }
+			try { SpectrumColor = (Color)ColorConverter.ConvertFromString(info.GetString("SpectrumColor")); }
+			catch { }
+			try { SpectrumTransparency = info.GetDouble("SpectrumTransparency"); }
+			catch { }
+			try { ShowSpectrum = info.GetBoolean("ShowSpectrum"); }
+			catch { }
+			try { AdjustVolumeWithMouseWheel = info.GetBoolean("AdjustVolumeWithMouseWheel"); }
+			catch { }
+			try { UserKey = info.GetString("UserKey"); }
+			catch { }
+			try { FavoriteChannels = (List<Channel>)info.GetValue("FavoriteChannels", typeof(List<Channel>)); }
+			catch { }
+			try { LastTimeLoggedOn = info.GetBoolean("LastTimeLoggedOn"); }
+			catch { }
+			try { Device = (DeviceInfo?)info.GetValue("Device", typeof(DeviceInfo?)); }
+			catch { }
+			
 			//向下兼容
 			if (!AutoBackground && Background.A != 255)
 			{
@@ -801,6 +583,7 @@ namespace DoubanFM.Core
 			info.AddValue("UserKey", UserKey);
 			info.AddValue("FavoriteChannels", FavoriteChannels);
 			info.AddValue("LastTimeLoggedOn", LastTimeLoggedOn);
+			info.AddValue("Device", Device);
 		}
 
 		/// <summary>
