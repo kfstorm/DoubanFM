@@ -119,8 +119,11 @@ namespace DoubanFM
 			player.Settings.ProxyPassword = PbProxyPassword.Password;
 		}
 
+		bool error = false;
+
 		private void CbOutputDevice_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
+			if (error) return;
 			try
 			{
 				if (e.AddedItems.Count > 0 && e.AddedItems[0] is Bass.DeviceInfo)
@@ -134,11 +137,13 @@ namespace DoubanFM
 			}
 			catch (Exception ex)
 			{
+				error = true;
 				if (e.RemovedItems.Count > 0)
 				{
 					CbOutputDevice.SelectedItem = e.RemovedItems[0];
 				}
 				MessageBox.Show(ex.Message, null, MessageBoxButton.OK, MessageBoxImage.Error);
+				error = false;
 			}
 		}
 	}

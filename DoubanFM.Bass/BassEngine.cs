@@ -127,6 +127,8 @@ namespace DoubanFM.Bass
 			//...
 			//loadedPlugIns = Bass.BASS_PluginLoadDirectory(targetPath);
 			//...
+
+			Un4seen.Bass.Bass.BASS_SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_DEV_DEFAULT, true);
 		}
 
 		private BassEngine(DeviceInfo? deviceInfo = null)
@@ -229,7 +231,7 @@ namespace DoubanFM.Bass
 			var devices = Un4seen.Bass.Bass.BASS_GetDeviceInfos().ToList();
 			foreach (var device in devices)
 			{
-				if (device.IsEnabled && devices.IndexOf(device) != 0)
+				if (device.IsEnabled && !string.Equals(device.name, "No sound", StringComparison.CurrentCultureIgnoreCase) && !string.Equals(device.name, "Default", StringComparison.CurrentCultureIgnoreCase))
 				{
 					results.Add(new DeviceInfo { ID = device.id, Name = device.name, Driver = device.driver });
 				}

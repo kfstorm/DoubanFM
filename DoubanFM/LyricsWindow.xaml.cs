@@ -62,11 +62,14 @@ namespace DoubanFM
 		/// </summary>
 		private Storyboard ChangeLyricsStoryboard, HideLyricsStoryboard;
 
+		private Geometry _wrongFontGeometry;
+
 		public LyricsWindow(LyricsSetting lyricsSetting = null)
 		{
 			this.InitializeComponent();
 
 			// 在此点之下插入创建对象所需的代码。
+			_wrongFontGeometry = (Geometry)FindResource("WrongFontGeometry");
 			LyricsSetting = lyricsSetting;
 
 			ChangeLyricsStoryboard = (Storyboard)FindResource("ChangeLyricsStoryboard");
@@ -399,17 +402,24 @@ namespace DoubanFM
 		/// </summary>
 		public Geometry CreateText(string text)
 		{
-			// Create the formatted text based on the properties set.
-			Geometry geometry = new FormattedText(
-				text == null ? "" : text,
-				CultureInfo.GetCultureInfo("zh-cn"),
-				FlowDirection.LeftToRight,
-				new Typeface(LyricsFontFamily == null ? SystemFonts.MessageFontFamily : LyricsFontFamily, FontStyles.Normal, LyricsFontWeight, FontStretches.Normal),
-				LyricsFontSize,
-				System.Windows.Media.Brushes.Black // This brush does not matter since we use the geometry of the text. 
-				).BuildGeometry(new System.Windows.Point(0, 0));
-			if (geometry.CanFreeze) geometry.Freeze();
-			return geometry;
+			try
+			{
+				// Create the formatted text based on the properties set.
+				Geometry geometry = new FormattedText(
+					text == null ? "" : text,
+					CultureInfo.GetCultureInfo("zh-cn"),
+					FlowDirection.LeftToRight,
+					new Typeface(LyricsFontFamily == null ? SystemFonts.MessageFontFamily : LyricsFontFamily, FontStyles.Normal, LyricsFontWeight, FontStretches.Normal),
+					LyricsFontSize,
+					System.Windows.Media.Brushes.Black // This brush does not matter since we use the geometry of the text. 
+					).BuildGeometry(new System.Windows.Point(0, 0));
+				if (geometry.CanFreeze) geometry.Freeze();
+				return geometry;
+			}
+			catch
+			{
+				return _wrongFontGeometry;
+			}
 		}
 
 		#endregion
