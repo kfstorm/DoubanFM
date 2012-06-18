@@ -20,7 +20,7 @@ Website : http://www.kfstorm.com
 	</Window.Resources>
 	<StackPanel Margin="10" Width="300" >
 		<local:HotKeySettingControl Command="Like" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="加红心（不取消）"/></TextBlock>
+			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="喜欢（不取消）"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="Never" Height="20" Margin="0,2">
 			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="不再播放"/></TextBlock>

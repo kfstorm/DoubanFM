@@ -184,6 +184,7 @@ Website : http://www.kfstorm.com
 		<Style.Triggers>
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="Foreground" Value="#DFE75849"/>
+				<Setter Property="ToolTip" Value="取消喜欢"/>
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Foreground" Value="#7F000000"/>

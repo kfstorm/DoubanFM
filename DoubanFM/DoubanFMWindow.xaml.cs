@@ -479,11 +479,13 @@ namespace DoubanFM
 					if (_player.IsLiked)
 					{
 						LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
+						LikeThumb.Description = "取消喜欢";
 						//NotifyIcon_Heart.Image = NotifyIconImage_Like_Like;
 					}
 					else
 					{
 						LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+						LikeThumb.Description = "喜欢";
 						//NotifyIcon_Heart.Image = NotifyIconImage_Like_Unlike;
 					}
 				else
