@@ -1154,7 +1154,7 @@ namespace DoubanFM
 			PersonalChannels.SelectedItem = PersonalChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
 			PublicChannels.SelectedItem = PublicChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
 			DjChannels.SelectedItem = DjChannels.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
-			SearchResultList.SelectedItem = SearchResultList.Items.OfType<Channel>().FirstOrDefault(x => x == _player.CurrentChannel);
+			SearchResultList.SelectedItem = SearchResultList.Items.OfType<ChannelSearchItem>().FirstOrDefault(x => x.GetChannel() == _player.CurrentChannel);
 			Channel PersonalNew = PersonalChannels.SelectedItem as Channel;
 			Channel PublicNew = PublicChannels.SelectedItem as Channel;
 			Channel DjNew = DjChannels.SelectedItem as Channel;

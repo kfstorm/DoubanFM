@@ -262,13 +262,19 @@ namespace DoubanFM.Core
 				{
 					string temp = mm.Groups[0].Value;
 					string titleTemp = Regex.Match(temp, @"<a.*?class=\""nbg\"".*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
+					string subject = Regex.Match(titleTemp, @"href=\"".*?subject/(\d+)", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
 					string title = Regex.Match(titleTemp, @".*?title=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
 					string link = Regex.Match(titleTemp, @".*?href=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
 					string pictureTemp = Regex.Match(temp, @"<img.*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
 					string picture = Regex.Match(pictureTemp, @".*?src=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
 					Match ma = Regex.Match(temp, @".*?href=\""http://douban\.fm/\?context=([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
 					string context = null;
-					if (ma != null) context = ma.Groups[1].Value;
+					if (ma != null && ma.Success) context = ma.Groups[1].Value;
+					if (string.IsNullOrEmpty(context))
+					{
+						context = MakeContext(subject);
+					}
 				
 					ChannelSearchItem item = new ChannelSearchItem(title, picture, link, null, false, context);
 					if (!isSearchFilterEnabled || !string.IsNullOrEmpty(item.Context))
@@ -279,6 +285,31 @@ namespace DoubanFM.Core
 
 			return items;
 		}
+		private static string MakeContext(string subject)
+		{
+			try
+			{
+				string file = new ConnectionBase().Get("http://api.douban.com/music/subject/" + subject);
+				if (file != null)
+				{
+					MatchCollection mc = Regex.Matches(file, @"<db:attribute[^>]*index=""\d+""[^>]*>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+					foreach (Match ma in mc)
+					{
+						if (ma.Success)
+						{
+							Match ma2 = Regex.Match(ma.Value, @"name=\""tracks?\""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+							if (ma2.Success)
+							{
+								return "channel:0|subject_id:" + subject;
+							}
+						}
+					}
+				}
+			}
+			catch { }
+			return null;
+		}
+
 		/// <summary>
 		/// 获取上一页的链接
 		/// </summary>
