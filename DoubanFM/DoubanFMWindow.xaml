@@ -653,7 +653,8 @@ Website : http://www.kfstorm.com
 							<ColumnDefinition Width="38"/>
 						</Grid.ColumnDefinitions>
 						<CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{StaticResource LikeStyle}" IsChecked="{Binding IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding IsLikedEnabled, Source={StaticResource Player}}" />
-						<Button Grid.Column="2" x:Name="ButtonNever" Style="{StaticResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding IsNeverEnabled, Source={StaticResource Player}}" />
+						<Border Grid.Column="2" Background="Transparent" ToolTip="登录后可用" Visibility="{Binding IsEnabled, ElementName=ButtonNever, Converter={StaticResource BoolReverseToVisibilityConverter}}"/>
+						<Button Grid.Column="2" x:Name="ButtonNever" Style="{StaticResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding IsNeverEnabled, Source={StaticResource Player}}" IsHitTestVisible="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" />
 						<CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{StaticResource PauseStyle}" IsChecked="{Binding IsPlaying, Converter={StaticResource BoolReverseConverter}, Source={StaticResource Player}}" />
 						<Button Grid.Column="6" x:Name="ButtonNext" Click="ButtonNext_Click" Style="{StaticResource NextStyle}"/>
 					</Grid>
