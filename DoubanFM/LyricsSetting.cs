@@ -41,7 +41,8 @@ namespace DoubanFM
 		public static readonly DependencyProperty HorizontalAlignmentProperty = DependencyProperty.Register("HorizontalAlignment", typeof(HorizontalAlignment), typeof(LyricsSetting), new PropertyMetadata(HorizontalAlignment.Center));
 		public static readonly DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register("VerticalAlignment", typeof(VerticalAlignment), typeof(LyricsSetting), new PropertyMetadata(VerticalAlignment.Bottom));
 		public static readonly DependencyProperty ForceTopMostProperty = DependencyProperty.Register("ForceTopMost", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
-
+		public static readonly DependencyProperty HideWhenPauseProperty = DependencyProperty.Register("HideWhenPause", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(true));
+		
 		/// <summary>
 		/// 字体
 		/// </summary>
@@ -197,6 +198,14 @@ namespace DoubanFM
 			get { return (bool)GetValue(ForceTopMostProperty); }
 			set { SetValue(ForceTopMostProperty, value); }
 		}
+		/// <summary>
+		/// 暂停时隐藏歌词
+		/// </summary>
+		public bool HideWhenPause
+		{
+			get { return (bool)GetValue(HideWhenPauseProperty); }
+			set { SetValue(HideWhenPauseProperty, value); }
+		}
 
 		/// <summary>
 		/// 数据保存文件夹
@@ -247,162 +256,46 @@ namespace DoubanFM
 		protected LyricsSetting(SerializationInfo info, StreamingContext context)
 		{
 			LyricsSetting def = new LyricsSetting();
-			try
-			{
-				FontFamily = new FontFamily(info.GetString("FontFamily"));
-			}
-			catch
-			{
-				FontFamily = def.FontFamily;
-			}
-			try
-			{
-				FontSize = info.GetDouble("FontSize");
-			}
-			catch
-			{
-				FontSize = def.FontSize;
-			}
-			try
-			{
-				FontWeight = info.GetInt32("FontWeight");
-			}
-			catch
-			{
-				FontWeight = def.FontWeight;
-			}
-			try
-			{
-				StrokeWeight = info.GetDouble("StrokeWeight");
-			}
-			catch
-			{
-				StrokeWeight = def.StrokeWeight;
-			}
-			try
-			{
-				TopMargin = info.GetDouble("TopMargin");
-			}
-			catch
-			{
-				TopMargin = def.TopMargin;
-			}
-			try
-			{
-				BottomMargin = info.GetDouble("BottomMargin");
-			}
-			catch
-			{
-				BottomMargin = def.BottomMargin;
-			}
-			try
-			{
-				LeftMargin = info.GetDouble("LeftMargin");
-			}
-			catch
-			{
-				LeftMargin = def.LeftMargin;
-			}
-			try
-			{
-				RightMargin = info.GetDouble("RightMargin");
-			}
-			catch
-			{
-				RightMargin = def.RightMargin;
-			}
-			try
-			{
-				EnableDesktopLyrics = info.GetBoolean("EnableDesktopLyrics");
-			}
-			catch
-			{
-				EnableDesktopLyrics = def.EnableDesktopLyrics;
-			}
-			try
-			{
-				EnableEmbeddedLyrics = info.GetBoolean("EnableEmbeddedLyrics");
-			}
-			catch
-			{
-				EnableEmbeddedLyrics = def.EnableEmbeddedLyrics;
-			}
-			try
-			{
-				Opacity = info.GetDouble("Opacity");
-			}
-			catch
-			{
-				Opacity = def.Opacity;
-			}
-			try
-			{
-				Foreground = (Color)ColorConverter.ConvertFromString(info.GetString("Foreground"));
-			}
-			catch
-			{
-				Foreground = def.Foreground;
-			}
-			try
-			{
-				StrokeColor = (Color)ColorConverter.ConvertFromString(info.GetString("StrokeColor"));
-			}
-			catch
-			{
-				StrokeColor = def.StrokeColor;
-			}
-			try
-			{
-				ShadowColor = (Color)ColorConverter.ConvertFromString(info.GetString("ShadowColor"));
-			}
-			catch
-			{
-				ShadowColor = def.ShadowColor;
-			}
-			try
-			{
-				AutoForeground = info.GetBoolean("AutoForeground");
-			}
-			catch
-			{
-				AutoForeground = def.AutoForeground;
-			}
-			try
-			{
-				SingleLineLyrics = info.GetBoolean("SingleLineLyrics");
-			}
-			catch
-			{
-				SingleLineLyrics = def.SingleLineLyrics;
-			}
-			try
-			{
-				HorizontalAlignment = (HorizontalAlignment)info.GetValue("HorizontalAlignment", typeof(HorizontalAlignment));
-				if (HorizontalAlignment == System.Windows.HorizontalAlignment.Stretch)
-					HorizontalAlignment = def.HorizontalAlignment;
-			}
-			catch
-			{
-				HorizontalAlignment = def.HorizontalAlignment;
-			}
-			try
-			{
-				VerticalAlignment = (VerticalAlignment)info.GetValue("VerticalAlignment", typeof(VerticalAlignment));
-				if (VerticalAlignment == System.Windows.VerticalAlignment.Stretch)
-					VerticalAlignment = def.VerticalAlignment;
-			}
-			catch
-			{
-				VerticalAlignment = def.VerticalAlignment;
-			}
-			try
-			{
-				ForceTopMost = info.GetBoolean("ForceTopMost");
-			}
-			catch
-			{
-				ForceTopMost = def.ForceTopMost;
-			}
+			try { FontFamily = new FontFamily(info.GetString("FontFamily")); }
+			catch { }
+			try { FontSize = info.GetDouble("FontSize"); }
+			catch { }
+			try { FontWeight = info.GetInt32("FontWeight"); }
+			catch { }
+			try { StrokeWeight = info.GetDouble("StrokeWeight"); }
+			catch { }
+			try { TopMargin = info.GetDouble("TopMargin"); }
+			catch { }
+			try { BottomMargin = info.GetDouble("BottomMargin"); }
+			catch { }
+			try { LeftMargin = info.GetDouble("LeftMargin"); }
+			catch { }
+			try { RightMargin = info.GetDouble("RightMargin"); }
+			catch { }
+			try { EnableDesktopLyrics = info.GetBoolean("EnableDesktopLyrics"); }
+			catch { }
+			try { EnableEmbeddedLyrics = info.GetBoolean("EnableEmbeddedLyrics"); }
+			catch { }
+			try { Opacity = info.GetDouble("Opacity"); }
+			catch { }
+			try { Foreground = (Color)ColorConverter.ConvertFromString(info.GetString("Foreground")); }
+			catch { }
+			try { StrokeColor = (Color)ColorConverter.ConvertFromString(info.GetString("StrokeColor")); }
+			catch { }
+			try { ShadowColor = (Color)ColorConverter.ConvertFromString(info.GetString("ShadowColor")); }
+			catch { }
+			try { AutoForeground = info.GetBoolean("AutoForeground"); }
+			catch { }
+			try { SingleLineLyrics = info.GetBoolean("SingleLineLyrics"); }
+			catch { }
+			try { HorizontalAlignment = (HorizontalAlignment)info.GetValue("HorizontalAlignment", typeof(HorizontalAlignment)); }
+			catch { }
+			try { VerticalAlignment = (VerticalAlignment)info.GetValue("VerticalAlignment", typeof(VerticalAlignment)); }
+			catch { }
+			try { ForceTopMost = info.GetBoolean("ForceTopMost"); }
+			catch { }
+			try { HideWhenPause = info.GetBoolean("HideWhenPause"); }
+			catch { }
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -429,6 +322,7 @@ namespace DoubanFM
 			info.AddValue("HorizontalAlignment", HorizontalAlignment);
 			info.AddValue("VerticalAlignment", VerticalAlignment);
 			info.AddValue("ForceTopMost", ForceTopMost);
+			info.AddValue("HideWhenPause", HideWhenPause);
 		}
 	}
 }

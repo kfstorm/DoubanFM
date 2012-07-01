@@ -34,7 +34,7 @@ Website : http://www.kfstorm.com
 		</Grid>
 			<GroupBox Header="桌面歌词设置" Margin="0,2">
 			<StackPanel>
-				<Grid Margin="0,2" Width="300" HorizontalAlignment="Left">
+				<Grid Width="300" HorizontalAlignment="Left">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition/>
 						<ColumnDefinition/>
@@ -49,6 +49,7 @@ Website : http://www.kfstorm.com
 							强力置顶可有效解决桌面歌词置顶失效的问题，但桌面歌词可能会覆盖在某些全屏应用上。
 						</CheckBox.ToolTip>
 					</CheckBox>
+					<CheckBox IsChecked="{Binding LyricsSetting.HideWhenPause, ElementName=Window}" Margin="0,2">音乐暂停时隐藏</CheckBox>
 				</StackPanel>
 				<Grid>
 					<Grid.RowDefinitions>

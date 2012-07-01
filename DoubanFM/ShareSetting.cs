@@ -107,14 +107,8 @@ namespace DoubanFM
 		{
 			ShareSetting def = new ShareSetting();
 
-			try
-			{
-				EnableOneKeyShare = info.GetBoolean("EnableOneKeyShare");
-			}
-			catch
-			{
-				EnableOneKeyShare = def.EnableOneKeyShare;
-			}
+			try { EnableOneKeyShare = info.GetBoolean("EnableOneKeyShare"); }
+			catch { }
 
 			#region 兼容1.7.4及更早版本的保存方式
 			bool isOld = false;

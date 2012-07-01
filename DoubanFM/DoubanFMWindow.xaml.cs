@@ -421,10 +421,10 @@ namespace DoubanFM
 				PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
 				PauseThumb.Description = "播放";
 				VolumeFadeOut.Begin();
-				//Audio.Pause();
-				//NotifyIcon_PlayPause.Text = "播放";
-				//NotifyIcon_PlayPause.Image = NotifyIconImage_Play;
-				//HideLyrics();
+				if (_player.Settings.ShowLyrics && _lyricsSetting.HideWhenPause && _lyricsSetting.EnableDesktopLyrics)
+				{
+					HideDesktopLyrics();
+				}
 			});
 			//音乐已播放
 			_player.Played += new EventHandler((o, e) =>
@@ -435,9 +435,10 @@ namespace DoubanFM
 				PauseThumb.Description = "暂停";
 				VolumeFadeIn.Begin();
 				BassEngine.Instance.Play();
-				//NotifyIcon_PlayPause.Text = "暂停";
-				//NotifyIcon_PlayPause.Image = NotifyIconImage_Pause;
-				//if (_player.Settings.ShowLyrics) ShowLyrics();
+				if (_player.Settings.ShowLyrics && _lyricsSetting.EnableDesktopLyrics)
+				{
+					ShowDesktopLyrics();
+				}
 			});
 			//音乐已停止
 			_player.Stoped += new EventHandler((o, e) =>
