@@ -11,14 +11,14 @@ Website : http://www.kfstorm.com
         WindowStyle="None" AllowsTransparency="True" ShowInTaskbar="False" Background="{x:Null}" ShowActivated="False" Activated="Window_Activated" ResizeMode="NoResize">
     <Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="24"/>
+			<ColumnDefinition Width="{Binding GridShadowSize, ElementName=Window}"/>
 			<ColumnDefinition/>
-			<ColumnDefinition Width="24"/>
+			<ColumnDefinition Width="{Binding GridShadowSize, ElementName=Window}"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="24"/>
+			<RowDefinition Height="{Binding GridShadowSize, ElementName=Window}"/>
 			<RowDefinition/>
-			<RowDefinition Height="24"/>
+			<RowDefinition Height="{Binding GridShadowSize, ElementName=Window}"/>
 		</Grid.RowDefinitions>
 		<Image x:Name="ImTopLeft" Stretch="Fill"/>
 		<Image x:Name="ImTop" Grid.Column="1" Stretch="Fill"/>

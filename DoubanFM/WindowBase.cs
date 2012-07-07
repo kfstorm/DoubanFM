@@ -28,8 +28,11 @@ namespace DoubanFM
 
 		public WindowBase()
 		{
-			//添加窗口阴影
-			ShadowWindow.Attach(this);
+			this.Loaded += delegate
+			{
+				//添加窗口阴影
+				ShadowWindow.Attach(this);
+			};
 
 			this.SourceInitialized += delegate
 			{

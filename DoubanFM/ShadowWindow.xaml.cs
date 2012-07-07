@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DoubanFM.Interop;
 using System.Windows.Interop;
+using System.Diagnostics;
 
 namespace DoubanFM
 {
@@ -52,6 +53,10 @@ namespace DoubanFM
 		protected static readonly ImageSource InactiveBottomLeftImage;
 		protected static readonly ImageSource InactiveBottomImage;
 		protected static readonly ImageSource InactiveBottomRightImage;
+
+		protected const double shadowSize = 24;
+		protected static readonly GridLength gridShadowSize = new GridLength(shadowSize, GridUnitType.Pixel);
+		public GridLength GridShadowSize { get { return gridShadowSize; } }
 
 		static ShadowWindow()
 		{
@@ -169,8 +174,8 @@ namespace DoubanFM
 
 		void Owner_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
-			this.Width = Owner.ActualWidth + 24 + 24;
-			this.Height = Owner.ActualHeight + 24 + 24;
+			this.Width = Owner.ActualWidth + shadowSize * 2;
+			this.Height = Owner.ActualHeight + shadowSize * 2;
 		}
 
 		bool isOwnerLocationChanged = false;
@@ -181,8 +186,8 @@ namespace DoubanFM
 			lock (lockObject)
 			{
 				isOwnerLocationChanged = true;
-				this.Left = Owner.Left - 24;
-				this.Top = Owner.Top - 24;
+				this.Left = Owner.Left - shadowSize;
+				this.Top = Owner.Top - shadowSize;
 				isOwnerLocationChanged = false;
 			}
 		}
@@ -191,8 +196,8 @@ namespace DoubanFM
 		{
 			if (!isOwnerLocationChanged)
 			{
-				this.Left = Owner.Left - 24;
-				this.Top = Owner.Top - 24;
+				this.Left = Owner.Left - shadowSize;
+				this.Top = Owner.Top - shadowSize;
 			}
 		}
 
@@ -265,7 +270,14 @@ namespace DoubanFM
 
 		private void Window_Activated(object sender, EventArgs e)
 		{
-			Owner.Activate();
+			try
+			{
+				Owner.Activate();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.ToString());
+			}
 		}
 
 		/// <summary>
