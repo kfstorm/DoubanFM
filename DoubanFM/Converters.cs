@@ -464,4 +464,26 @@ namespace DoubanFM
 		}
 	}
 
+	/// <summary>
+	/// 根据一个Boolean值的真假选择两个值中的一个
+	/// </summary>
+	public class BooleanChooserConverter : IMultiValueConverter
+	{
+		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			if ((bool)values[0])
+			{
+				return values[1];
+			}
+			else
+			{
+				return values[2];
+			}
+		}
+
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

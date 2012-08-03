@@ -20,6 +20,11 @@ namespace DoubanFM.Core
 	public static class LyricsAssistant
 	{
 		/// <summary>
+		/// 歌词服务器列表
+		/// </summary>
+		private static readonly string[] servers = new string[] { "ttlrcct.qianqian.com", "ttlrcct2.qianqian.com" };
+
+		/// <summary>
 		/// 获取歌词
 		/// </summary>
 		/// <param name="artist">表演者</param>
@@ -34,70 +39,76 @@ namespace DoubanFM.Core
 			parameters["Artist"] = Encode(artist);
 			parameters["Title"] = Encode(title);
 			parameters["Flag"] = "0";
-			string url = ConnectionBase.ConstructUrlWithParameters("http://ttlrcct.qianqian.com/dll/lyricsvr.dll?sh", parameters);
-			string file = new ConnectionBase().Get(url);
 
-			//分析返回的XML文件
-			LyricsResult result = null;
-			try
+			foreach (var server in servers)
 			{
-				using (MemoryStream stream = new MemoryStream())
-				using (StreamWriter writer = new StreamWriter(stream))
-				{
-					writer.Write(file);
-					writer.Flush();
-					XmlSerializer serializer = new XmlSerializer(typeof(LyricsResult));
-					stream.Position = 0;
-					result = (LyricsResult)serializer.Deserialize(stream);
-				}
-			}
-			catch { }
-			if (result == null || result.Count == 0) return null;
+				string url = ConnectionBase.ConstructUrlWithParameters("http://" + server +"/dll/lyricsvr.dll?sh", parameters);
+				string file = new ConnectionBase().Get(url);
 
-			//选出最合适的歌词文件
-			LyricsItem selected = result[0];
-			double dist = double.MaxValue;
-			string lArtist = artist.ToLower();
-			string lTitle = title.ToLower();
-			foreach (var item in result)
-			{
-				string iArtist = item.Artist.ToLower();
-				string iTitle = item.Title.ToLower();
-				if (lArtist == iArtist && lTitle == iTitle)
+				//分析返回的XML文件
+				LyricsResult result = null;
+				try
 				{
-					selected = item;
-					break;
-				}
-				else if (lArtist.Length < 100 && lTitle.Length < 100 && iArtist.Length < 100 && iTitle.Length < 100)
-				{
-					int dist1 = Distance(lArtist, iArtist);
-					int dist2 = Distance(lTitle, iTitle);
-					double temp = ((double)(dist1 + dist2)) / (lArtist.Length + lTitle.Length);
-					if (temp < dist)
+					using (MemoryStream stream = new MemoryStream())
+					using (StreamWriter writer = new StreamWriter(stream))
 					{
-						dist = temp;
-						selected = item;
+						writer.Write(file);
+						writer.Flush();
+						XmlSerializer serializer = new XmlSerializer(typeof(LyricsResult));
+						stream.Position = 0;
+						result = (LyricsResult)serializer.Deserialize(stream);
 					}
 				}
+				catch { }
+				if (result == null || result.Count == 0) continue;
+
+				//选出最合适的歌词文件
+				LyricsItem selected = result[0];
+				double dist = double.MaxValue;
+				string lArtist = artist.ToLower();
+				string lTitle = title.ToLower();
+				foreach (var item in result)
+				{
+					string iArtist = item.Artist.ToLower();
+					string iTitle = item.Title.ToLower();
+					if (lArtist == iArtist && lTitle == iTitle)
+					{
+						selected = item;
+						break;
+					}
+					else if (lArtist.Length < 100 && lTitle.Length < 100 && iArtist.Length < 100 && iTitle.Length < 100)
+					{
+						int dist1 = Distance(lArtist, iArtist);
+						int dist2 = Distance(lTitle, iTitle);
+						double temp = ((double)(dist1 + dist2)) / (lArtist.Length + lTitle.Length);
+						if (temp < dist)
+						{
+							dist = temp;
+							selected = item;
+						}
+					}
+				}
+
+				//下载歌词文件
+				Parameters parameters2 = new Parameters();
+				parameters2["Id"] = selected.Id.ToString();
+				parameters2["Code"] = VerifyCode(selected.Artist, selected.Title, selected.Id);
+				string url2 = ConnectionBase.ConstructUrlWithParameters("http://" + server + "/dll/lyricsvr.dll?dl", parameters2);
+				string file2 = new ConnectionBase().Get(url2);
+
+				//生成Lyrics的实例
+				if (string.IsNullOrEmpty(file2)) continue;
+				try
+				{
+					return new Lyrics(file2);
+				}
+				catch
+				{
+					continue;
+				}
 			}
 
-			//下载歌词文件
-			Parameters parameters2 = new Parameters();
-			parameters2["Id"] = selected.Id.ToString();
-			parameters2["Code"] = VerifyCode(selected.Artist, selected.Title, selected.Id);
-			string url2 = ConnectionBase.ConstructUrlWithParameters("http://ttlrcct2.qianqian.com/dll/lyricsvr.dll?dl", parameters2);
-			string file2 = new ConnectionBase().Get(url2);
-
-			//生成Lyrics的实例
-			if (string.IsNullOrEmpty(file2)) return null;
-			try
-			{
-				return new Lyrics(file2);
-			}
-			catch
-			{
-				return null;
-			}
+			return null;
 		}
 
 		/// <summary>

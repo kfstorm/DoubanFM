@@ -21,6 +21,7 @@ Website : http://www.kfstorm.com
 	<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 	<local:BoolReverseToVisibilityConverter x:Key="BoolReverseToVisibilityConverter"/>
 	<local:ChannelToCanFavoriteVisibilityConverter x:Key="ChannelToCanFavoriteVisibilityConverter"/>
+	<local:BooleanChooserConverter x:Key="BooleanChooserConverter"/>
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 	<LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
 		<GradientStop Color="#FFE93613" Offset="0" PresentationOptions:Freeze="True"/>

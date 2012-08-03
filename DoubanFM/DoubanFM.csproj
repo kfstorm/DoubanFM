@@ -360,7 +360,9 @@
   <ItemGroup>
     <Resource Include="Images\DoubanFM_Like_Disabled.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="icon_like.ico" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOM.PNG" />
     <Resource Include="Images\Shadow\ACTIVESHADOWLEFT.PNG" />

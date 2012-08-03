@@ -188,6 +188,13 @@ Website : http://www.kfstorm.com
 				<ThumbButtonInfo x:Name="PauseThumb" Click="PauseThumb_Click" ImageSource="{StaticResource PauseThumbImage}" Description="暂停" />
 				<ThumbButtonInfo x:Name="NextThumb" Click="NextThumb_Click" ImageSource="{StaticResource NextThumbImage}" Description="下一首" />
 			</TaskbarItemInfo.ThumbButtonInfos>
+			<TaskbarItemInfo.Overlay>
+				<MultiBinding Converter="{StaticResource BooleanChooserConverter}">
+					<Binding Path="IsLiked" Source="{StaticResource Player}"/>
+					<Binding Source="{StaticResource LikeThumbImage}"/>
+					<Binding Source="{x:Null}"/>
+				</MultiBinding>
+			</TaskbarItemInfo.Overlay>
 		</TaskbarItemInfo>
 	</Window.TaskbarItemInfo>
 	<Window.Background>
@@ -199,13 +206,28 @@ Website : http://www.kfstorm.com
 				<ScaleTransform ScaleX="{Binding Settings.ScaleTransform, Source={StaticResource Player}}" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
 			</TransformGroup>
 		</Grid.LayoutTransform>
-		<tb:TaskbarIcon x:Name="NotifyIcon" IconSource="icon.ico" PopupActivation="RightClick" ToolTipText="豆瓣电台" TrayLeftMouseUp="NotifyIcon_TrayLeftMouseUp">
+		<tb:TaskbarIcon x:Name="NotifyIcon" PopupActivation="RightClick" ToolTipText="豆瓣电台" TrayLeftMouseUp="NotifyIcon_TrayLeftMouseUp">
 			<tb:TaskbarIcon.TrayToolTip>
 				<notify:BalloonSongInfo/>
 			</tb:TaskbarIcon.TrayToolTip>
 			<tb:TaskbarIcon.TrayPopup>
 				<notify:PopupControlPanel/>
 			</tb:TaskbarIcon.TrayPopup>
+			<tb:TaskbarIcon.IconSource>
+				<MultiBinding Converter="{StaticResource BooleanChooserConverter}">
+					<Binding Path="IsLiked" Source="{StaticResource Player}"/>
+					<Binding>
+						<Binding.Source>
+							<BitmapImage UriSource="icon_like.ico"/>
+						</Binding.Source>
+					</Binding>
+					<Binding>
+						<Binding.Source>
+							<BitmapImage UriSource="icon.ico"/>
+						</Binding.Source>
+					</Binding>
+				</MultiBinding>
+			</tb:TaskbarIcon.IconSource>
 		</tb:TaskbarIcon>
 		<Grid x:Name="grid" Height="300">
 			<Grid.ColumnDefinitions>
