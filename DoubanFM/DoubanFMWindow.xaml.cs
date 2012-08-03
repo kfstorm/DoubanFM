@@ -552,6 +552,8 @@ namespace DoubanFM
 			VolumeDirectIn = (Storyboard)FindResource("VolumeDirectIn");
 			EnhancementsPanelShow = (Storyboard)FindResource("EnhancementsPanelShow");
 			EnhancementsPanelHide = (Storyboard)FindResource("EnhancementsPanelHide");
+
+			lbVersion.Content = typeof(App).Assembly.GetName().Version.ToString(3);
 		}
 
 		/// <summary>
