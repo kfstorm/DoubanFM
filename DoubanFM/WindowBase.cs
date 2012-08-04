@@ -36,7 +36,8 @@ namespace DoubanFM
 
 			this.SourceInitialized += delegate
 			{
-				if (Environment.OSVersion.Version.Major >= 6)
+                //只有Windows Vista和Windows 7支持Aero特效
+                if (Environment.OSVersion.Version >= new Version(6,0) && Environment.OSVersion.Version < new Version(6, 2))
 				{
 					//监听系统中Aero设置的改变
 					this.AeroGlassCompositionChanged += new EventHandler<Aero.AeroGlassCompositionChangedEventArgs>(WindowBase_AeroGlassCompositionChanged);
@@ -54,7 +55,8 @@ namespace DoubanFM
 			//当窗口大小改变后，需调整Aero模糊效果的范围，所以这里调用EnableBlurBehindWindow方法更新模糊效果
 			this.SizeChanged += delegate
 			{
-				if (Environment.OSVersion.Version.Major >= 6)
+                //只有Windows Vista和Windows 7支持Aero特效
+                if (Environment.OSVersion.Version >= new Version(6, 0) && Environment.OSVersion.Version < new Version(6, 2))
 				{
 					Aero.AeroHelper.EnableBlurBehindWindow(this);
 				}
