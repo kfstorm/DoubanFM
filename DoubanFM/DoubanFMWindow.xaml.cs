@@ -616,7 +616,7 @@ namespace DoubanFM
 		/// </summary>
 		void CheckUpdateOnStartup()
 		{
-			if (_player.Settings.AutoUpdate && (DateTime.Now - _player.Settings.LastTimeCheckUpdate).TotalDays > 1)
+			if (_player.Settings.AutoUpdate)
 			{
 				Updater updater = new Updater(_player.Settings);
 				updater.StateChanged += new EventHandler((o, e) =>
