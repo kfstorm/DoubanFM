@@ -9,8 +9,8 @@ set imagedir=Images
 set tempdir=Temp
 set outputdir=Output
 set compile="C:\Program Files (x86)\NSIS\Unicode\makensis.exe"
-set setup=DoubanFMSetup_2.0.4.exe
-set version=2.0.4.16099
+set setup=DoubanFMSetup_2.0.5.exe
+set version=2.0.5.16231
 
 :copy
 xcopy "%imagedir%" "%tempdir%\" /Q/E/Y
