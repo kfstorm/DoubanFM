@@ -381,7 +381,7 @@ namespace DoubanFM.Core
 						while (true)
 						{
 							Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
-							file = new ConnectionBase().Get("http://douban.fm/settings/profile");
+							file = new ConnectionBase().Get("http://douban.fm/");
 							Debug.WriteLine(DateTime.Now + " 刷新完成");
 							if (!string.IsNullOrEmpty(file))
 							{

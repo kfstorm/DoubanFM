@@ -261,7 +261,7 @@ namespace DoubanFM.Core
 			if (!string.IsNullOrEmpty(html))
 			{
 				//获取昵称和播放记录
-				Match match2 = Regex.Match(html, @"id=""fm-user"">(?!{{)(.*)<i></i></a>", RegexOptions.None);
+				Match match2 = Regex.Match(html, @"id=""user_name"">(?!{{)(.*)<i></i></span>", RegexOptions.None);
 				string nickname = match2.Groups[1].Value;
 				Match match3 = Regex.Match(html, @"累积收听.*?(\d+).*?首");
 				int played = 0;
