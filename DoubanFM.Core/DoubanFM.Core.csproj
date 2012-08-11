@@ -37,10 +37,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Key.pfx</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -72,17 +69,12 @@
     <Compile Include="ChannelSearch\ChannelSearch.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\PlayList.cs" />
-    <Compile Include="Updater\Product.cs" />
-    <Compile Include="Updater\Products.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChannelSearch\ChannelSearchItem.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Share.cs" />
     <Compile Include="ShareSongInfo.cs" />
     <Compile Include="Player\Song.cs" />
-    <Compile Include="Updater\Updater.cs" />
-    <Compile Include="Updater\UpdateResult.cs" />
-    <Compile Include="Updater\UpdateWork.cs" />
     <Compile Include="Player\User.cs" />
     <Compile Include="Player\UserAssistant.cs" />
     <Compile Include="UrlHelper.cs" />

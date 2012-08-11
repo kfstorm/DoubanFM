@@ -9,27 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifyIconWpf", "NotifyIcon
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{83D9C222-9C9B-4666-AF75-8070323790E5}"
 	ProjectSection(SolutionItems) = preProject
-		Key.pfx = Key.pfx
-		LICENSE.txt = LICENSE.txt
-		README.txt = README.txt
 		WPFSoundVisualizationLib.dll = WPFSoundVisualizationLib.dll
-		源代码使用方法.txt = 源代码使用方法.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoubanFM.Bass", "DoubanFM.Bass\DoubanFM.Bass.csproj", "{62324CFD-03FF-44B4-9204-66BAE86972B6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "安装程序脚本", "安装程序脚本", "{8C6B4143-06AA-435B-801F-43CBC3A72E9F}"
-	ProjectSection(SolutionItems) = preProject
-		安装程序脚本\DoubanFM.nsi = 安装程序脚本\DoubanFM.nsi
-		安装程序脚本\make.bat = 安装程序脚本\make.bat
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{433EB02E-5065-4988-966F-9CA5D86E40B1}"
-	ProjectSection(SolutionItems) = preProject
-		安装程序脚本\Images\DoubanFM_Icon_Install.ico = 安装程序脚本\Images\DoubanFM_Icon_Install.ico
-		安装程序脚本\Images\DoubanFM_Icon_Uninstall.ico = 安装程序脚本\Images\DoubanFM_Icon_Uninstall.ico
-		安装程序脚本\Images\DoubanFM_Install_Welcome.bmp = 安装程序脚本\Images\DoubanFM_Install_Welcome.bmp
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -74,8 +57,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{433EB02E-5065-4988-966F-9CA5D86E40B1} = {8C6B4143-06AA-435B-801F-43CBC3A72E9F}
 	EndGlobalSection
 EndGlobal

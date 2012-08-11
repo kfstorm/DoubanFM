@@ -23,7 +23,7 @@ namespace DoubanFM
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(ChildWindowBase), new FrameworkPropertyMetadata(typeof(ChildWindowBase)));
 		}
-		
+
 		public ChildWindowBase()
 		{
 			try
@@ -43,7 +43,7 @@ namespace DoubanFM
 			{
 				System.Windows.Data.Binding binding = new System.Windows.Data.Binding("Background");
 				binding.Source = Owner;
-				this.SetBinding(UpdateWindow.BackgroundProperty, binding);
+				this.SetBinding(Window.BackgroundProperty, binding);
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace DoubanFM
 			}
 		}
 
-		void btnClose_Click(object sender, RoutedEventArgs e)
+		private void btnClose_Click(object sender, RoutedEventArgs e)
 		{
 			this.Close();
 		}

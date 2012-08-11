@@ -4,31 +4,31 @@
  * Website : http://www.kfstorm.com
  * */
 
+using DoubanFM.Bass;
+using DoubanFM.Core;
+using DoubanFM.NotifyIcon;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.IO.MemoryMappedFiles;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using DoubanFM.Core;
-using System.Windows.Threading;
-using System.Threading;
-using System.Collections.ObjectModel;
-using System.Windows.Media.Animation;
-using System.Diagnostics;
-using System.Windows.Shell;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO.MemoryMappedFiles;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
-using System.Windows.Input;
-using System.Text;
-using DoubanFM.NotifyIcon;
 using System.Windows.Data;
-using DoubanFM.Bass;
-using System.Collections.Generic;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Shell;
+using System.Windows.Threading;
 
 namespace DoubanFM
 {
@@ -43,10 +43,12 @@ namespace DoubanFM
 		/// 播放器
 		/// </summary>
 		private Player _player;
+
 		/// <summary>
 		/// 进度更新计时器
 		/// </summary>
 		private DispatcherTimer _progressRefreshTimer;
+
 		///// <summary>
 		///// 防止不执行下一首
 		///// </summary>
@@ -55,38 +57,47 @@ namespace DoubanFM
 		/// 各种无法在XAML里直接启动的Storyboard
 		/// </summary>
 		private Storyboard BackgroundColorStoryboard, ShowCover1Storyboard, ShowCover2Storyboard, SlideCoverRightStoryboard, SlideCoverLeftStoryboard, ChangeSongInfoStoryboard, VolumeFadeOut, VolumeFadeIn, VolumeDirectIn, EnhancementsPanelShow, EnhancementsPanelHide;
+
 		/// <summary>
 		/// 滑动封面的计时器
 		/// </summary>
 		private DispatcherTimer _slideCoverRightTimer, _slideCoverLeftTimer, _leftPanelMouseLeaveTimer;
+
 		/// <summary>
 		/// 当前显示的封面
 		/// </summary>
 		private Image _cover;
+
 		/// <summary>
 		/// 用于进程间更换频道的内存映射文件
 		/// </summary>
 		private MemoryMappedFile _mappedFile;
+
 		/// <summary>
 		/// 命令
 		/// </summary>
 		public enum Commands { None, Like, Unlike, LikeUnlike, Never, PlayPause, Next, ShowMinimize, ShowHide, ShowLyrics, HideLyrics, ShowHideLyrics, OneKeyShare, SearchDownload, VolumeUp, VolumeDown, MuteSwitch }
+
 		/// <summary>
 		/// 热键
 		/// </summary>
 		public HotKeys HotKeys;
+
 		/// <summary>
 		/// 临时文件夹
 		/// </summary>
 		private string _tempPath = Path.Combine(Path.GetTempPath(), "DoubanFM");
+
 		/// <summary>
 		/// 桌面歌词窗口
 		/// </summary>
 		internal LyricsWindow _lyricsWindow;
+
 		/// <summary>
 		/// 歌词设置
 		/// </summary>
 		internal LyricsSetting _lyricsSetting;
+
 		/// <summary>
 		/// 分享设置
 		/// </summary>
@@ -148,8 +159,6 @@ namespace DoubanFM
 				return v >= 0 && v <= 1;
 			}));
 
-
-
 		/// <summary>
 		/// 音量淡入淡出参数
 		/// </summary>
@@ -171,7 +180,6 @@ namespace DoubanFM
 				return v >= 0 && v <= 1;
 			}));
 
-
 		///// <summary>
 		///// 记录最后一次切歌的时间
 		///// </summary>
@@ -179,7 +187,7 @@ namespace DoubanFM
 
 		public bool willSaveSettings = true;
 
-		#endregion
+		#endregion 成员变量
 
 		#region 构造和初始化
 
@@ -195,7 +203,6 @@ namespace DoubanFM
 			InitNotifyIcon();
 			InitTimers();
 			CheckMappedFile();
-			CheckUpdateOnStartup();
 			InitLyrics();
 			InitShareSetting();
 			InitBackground();
@@ -205,7 +212,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 初始化播放器设置
 		/// </summary>
-		void InitPlayerSettings()
+		private void InitPlayerSettings()
 		{
 			PbPassword.Password = _player.Settings.User.Password;
 			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
@@ -233,10 +240,11 @@ namespace DoubanFM
 					this.Top = SystemParameters.WorkArea.Top;
 			}
 		}
+
 		/// <summary>
 		/// 初始化BassEngine
 		/// </summary>
-		void InitBassEngine()
+		private void InitBassEngine()
 		{
 			//歌曲播放完毕
 			BassEngine.Instance.TrackEnded += delegate
@@ -283,10 +291,11 @@ namespace DoubanFM
 		/// 键盘钩子
 		/// </summary>
 		private KeyboardHook hook;
+
 		/// <summary>
 		/// 初始化键盘钩子
 		/// </summary>
-		void InitKeyboardHook()
+		private void InitKeyboardHook()
 		{
 			hook = new KeyboardHook();
 			hook.KeyUp += new KeyboardHook.HookEventHandler((sender, e) =>
@@ -306,10 +315,11 @@ namespace DoubanFM
 				}
 			});
 		}
+
 		/// <summary>
 		/// 初始化窗口背景
 		/// </summary>
-		void InitBackground()
+		private void InitBackground()
 		{
 			Binding binding = new Binding();
 			binding.Source = _player;
@@ -368,7 +378,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 给播放器的各种事件添加处理代码
 		/// </summary>
-		void AddPlayerEventListener()
+		private void AddPlayerEventListener()
 		{
 			//启动播放器完成
 			_player.Initialized += new EventHandler((o, e) =>
@@ -537,7 +547,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 初始化成员变量
 		/// </summary>
-		void InitMemberVariables()
+		private void InitMemberVariables()
 		{
 			_player = (Player)FindResource("Player");
 			_cover = Cover1;
@@ -559,7 +569,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 初始化计时器
 		/// </summary>
-		void InitTimers()
+		private void InitTimers()
 		{
 			//_forceNextTimer = new DispatcherTimer();
 			//_forceNextTimer.Interval = new TimeSpan(600000000);
@@ -575,10 +585,11 @@ namespace DoubanFM
 			_leftPanelMouseLeaveTimer.Interval = TimeSpan.FromSeconds(1);
 			_leftPanelMouseLeaveTimer.Tick += _leftPanelMouseLeaveTimer_Tick;
 		}
+
 		/// <summary>
 		/// 定时检查内存映射文件，看是否需要更换频道
 		/// </summary>
-		void CheckMappedFile()
+		private void CheckMappedFile()
 		{
 			DispatcherTimer checkMappedFileTimer = new DispatcherTimer();
 			checkMappedFileTimer.Interval = TimeSpan.FromMilliseconds(50);
@@ -611,37 +622,38 @@ namespace DoubanFM
 			App.ClearMappedFile();
 			checkMappedFileTimer.Start();
 		}
-		/// <summary>
-		/// 启动时检查更新
-		/// </summary>
-		void CheckUpdateOnStartup()
-		{
-			if (_player.Settings.AutoUpdate)
-			{
-				Updater updater = new Updater(_player.Settings);
-				updater.StateChanged += new EventHandler((o, e) =>
-				{
-					switch (updater.Now)
-					{
-						case Updater.State.CheckFailed:
-							updater.Dispose();
-							break;
-						case Updater.State.NoNewVersion:
-							updater.Dispose();
-							break;
-						case Updater.State.HasNewVersion:
-							ShowUpdateWindow(updater);
-							break;
-					}
-				});
-				updater.Start();
-			}
-		}
+
+		///// <summary>
+		///// 启动时检查更新
+		///// </summary>
+		//void CheckUpdateOnStartup()
+		//{
+		//	if (_player.Settings.AutoUpdate)
+		//	{
+		//		Updater updater = new Updater(_player.Settings);
+		//		updater.StateChanged += new EventHandler((o, e) =>
+		//		{
+		//			switch (updater.Now)
+		//			{
+		//				case Updater.State.CheckFailed:
+		//					updater.Dispose();
+		//					break;
+		//				case Updater.State.NoNewVersion:
+		//					updater.Dispose();
+		//					break;
+		//				case Updater.State.HasNewVersion:
+		//					ShowUpdateWindow(updater);
+		//					break;
+		//			}
+		//		});
+		//		updater.Start();
+		//	}
+		//}
 		/// <summary>
 		/// 清理从1.3.0版本至1.4.0版本以来的临时文件
 		/// 这些临时文件存放的位置不对，系统似乎不会自动删除，使得占用空间不断增大
 		/// </summary>
-		void ClearOldTempFiles()
+		private void ClearOldTempFiles()
 		{
 			try
 			{
@@ -671,7 +683,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 清理自动更新时下载的安装文件
 		/// </summary>
-		void ClearSetupFiles()
+		private void ClearSetupFiles()
 		{
 			try
 			{
@@ -692,7 +704,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 初始化歌词
 		/// </summary>
-		void InitLyrics()
+		private void InitLyrics()
 		{
 			_lyricsSetting = LyricsSetting.Load();
 			_lyricsWindow = new LyricsWindow(_lyricsSetting);
@@ -710,7 +722,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 初始化分享设置
 		/// </summary>
-		void InitShareSetting()
+		private void InitShareSetting()
 		{
 			ShareSetting = ShareSetting.Load();
 			ApplyShareSetting();
@@ -719,12 +731,12 @@ namespace DoubanFM
 		/// <summary>
 		/// 初始化代理设置
 		/// </summary>
-		void InitProxy()
+		private void InitProxy()
 		{
 			ApplyProxy();
 		}
 
-		#endregion
+		#endregion 构造和初始化
 
 		#region 操作
 
@@ -824,6 +836,7 @@ namespace DoubanFM
 			if (_lyricsSetting.EnableDesktopLyrics) ShowDesktopLyrics();
 			if (_lyricsSetting.EnableEmbeddedLyrics) ShowEmbeddedLyrics();
 		}
+
 		/// <summary>
 		/// 隐藏歌词
 		/// </summary>
@@ -833,6 +846,7 @@ namespace DoubanFM
 			if (_lyricsSetting.EnableDesktopLyrics) HideDesktopLyrics();
 			if (_lyricsSetting.EnableEmbeddedLyrics) HideEmbeddedLyrics();
 		}
+
 		/// <summary>
 		/// 显示/隐藏 歌词
 		/// </summary>
@@ -843,6 +857,7 @@ namespace DoubanFM
 			else
 				ShowLyrics();
 		}
+
 		/// <summary>
 		/// 一键分享
 		/// </summary>
@@ -854,6 +869,7 @@ namespace DoubanFM
 				new Share(_player, site).Go();
 			}
 		}
+
 		/// <summary>
 		/// 搜索下载
 		/// </summary>
@@ -887,9 +903,10 @@ namespace DoubanFM
 			_player.Settings.IsMuted = !_player.Settings.IsMuted;
 		}
 
-		#endregion
+		#endregion 操作
 
 		#region 其他
+
 		/// <summary>
 		/// 更换输出设备
 		/// </summary>
@@ -899,6 +916,7 @@ namespace DoubanFM
 			Bass.BassEngine.Instance.ChangeDevice(device);
 			_player.Settings.Device = Bass.BassEngine.Instance.Device;
 		}
+
 		/// <summary>
 		/// 应用当前代理设置
 		/// </summary>
@@ -912,10 +930,12 @@ namespace DoubanFM
 						ConnectionBase.UseDefaultProxy();
 						BassEngine.Instance.UseDefaultProxy();
 						break;
+
 					case Settings.ProxyKinds.None:
 						ConnectionBase.DontUseProxy();
 						BassEngine.Instance.DontUseProxy();
 						break;
+
 					case Settings.ProxyKinds.Custom:
 						ConnectionBase.SetProxy(_player.Settings.ProxyHost, _player.Settings.ProxyPort, _player.Settings.ProxyUsername, _player.Settings.ProxyPassword);
 						BassEngine.Instance.SetProxy(_player.Settings.ProxyHost, _player.Settings.ProxyPort, _player.Settings.ProxyUsername, _player.Settings.ProxyPassword);
@@ -929,6 +949,7 @@ namespace DoubanFM
 				MessageBox.Show(this, ex.Message, "代理设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
+
 		/// <summary>
 		/// 应用当前分享设置
 		/// </summary>
@@ -949,6 +970,7 @@ namespace DoubanFM
 					button.Visibility = Visibility.Collapsed;
 			}
 		}
+
 		/// <summary>
 		/// 显示桌面歌词
 		/// </summary>
@@ -957,6 +979,7 @@ namespace DoubanFM
 			_lyricsWindow.Show();
 			if (_lyricsWindow.Lyrics == null) DownloadLyrics();
 		}
+
 		/// <summary>
 		/// 显示内嵌歌词
 		/// </summary>
@@ -973,6 +996,7 @@ namespace DoubanFM
 		{
 			_lyricsWindow.Hide();
 		}
+
 		/// <summary>
 		/// 隐藏内嵌歌词
 		/// </summary>
@@ -990,6 +1014,7 @@ namespace DoubanFM
 			this.WindowState = WindowState.Normal;
 			this.Activate();
 		}
+
 		/// <summary>
 		/// 最小化后隐藏
 		/// </summary>
@@ -998,18 +1023,20 @@ namespace DoubanFM
 			this.WindowState = WindowState.Minimized;
 			this.Hide();
 		}
+
 		/// <summary>
 		/// 设置歌词
 		/// </summary>
-		void SetLyrics(Lyrics lyrics)
+		private void SetLyrics(Lyrics lyrics)
 		{
 			if (_lyricsWindow != null)
 				_lyricsWindow.Lyrics = lyrics;
 		}
+
 		/// <summary>
 		/// 给热键添加逻辑
 		/// </summary>
-		void AddLogicToHotKeys(HotKeys hotKeys)
+		private void AddLogicToHotKeys(HotKeys hotKeys)
 		{
 			foreach (var keyValue in hotKeys)
 			{
@@ -1018,6 +1045,7 @@ namespace DoubanFM
 				{
 					case Commands.None:
 						break;
+
 					case Commands.Like:
 						hotKey.OnHotKey += delegate
 						{
@@ -1026,48 +1054,63 @@ namespace DoubanFM
 								NotifyIcon.ShowCustomBalloon(new PopupLiked(), System.Windows.Controls.Primitives.PopupAnimation.Fade, 1000);
 						};
 						break;
+
 					case Commands.Unlike:
 						hotKey.OnHotKey += delegate { Unlike(); };
 						break;
+
 					case Commands.LikeUnlike:
 						hotKey.OnHotKey += delegate { LikeUnlike(); };
 						break;
+
 					case Commands.Never:
 						hotKey.OnHotKey += delegate { Never(); };
 						break;
+
 					case Commands.PlayPause:
 						hotKey.OnHotKey += delegate { PlayPause(); };
 						break;
+
 					case Commands.Next:
 						hotKey.OnHotKey += delegate { Next(); };
 						break;
+
 					case Commands.ShowMinimize:
 						hotKey.OnHotKey += delegate { ShowMinimize(); };
 						break;
+
 					case Commands.ShowHide:
 						hotKey.OnHotKey += delegate { ShowHide(); };
 						break;
+
 					case Commands.ShowLyrics:
 						hotKey.OnHotKey += delegate { ShowLyrics(); };
 						break;
+
 					case Commands.HideLyrics:
 						hotKey.OnHotKey += delegate { HideLyrics(); };
 						break;
+
 					case Commands.ShowHideLyrics:
 						hotKey.OnHotKey += delegate { ShowHideLyrics(); };
 						break;
+
 					case Commands.OneKeyShare:
 						hotKey.OnHotKey += delegate { OneKeyShare(); };
 						break;
+
 					case Commands.SearchDownload:
 						hotKey.OnHotKey += delegate { SearchDownload(); };
 						break;
+
 					case Commands.VolumeUp:
 						hotKey.OnHotKey += delegate { VolumeUp(); };
 						break;
+
 					case Commands.VolumeDown:
 						hotKey.OnHotKey += delegate { VolumeDown(); };
 						break;
+
 					case Commands.MuteSwitch:
 						hotKey.OnHotKey += delegate { MuteSwitch(); };
 						break;
@@ -1078,11 +1121,12 @@ namespace DoubanFM
 		/// <summary>
 		/// 暂存正在下载的歌词所对应的歌曲
 		/// </summary>
-		Song downloadingLyrics = null;
+		private Song downloadingLyrics = null;
+
 		/// <summary>
 		/// 下载歌词
 		/// </summary>
-		void DownloadLyrics()
+		private void DownloadLyrics()
 		{
 			if (_player == null || _player.CurrentSong == null) return;
 			if (_player.CurrentSong == downloadingLyrics) return;
@@ -1097,34 +1141,7 @@ namespace DoubanFM
 				}));
 			}));
 		}
-		/// <summary>
-		/// 显示更新窗口
-		/// </summary>
-		/// <param name="updater">指定的更新器</param>
-		void ShowUpdateWindow(Updater updater = null)
-		{
-			CheckUpdate.IsEnabled = false;
-			UpdateWindow update = new UpdateWindow(updater);
-			update.Closed += new EventHandler((o, e) =>
-			{
-				CheckUpdate.IsEnabled = true;
-				_leftPanelMouseLeaveTimer.Start();
-				if (update.Updater.Now == Updater.State.DownloadCompleted)
-				{
-					App.Current.Exit += new ExitEventHandler((oo, ee) =>
-					{
-						Process.Start(update.Updater.DownloadedFilePath, "/S");
-					});
-					//有可能是主窗口的关闭引起更新窗口的关闭，这时再关闭主窗口会出错。
-					try
-					{
-						this.Close();
-					}
-					catch { }
-				}
-			});
-			update.Show();
-		}
+
 		/// <summary>
 		/// 显示频道列表
 		/// </summary>
@@ -1133,6 +1150,7 @@ namespace DoubanFM
 			RefreshMyChannels();
 			PublicChannels.ItemsSource = new ObservableCollection<Channel>(_player.ChannelInfo.Public);
 		}
+
 		/// <summary>
 		/// 刷新“我的电台”列表
 		/// </summary>
@@ -1146,6 +1164,7 @@ namespace DoubanFM
 				PersonalChannelsItem.Add(channel);
 			PersonalChannels.ItemsSource = PersonalChannelsItem;
 		}
+
 		/// <summary>
 		/// 更换选中的频道列表
 		/// </summary>
@@ -1179,8 +1198,8 @@ namespace DoubanFM
 			}
 		}
 
-		List<Channel> filteredDjChannels = new List<Channel>();
-		int showedDjChannelsCount = 0;
+		private List<Channel> filteredDjChannels = new List<Channel>();
+		private int showedDjChannelsCount = 0;
 
 		/// <summary>
 		/// 显示DJ兆赫列表
@@ -1339,7 +1358,7 @@ namespace DoubanFM
 			//    Audio.IsMuted = !Audio.IsMuted;
 			//    timer.Stop();
 			//});
-			//timer.Start();			
+			//timer.Start();
 		}
 
 		/// <summary>
@@ -1363,13 +1382,14 @@ namespace DoubanFM
 			NotifyIcon.CloseBalloon();
 		}
 
-		BitmapImage bitmap;
-		bool downloadFailed = false;
-		bool shouldSwitchCover = false;
+		private BitmapImage bitmap;
+		private bool downloadFailed = false;
+		private bool shouldSwitchCover = false;
+
 		/// <summary>
 		/// 封面下载成功时调用以更换封面
 		/// </summary>
-		void OnCoverDownloadCompleted()
+		private void OnCoverDownloadCompleted()
 		{
 			if (!shouldSwitchCover) return;
 			if (downloadFailed)
@@ -1400,10 +1420,11 @@ namespace DoubanFM
 				}
 			}
 		}
+
 		/// <summary>
 		/// 更改封面
 		/// </summary>
-		void ChangeCover()
+		private void ChangeCover()
 		{
 			shouldSwitchCover = false;
 			downloadFailed = false;
@@ -1431,19 +1452,21 @@ namespace DoubanFM
 				shouldSwitchCover = true;
 			}
 		}
+
 		/// <summary>
 		/// 将窗口背景更换为指定的颜色
 		/// </summary>
-		void ChangeBackground(Color color)
+		private void ChangeBackground(Color color)
 		{
 			((ColorAnimation)BackgroundColorStoryboard.Children[0]).To = color;
 			BackgroundColorStoryboard.Begin();
 		}
+
 		/// <summary>
 		/// 根据封面颜色更换背景。封面加载成功时自动调用
 		/// </summary>
 		/// <param name="NewCover">新封面</param>
-		void ChangeBackground(BitmapSource NewCover)
+		private void ChangeBackground(BitmapSource NewCover)
 		{
 			ColorFunctions.GetImageColorForBackgroundAsync(NewCover, new ColorFunctions.ComputeCompleteCallback((color) =>
 				{
@@ -1453,11 +1476,12 @@ namespace DoubanFM
 						}));
 				}));
 		}
+
 		/// <summary>
 		/// 更换封面。封面加载成功时自动调用
 		/// </summary>
 		/// <param name="NewCover">新封面</param>
-		void SwitchCover(BitmapImage NewCover)
+		private void SwitchCover(BitmapImage NewCover)
 		{
 			if (_cover == Cover1)
 			{
@@ -1472,6 +1496,7 @@ namespace DoubanFM
 				ShowCover1Storyboard.Begin();
 			}
 		}
+
 		/// <summary>
 		/// 将频道添加到跳转列表
 		/// </summary>
@@ -1493,9 +1518,10 @@ namespace DoubanFM
 			JumpList.SetJumpList(App.Current, jumpList);
 		}
 
-		#endregion
+		#endregion 其他
 
 		#region 事件响应
+
 		/// <summary>
 		/// 主界面中按下“下一首”
 		/// </summary>
@@ -1503,10 +1529,11 @@ namespace DoubanFM
 		{
 			Next();
 		}
+
 		/// <summary>
 		/// 计时器响应函数，用于更新时间信息和歌词
 		/// </summary>
-		void timer_Tick(object sender, EventArgs e)
+		private void timer_Tick(object sender, EventArgs e)
 		{
 			CurrentTime.Text = TimeSpanToStringConverter.QuickConvert(BassEngine.Instance.ChannelPosition);
 			Slider.Value = BassEngine.Instance.ChannelPosition.TotalSeconds;
@@ -1522,6 +1549,7 @@ namespace DoubanFM
 				OnCoverDownloadCompleted();
 			}
 		}
+
 		///// <summary>
 		///// 在网络不好时有用
 		///// </summary>
@@ -1548,6 +1576,7 @@ namespace DoubanFM
 		{
 			PlayPause();
 		}
+
 		/// <summary>
 		/// 任务栏按下“下一首”按钮
 		/// </summary>
@@ -1555,6 +1584,7 @@ namespace DoubanFM
 		{
 			Next();
 		}
+
 		/// <summary>
 		/// 保存各种信息
 		/// </summary>
@@ -1578,6 +1608,7 @@ namespace DoubanFM
 				_player.Dispose();
 			SaveSettings();
 		}
+
 		/// <summary>
 		/// 更新密码
 		/// </summary>
@@ -1585,6 +1616,7 @@ namespace DoubanFM
 		{
 			_player.Settings.User.Password = PbPassword.Password;
 		}
+
 		/// <summary>
 		/// 登录
 		/// </summary>
@@ -1593,6 +1625,7 @@ namespace DoubanFM
 			_player.UserAssistant.LogOn(_player.UserAssistant.HasCaptcha ? CaptchaText.Text : null);
 			CaptchaText.Text = null;
 		}
+
 		/// <summary>
 		/// 注销
 		/// </summary>
@@ -1600,6 +1633,7 @@ namespace DoubanFM
 		{
 			_player.UserAssistant.LogOff();
 		}
+
 		///// <summary>
 		///// 验证码被点击
 		///// </summary>
@@ -1615,6 +1649,7 @@ namespace DoubanFM
 		{
 			LikeUnlike();
 		}
+
 		/// <summary>
 		/// 主界面点击“不再播放”
 		/// </summary>
@@ -1622,6 +1657,7 @@ namespace DoubanFM
 		{
 			Never();
 		}
+
 		/// <summary>
 		/// 任务栏点击“不再播放”
 		/// </summary>
@@ -1638,6 +1674,7 @@ namespace DoubanFM
 			if (PersonalChannels.SelectedItem != null)
 				_player.CurrentChannel = (Channel)PersonalChannels.SelectedItem;
 		}
+
 		/// <summary>
 		/// 更换公共频道
 		/// </summary>
@@ -1646,6 +1683,7 @@ namespace DoubanFM
 			if (PublicChannels.SelectedItem != null)
 				_player.CurrentChannel = (Channel)PublicChannels.SelectedItem;
 		}
+
 		/// <summary>
 		/// 更换DJ节目
 		/// </summary>
@@ -1656,6 +1694,7 @@ namespace DoubanFM
 				_player.CurrentChannel = (Channel)DjChannels.SelectedItem;
 			}
 		}
+
 		/// <summary>
 		/// 鼠标左键点击封面时滑动封面
 		/// </summary>
@@ -1696,7 +1735,7 @@ namespace DoubanFM
 			}
 		}
 
-		void SlideCoverRightTimer_Tick(object sender, EventArgs e)
+		private void SlideCoverRightTimer_Tick(object sender, EventArgs e)
 		{
 			if (!IsDraging && Mouse.LeftButton != MouseButtonState.Pressed)
 			{
@@ -1704,7 +1743,8 @@ namespace DoubanFM
 			}
 			_slideCoverRightTimer.Stop();
 		}
-		void SlideCoverLeftTimer_Tick(object sender, EventArgs e)
+
+		private void SlideCoverLeftTimer_Tick(object sender, EventArgs e)
 		{
 			if (!IsDraging && Mouse.LeftButton != MouseButtonState.Pressed)
 			{
@@ -1784,11 +1824,6 @@ namespace DoubanFM
 			}
 		}
 
-		private void CheckUpdate_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			ShowUpdateWindow();
-		}
-
 		private void VisitOfficialWebsite_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			Core.UrlHelper.OpenLink("http://douban.fm/");
@@ -1823,6 +1858,7 @@ namespace DoubanFM
 				case System.Windows.Input.Key.MediaPlayPause:
 					PlayPause();
 					break;
+
 				case System.Windows.Input.Key.MediaNextTrack:
 					Next();
 					break;
@@ -2022,7 +2058,8 @@ namespace DoubanFM
 			Core.UrlHelper.OpenLink("http://www.douban.com/accounts/register");
 		}
 
-		bool resetting = false;
+		private bool resetting = false;
+
 		private void BtnResetSettings_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			resetting = true;
@@ -2225,6 +2262,7 @@ namespace DoubanFM
 		{
 			_leftPanelMouseLeaveTimer.Stop();
 		}
+
 		private void _leftPanelMouseLeaveTimer_Tick(object sender, EventArgs e)
 		{
 			if (NoChildren())
@@ -2233,6 +2271,7 @@ namespace DoubanFM
 			}
 			_leftPanelMouseLeaveTimer.Stop();
 		}
+
 		private bool NoChildren()
 		{
 			if (resetting) return false;
@@ -2241,7 +2280,6 @@ namespace DoubanFM
 			return children.Count == 0;
 		}
 
-		#endregion
-
-		}
+		#endregion 事件响应
+	}
 }

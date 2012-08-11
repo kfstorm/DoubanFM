@@ -1,7 +1,7 @@
 ﻿<!--
 Author : K.F.Storm
 Email : yk000123 at sina.com
-Website : http://www.kfstorm.com	
+Website : http://www.kfstorm.com
 -->
 <local:WindowBase
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -26,16 +26,16 @@ Website : http://www.kfstorm.com
 			<ObjectAnimationUsingKeyFrames Storyboard.TargetName="FirstTimePanel" Storyboard.TargetProperty="Visibility">
 				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
 			</ObjectAnimationUsingKeyFrames>
-			 <ObjectAnimationUsingKeyFrames Storyboard.Target="{Binding Settings, Source={StaticResource Player}}" Storyboard.TargetProperty="FirstTime">
+			<ObjectAnimationUsingKeyFrames Storyboard.Target="{Binding Settings, Source={StaticResource Player}}" Storyboard.TargetProperty="FirstTime">
 				<DiscreteObjectKeyFrame KeyTime="0">
 					<DiscreteObjectKeyFrame.Value>
 						<sys:Boolean>False</sys:Boolean>
 					</DiscreteObjectKeyFrame.Value>
 				</DiscreteObjectKeyFrame>
 			</ObjectAnimationUsingKeyFrames>
-			 <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CoverGrid">
-			 	<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="300" EasingFunction="{StaticResource Smooth}"/>
-			 </DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CoverGrid">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="300" EasingFunction="{StaticResource Smooth}"/>
+			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="SlideCoverLeftStoryboard">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CoverGrid">
@@ -78,7 +78,7 @@ Website : http://www.kfstorm.com
 		<Storyboard x:Key="ShowChannelList">
 			<Int32Animation Duration="0" Storyboard.TargetProperty="(Panel.ZIndex)" To="1"/>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
-				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:1.5" EasingFunction="{StaticResource Smooth}"/>			
+				<EasingDoubleKeyFrame Value="1" KeyTime="0:0:1.5" EasingFunction="{StaticResource Smooth}"/>
 			</DoubleAnimationUsingKeyFrames>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
 				<EasingDoubleKeyFrame KeyTime="0" Value="-20"/>
@@ -374,10 +374,10 @@ Website : http://www.kfstorm.com
 										<StackPanel DockPanel.Dock="Top">
 											<Grid>
 												<Grid.RowDefinitions>
-													<RowDefinition/> 					
-													<RowDefinition/> 					
-													<RowDefinition Height="Auto"/> 					
-												</Grid.RowDefinitions> 
+													<RowDefinition/>
+													<RowDefinition/>
+													<RowDefinition Height="Auto"/>
+												</Grid.RowDefinitions>
 												<Grid.ColumnDefinitions>
 													<ColumnDefinition Width="70"/>
 													<ColumnDefinition/>
@@ -396,7 +396,7 @@ Website : http://www.kfstorm.com
 												<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding UserAssistant.ShowLogOnFailedHint, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}" Margin="0,2"/>
 												<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="登录" HorizontalAlignment="Right" Width="100" Height="40" FontSize="16" Margin="0,5"/>
 											</StackPanel>
-										
+
 										</StackPanel>
 										<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
 											<Button x:Name="ButtonSignUp" Content="注册" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Height="30" Click="ButtonSignUp_Click" Margin="0,5"/>
@@ -480,7 +480,7 @@ Website : http://www.kfstorm.com
 								<Button x:Name="BtnExportSettings" Content="导出" MinWidth="50" Click="BtnExportSettings_Click" Margin="0,0,10,0"/>
 								<Button x:Name="BtnResetSettings" Content="重置" MinWidth="50" Click="BtnResetSettings_Click"/>
 							</StackPanel>
-						</Grid>			
+						</Grid>
 					</TabItem>
 					<TabItem Header="{StaticResource TabItemInfo}">
 						<Border Padding="20">
@@ -500,7 +500,6 @@ Website : http://www.kfstorm.com
 								</StackPanel>
 								<TextBlock Grid.Row="1" HorizontalAlignment="Center">第三方客户端</TextBlock>
 								<Label x:Name="lbVersion" Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">X.X.X</Label>
-								<Button x:Name="CheckUpdate" Grid.Row="3" Click="CheckUpdate_Click" Style="{StaticResource CheckUpdateStyle}"/>
 								<Grid Grid.Row="4" Height="40">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition/>
