@@ -1,7 +1,7 @@
 ﻿<!--
 Author : K.F.Storm
 Email : yk000123 at sina.com
-Website : http://www.kfstorm.com	
+Website : http://www.kfstorm.com
 -->
 <local:ChildWindowBase x:Class="DoubanFM.GeneralSettingWindow"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -10,7 +10,6 @@ Website : http://www.kfstorm.com
 		x:Name="Window"
 		Title="常规设置" Background="#FF813131">
 	<StackPanel Width="300" Margin="10">
-		<CheckBox x:Name="CheckBoxAutoUpdate" Content="开启自动更新" IsChecked="{Binding Settings.AutoUpdate, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxAdjustVolumeWithMouseWheel" Content="鼠标滚轮调节音量" IsChecked="{Binding Settings.AdjustVolumeWithMouseWheel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
@@ -35,7 +34,8 @@ Website : http://www.kfstorm.com
 				<Grid Margin="2">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition/>
-						<ColumnDefinition/><!-- Width="0"/>	目前代码有问题，无法设置为不使用代理，所以这里把它隐藏掉-->
+						<ColumnDefinition/>
+						<!-- Width="0"/>	目前代码有问题，无法设置为不使用代理，所以这里把它隐藏掉-->
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					<RadioButton x:Name="RbDefaultProxy" Click="ProxyKindChanged">系统默认</RadioButton>
