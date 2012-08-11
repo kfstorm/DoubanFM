@@ -4,21 +4,21 @@
  * Website : http://www.kfstorm.com
  * */
 
+using DoubanFM.Core;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Linq;
-using System.Windows;
 using System.Diagnostics;
-using System.Windows.Markup;
 using System.Globalization;
-using System.IO.MemoryMappedFiles;
-using DoubanFM.Core;
 using System.IO;
+using System.IO.MemoryMappedFiles;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
+using System.Windows;
+using System.Windows.Markup;
 
 namespace DoubanFM
 {
@@ -27,8 +27,8 @@ namespace DoubanFM
 	/// </summary>
 	public partial class App : Application
 	{
-		Mutex mutex;
-		object exceptionObject = null;
+		private Mutex mutex;
+		private static object exceptionObject = null;
 
 		public App()
 		{
@@ -86,7 +86,7 @@ namespace DoubanFM
 						sb.AppendLine(DateTime.Now.ToString());
 						sb.AppendLine(ExceptionWindow.GetSystemInformation());
 						sb.AppendLine(ExceptionWindow.GetExceptionMessage(exceptionObject));
-						
+
 						string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台\error.log");
 						string directory = Path.GetDirectoryName(path);
 						if (!Directory.Exists(directory))
@@ -94,9 +94,11 @@ namespace DoubanFM
 							Directory.CreateDirectory(directory);
 						}
 						File.WriteAllText(path, sb.ToString());
+
+						App.DeleteSettings();
 					}
 					catch { }
-					
+
 					Dispatcher.Invoke(new Action(() =>
 					{
 						try
@@ -104,11 +106,11 @@ namespace DoubanFM
 							DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
 							if (mainWindow != null)
 							{
-								Player player = FindResource("Player") as Player;
-								if (player != null) player.SaveSettings();
-								if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
-								if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
-								if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
+								//Player player = FindResource("Player") as Player;
+								//if (player != null) player.SaveSettings();
+								//if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
+								//if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
+								//if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
 								if (mainWindow.NotifyIcon != null) mainWindow.NotifyIcon.Dispose();
 							}
 							var window = new ExceptionWindow();
@@ -124,6 +126,7 @@ namespace DoubanFM
 				}
 				else
 				{
+					App.DeleteSettings();
 					SendReport();
 				}
 			});
@@ -197,6 +200,7 @@ namespace DoubanFM
 				}
 			}
 		}
+
 		/// <summary>
 		/// 清除内存映射文件
 		/// </summary>
@@ -234,6 +238,37 @@ namespace DoubanFM
 					}
 					catch { }
 					Process.GetCurrentProcess().Kill();
+				}
+			}
+		}
+
+		/// <summary>
+		/// 删除所有设置
+		/// </summary>
+		public static void DeleteSettings(bool useLock = true)
+		{
+			if (useLock && exceptionObject != null)
+			{
+				lock (exceptionObject)
+				{
+					DeleteSettings(false);
+				}
+			}
+			else
+			{
+				try
+				{
+					var dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
+					if (!Directory.Exists(dataFolder)) return;
+					var files = Directory.GetFiles(dataFolder, "*.dat");
+					foreach (var file in files)
+					{
+						File.Delete(file);
+					}
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine((ex.ToString()));
 				}
 			}
 		}

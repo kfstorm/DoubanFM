@@ -2068,19 +2068,7 @@ namespace DoubanFM
 			{
 				try
 				{
-					//删除所有设置
-
-					string dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
-					if (Directory.Exists(dataFolder))
-					{
-						string[] files = Directory.GetFiles(dataFolder);
-						foreach (var file in files)
-						{
-							File.Delete(file);
-						}
-						Directory.Delete(dataFolder);
-					}
-
+					App.DeleteSettings();
 					willSaveSettings = false;
 					_mappedFile.Dispose();
 					//关闭当前程序并启动一个新的程序
