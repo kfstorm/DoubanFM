@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -16,7 +17,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Collections.ObjectModel;
 
 namespace DoubanFM
 {
@@ -45,6 +45,8 @@ namespace DoubanFM
 					(Owner as DoubanFMWindow)._lyricsWindow.HideBoundary();
 				}
 			};
+
+			UpdateComboBoxOutputScreen();
 		}
 
 		private void CbShowLyrics_Checked(object sender, RoutedEventArgs e)
@@ -94,6 +96,45 @@ namespace DoubanFM
 			{
 				(Owner as DoubanFMWindow)._lyricsWindow.HideBoundary();
 			}
+		}
+
+		private void UpdateComboBoxOutputScreen()
+		{
+			pauseUpdateSizeAndLocation = true;
+
+			cbOutputScreen.Items.Clear();
+			var screens = Screen.AllScreens;
+			for (var i = 0; i < screens.Length; ++i)
+			{
+				cbOutputScreen.Items.Add(new ComboBoxItem() { Content = string.Format("显示器{0}", i + 1), Tag = screens[i].DeviceName });
+				if (screens[i].DeviceName == LyricsSetting.DesktopLyricsScreen)
+				{
+					cbOutputScreen.SelectedIndex = i;
+				}
+				if (cbOutputScreen.SelectedItem == null && screens[i].Primary)
+				{
+					cbOutputScreen.SelectedIndex = i;
+				}
+			}
+
+			if (cbOutputScreen.SelectedItem != null)
+			{
+				LyricsSetting.DesktopLyricsScreen = (cbOutputScreen.SelectedItem as ComboBoxItem).Tag as string;
+				((DoubanFMWindow)Owner)._lyricsWindow.UpdateSizeAndLocation();
+			}
+
+			pauseUpdateSizeAndLocation = false;
+		}
+
+		private bool pauseUpdateSizeAndLocation = false;
+
+		private void cbOutputScreen_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (pauseUpdateSizeAndLocation) return;
+			if (e.AddedItems.Count <= 0) return;
+			var deviceName = ((ComboBoxItem)e.AddedItems[0]).Tag as string;
+			LyricsSetting.DesktopLyricsScreen = deviceName;
+			((DoubanFMWindow)Owner)._lyricsWindow.UpdateSizeAndLocation();
 		}
 	}
 }

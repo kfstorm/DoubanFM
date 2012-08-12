@@ -4,23 +4,23 @@
  * Website : http://www.kfstorm.com
  * */
 
+using DoubanFM.Core;
+using DoubanFM.Interop;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Windows.Media.Animation;
-using DoubanFM.Core;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
-using System.Globalization;
-using DoubanFM.Interop;
 using System.Windows.Threading;
 
 namespace DoubanFM
@@ -31,6 +31,7 @@ namespace DoubanFM
 	public partial class LyricsWindow : Window
 	{
 		public static readonly DependencyProperty LyricsSettingProperty = DependencyProperty.Register("LyricsSetting", typeof(LyricsSetting), typeof(LyricsWindow));
+
 		public LyricsSetting LyricsSetting
 		{
 			get { return (LyricsSetting)GetValue(LyricsSettingProperty); }
@@ -38,6 +39,7 @@ namespace DoubanFM
 		}
 
 		private Lyrics _lyrics;
+
 		/// <summary>
 		/// 歌词分析器
 		/// </summary>
@@ -53,10 +55,12 @@ namespace DoubanFM
 				}
 			}
 		}
+
 		/// <summary>
 		/// 当前歌词所在位置
 		/// </summary>
 		private int _lyricsCurrentIndex = int.MinValue;
+
 		/// <summary>
 		/// 更换歌词的Storyboard
 		/// </summary>
@@ -92,12 +96,7 @@ namespace DoubanFM
 			UpdateSizeAndLocation();
 
 			//监听Windows的显示设置，当分辨率改变或任务栏位置和大小改变时，能够调整歌词位置
-			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += delegate { UpdateSizeAndLocation(); };
-			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler((sender, e) =>
-				{
-					if (e.Category == Microsoft.Win32.UserPreferenceCategory.Desktop)
-						UpdateSizeAndLocation();
-				});
+			Screen.DisplayChanged += (sender, e) => UpdateSizeAndLocation();
 
 			//将歌词窗口的属性与设置绑定
 
@@ -197,12 +196,27 @@ namespace DoubanFM
 		/// <summary>
 		/// 更新窗口的位置和大小
 		/// </summary>
-		protected void UpdateSizeAndLocation()
+		public void UpdateSizeAndLocation()
 		{
-			this.Left = SystemParameters.WorkArea.Left;
-			this.Top = SystemParameters.WorkArea.Top;
-			this.Width = SystemParameters.WorkArea.Width;
-			this.Height = SystemParameters.WorkArea.Height;
+			Screen outputScreen = null;
+			foreach (var screen in Screen.AllScreens)
+			{
+				if (screen.DeviceName == LyricsSetting.DesktopLyricsScreen)
+				{
+					outputScreen = screen;
+				}
+			}
+			if (outputScreen == null)
+			{
+				outputScreen = Screen.PrimaryScreen;
+			}
+
+			this.Left = outputScreen.WorkingArea.Left;
+			this.Top = outputScreen.WorkingArea.Top;
+			this.Width = outputScreen.WorkingArea.Width;
+			this.Height = outputScreen.WorkingArea.Height;
+
+			LyricsSetting.DesktopLyricsScreen = outputScreen.DeviceName;
 		}
 
 		/// <summary>
@@ -224,6 +238,7 @@ namespace DoubanFM
 		#region 绘制歌词
 
 		#region 字体
+
 		/// <summary>
 		/// 字体
 		/// </summary>
@@ -236,15 +251,17 @@ namespace DoubanFM
 		public static readonly DependencyProperty LyricsFontFamilyProperty =
 			DependencyProperty.Register("LyricsFontFamily", typeof(FontFamily), typeof(LyricsWindow), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, new PropertyChangedCallback(OnLyricsFontFamilyChanged)));
 
-		static void OnLyricsFontFamilyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnLyricsFontFamilyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
-		#endregion
+
+		#endregion 字体
 
 		#region 字号
+
 		/// <summary>
 		/// 字号
 		/// </summary>
@@ -257,16 +274,18 @@ namespace DoubanFM
 		public static readonly DependencyProperty LyricsFontSizeProperty =
 			DependencyProperty.Register("LyricsFontSize", typeof(double), typeof(LyricsWindow), new FrameworkPropertyMetadata(SystemFonts.MessageFontSize, new PropertyChangedCallback(OnLyricsFontSizeChanged)));
 
-		static void OnLyricsFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnLyricsFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 			(d as LyricsWindow).UpdateStrokeAndShadow();
 		}
-		#endregion
+
+		#endregion 字号
 
 		#region 粗细
+
 		/// <summary>
 		/// 粗细
 		/// </summary>
@@ -279,15 +298,17 @@ namespace DoubanFM
 		public static readonly DependencyProperty LyricsFontWeightProperty =
 			DependencyProperty.Register("LyricsFontWeight", typeof(FontWeight), typeof(LyricsWindow), new FrameworkPropertyMetadata(SystemFonts.MessageFontWeight, new PropertyChangedCallback(OnLyricsFontWeightChanged)));
 
-		static void OnLyricsFontWeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnLyricsFontWeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
-		#endregion
+
+		#endregion 粗细
 
 		#region 描边粗细
+
 		/// <summary>
 		/// 描边粗细
 		/// </summary>
@@ -300,13 +321,15 @@ namespace DoubanFM
 		public static readonly DependencyProperty LyricsStrokeWeightProperty =
 			DependencyProperty.Register("LyricsStrokeWeight", typeof(double), typeof(LyricsWindow), new FrameworkPropertyMetadata(new PropertyChangedCallback(OnLyricsStrokeWeightChanged)));
 
-		static void OnLyricsStrokeWeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnLyricsStrokeWeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			(d as LyricsWindow).UpdateStrokeAndShadow();
 		}
-		#endregion
+
+		#endregion 描边粗细
 
 		#region 歌词文字1
+
 		/// <summary>
 		/// 歌词文字1
 		/// </summary>
@@ -319,13 +342,15 @@ namespace DoubanFM
 		public static readonly DependencyProperty LyricsText1Property =
 			DependencyProperty.Register("LyricsText1", typeof(string), typeof(LyricsWindow), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnLyricsText1Changed)));
 
-		static void OnLyricsText1Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnLyricsText1Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText1);
 		}
-		#endregion
+
+		#endregion 歌词文字1
 
 		#region 歌词文字2
+
 		/// <summary>
 		/// 歌词文字2
 		/// </summary>
@@ -338,13 +363,15 @@ namespace DoubanFM
 		public static readonly DependencyProperty LyricsText2Property =
 			DependencyProperty.Register("LyricsText2", typeof(string), typeof(LyricsWindow), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnLyricsText2Changed)));
 
-		static void OnLyricsText2Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnLyricsText2Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText2);
 		}
-		#endregion
+
+		#endregion 歌词文字2
 
 		#region 歌词文字3
+
 		/// <summary>
 		/// 歌词文字3
 		/// </summary>
@@ -357,11 +384,12 @@ namespace DoubanFM
 		public static readonly DependencyProperty LyricsText3Property =
 			DependencyProperty.Register("LyricsText3", typeof(string), typeof(LyricsWindow), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnLyricsText3Changed)));
 
-		static void OnLyricsText3Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnLyricsText3Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			(d as LyricsWindow).UpdateText((d as LyricsWindow).PathText3);
 		}
-		#endregion
+
+		#endregion 歌词文字3
 
 		/// <summary>
 		/// 重绘歌词
@@ -411,7 +439,7 @@ namespace DoubanFM
 					FlowDirection.LeftToRight,
 					new Typeface(LyricsFontFamily == null ? SystemFonts.MessageFontFamily : LyricsFontFamily, FontStyles.Normal, LyricsFontWeight, FontStretches.Normal),
 					LyricsFontSize,
-					System.Windows.Media.Brushes.Black // This brush does not matter since we use the geometry of the text. 
+					System.Windows.Media.Brushes.Black // This brush does not matter since we use the geometry of the text.
 					).BuildGeometry(new System.Windows.Point(0, 0));
 				if (geometry.CanFreeze) geometry.Freeze();
 				return geometry;
@@ -422,12 +450,12 @@ namespace DoubanFM
 			}
 		}
 
-		#endregion
+		#endregion 绘制歌词
 
 		/// <summary>
 		/// 强力置顶所使用的计时器
 		/// </summary>
-		DispatcherTimer timer = new DispatcherTimer();
+		private DispatcherTimer timer = new DispatcherTimer();
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{

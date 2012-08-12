@@ -229,18 +229,6 @@ namespace DoubanFM
 			if (!double.IsNaN(_player.Settings.LocationLeft))
 			{
 				this.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
-				this.Left = _player.Settings.LocationLeft;
-				this.Top = _player.Settings.LocationTop;
-
-				//防止调整分辨率后窗口超出屏幕
-				if (this.Left + 50 > SystemParameters.WorkArea.Right)
-					this.Left = SystemParameters.WorkArea.Right - 50;
-				if (this.Top + 50 > SystemParameters.WorkArea.Bottom)
-					this.Top = SystemParameters.WorkArea.Bottom - 50;
-				if (this.Left < SystemParameters.WorkArea.Left)
-					this.Left = SystemParameters.WorkArea.Left;
-				if (this.Top < SystemParameters.WorkArea.Top)
-					this.Top = SystemParameters.WorkArea.Top;
 			}
 		}
 
@@ -1924,6 +1912,19 @@ namespace DoubanFM
 
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置完成");
 
+			//初始化窗口位置
+			if (!double.IsNaN(_player.Settings.LocationLeft))
+			{
+				var rect = new Rect(_player.Settings.LocationLeft,
+					_player.Settings.LocationTop,
+					this.RestoreBounds.Width,
+					this.RestoreBounds.Height);
+				var workArea = Screen.GetWorkingArea(rect);
+				this.Left = Math.Max(workArea.Left, Math.Min(workArea.Right - RestoreBounds.Width, rect.Left));
+				this.Top = Math.Max(workArea.Top, Math.Min(workArea.Bottom - RestoreBounds.Height, rect.Top));
+			}
+			recordLocation = true;
+
 			//设置歌词显示
 			if (_player.Settings.ShowLyrics)
 			{
@@ -2190,9 +2191,11 @@ namespace DoubanFM
 			}
 		}
 
+		private bool recordLocation = false;
+
 		private void Window_LocationChanged(object sender, EventArgs e)
 		{
-			if (!this.RestoreBounds.IsEmpty)
+			if (recordLocation && !this.RestoreBounds.IsEmpty)
 			{
 				//_player.Settings.LocationLeft = this.Left;
 				//_player.Settings.LocationTop = this.Top;

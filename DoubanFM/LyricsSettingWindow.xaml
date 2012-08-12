@@ -1,7 +1,7 @@
 ﻿<!--
 Author : K.F.Storm
 Email : yk000123 at sina.com
-Website : http://www.kfstorm.com	
+Website : http://www.kfstorm.com
 -->
 <local:ChildWindowBase x:Class="DoubanFM.LyricsSettingWindow"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -32,7 +32,7 @@ Website : http://www.kfstorm.com
 			</StackPanel>
 			<CheckBox Grid.Row="1" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked" Margin="0,2">内嵌歌词</CheckBox>
 		</Grid>
-			<GroupBox Header="桌面歌词设置" Margin="0,2">
+		<GroupBox Header="桌面歌词设置" Margin="0,2">
 			<StackPanel>
 				<Grid Width="300" HorizontalAlignment="Left">
 					<Grid.ColumnDefinitions>
@@ -50,6 +50,10 @@ Website : http://www.kfstorm.com
 						</CheckBox.ToolTip>
 					</CheckBox>
 					<CheckBox IsChecked="{Binding LyricsSetting.HideWhenPause, ElementName=Window}" Margin="0,2">音乐暂停时隐藏</CheckBox>
+					<StackPanel Orientation="Horizontal" Margin="0,2">
+						<TextBlock VerticalAlignment="Center">输出显示器</TextBlock>
+						<ComboBox x:Name="cbOutputScreen" VerticalAlignment="Center" Width="100" Margin="10,0,0,0" SelectionChanged="cbOutputScreen_SelectionChanged"/>
+					</StackPanel>
 				</StackPanel>
 				<Grid>
 					<Grid.RowDefinitions>

@@ -6,12 +6,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Windows;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Windows;
 using System.Windows.Media;
 
 namespace DoubanFM
@@ -42,7 +42,8 @@ namespace DoubanFM
 		public static readonly DependencyProperty VerticalAlignmentProperty = DependencyProperty.Register("VerticalAlignment", typeof(VerticalAlignment), typeof(LyricsSetting), new PropertyMetadata(VerticalAlignment.Bottom));
 		public static readonly DependencyProperty ForceTopMostProperty = DependencyProperty.Register("ForceTopMost", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(false));
 		public static readonly DependencyProperty HideWhenPauseProperty = DependencyProperty.Register("HideWhenPause", typeof(bool), typeof(LyricsSetting), new PropertyMetadata(true));
-		
+		public static readonly DependencyProperty DesktopLyricsScreenProperty = DependencyProperty.Register("DesktopLyricsScreen", typeof(string), typeof(LyricsSetting), new PropertyMetadata(Screen.PrimaryScreen.DeviceName));
+
 		/// <summary>
 		/// 字体
 		/// </summary>
@@ -51,6 +52,7 @@ namespace DoubanFM
 			get { return (FontFamily)GetValue(FontFamilyProperty); }
 			set { SetValue(FontFamilyProperty, value); }
 		}
+
 		/// <summary>
 		/// 大小
 		/// </summary>
@@ -59,6 +61,7 @@ namespace DoubanFM
 			get { return (double)GetValue(FontSizeProperty); }
 			set { SetValue(FontSizeProperty, value); }
 		}
+
 		/// <summary>
 		/// 粗细
 		/// </summary>
@@ -67,6 +70,7 @@ namespace DoubanFM
 			get { return (int)GetValue(FontWeightProperty); }
 			set { SetValue(FontWeightProperty, value); }
 		}
+
 		/// <summary>
 		/// 描边粗细
 		/// </summary>
@@ -75,6 +79,7 @@ namespace DoubanFM
 			get { return (double)GetValue(StrokeWeightProperty); }
 			set { SetValue(StrokeWeightProperty, value); }
 		}
+
 		/// <summary>
 		/// 顶部边距
 		/// </summary>
@@ -83,6 +88,7 @@ namespace DoubanFM
 			get { return (double)GetValue(TopMarginProperty); }
 			set { SetValue(TopMarginProperty, value); }
 		}
+
 		/// <summary>
 		/// 底部边距
 		/// </summary>
@@ -91,6 +97,7 @@ namespace DoubanFM
 			get { return (double)GetValue(BottomMarginProperty); }
 			set { SetValue(BottomMarginProperty, value); }
 		}
+
 		/// <summary>
 		/// 左边距
 		/// </summary>
@@ -99,6 +106,7 @@ namespace DoubanFM
 			get { return (double)GetValue(LeftMarginProperty); }
 			set { SetValue(LeftMarginProperty, value); }
 		}
+
 		/// <summary>
 		/// 右边距
 		/// </summary>
@@ -107,6 +115,7 @@ namespace DoubanFM
 			get { return (double)GetValue(RightMarginProperty); }
 			set { SetValue(RightMarginProperty, value); }
 		}
+
 		/// <summary>
 		/// 是否开启桌面歌词
 		/// </summary>
@@ -115,6 +124,7 @@ namespace DoubanFM
 			get { return (bool)GetValue(EnableDesktopLyricsProperty); }
 			set { SetValue(EnableDesktopLyricsProperty, value); }
 		}
+
 		/// <summary>
 		/// 是否开启内嵌歌词
 		/// </summary>
@@ -123,6 +133,7 @@ namespace DoubanFM
 			get { return (bool)GetValue(EnableEmbeddedLyricsProperty); }
 			set { SetValue(EnableEmbeddedLyricsProperty, value); }
 		}
+
 		/// <summary>
 		/// 不透明度
 		/// </summary>
@@ -131,6 +142,7 @@ namespace DoubanFM
 			get { return (double)GetValue(OpacityProperty); }
 			set { SetValue(OpacityProperty, value); }
 		}
+
 		/// <summary>
 		/// 前景色
 		/// </summary>
@@ -139,14 +151,16 @@ namespace DoubanFM
 			get { return (Color)GetValue(ForegroundProperty); }
 			set { SetValue(ForegroundProperty, value); }
 		}
+
 		/// <summary>
-		/// 描边色 
+		/// 描边色
 		/// </summary>
 		public Color StrokeColor
 		{
 			get { return (Color)GetValue(StrokeColorProperty); }
 			set { SetValue(StrokeColorProperty, value); }
 		}
+
 		/// <summary>
 		/// 阴影色
 		/// </summary>
@@ -155,6 +169,7 @@ namespace DoubanFM
 			get { return (Color)GetValue(ShadowColorProperty); }
 			set { SetValue(ShadowColorProperty, value); }
 		}
+
 		/// <summary>
 		/// 自动前景
 		/// </summary>
@@ -190,6 +205,7 @@ namespace DoubanFM
 			get { return (VerticalAlignment)GetValue(VerticalAlignmentProperty); }
 			set { SetValue(VerticalAlignmentProperty, value); }
 		}
+
 		/// <summary>
 		/// 是否强力置顶
 		/// </summary>
@@ -198,6 +214,7 @@ namespace DoubanFM
 			get { return (bool)GetValue(ForceTopMostProperty); }
 			set { SetValue(ForceTopMostProperty, value); }
 		}
+
 		/// <summary>
 		/// 暂停时隐藏歌词
 		/// </summary>
@@ -208,9 +225,19 @@ namespace DoubanFM
 		}
 
 		/// <summary>
+		/// 显示桌面歌词的显示器名称
+		/// </summary>
+		public string DesktopLyricsScreen
+		{
+			get { return (string)GetValue(DesktopLyricsScreenProperty); }
+			set { SetValue(DesktopLyricsScreenProperty, value); }
+		}
+
+		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
 		private static string _dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
+
 		/// <summary>
 		/// 加载设置
 		/// </summary>
@@ -231,6 +258,7 @@ namespace DoubanFM
 			}
 			return setting;
 		}
+
 		/// <summary>
 		/// 保存设置
 		/// </summary>
@@ -248,9 +276,9 @@ namespace DoubanFM
 			}
 			catch { }
 		}
+
 		public LyricsSetting()
 		{
-
 		}
 
 		protected LyricsSetting(SerializationInfo info, StreamingContext context)
@@ -296,6 +324,8 @@ namespace DoubanFM
 			catch { }
 			try { HideWhenPause = info.GetBoolean("HideWhenPause"); }
 			catch { }
+			try { DesktopLyricsScreen = info.GetString("DesktopLyricsScreen"); }
+			catch { }
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -323,6 +353,7 @@ namespace DoubanFM
 			info.AddValue("VerticalAlignment", VerticalAlignment);
 			info.AddValue("ForceTopMost", ForceTopMost);
 			info.AddValue("HideWhenPause", HideWhenPause);
+			info.AddValue("DesktopLyricsScreen", DesktopLyricsScreen);
 		}
 	}
 }
