@@ -4,10 +4,17 @@
  * Website : http://www.kfstorm.com
  * */
 
+using DoubanFM.Core;
+using DoubanFM.Wmi;
 using System;
 using System.Collections.Generic;
+using System.Deployment.Application;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,12 +23,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Threading;
-using DoubanFM.Core;
-using System.Reflection;
-using System.Diagnostics;
-using System.IO;
-using DoubanFM.Wmi;
 
 namespace DoubanFM
 {
@@ -31,6 +32,7 @@ namespace DoubanFM
 	public partial class ExceptionWindow : ChildWindowBase
 	{
 		private object exceptionObject;
+
 		/// <summary>
 		/// 保存异常信息的对象
 		/// </summary>
@@ -55,6 +57,7 @@ namespace DoubanFM
 		/// 异常信息
 		/// </summary>
 		public string ExceptionMessage;
+
 		/// <summary>
 		/// 系统信息
 		/// </summary>
@@ -126,6 +129,17 @@ namespace DoubanFM
 		public static string GetSystemInformation()
 		{
 			StringBuilder sb = new StringBuilder();
+
+			try
+			{
+				sb.AppendLine("ClickOnce应用程序部署版本：" + ApplicationDeployment.CurrentDeployment.CurrentVersion);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				sb.AppendLine("非ClickOnce应用程序");
+			}
+
 			sb.AppendLine("DoubanFM.exe版本：" + GetAssemblyVersion(typeof(App)));
 			sb.AppendLine("DoubanFM.Core.dll版本：" + GetAssemblyVersion(typeof(Player)));
 			sb.AppendLine("DoubanFM.Bass.dll版本：" + GetAssemblyVersion(typeof(Bass.BassEngine)));
@@ -294,7 +308,7 @@ namespace DoubanFM
 		{
 			Assembly assembly = Assembly.GetEntryAssembly();
 			string productName = ((AssemblyProductAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyProductAttribute))).Product;
-			string versionNumber = assembly.GetName().Version.ToString();
+			string versionNumber = App.AppVersion.ToString();
 
 			Parameters parameters = new Parameters();
 			parameters["ProductName"] = productName;

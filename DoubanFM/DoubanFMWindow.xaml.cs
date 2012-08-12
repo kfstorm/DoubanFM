@@ -10,10 +10,12 @@ using DoubanFM.NotifyIcon;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Deployment.Application;
 using System.Diagnostics;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -203,6 +205,7 @@ namespace DoubanFM
 			InitNotifyIcon();
 			InitTimers();
 			CheckMappedFile();
+			ReportUseAtStartup();
 			InitLyrics();
 			InitShareSetting();
 			InitBackground();
@@ -562,8 +565,7 @@ namespace DoubanFM
 			VolumeDirectIn = (Storyboard)FindResource("VolumeDirectIn");
 			EnhancementsPanelShow = (Storyboard)FindResource("EnhancementsPanelShow");
 			EnhancementsPanelHide = (Storyboard)FindResource("EnhancementsPanelHide");
-
-			lbVersion.Content = typeof(App).Assembly.GetName().Version.ToString(3);
+			lbVersion.Content = App.AppVersion;
 		}
 
 		/// <summary>
@@ -726,6 +728,19 @@ namespace DoubanFM
 		{
 			ShareSetting = ShareSetting.Load();
 			ApplyShareSetting();
+		}
+
+		/// <summary>
+		/// 启动时向服务器报告
+		/// </summary>
+		private void ReportUseAtStartup()
+		{
+			var parameters = new Parameters();
+			parameters["ProductName"] = ((AssemblyProductAttribute)Attribute.GetCustomAttribute(typeof(DoubanFMWindow).Assembly, typeof(AssemblyProductAttribute))).Product;
+			parameters["VersionNumber"] = App.AppVersion.ToString();
+			parameters["UserKey"] = _player.Settings.UserKey;
+			var url = ConnectionBase.ConstructUrlWithParameters("http://doubanfmcloud.sinaapp.com/products/reportuse.php", parameters);
+			ThreadPool.QueueUserWorkItem((state) => new ConnectionBase().Get(url));
 		}
 
 		/// <summary>
@@ -1047,6 +1062,7 @@ namespace DoubanFM
 						break;
 
 					case Commands.Like:
+
 						hotKey.OnHotKey += delegate
 						{
 							Like();

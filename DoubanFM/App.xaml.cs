@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Deployment.Application;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -29,6 +30,19 @@ namespace DoubanFM
 	{
 		private Mutex mutex;
 		private static object exceptionObject = null;
+
+		static App()
+		{
+			try
+			{
+				AppVersion = ApplicationDeployment.CurrentDeployment.CurrentVersion;
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				AppVersion = typeof(App).Assembly.GetName().Version;
+			}
+		}
 
 		public App()
 		{
@@ -249,10 +263,12 @@ namespace DoubanFM
 		{
 			if (useLock && exceptionObject != null)
 			{
+#if !DEBUG
 				lock (exceptionObject)
 				{
 					DeleteSettings(false);
 				}
+#endif
 			}
 			else
 			{
@@ -272,5 +288,7 @@ namespace DoubanFM
 				}
 			}
 		}
+
+		public static Version AppVersion { get; private set; }
 	}
 }
