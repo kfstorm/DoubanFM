@@ -1,0 +1,2 @@
+﻿1、请使用Visual Studio 2012打开解决方案。
+2、在打开解决方案文件DoubanFM.sln时，如果出现有关Team Foundation Server的提示，请无视，点击对话框右上角的关闭按钮即可。如果想去掉此提示，请自行到网上搜索去除方法。
