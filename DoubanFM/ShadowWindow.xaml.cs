@@ -4,8 +4,10 @@
  * Website : http://www.kfstorm.com
  * */
 
+using DoubanFM.Interop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -13,12 +15,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using DoubanFM.Interop;
-using System.Windows.Interop;
-using System.Diagnostics;
 
 namespace DoubanFM
 {
@@ -31,6 +31,7 @@ namespace DoubanFM
 		/// 阴影窗口的句柄
 		/// </summary>
 		protected IntPtr Handle = IntPtr.Zero;
+
 		/// <summary>
 		/// 父窗口的句柄
 		/// </summary>
@@ -56,6 +57,7 @@ namespace DoubanFM
 
 		protected const double shadowSize = 24;
 		protected static readonly GridLength gridShadowSize = new GridLength(shadowSize, GridUnitType.Pixel);
+
 		public GridLength GridShadowSize { get { return gridShadowSize; } }
 
 		static ShadowWindow()
@@ -104,7 +106,7 @@ namespace DoubanFM
 		/// </summary>
 		/// <param name="filename">文件名</param>
 		/// <returns>图片的URI</returns>
-		static Uri GetImageUri(string filename)
+		private static Uri GetImageUri(string filename)
 		{
 			return new Uri("pack://application:,,,/DoubanFM;component/Images/Shadow/" + filename);
 		}
@@ -123,7 +125,7 @@ namespace DoubanFM
 			}
 			else
 			{
-				owner.SourceInitialized += delegate
+				owner.ContentRendered += delegate
 				{
 					Init(owner);
 				};
@@ -135,7 +137,7 @@ namespace DoubanFM
 		/// 初始化阴影窗口
 		/// </summary>
 		/// <param name="owner">父窗口</param>
-		void Init(Window owner)
+		private void Init(Window owner)
 		{
 			Owner = owner;
 			Handle = new WindowInteropHelper(this).EnsureHandle();
@@ -153,7 +155,7 @@ namespace DoubanFM
 			Owner.IsVisibleChanged += new DependencyPropertyChangedEventHandler(Owner_IsVisibleChanged);
 			Owner.LocationChanged += new EventHandler(Owner_LocationChanged);
 			Owner.SizeChanged += new SizeChangedEventHandler(Owner_SizeChanged);
-			
+
 			//初始化活动或非活动的阴影
 			if (Owner.IsActive)
 			{
@@ -172,16 +174,16 @@ namespace DoubanFM
 			ConsiderShowShadow();
 		}
 
-		void Owner_SizeChanged(object sender, SizeChangedEventArgs e)
+		private void Owner_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			this.Width = Owner.ActualWidth + shadowSize * 2;
 			this.Height = Owner.ActualHeight + shadowSize * 2;
 		}
 
-		bool isOwnerLocationChanged = false;
-		object lockObject = new object();
+		private bool isOwnerLocationChanged = false;
+		private object lockObject = new object();
 
-		void Owner_LocationChanged(object sender, EventArgs e)
+		private void Owner_LocationChanged(object sender, EventArgs e)
 		{
 			lock (lockObject)
 			{
@@ -192,7 +194,7 @@ namespace DoubanFM
 			}
 		}
 
-		void ShadowWindow_LocationChanged(object sender, EventArgs e)
+		private void ShadowWindow_LocationChanged(object sender, EventArgs e)
 		{
 			if (!isOwnerLocationChanged)
 			{
@@ -201,7 +203,7 @@ namespace DoubanFM
 			}
 		}
 
-		void Owner_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void Owner_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if ((bool)e.NewValue)
 			{
@@ -213,7 +215,7 @@ namespace DoubanFM
 			}
 		}
 
-		void Owner_StateChanged(object sender, EventArgs e)
+		private void Owner_StateChanged(object sender, EventArgs e)
 		{
 			switch (Owner.WindowState)
 			{
@@ -221,6 +223,7 @@ namespace DoubanFM
 				case WindowState.Minimized:
 					HideShadow();
 					break;
+
 				case WindowState.Normal:
 					ConsiderShowShadow();
 					break;
@@ -229,12 +232,12 @@ namespace DoubanFM
 			}
 		}
 
-		void Owner_Activated(object sender, EventArgs e)
+		private void Owner_Activated(object sender, EventArgs e)
 		{
 			ChangeToActive();
 		}
 
-		void Owner_Deactivated(object sender, EventArgs e)
+		private void Owner_Deactivated(object sender, EventArgs e)
 		{
 			ChangeToInactive();
 		}

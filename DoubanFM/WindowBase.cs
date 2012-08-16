@@ -4,15 +4,15 @@
  * Website : http://www.kfstorm.com
  * */
 
+using DoubanFM.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Interop;
-using DoubanFM.Interop;
+using System.Windows.Media;
 
 namespace DoubanFM
 {
@@ -28,7 +28,7 @@ namespace DoubanFM
 
 		public WindowBase()
 		{
-			this.Loaded += delegate
+			this.ContentRendered += delegate
 			{
 				//添加窗口阴影
 				ShadowWindow.Attach(this);
@@ -36,8 +36,8 @@ namespace DoubanFM
 
 			this.SourceInitialized += delegate
 			{
-                //只有Windows Vista和Windows 7支持Aero特效
-                if (Environment.OSVersion.Version >= new Version(6,0) && Environment.OSVersion.Version < new Version(6, 2))
+				//只有Windows Vista和Windows 7支持Aero特效
+				if (Environment.OSVersion.Version >= new Version(6, 0) && Environment.OSVersion.Version < new Version(6, 2))
 				{
 					//监听系统中Aero设置的改变
 					this.AeroGlassCompositionChanged += new EventHandler<Aero.AeroGlassCompositionChangedEventArgs>(WindowBase_AeroGlassCompositionChanged);
@@ -55,8 +55,8 @@ namespace DoubanFM
 			//当窗口大小改变后，需调整Aero模糊效果的范围，所以这里调用EnableBlurBehindWindow方法更新模糊效果
 			this.SizeChanged += delegate
 			{
-                //只有Windows Vista和Windows 7支持Aero特效
-                if (Environment.OSVersion.Version >= new Version(6, 0) && Environment.OSVersion.Version < new Version(6, 2))
+				//只有Windows Vista和Windows 7支持Aero特效
+				if (Environment.OSVersion.Version >= new Version(6, 0) && Environment.OSVersion.Version < new Version(6, 2))
 				{
 					Aero.AeroHelper.EnableBlurBehindWindow(this);
 				}
@@ -66,7 +66,7 @@ namespace DoubanFM
 		/// <summary>
 		/// Aero效果设置已改变
 		/// </summary>
-		void WindowBase_AeroGlassCompositionChanged(object sender, Aero.AeroGlassCompositionChangedEventArgs e)
+		private void WindowBase_AeroGlassCompositionChanged(object sender, Aero.AeroGlassCompositionChangedEventArgs e)
 		{
 			if (e.GlassAvailable)
 			{
@@ -78,25 +78,30 @@ namespace DoubanFM
 		/// 当前是否正在拖拽窗口
 		/// </summary>
 		protected bool IsDraging = false;
+
 		/// <summary>
 		/// 是否按下了鼠标左键（不要用Mouse.LeftButton去检测）
 		/// </summary>
-		bool pressed = false;
+		private bool pressed = false;
+
 		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
 		{
 			pressed = true;
 			base.OnMouseLeftButtonDown(e);
 		}
+
 		protected override void OnMouseRightButtonUp(System.Windows.Input.MouseButtonEventArgs e)
 		{
 			pressed = false;
 			base.OnMouseRightButtonUp(e);
 		}
+
 		protected override void OnMouseLeave(System.Windows.Input.MouseEventArgs e)
 		{
 			pressed = false;
 			base.OnMouseLeave(e);
 		}
+
 		/// <summary>
 		/// 支持拖拽窗口
 		/// </summary>
