@@ -31,8 +31,20 @@ namespace DoubanFM
 		private Mutex mutex;
 		private static object exceptionObject = null;
 
+		/// <summary>
+		/// 启动时的时间
+		/// </summary>
+		public static DateTime StartTime { get; set; }
+
+		/// <summary>
+		/// 是否已启动
+		/// </summary>
+		public static bool Started { get; set; }
+
 		static App()
 		{
+			Started = false;
+
 			try
 			{
 				AppVersion = ApplicationDeployment.CurrentDeployment.CurrentVersion;
@@ -109,7 +121,7 @@ namespace DoubanFM
 						}
 						File.WriteAllText(path, sb.ToString());
 
-						App.DeleteSettings();
+						DeleteSettingsIfEmergant();
 					}
 					catch { }
 
@@ -117,14 +129,10 @@ namespace DoubanFM
 					{
 						try
 						{
-							DoubanFMWindow mainWindow = MainWindow as DoubanFMWindow;
+							SaveSettings();
+							var mainWindow = MainWindow as DoubanFMWindow;
 							if (mainWindow != null)
 							{
-								//Player player = FindResource("Player") as Player;
-								//if (player != null) player.SaveSettings();
-								//if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
-								//if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
-								//if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
 								if (mainWindow.NotifyIcon != null) mainWindow.NotifyIcon.Dispose();
 							}
 							var window = new ExceptionWindow();
@@ -140,7 +148,7 @@ namespace DoubanFM
 				}
 				else
 				{
-					App.DeleteSettings();
+					DeleteSettingsIfEmergant();
 					SendReport();
 				}
 			});
@@ -287,6 +295,46 @@ namespace DoubanFM
 					Debug.WriteLine((ex.ToString()));
 				}
 			}
+		}
+
+		private static bool _neverSaveSettings = false;
+
+		/// <summary>
+		/// 如果软件无法正常启动，则删除设置
+		/// </summary>
+		public static void DeleteSettingsIfEmergant()
+		{
+			if (Started && DateTime.Now - StartTime >= TimeSpan.FromSeconds(5)) return;
+			NeverSaveSettings();
+			DeleteSettings();
+		}
+
+		/// <summary>
+		/// 删除设置
+		/// </summary>
+		/// <param name="mainWindow">软件的主窗口</param>
+		public void SaveSettings(DoubanFMWindow mainWindow = null)
+		{
+			if (_neverSaveSettings) return;
+			if (mainWindow == null)
+			{
+				mainWindow = MainWindow as DoubanFMWindow;
+			}
+			if (mainWindow == null) return;
+
+			var player = FindResource("Player") as Player;
+			if (player != null) player.SaveSettings();
+			if (mainWindow._lyricsSetting != null) mainWindow._lyricsSetting.Save();
+			if (mainWindow.ShareSetting != null) mainWindow.ShareSetting.Save();
+			if (mainWindow.HotKeys != null) mainWindow.HotKeys.Save();
+		}
+
+		/// <summary>
+		/// 本次运行不再保存设置
+		/// </summary>
+		public static void NeverSaveSettings()
+		{
+			_neverSaveSettings = true;
 		}
 
 		public static Version AppVersion { get; private set; }

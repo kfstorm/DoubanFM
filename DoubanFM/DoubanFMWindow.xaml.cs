@@ -187,8 +187,6 @@ namespace DoubanFM
 		///// </summary>
 		//private DateTime _lastTimeChangeSong = DateTime.MaxValue;
 
-		public bool willSaveSettings = true;
-
 		#endregion 成员变量
 
 		#region 构造和初始化
@@ -1259,23 +1257,7 @@ namespace DoubanFM
 
 		public void SaveSettings()
 		{
-			if (!willSaveSettings) return;
-			if (HotKeys != null)
-			{
-				HotKeys.Save();
-			}
-			if (_lyricsSetting != null)
-			{
-				_lyricsSetting.Save();
-			}
-			if (ShareSetting != null)
-			{
-				ShareSetting.Save();
-			}
-			if (_player != null)
-			{
-				_player.SaveSettings();
-			}
+			((App)Application.Current).SaveSettings(this);
 		}
 
 		/// <summary>
@@ -2086,7 +2068,7 @@ namespace DoubanFM
 				try
 				{
 					App.DeleteSettings();
-					willSaveSettings = false;
+					App.NeverSaveSettings();
 					_mappedFile.Dispose();
 					//关闭当前程序并启动一个新的程序
 					App.Current.Shutdown();
@@ -2145,10 +2127,10 @@ namespace DoubanFM
 				string currentDirectory = Environment.CurrentDirectory;
 				try
 				{
+					SaveSettings();
 					string directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
 					FilePackage.ExtractPackage(dialog.FileName, directory);
-
-					willSaveSettings = false;
+					App.NeverSaveSettings();
 					_mappedFile.Dispose();
 					//关闭当前程序并启动一个新的程序
 					App.Current.Shutdown();
@@ -2285,6 +2267,12 @@ namespace DoubanFM
 			List<Window> children = OwnedWindows.OfType<Window>().ToList();
 			children.RemoveAll(win => win is ShadowWindow);
 			return children.Count == 0;
+		}
+
+		private void Window_ContentRendered(object sender, EventArgs e)
+		{
+			App.Started = true;
+			App.StartTime = DateTime.Now;
 		}
 
 		#endregion 事件响应
