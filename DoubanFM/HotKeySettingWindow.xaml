@@ -9,52 +9,53 @@ Website : http://www.kfstorm.com
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:DoubanFM"
+    xmlns:resx="clr-namespace:DoubanFM.Resources"
 	mc:Ignorable="d" x:Class="DoubanFM.HotKeySettingWindow"
 	x:Name="window"
-	Title="热键设置" Background="#FF852929">
+	Title="{x:Static resx:Resources.HotKeySettingsButton}" Background="#FF852929">
 	<Window.Resources>
 		<Style TargetType="{x:Type local:HotKeySettingControl}">
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
 		</Style>
 	</Window.Resources>
-	<StackPanel Margin="10" Width="300" >
+    <StackPanel Margin="10" Width="300" >
 		<local:HotKeySettingControl Command="Like" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="喜欢（不取消）"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowLikeHotkeyTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="Never" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="不再播放"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowDontPlayHotkeyTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="PlayPause" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="播放/暂停"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowPlayPauseHotkeyTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="Next" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="下一首"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowNextHotkeyTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
-		<TextBlock FontSize="11" Margin="0,2">多媒体键“播放/暂停”和“下一首”已自动设置</TextBlock>
-		<local:HotKeySettingControl Command="ShowMinimize" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="显示/最小化"/></TextBlock>
+        <TextBlock FontSize="11" Margin="0,2" Text="{x:Static resx:Resources.HotKeySettingWindowMediaKeyInfoTextBlock}"/>
+        <local:HotKeySettingControl Command="ShowMinimize" Height="20" Margin="0,2">
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowShowMinimizeTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="ShowHide" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="显示/隐藏 窗口"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowShowHideTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="ShowHideLyrics" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="显示/隐藏 歌词"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowShowHideLyricsTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="OneKeyShare" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="一键分享"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowShareKeyTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="SearchDownload" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="搜索下载"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowSearchDownloadTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="VolumeUp" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="音量增大"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowVolumeIncreaseTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="VolumeDown" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="音量减小"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowVolumeDecreaseTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<local:HotKeySettingControl Command="MuteSwitch" Height="20" Margin="0,2">
-			<TextBlock Width="100" VerticalAlignment="Center"><Run Text="静音切换"/></TextBlock>
+            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowMuteSwitchTextBlock}"/></TextBlock>
 		</local:HotKeySettingControl>
 		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="40" Margin="5">
 			<Button x:Name="Ok" Click="Ok_Click" Style="{DynamicResource OKButtonStyle}"/>

@@ -59,7 +59,7 @@ namespace DoubanFM.Core.Json
         /// 长度
         /// </summary>
         [DataMember]
-        public int length { get; set; }
+        public double length { get; set; }
         [DataMember]
         public string source_url { get; set; }
         /// <summary>

@@ -92,7 +92,7 @@ namespace DoubanFM.Core
 			Album = song.albumtitle;
 			Company = song.company;
 			Picture = song.picture;
-			Length = new TimeSpan(song.length * 10000000L);
+            Length = TimeSpan.FromSeconds(song.length);
 			PublicTime = song.public_time;
 			AlbumInfo = song.album;
 			SSId = song.ssid;

@@ -106,7 +106,7 @@ namespace DoubanFM
 			var screens = Screen.AllScreens;
 			for (var i = 0; i < screens.Length; ++i)
 			{
-				cbOutputScreen.Items.Add(new ComboBoxItem() { Content = string.Format("显示器{0}", i + 1), Tag = screens[i].DeviceName });
+				cbOutputScreen.Items.Add(new ComboBoxItem() { Content = string.Format(DoubanFM.Resources.Resources.OutputScreenFormatString, i + 1), Tag = screens[i].DeviceName });
 				if (screens[i].DeviceName == LyricsSetting.DesktopLyricsScreen)
 				{
 					cbOutputScreen.SelectedIndex = i;

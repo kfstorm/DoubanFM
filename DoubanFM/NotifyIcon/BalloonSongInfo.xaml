@@ -9,6 +9,7 @@ Website : http://www.kfstorm.com
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 			 xmlns:tb="http://www.hardcodet.net/taskbar"
+             xmlns:resx="clr-namespace:DoubanFM.Resources"
 			 mc:Ignorable="d" 
 			 d:DesignHeight="300" d:DesignWidth="300"
 			 TextOptions.TextFormattingMode="Display"
@@ -63,7 +64,7 @@ Website : http://www.kfstorm.com
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
-					<TextBlock x:Name="TbChannel" Text="{Binding CurrentChannel, Source={StaticResource Player}, TargetNullValue=豆瓣电台}" TextTrimming="CharacterEllipsis"/>
+					<TextBlock x:Name="TbChannel" Text="{Binding CurrentChannel, Source={StaticResource Player}, TargetNullValue={x:Static resx:Resources.WindowTitle}}" TextTrimming="CharacterEllipsis"/>
 					<TextBlock x:Name="TbTitle" Grid.Row="1" FontSize="20" Text="{Binding CurrentSong.Title, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
 					<TextBlock x:Name="TbArtist" Grid.Row="2" FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
 					<TextBlock x:Name="TbAlbum" Grid.Row="3" FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>

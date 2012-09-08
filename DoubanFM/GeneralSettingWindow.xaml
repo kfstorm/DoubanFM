@@ -7,29 +7,38 @@ Website : http://www.kfstorm.com
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:DoubanFM"
+        xmlns:resx="clr-namespace:DoubanFM.Resources"
 		x:Name="Window"
-		Title="常规设置" Background="#FF813131">
+		Title="{x:Static resx:Resources.GeneralSettingsButton}" Background="#FF813131">
 	<StackPanel Width="300" Margin="10">
-		<CheckBox x:Name="CheckBoxAdjustVolumeWithMouseWheel" Content="鼠标滚轮调节音量" IsChecked="{Binding Settings.AdjustVolumeWithMouseWheel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
-		<CheckBox x:Name="CheckBoxRememberLastChannel" Content="记住上次播放的频道" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
-		<CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="在搜索结果中剔除无法收听的项目" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+        <Grid Margin="0,2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" Text="{x:Static resx:Resources.LanguageTextBlock}"/>
+            <ComboBox x:Name="CbLanguage" Grid.Column="1"/>
+        </Grid>
+        <CheckBox x:Name="CheckBoxAdjustVolumeWithMouseWheel" Content="{x:Static resx:Resources.CheckBoxAdjustVolumeWithMouseWheel}" IsChecked="{Binding Settings.AdjustVolumeWithMouseWheel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+        <CheckBox x:Name="CheckBoxRememberLastChannel" Content="{x:Static resx:Resources.CheckBoxRememberLastChannel}" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+        <CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="{x:Static resx:Resources.CheckBoxIsSearchFilterEnabled}" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<Grid Margin="0,2">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<TextBlock Margin="0,0,10,0" VerticalAlignment="Center">输出设备</TextBlock>
-			<ComboBox x:Name="CbOutputDevice" Grid.Column="1" SelectionChanged="CbOutputDevice_SelectionChanged"/>
+            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" Text="{x:Static resx:Resources.OutputDevicesTextBlock}"/>
+            <ComboBox x:Name="CbOutputDevice" Grid.Column="1" SelectionChanged="CbOutputDevice_SelectionChanged"/>
 		</Grid>
-		<GroupBox Margin="0,2" Header="下载搜索设置">
+        <GroupBox Margin="0,2" Header="{x:Static resx:Resources.DownloadSearchSettingsGroupBox}">
 			<StackPanel>
-				<CheckBox Margin="0,2" IsChecked="{Binding Settings.SearchAlbum, Source={StaticResource Player}}">搜索下载时包括专辑信息</CheckBox>
-				<CheckBox Margin="0,2" IsChecked="{Binding Settings.TrimBrackets, Source={StaticResource Player}}">搜索下载时自动剔除歌曲信息中的括号内容</CheckBox>
-				<CheckBox Margin="0,2" x:Name="CbSearchGoogleMusic" Click="CbSearchGoogleMusic_Click">搜索谷歌音乐</CheckBox>
-				<CheckBox Margin="0,2" x:Name="CbSearchBaiduTing" Click="CbSearchBaiduTing_Click">搜索百度听</CheckBox>
+                <CheckBox Margin="0,2" IsChecked="{Binding Settings.SearchAlbum, Source={StaticResource Player}}" Content="{x:Static resx:Resources.AlbumSearchCheckBox}"/>
+                <CheckBox Margin="0,2" IsChecked="{Binding Settings.TrimBrackets, Source={StaticResource Player}}" Content="{x:Static resx:Resources.TrimBracketsCheckBox}"/>
+                <CheckBox Margin="0,2" x:Name="CbSearchGoogleMusic" Click="CbSearchGoogleMusic_Click" Content="{x:Static resx:Resources.CbSearchGoogleMusic}"/>
+                <CheckBox Margin="0,2" x:Name="CbSearchBaiduTing" Click="CbSearchBaiduTing_Click" Content="{x:Static resx:Resources.CbSearchBaiduTing}"/>
 			</StackPanel>
 		</GroupBox>
-		<GroupBox Header="代理服务器" Margin="0,2">
+		<GroupBox Header="{x:Static resx:Resources.ProxyServerGroupBox}" Margin="0,2">
 			<StackPanel>
 				<Grid Margin="2">
 					<Grid.ColumnDefinitions>
@@ -38,9 +47,9 @@ Website : http://www.kfstorm.com
 						<!-- Width="0"/>	目前代码有问题，无法设置为不使用代理，所以这里把它隐藏掉-->
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<RadioButton x:Name="RbDefaultProxy" Click="ProxyKindChanged">系统默认</RadioButton>
-					<RadioButton Grid.Column="1" x:Name="RbNoProxy" Click="ProxyKindChanged">无</RadioButton>
-					<RadioButton Grid.Column="2" x:Name="RbCustomProxy" Click="ProxyKindChanged">自定义</RadioButton>
+                    <RadioButton x:Name="RbDefaultProxy" Click="ProxyKindChanged" Content="{x:Static resx:Resources.RbDefaultProxy}"/>
+                    <RadioButton Grid.Column="1" x:Name="RbNoProxy" Click="ProxyKindChanged" Content="{x:Static resx:Resources.RbNoProxy}"/>
+                    <RadioButton Grid.Column="2" x:Name="RbCustomProxy" Click="ProxyKindChanged" Content="{x:Static resx:Resources.RbCustomProxy}"/>
 				</Grid>
 				<Grid x:Name="CustomProxyPanel" IsEnabled="{Binding IsChecked, ElementName=RbCustomProxy}" Margin="2">
 					<Grid.ColumnDefinitions>
@@ -54,18 +63,18 @@ Website : http://www.kfstorm.com
 						<RowDefinition/>
 						<RowDefinition/>
 					</Grid.RowDefinitions>
-					<Label>主机</Label>
-					<TextBox x:Name="TbHost" Grid.Column="1" Text="{Binding Settings.ProxyHost, Mode=TwoWay, Source={StaticResource Player}}" Height="20"/>
-					<Label Grid.Column="2" Margin="10,0,0,0">端口</Label>
-					<TextBox x:Name="TbPort" Grid.Column="3" Text="{Binding Settings.ProxyPort, Mode=TwoWay, Source={StaticResource Player}}" Height="20" MaxLength="10"/>
-					<Label Grid.Row="1">用户名</Label>
-					<TextBox x:Name="TbProxyUsername" Grid.Row="1" Grid.Column="1" Text="{Binding Settings.ProxyUsername, Mode=TwoWay, Source={StaticResource Player}}" Height="20"/>
-					<Label Grid.Row="1" Grid.Column="2" Margin="10,0,0,0">密码</Label>
-					<PasswordBox x:Name="PbProxyPassword" Grid.Row="1" Grid.Column="3" PasswordChanged="PbProxyPassword_PasswordChanged" Height="20"/>
-					<Label Grid.Row="2" Grid.ColumnSpan="4" FontSize="11">如果代理服务器不使用用户名和密码，请留空。</Label>
-				</Grid>
-				<Button x:Name="BtnApplyProxy" HorizontalAlignment="Right" Grid.Column="1" Height="30" Margin="0,2" Click="BtnApplyProxy_Click">现在就应用代理设置</Button>
-			</StackPanel>
+                    <Label Content="{x:Static resx:Resources.HostComputerLabel}"/>
+                    <TextBox x:Name="TbHost" Grid.Column="1" Text="{Binding Settings.ProxyHost, Mode=TwoWay, Source={StaticResource Player}}" Height="20"/>
+                    <Label Grid.Column="2" Margin="10,0,0,0" Content="{x:Static resx:Resources.PortLabel}"/>
+                    <TextBox x:Name="TbPort" Grid.Column="3" Text="{Binding Settings.ProxyPort, Mode=TwoWay, Source={StaticResource Player}}" Height="20" MaxLength="10"/>
+                    <Label Grid.Row="1" Content="{x:Static resx:Resources.UserNameLabel}"/>
+                    <TextBox x:Name="TbProxyUsername" Grid.Row="1" Grid.Column="1" Text="{Binding Settings.ProxyUsername, Mode=TwoWay, Source={StaticResource Player}}" Height="20"/>
+                    <Label Grid.Row="1" Grid.Column="2" Margin="10,0,0,0" Content="{x:Static resx:Resources.PasswordBlock}"/>
+                    <PasswordBox x:Name="PbProxyPassword" Grid.Row="1" Grid.Column="3" PasswordChanged="PbProxyPassword_PasswordChanged" Height="20"/>
+                    <Label Grid.Row="2" Grid.ColumnSpan="4" FontSize="11" Content="{x:Static resx:Resources.ProxyNoCredentialsLabel}"/>
+                </Grid>
+                <Button x:Name="BtnApplyProxy" HorizontalAlignment="Right" Grid.Column="1" Height="30" Margin="0,2" Click="BtnApplyProxy_Click" Content="{x:Static resx:Resources.BtnApplyProxy}"/>
+            </StackPanel>
 		</GroupBox>
 	</StackPanel>
 </local:ChildWindowBase>

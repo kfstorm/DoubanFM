@@ -163,7 +163,16 @@ namespace DoubanFM
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 程序结束，返回代码为" + e.ApplicationExitCode);
 			});
 
-			//System.Windows.Media.RenderOptions.ProcessRenderMode = System.Windows.Interop.RenderMode.SoftwareOnly;
+            InitializeComponent();
+
+            var player = FindResource("Player") as Player;
+            if (player.Settings.CultureInfo != null)
+            {
+                Thread.CurrentThread.CurrentCulture = player.Settings.CultureInfo;
+                Thread.CurrentThread.CurrentUICulture = player.Settings.CultureInfo;
+            }
+
+            //System.Windows.Media.RenderOptions.ProcessRenderMode = System.Windows.Interop.RenderMode.SoftwareOnly;
 
 			/* 这句话可以使Global User Interface这个默认的组合字体按当前系统的区域信息选择合适的字形。
 			 * 只对FrameworkElement有效。对于FlowDocument，由于是从FrameworkContentElement继承，
@@ -174,7 +183,7 @@ namespace DoubanFM
 			FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.Name)));
 		}
 
-		/// <summary>
+        /// <summary>
 		/// 获取时间的一个精确表示
 		/// </summary>
 		/// <param name="time">时间</param>

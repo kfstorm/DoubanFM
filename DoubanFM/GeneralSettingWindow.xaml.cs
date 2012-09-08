@@ -5,17 +5,10 @@
  * */
 
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using DoubanFM.Core;
 
 namespace DoubanFM
@@ -27,45 +20,63 @@ namespace DoubanFM
 	{
 		Player player;
 
-		public GeneralSettingWindow()
-		{
-			InitializeComponent();
-			player = (Player)FindResource("Player");
+        public GeneralSettingWindow()
+        {
+            InitializeComponent();
+            player = (Player)FindResource("Player");
 
-			CbSearchGoogleMusic.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.GoogleMusic);
-			CbSearchBaiduTing.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.BaiduTing);
+            CbSearchGoogleMusic.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.GoogleMusic);
+            CbSearchBaiduTing.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.BaiduTing);
 
-			switch (player.Settings.ProxyKind)
-			{
-				case Settings.ProxyKinds.Default:
-					RbDefaultProxy.IsChecked = true;
-					break;
-				case Settings.ProxyKinds.None:
-					RbNoProxy.IsChecked = true;
-					break;
-				case Settings.ProxyKinds.Custom:
-					RbCustomProxy.IsChecked = true;
-					break;
-				default:
-					break;
-			}
+            //Init proxy setting.
+            switch (player.Settings.ProxyKind)
+            {
+                case Settings.ProxyKinds.Default:
+                    RbDefaultProxy.IsChecked = true;
+                    break;
+                case Settings.ProxyKinds.None:
+                    RbNoProxy.IsChecked = true;
+                    break;
+                case Settings.ProxyKinds.Custom:
+                    RbCustomProxy.IsChecked = true;
+                    break;
+            }
+            PbProxyPassword.Password = player.Settings.ProxyPassword;
 
-			PbProxyPassword.Password = player.Settings.ProxyPassword;
+            //Init output device setting.
+            CbOutputDevice.Items.Add(DoubanFM.Resources.Resources.Default);
+            foreach (var device in Bass.BassEngine.GetDeviceInfos())
+            {
+                CbOutputDevice.Items.Add(device);
+            }
+            if (Bass.BassEngine.Instance.Device == null)
+            {
+                CbOutputDevice.SelectedIndex = 0;
+            }
+            else
+            {
+                CbOutputDevice.SelectedItem = Bass.BassEngine.Instance.Device;
+            }
 
-			CbOutputDevice.Items.Add("默认");
-			foreach (var device in Bass.BassEngine.GetDeviceInfos())
-			{
-				CbOutputDevice.Items.Add(device);
-			}
-			if (Bass.BassEngine.Instance.Device == null)
-			{
-				CbOutputDevice.SelectedIndex = 0;
-			}
-			else
-			{
-				CbOutputDevice.SelectedItem = Bass.BassEngine.Instance.Device;
-			}
-		}
+            //Init language setting.
+            var availableCultrues = new[] { CultureInfo.GetCultureInfo("en-US"), CultureInfo.GetCultureInfo("zh-CN") };
+            CultureInfo selectedLanguage = null;
+            foreach (var cultrue in availableCultrues)
+            {
+                var cb = new ComboBoxItem { Content = cultrue.NativeName, Tag = cultrue };
+                CbLanguage.Items.Add(cb);
+                if (cultrue.LCID == player.Settings.CultureInfo.LCID)
+                {
+                    selectedLanguage = cultrue;
+                }
+            }
+            if (selectedLanguage == null)
+            {
+                selectedLanguage = availableCultrues[0];
+            }
+            CbLanguage.SelectedItem = CbLanguage.Items.OfType<ComboBoxItem>().First(tb => ((CultureInfo)tb.Tag).LCID == selectedLanguage.LCID);
+            CbLanguage.SelectionChanged += CbLanguage_SelectionChanged;
+        }
 
 		private void BtnApplyProxy_Click(object sender, RoutedEventArgs e)
 		{
@@ -146,5 +157,28 @@ namespace DoubanFM
 				error = false;
 			}
 		}
+
+        private static bool changed;
+
+        private void CbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                var cb = e.AddedItems[0] as ComboBoxItem;
+                if (cb != null)
+                {
+                    var culture = cb.Tag as CultureInfo;
+                    if (culture != null)
+                    {
+                        player.Settings.CultureInfo = culture;
+                        if (!changed)
+                        {
+                            changed = true;
+                            MessageBox.Show(this, DoubanFM.Resources.Resources.LanguageChangedHint, null, MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
+                }
+            }
+        }
 	}
 }

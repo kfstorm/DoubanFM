@@ -6,8 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Runtime.Serialization;
 using System.IO;
@@ -68,8 +70,9 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty UserKeyProperty = DependencyProperty.Register("UserKey", typeof(string), typeof(Settings), new PropertyMetadata(Guid.NewGuid().ToString("N")));
 		public static readonly DependencyProperty FavoriteChannelsProperty = DependencyProperty.Register("FavoriteChannels", typeof(List<Channel>), typeof(Settings), new PropertyMetadata(new List<Channel>()));
 		public static readonly DependencyProperty LastTimeLoggedOnProperty = DependencyProperty.Register("LastTimeLoggedOn", typeof(bool), typeof(Settings), new PropertyMetadata(false));
-		public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceInfo?), typeof(Settings), new PropertyMetadata(null));
-		#endregion
+        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceInfo?), typeof(Settings), new PropertyMetadata(null));
+        public static readonly DependencyProperty CultureInfoProperty = DependencyProperty.Register("CultureInfo", typeof(CultureInfo), typeof(Settings), new PropertyMetadata(Thread.CurrentThread.CurrentCulture));
+        #endregion
 
 		#region ProxyKinds
 		/// <summary>
@@ -421,6 +424,15 @@ namespace DoubanFM.Core
 			set { SetValue(DeviceProperty, value); }
 		}
 
+        /// <summary>
+        /// 语言
+        /// </summary>
+        public CultureInfo CultureInfo
+        {
+            get { return (CultureInfo)GetValue(CultureInfoProperty); }
+            set { SetValue(CultureInfoProperty, value); }
+        }
+
 		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
@@ -528,7 +540,9 @@ namespace DoubanFM.Core
 			catch { }
 			try { Device = (DeviceInfo?)info.GetValue("Device", typeof(DeviceInfo?)); }
 			catch { }
-			
+            try { CultureInfo = (CultureInfo)info.GetValue("CultureInfo", typeof(CultureInfo)); }
+            catch { }
+            
 			//向下兼容
 			if (!AutoBackground && Background.A != 255)
 			{
@@ -588,6 +602,7 @@ namespace DoubanFM.Core
 			info.AddValue("FavoriteChannels", FavoriteChannels);
 			info.AddValue("LastTimeLoggedOn", LastTimeLoggedOn);
 			info.AddValue("Device", Device);
+            info.AddValue("CultureInfo", CultureInfo);
 		}
 
 		/// <summary>

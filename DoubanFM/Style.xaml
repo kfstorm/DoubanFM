@@ -7,6 +7,7 @@ Website : http://www.kfstorm.com
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+    xmlns:resx="clr-namespace:DoubanFM.Resources"
 	xmlns:local="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	x:Class="DoubanFM.Style"
 	mc:Ignorable="d PresentationOptions">
@@ -114,7 +115,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="PauseStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
-		<Setter Property="ToolTip" Value="暂停"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.PauseThumbButton}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type CheckBox}">
@@ -129,7 +130,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 		<Style.Triggers>
 			<Trigger Property="IsChecked" Value="True">
-				<Setter Property="ToolTip" Value="播放"/>
+                <Setter Property="ToolTip" Value="{x:Static resx:Resources.PlayThumbButton}"/>
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type CheckBox}">
@@ -145,7 +146,7 @@ Website : http://www.kfstorm.com
 		</Style.Triggers>
 	</Style>
 	<Style x:Key="NextStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="下一首"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.NextThumbButton}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -162,7 +163,7 @@ Website : http://www.kfstorm.com
 	</Style>
 	<Style x:Key="LikeStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
 		<Setter Property="BorderBrush" Value="White"/>
-		<Setter Property="ToolTip" Value="喜欢"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.LikeThumbButton}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type CheckBox}">
@@ -185,7 +186,7 @@ Website : http://www.kfstorm.com
 		<Style.Triggers>
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="Foreground" Value="#DFE75849"/>
-				<Setter Property="ToolTip" Value="取消喜欢"/>
+                <Setter Property="ToolTip" Value="{x:Static resx:Resources.UnlikeThumbButton}"/>
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Foreground" Value="#7F000000"/>
@@ -196,7 +197,7 @@ Website : http://www.kfstorm.com
 		</Style.Triggers>
 	</Style>
 	<Style x:Key="NeverStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="不再播放"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.DontPlayThumbButton}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -210,7 +211,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="FavoriteStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
-		<Setter Property="ToolTip" Value="收藏"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.FavoriteButton}"/>
 		<Setter Property="BorderBrush" Value="#7FFFFFFF"/>
 		<Setter Property="Template">
 			<Setter.Value>
@@ -247,7 +248,7 @@ Website : http://www.kfstorm.com
 			</Trigger>
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="Foreground" Value="#7FFFFFFF"/>
-				<Setter Property="ToolTip" Value="取消收藏"/>
+                <Setter Property="ToolTip" Value="{x:Static resx:Resources.UnfavoriteButton}"/>
 			</Trigger>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="BorderBrush" Value="#7F000000"/>
@@ -468,10 +469,10 @@ Website : http://www.kfstorm.com
 		<Setter Property="ItemContainerStyle" Value="{StaticResource ControlPanelTabItemStyle}"/>
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
 	</Style>
-	<Border x:Key="TabItemChannels" Background="Transparent" ToolTip="频道列表">
+    <Border x:Key="TabItemChannels" Background="Transparent" ToolTip="{x:Static resx:Resources.ChannelsTab}">
 		<Viewbox>
 			<Canvas x:Name="DoubanFM__Channels" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
-				<Canvas x:Name="层_1" Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
+				<Canvas Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
 					<Rectangle x:Name="Rectangle" Width="32" Height="192" Canvas.Left="112" Canvas.Top="32.0001" Stretch="Fill" Fill="White"/>
 					<Rectangle x:Name="Rectangle_0" Width="24" Height="96" Canvas.Left="64" Canvas.Top="80" Stretch="Fill" Fill="White"/>
 					<Rectangle x:Name="Rectangle_1" Width="24" Height="96" Canvas.Left="16" Canvas.Top="80" Stretch="Fill" Fill="White"/>
@@ -481,7 +482,7 @@ Website : http://www.kfstorm.com
 			</Canvas>
 		</Viewbox>
 	</Border>
-	<Border x:Key="TabItemAccount" Background="Transparent" ToolTip="帐号信息">
+    <Border x:Key="TabItemAccount" Background="Transparent" ToolTip="{x:Static resx:Resources.AccountTab}">
 		<Viewbox>
 			<Canvas x:Name="DoubanFM__Account" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
 				<Canvas Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
@@ -489,22 +490,22 @@ Website : http://www.kfstorm.com
 				</Canvas>
 			</Canvas>
 		</Viewbox>
-	</Border>
-	<Border x:Key="TabItemSettings" Background="Transparent" ToolTip="设置">
+    </Border>
+    <Border x:Key="TabItemSettings" Background="Transparent" ToolTip="{x:Static resx:Resources.SettingsTab}">
 		<Viewbox>
 			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
 				<Path Width="192" Height="192" Canvas.Left="32" Canvas.Top="32" Stretch="Fill" Fill="White" Data="M 128,32C 131.223,32 134.409,32.1589 137.55,32.4691L 148.399,45.1204C 156.893,47.2037 164.887,50.5586 172.168,54.9716L 188.792,53.697C 193.73,57.7421 198.258,62.2699 202.303,67.2083L 201.028,83.8324C 205.441,91.1134 208.796,99.1072 210.88,107.6L 223.531,118.45C 223.841,121.591 224,124.777 224,128C 224,131.223 223.841,134.408 223.531,137.55L 210.88,148.399C 208.796,156.892 205.441,164.886 201.028,172.168L 202.303,188.792C 198.258,193.73 193.73,198.258 188.792,202.303L 172.168,201.028C 164.887,205.441 156.893,208.796 148.399,210.88L 137.55,223.531C 134.408,223.841 131.223,224 128,224C 124.777,224 121.592,223.841 118.451,223.531L 107.601,210.88C 99.1075,208.796 91.1133,205.441 83.8319,201.028L 67.208,202.303C 62.2699,198.258 57.7423,193.73 53.6973,188.792L 54.9719,172.168C 50.5586,164.887 47.2036,156.892 45.1201,148.399L 32.469,137.549C 32.1588,134.408 32,131.223 32,128C 32,124.777 32.1588,121.591 32.4691,118.45L 45.1203,107.601C 47.2037,99.1072 50.5587,91.1132 54.9719,83.8319L 53.6973,67.2081C 57.7424,62.2698 62.2701,57.7421 67.2084,53.697L 83.8324,54.9716C 91.1135,50.5585 99.1075,47.2036 107.601,45.1202L 118.45,32.469C 121.591,32.1588 124.777,32 128,32 Z M 128,64C 92.6538,64 64,92.6538 64,128C 64,163.346 92.6538,192 128,192C 163.346,192 192,163.346 192,128C 192,92.6538 163.346,64 128,64 Z "/>
 			</Canvas>
 		</Viewbox>
 	</Border>
-	<Border x:Key="TabItemInfo" Background="Transparent" ToolTip="信息">
+    <Border x:Key="TabItemInfo" Background="Transparent" ToolTip="{x:Static resx:Resources.InfoTab}">
 		<Viewbox>
 			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
 				<Path Width="192" Height="192" Canvas.Left="32" Canvas.Top="32" Stretch="Fill" Fill="White" Data="F1 M 128,32C 181.493,32 224,74.0339 224,128C 224,181.966 181.493,224 128,224C 74.5073,224 32,181.966 32,128C 32,74.0339 74.5073,32 128,32 Z M 128,52.5715C 116.639,52.5715 107.429,61.7817 107.429,73.1429C 107.429,84.5042 116.639,93.7143 128,93.7143C 139.361,93.7143 148.571,84.5042 148.571,73.1429C 148.571,61.7817 139.361,52.5715 128,52.5715 Z M 107.429,107.429L 107.429,203.429L 148.571,203.429L 148.571,107.429L 107.429,107.429 Z "/>
 			</Canvas>
 		</Viewbox>
 	</Border>
-	<Border x:Key="TabItemSearch" Background="Transparent" ToolTip="搜索">
+    <Border x:Key="TabItemSearch" Background="Transparent" ToolTip="{x:Static resx:Resources.SearchTab}">
 		<Viewbox>
 			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
 				<Path Width="193.87" Height="201" Canvas.Left="31.5" Canvas.Top="31.5" Stretch="Fill" Fill="White" Data="F1 M 108,56C 79.2812,56 56,79.2812 56,108C 56,136.719 79.2812,160 108,160C 136.719,160 160,136.719 160,108C 160,79.2812 136.719,56 108,56 Z M 108,32C 149.974,32 184,66.0264 184,108C 184,122.615 179.874,136.267 172.724,147.854L 224.87,200L 192.87,232L 138.502,177.632C 129.165,181.727 118.848,184 108,184C 66.0263,184 32,149.974 32,108C 32,66.0264 66.0264,32 108,32 Z "/>
@@ -513,7 +514,7 @@ Website : http://www.kfstorm.com
 	</Border>
 	
 	<Style x:Key="MinimizeStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="最小化"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Minimize}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -527,7 +528,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ToNotifyIconStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="最小化到托盘"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.MinimizeToTray}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -542,7 +543,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ExitStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="退出"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Exit}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -693,9 +694,9 @@ Website : http://www.kfstorm.com
 							</Grid.RowDefinitions>
 							<TextBlock Foreground="White" Text="{Binding Title}" MaxHeight="50" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
 							<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
-								<TextBlock Margin="0,0,20,0" Visibility="{Binding IsArtist, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="White"><Run Text="艺术家"/></TextBlock>
-								<TextBlock Margin="0,0,20,0" Visibility="{Binding CanContextPlay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="White"><Run Text="收听"/></TextBlock>
-								<Button x:Name="Link" BorderThickness="1" Padding="0" Click="Link_Click" Tag="{Binding Link, Mode=OneWay}" Content="资料"/>
+								<TextBlock Margin="0,0,20,0" Visibility="{Binding IsArtist, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="White"><Run Text="{x:Static resx:Resources.Artist}"/></TextBlock>
+                                <TextBlock Margin="0,0,20,0" Visibility="{Binding CanContextPlay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="White"><Run Text="{x:Static resx:Resources.Listen}"/></TextBlock>
+                                <Button x:Name="Link" BorderThickness="1" Padding="0" Click="Link_Click" Tag="{Binding Link, Mode=OneWay}" Content="{x:Static resx:Resources.AlbumInfoPage}"/>
 							</StackPanel>
 						</Grid>
 					</Grid>
@@ -705,7 +706,7 @@ Website : http://www.kfstorm.com
 		<Setter Property="AlternationCount" Value="12"/>
 	</Style>
 	<Style x:Key="SearchStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="搜索"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Search}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -719,7 +720,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="PreviousPageStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="上一页"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Previous}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -733,7 +734,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="NextPageStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="下一页"/>
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.Next}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -767,7 +768,7 @@ Website : http://www.kfstorm.com
 		
 	</Style>
 	<Style x:Key="ShareStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Share}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -781,7 +782,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareDoubanStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到豆瓣"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareDouban}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -795,7 +796,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareWeiboStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到新浪微博"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareWeibo}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -812,7 +813,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareMsnStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到MSN"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareMsn}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -826,7 +827,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareKaixinStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到开心网"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareKaixin}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -840,7 +841,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareRenenStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到人人网"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareRenren}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -854,7 +855,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareQzoneStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到QQ空间"/>
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareQzone}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -868,7 +869,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareTencentWeiboStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到腾讯微博"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareTencentWeibo}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -882,7 +883,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareFanfouStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到饭否"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareTencentWeibo}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -896,7 +897,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareFacebookStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到Facebook"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareFacebook}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -910,7 +911,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareTwitterStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="分享到Twitter"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareTwitter}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -924,7 +925,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShowLyricsStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
-		<Setter Property="ToolTip" Value="显示歌词"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShowLyrics}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type CheckBox}">
@@ -944,7 +945,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 		<Style.Triggers>
 			<Trigger Property="IsChecked" Value="True">
-				<Setter Property="ToolTip" Value="隐藏歌词"/>
+                <Setter Property="ToolTip" Value="{x:Static resx:Resources.HideLyrics}"/>
 			</Trigger>
 		</Style.Triggers>
 	</Style>
@@ -983,7 +984,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="RefreshWithFrameStyle" BasedOn="{StaticResource StandardButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="刷新"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Refresh}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -1000,13 +1001,13 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="RetryStyle" BasedOn="{StaticResource RefreshWithFrameStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="重试"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Retry}"/>
 	</Style>
 	<Style x:Key="UpdateStyle" BasedOn="{StaticResource RefreshWithFrameStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="更新"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Update}"/>
 	</Style>
 	<Style x:Key="CheckUpdateStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="检查更新"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.CheckforUpdates}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -1021,7 +1022,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="FeedbackStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="意见与反馈"/>
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.Feedback}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -1035,7 +1036,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="DoubanFMOfficialWebsiteStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="豆瓣FM官网"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.DoubanFMOfficialWebsite}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -1049,7 +1050,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="IconStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="软件主页"/>
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.SoftwareHome}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -1063,7 +1064,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ClearStyle" BasedOn="{StaticResource ExitStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="清除"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Clear}"/>
 	</Style>
 	<Style x:Key="ChannelCategoryStyle" TargetType="{x:Type RadioButton}">
 		<Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -1120,7 +1121,7 @@ Website : http://www.kfstorm.com
 										</Canvas>
 									</Viewbox>
 								</Canvas>
-								<Canvas x:Name="层_2" Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
+								<Canvas Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
 									<Rectangle x:Name="Rectangle" Width="32" Height="96" Canvas.Left="32" Canvas.Top="80" Stretch="Fill" StrokeThickness="1" StrokeLineJoin="Round" Fill="{TemplateBinding Foreground}"/>
 									<Path x:Name="Path_2" Width="48" Height="192" Canvas.Left="80" Canvas.Top="32" Stretch="Fill" StrokeThickness="1" StrokeLineJoin="Round" Fill="{TemplateBinding Foreground}" Data="F1 M 80,80L 128,32L 128,224L 80,176L 80,80 Z "/>
 								</Canvas>
@@ -1153,7 +1154,7 @@ Website : http://www.kfstorm.com
 		<Setter Property="ItemContainerStyle" Value="{StaticResource CheckableListBoxItemStyle}"/>
 	</Style>
 	<Style x:Key="HelpStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="帮助"/>
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.Help}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
@@ -1168,7 +1169,7 @@ Website : http://www.kfstorm.com
 	</Style>
 	
 	<Style x:Key="DonateStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-		<Setter Property="ToolTip" Value="捐赠"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Donate}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">

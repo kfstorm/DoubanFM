@@ -348,7 +348,7 @@ namespace DoubanFM.Core
 					}
 					else
 					{
-						LogOnFailedMessage = "未知错误";
+						LogOnFailedMessage = Resources.Resources.UnknownError;
 						ErrorNo = 0;
 					}
 					if (CurrentState == State.LoggingOn) CurrentState = State.LoggedOff;

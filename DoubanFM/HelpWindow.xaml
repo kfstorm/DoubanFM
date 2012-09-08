@@ -9,212 +9,259 @@ Website : http://www.kfstorm.com
 	xmlns:local="clr-namespace:DoubanFM"
 	xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"
 	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:resx="clr-namespace:DoubanFM.Resources"
 	x:Class="DoubanFM.HelpWindow"
 	x:Name="Window"
-	Title="帮助"
+	Title="{x:Static resx:Resources.HelpWindowTitle}"
 	Background="#FF1167A9" xml:lang="zh-CN">
-	<Grid x:Name="LayoutRoot" Width="640" Height="480" Margin="10">
-		<FlowDocumentReader ViewingMode="Scroll" IsFindEnabled="False" TextOptions.TextFormattingMode="Ideal">
-			<FlowDocument>
-				<FlowDocument.Resources>
-					<Style x:Key="TitleStyleKey" TargetType="{x:Type Paragraph}">
-						<Setter Property="FontSize" Value="24"/>
-					</Style>
-					<Style x:Key="Header1StyleKey" TargetType="{x:Type Paragraph}">
-						<Setter Property="FontSize" Value="18"/>
-					</Style>
-					<Style x:Key="Header2StyleKey" TargetType="{x:Type Paragraph}">
-						<Setter Property="FontSize" Value="16"/>
-					</Style>
-					<Style x:Key="Header3StyleKey" TargetType="{x:Type Paragraph}">
-						<Setter Property="FontSize" Value="14"/>
-					</Style>
-					<Style x:Key="TextStyleKey" TargetType="{x:Type Paragraph}">
-						<Setter Property="FontSize" Value="12"/>
-						<Setter Property="TextIndent" Value="24"/>
-					</Style>
-					<Style x:Key="HyperlinkStyleKey" TargetType="{x:Type Hyperlink}">
-						<Setter Property="Foreground" Value="White"/>
-						<EventSetter Event="Click" Handler="Hyperlink_Click"/>
-					</Style>
-				</FlowDocument.Resources>
-				<Paragraph TextAlignment="Center" Style="{StaticResource TitleStyleKey}">豆瓣电台帮助文档</Paragraph>
-				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">怎么设置字体？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">本软件可同时设置多种字体。由于大部分中文字体的英文都不太好看，所以有时将中英文字体分别设置就很有必要了。下面是一个例子：</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp5" Font="Century,华文新魏"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp5}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">字体设置有优先级区别，不同字体间用逗号分隔（半角全角均可），排在前面的字体优先使用，如果设置的多种字体都无法显示某一文字，则会使用系统默认字体显示。常见的设置是英文字体在前，中文字体在后。设置方法是手动填入类似“Century,华文新魏”这样的文字，而不是通过下拉菜单选择。如果把中文字体放在前面，就会使英文字体失效，因为中文字体中已经包含英文的字形。如下面所示：</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp6" Font="华文新魏,Century"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp6}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">如果填写的字体在系统中找不到，则会被忽略，其后面的字体仍然能成功显示。</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp7" Font="Century,找不到的字体,华文新魏"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp7}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">从上面的例子可以看到，华文新魏是没有繁体中文的字形的，繁体字会显示成默认字体，所以可以设置第三种字体：</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp1" Font="Century,华文新魏,楷体"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp1}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">大小写不敏感：</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp2" Font="century,华文新魏,楷体"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp2}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">字体前后可以有空格</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp3" Font="  Century  ,  华文新魏  ,  楷体  "/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp3}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">字体后也可以加上Light、SemiLight、SemiBold、Bold等文字来强制指定粗细，这样即使在歌词设置里调整粗细，也不会影响到强制指定粗细的字体。（有些字体可能不支持那么多种粗细变化，中文一般只有两种，而有些英文字体则多一些，比如Vista和Win7系统中的Segoe UI，可以设置Light、SemiBold和Bold，不能设置SemiLight）</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp4" Font="Century Bold,华文新魏,楷体"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp4}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp8" Font="Century,华文新魏 Bold,楷体"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp8}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp9" Font="Segoe UI Light,华文细黑 Bold"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp9}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">设置字体时可以用不同语言的字体名。所有的字体都有英文名字，而非英文字体一般都有非英文的名字。比如宋体的英文名是SimSun，新宋体的英文名是NSimSun，楷体的英文名是KaiTi，微软雅黑的英文名是Microsoft YaHei。台湾地区的Win7中默认字体是微軟正黑體，英文名是Microsoft JhengHei。本软件中选择字体时只把有简体中文名称的字体显示中文名，其他字体显示英文名，所以微软雅黑在下拉列表里叫微软雅黑，而微軟正黑體在下拉列表里叫Microsoft JhengHei，还有比如標楷體的英文叫DFKai-SB。</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp10" Font="宋体"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp10}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp11" Font="SimSun"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp11}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp12" Font="KaiTi"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp12}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp13" Font="微軟正黑體"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp13}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp14" Font="Microsoft JhengHei"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp14}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-					<Paragraph>
-						<InlineUIContainer>
-							<local:FontPicker x:Name="Fp15" Font="標楷體"/>
-						</InlineUIContainer>
-						<InlineUIContainer>
-							<TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp15}">豆瓣电台 豆瓣電台 DoubanFM 1234567</TextBox>
-						</InlineUIContainer>
-					</Paragraph>
-				</Section>
-				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">为什么点击分享到其他网站的链接后不能听到我分享的那首音乐？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">这是因为豆瓣对网页做了手脚，会查看你是从哪个网站过来的，从某些网站（比如人人）进入豆瓣电台的网站会转到豆瓣电台的首页（也就是和直接在浏览器里输入douban.fm一样）。可以把分享的链接复制出来，粘贴到浏览器地址栏里打开，就可以听到分享的歌曲了。</Paragraph>
-				</Section>
-				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">为什么本来已经登录了，并且勾选了下次自动登录，结果下次打开软件时却没有自动登录？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">一般情况下是因为你在浏览器中注销过豆瓣的帐号导致的，豆瓣规定得很严，只要在一个地方注销了，所有已登录的地方都会注销（比如同时使用多个浏览器登录豆瓣，然后在其中一个浏览器注销掉，这时其他浏览器也会注销），本软件也不例外。所以只能尽量避免在任何地方注销豆瓣了。</Paragraph>
-				</Section>
-				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">程序崩溃了……</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">如果发生了程序崩溃的情况，请
-						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">向我反应</Hyperlink> ，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。
-						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">查看错误日志的方法</Hyperlink>
-					</Paragraph>
-				</Section>
-				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">修改主界面字体后经常看不清字，怎么办？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">可以把主界面缩放调大一点，字会清晰很多。</Paragraph>
-				</Section>
-				<Section>
-					<Paragraph Style="{StaticResource Header1StyleKey}">为什么登录后就无法使用了，需要重置设置才能继续使用？</Paragraph>
-					<Paragraph Style="{StaticResource TextStyleKey}">请打开浏览器进入
-						<Hyperlink Tag="http://www.douban.com/" Style="{StaticResource HyperlinkStyleKey}">www.douban.com</Hyperlink> 并登录，检查一下自己的帐号是否存在异常，有可能是帐号被锁定，或者帐号未激活。</Paragraph>
-				</Section>
-				<Section>
-					<Paragraph></Paragraph>
-					<Paragraph TextIndent="0" Style="{StaticResource TextStyleKey}">声明：本软件为第三方客户端，并非豆瓣FM官方客户端。
-						<LineBreak/>
-						软件作者：
-						<Hyperlink Tag="http://www.kfstorm.com/blog/" Style="{StaticResource HyperlinkStyleKey}">K.F.Storm</Hyperlink>
-						<LineBreak/>
-						软件主页：
-						<Hyperlink Tag="http://www.kfstorm.com/blog/doubanfm" Style="{StaticResource HyperlinkStyleKey}">http://www.kfstorm.com/blog/doubanfm</Hyperlink>
-						<LineBreak/>
-						网页版FAQ：
-						<Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/</Hyperlink>
-						<LineBreak/>
-						豆瓣FM官方网站：
-						<Hyperlink Tag="http://douban.fm" Style="{StaticResource HyperlinkStyleKey}">http://douban.fm</Hyperlink>
-						<LineBreak/>
-						豆瓣FM使用帮助和支持：
-						<Hyperlink Tag="http://douban.fm/support" Style="{StaticResource HyperlinkStyleKey}">http://douban.fm/support</Hyperlink>
-					</Paragraph>
-				</Section>
-			</FlowDocument>
-		</FlowDocumentReader>
-	</Grid>
+    <Grid x:Name="LayoutRoot" Width="640" Height="480" Margin="10">
+        <FlowDocumentReader ViewingMode="Scroll" IsFindEnabled="False" TextOptions.TextFormattingMode="Ideal">
+            <FlowDocument>
+                <FlowDocument.Resources>
+                    <Style x:Key="TitleStyleKey" TargetType="{x:Type Paragraph}">
+                        <Setter Property="FontSize" Value="24"/>
+                    </Style>
+                    <Style x:Key="Header1StyleKey" TargetType="{x:Type Paragraph}">
+                        <Setter Property="FontSize" Value="18"/>
+                    </Style>
+                    <Style x:Key="Header2StyleKey" TargetType="{x:Type Paragraph}">
+                        <Setter Property="FontSize" Value="16"/>
+                    </Style>
+                    <Style x:Key="Header3StyleKey" TargetType="{x:Type Paragraph}">
+                        <Setter Property="FontSize" Value="14"/>
+                    </Style>
+                    <Style x:Key="TextStyleKey" TargetType="{x:Type Paragraph}">
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="TextIndent" Value="24"/>
+                    </Style>
+                    <Style x:Key="HyperlinkStyleKey" TargetType="{x:Type Hyperlink}">
+                        <Setter Property="Foreground" Value="White"/>
+                        <EventSetter Event="Click" Handler="Hyperlink_Click"/>
+                    </Style>
+                </FlowDocument.Resources>
+                <Paragraph TextAlignment="Center" Style="{StaticResource TitleStyleKey}">
+                    <Run Text="{x:Static resx:Resources.HelpWindowParagraphTitle}" />
+                </Paragraph>
+                <Section>
+                    <Paragraph Style="{StaticResource Header1StyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet}" />
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet2}"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp5" Font="Century,华文新魏"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp5}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet4}"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp6" Font="华文新魏,Century"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp6}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}" />
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet5}"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp7" Font="Century,找不到的字体,华文新魏"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp7}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet6}"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp1" Font="Century,华文新魏,楷体"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp1}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet7}"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp2" Font="century,华文新魏,楷体"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp2}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet8}"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp3" Font="  Century  ,  华文新魏  ,  楷体  "/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp3}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet9}"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp4" Font="Century Bold,华文新魏,楷体"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp4}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp8" Font="Century,华文新魏 Bold,楷体"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp8}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp9" Font="Segoe UI Light,华文细黑 Bold"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp9}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontSet10}"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp10" Font="宋体"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp10}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp11" Font="SimSun"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp11}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp12" Font="KaiTi"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp12}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp13" Font="微軟正黑體"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp13}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp14" Font="Microsoft JhengHei"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp14}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                    <Paragraph>
+                        <InlineUIContainer>
+                            <local:FontPicker x:Name="Fp15" Font="標楷體"/>
+                        </InlineUIContainer>
+                        <InlineUIContainer>
+                            <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp15}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
+                        </InlineUIContainer>
+                    </Paragraph>
+                </Section>
+                <Section>
+                    <Paragraph Style="{StaticResource Header1StyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphShareParagraph1}"/>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphShareParagraph2}"/>
+                    </Paragraph>
+                </Section>
+                <Section>
+                    <Paragraph Style="{StaticResource Header1StyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphLogin1}"/>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphLogin2}"/>
+                    </Paragraph>
+                </Section>
+                <Section>
+                    <Paragraph Style="{StaticResource Header1StyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphProgramCrashes1}"/>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphProgramCrashes2}"/>
+                        <Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">
+                            <Run Text="{x:Static resx:Resources.HelpWindowParagraphProgramCrashes3}"/>
+                        </Hyperlink>
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphProgramCrashes4}"/>
+                        <Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">
+                            <Run Text="{x:Static resx:Resources.HelpWindowParagraphProgramCrashes5}"/>
+                        </Hyperlink>
+                    </Paragraph>
+                </Section>
+                <Section>
+                    <Paragraph Style="{StaticResource Header1StyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontModification1}"/>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontModification2}"/>
+                    </Paragraph>
+                </Section>
+                <Section>
+                    <Paragraph Style="{StaticResource Header1StyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphFontModification3}"/>
+                    </Paragraph>
+                    <Paragraph Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphOpenBrowser1}"/>
+                        <Hyperlink Tag="http://www.douban.com/" Style="{StaticResource HyperlinkStyleKey}">www.douban.com</Hyperlink>
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphOpenBrowser2}"/>
+                    </Paragraph>
+                </Section>
+                <Section>
+                    <Paragraph></Paragraph>
+                    <Paragraph TextIndent="0" Style="{StaticResource TextStyleKey}">
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphDisclaimer1}"/>
+                        <LineBreak/>
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphDisclaimer2}"/>
+                        <Hyperlink Tag="http://www.kfstorm.com/blog/" Style="{StaticResource HyperlinkStyleKey}">K.F.Storm</Hyperlink>
+                        <LineBreak/>
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphDisclaimer3}"/>
+                        <Hyperlink Tag="http://www.kfstorm.com/blog/doubanfm" Style="{StaticResource HyperlinkStyleKey}">http://www.kfstorm.com/blog/doubanfm</Hyperlink>
+                        <LineBreak/>
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphDisclaimer4}"/>
+                        <Hyperlink Tag="http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/" Style="{StaticResource HyperlinkStyleKey}">http://www.kfstorm.com/blog/2011/12/01/豆瓣电台faq/</Hyperlink>
+                        <LineBreak/>
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphDisclaimer5}"/>
+                        <Hyperlink Tag="http://douban.fm" Style="{StaticResource HyperlinkStyleKey}">http://douban.fm</Hyperlink>
+                        <LineBreak/>
+                        <Run Text="{x:Static resx:Resources.HelpWindowParagraphDisclaimer6}"/>
+                        <Hyperlink Tag="http://douban.fm/support" Style="{StaticResource HyperlinkStyleKey}">http://douban.fm/support</Hyperlink>
+                    </Paragraph>
+                </Section>
+            </FlowDocument>
+        </FlowDocumentReader>
+    </Grid>
 </local:ChildWindowBase>

@@ -9,6 +9,7 @@ Website : http://www.kfstorm.com
 	xmlns:local="clr-namespace:DoubanFM"
 	xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:DoubanFM.Resources"
 	mc:Ignorable="PresentationOptions"
 	x:Class="DoubanFM.LyricsWindow"
 	x:Name="Window"
@@ -114,7 +115,7 @@ Website : http://www.kfstorm.com
 										<SolidColorBrush Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
 									</Path.Stroke>
 								</Path>
-								<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
+                                <TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}" Text="{x:Static resx:Resources.LyricsWindowLyricsRoot1TB}"/>
 							</Grid>
 						</Viewbox>
 						<Viewbox x:Name="Lyrics2Root" StretchDirection="DownOnly" RenderTransformOrigin="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window, Converter={StaticResource HorizontalAlignmentToRenderTransformOriginConverter}}" Height="{Binding ActualHeight, ElementName=Lyrics2Root2}" HorizontalAlignment="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}">
@@ -124,8 +125,8 @@ Website : http://www.kfstorm.com
 							<Grid x:Name="Lyrics2Root2">
 								<Path x:Name="PathText2" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
 								</Path>
-								<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
-							</Grid>
+                                <TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}" Text="{x:Static resx:Resources.LyricsWindowLyricsRoot1TB}"/>
+                            </Grid>
 						</Viewbox>
 						<Viewbox x:Name="Lyrics3Root" StretchDirection="DownOnly" RenderTransformOrigin="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window, Converter={StaticResource HorizontalAlignmentToRenderTransformOriginConverter}}" Height="{Binding ActualHeight, ElementName=Lyrics3Root2}" HorizontalAlignment="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}">
 							<Viewbox.RenderTransform>
@@ -134,8 +135,8 @@ Website : http://www.kfstorm.com
 							<Grid x:Name="Lyrics3Root2">
 								<Path x:Name="PathText3" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
 								</Path>
-								<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
-							</Grid>
+                                <TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}" Text="{x:Static resx:Resources.LyricsWindowLyricsRoot1TB}"/>
+                            </Grid>
 						</Viewbox>
 					</UniformGrid>
 					<Grid x:Name="SingleLine" Visibility="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}">
@@ -143,8 +144,8 @@ Website : http://www.kfstorm.com
 							<Grid>
 								<Path x:Name="SingleLinePathText1" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
 								</Path>
-								<TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}">占位用</TextBlock>
-							</Grid>
+                                <TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}" Text="{x:Static resx:Resources.LyricsWindowLyricsRoot1TB}"/>
+                            </Grid>
 						</Viewbox>
 					</Grid>
 				</Grid>

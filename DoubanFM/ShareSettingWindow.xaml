@@ -8,8 +8,9 @@ Website : http://www.kfstorm.com
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:DoubanFM"
 		xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"
+        xmlns:resx="clr-namespace:DoubanFM.Resources"
 		x:Name="Window"
-		Title="分享设置" Background="#FF813131">
+		Title="{x:Static resx:Resources.ShareSettingsButton}" Background="#FF813131">
 	<local:ChildWindowBase.Resources>
 		<local:ShareSitesToStringConverter x:Key="ShareSitesToStringConverter"/>
 	</local:ChildWindowBase.Resources>
@@ -22,7 +23,7 @@ Website : http://www.kfstorm.com
 			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<Label>显示分享按钮：</Label>
+        <Label Content="{x:Static resx:Resources.ShareSettingsWindowShareButtonLabel}"/>
 		<ListBox x:Name="LbDisplayedSites" Grid.Row="1" Style="{StaticResource CheckableListBoxStyle}">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
@@ -35,8 +36,8 @@ Website : http://www.kfstorm.com
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		<CheckBox Grid.Row="3" IsChecked="{Binding Path=ShareSetting.EnableOneKeyShare, ElementName=Window}">启用一键分享</CheckBox>
-		<Label Grid.Row="4">一键分享的网站：</Label>
+        <CheckBox Grid.Row="3" IsChecked="{Binding Path=ShareSetting.EnableOneKeyShare, ElementName=Window}" Content="{x:Static resx:Resources.ShareSettingsWindowEnableKeyShareCb}"/>
+        <Label Grid.Row="4" Content="{x:Static resx:Resources.ShareSettingsWindowKeyShareSiteLabel}"/>
 		<ListBox x:Name="LbOneKeyShareSites" Grid.Row="5" Style="{DynamicResource CheckableListBoxStyle}">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>

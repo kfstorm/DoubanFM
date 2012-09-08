@@ -117,4 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ShareTextPartOne" xml:space="preserve">
+    <value>I'm listening to {0} - {1}</value>
+  </data>
+  <data name="ShareTextPartTwo" xml:space="preserve">
+    <value>( From K.F.Storm's DoubanFM {0} - {1} )</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Unknown error</value>
+  </data>
 </root>

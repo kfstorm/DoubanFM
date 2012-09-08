@@ -195,7 +195,7 @@ namespace DoubanFM
 		{
 			InitializeComponent();
 			InitMemberVariables();
-			InitPlayerSettings();
+            InitPlayerSettings();
 			ClearOldTempFiles();
 			ClearSetupFiles();
 			InitBass();
@@ -418,7 +418,7 @@ namespace DoubanFM
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已暂停");
 				CheckBoxPause.IsChecked = !_player.IsPlaying;
 				PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
-				PauseThumb.Description = "播放";
+				PauseThumb.Description = DoubanFM.Resources.Resources.PlayThumbButton;
 				VolumeFadeOut.Begin();
 				if (_player.Settings.ShowLyrics && _lyricsSetting.HideWhenPause && _lyricsSetting.EnableDesktopLyrics)
 				{
@@ -431,7 +431,7 @@ namespace DoubanFM
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已播放");
 				CheckBoxPause.IsChecked = !_player.IsPlaying;
 				PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
-				PauseThumb.Description = "暂停";
+                PauseThumb.Description = DoubanFM.Resources.Resources.PauseThumbButton;
 				VolumeFadeIn.Begin();
 				BassEngine.Instance.Play();
 				if (_player.Settings.ShowLyrics && _lyricsSetting.EnableDesktopLyrics)
@@ -479,13 +479,13 @@ namespace DoubanFM
 					if (_player.IsLiked)
 					{
 						LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
-						LikeThumb.Description = "取消喜欢";
+                        LikeThumb.Description = DoubanFM.Resources.Resources.UnlikeThumbButton;
 						//NotifyIcon_Heart.Image = NotifyIconImage_Like_Like;
 					}
 					else
 					{
 						LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
-						LikeThumb.Description = "喜欢";
+                        LikeThumb.Description = DoubanFM.Resources.Resources.LikeThumbButton;
 						//NotifyIcon_Heart.Image = NotifyIconImage_Like_Unlike;
 					}
 				else
@@ -518,9 +518,9 @@ namespace DoubanFM
 			//获取播放列表失败
 			_player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
 			{
-				string message = "获取播放列表失败：" + e.Message;
+                string message = string.Format(DoubanFM.Resources.Resources.GetPlayListFailedMessage, e.Message);
 				Debug.WriteLine(message);
-				MessageBox.Show(this, message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(this, message, DoubanFM.Resources.Resources.ApplicationWillClose, MessageBoxButton.OK, MessageBoxImage.Error);
 				this.Close();
 			});
 			//报告播放完毕的信息失败
@@ -528,7 +528,7 @@ namespace DoubanFM
 			{
 				string message = e.GetException().Message;
 				Debug.WriteLine(message);
-				MessageBox.Show(this, message, "程序即将关闭", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(this, message, DoubanFM.Resources.Resources.ApplicationWillClose, MessageBoxButton.OK, MessageBoxImage.Error);
 				this.Close();
 			});
 		}
@@ -554,7 +554,7 @@ namespace DoubanFM
 			lbVersion.Content = App.AppVersion;
 		}
 
-		/// <summary>
+        /// <summary>
 		/// 初始化计时器
 		/// </summary>
 		private void InitTimers()
@@ -947,7 +947,7 @@ namespace DoubanFM
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(this, ex.Message, "代理设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(this, ex.Message, DoubanFM.Resources.Resources.SetProxyFailed, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -1278,8 +1278,8 @@ namespace DoubanFM
 			((StringAnimationUsingKeyFrames)ChangeSongInfoStoryboard.Children[3]).KeyFrames[0].Value = _player.CurrentSong.Album;
 			ChangeSongInfoStoryboard.Begin();
 
-			string stringA = _player.CurrentSong.Title + " - " + _player.CurrentSong.Artist;
-			string stringB = "    豆瓣电台 - " + _player.CurrentChannel.Name;
+            string stringA = string.Format("{0} - {1}", _player.CurrentSong.Title, _player.CurrentSong.Artist);
+            string stringB = string.Format("    {0} - {1}", DoubanFM.Resources.Resources.WindowTitle, _player.CurrentChannel.Name);
 			this.Title = stringA + stringB;
 
 			string song = _player.CurrentSong.ToString();
@@ -1998,7 +1998,7 @@ namespace DoubanFM
 			if (_player.CurrentSong != null)
 			{
 				new Share(_player).Go();
-				MessageBox.Show(this, "地址已复制到剪贴板", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(this, DoubanFM.Resources.Resources.UrlCopyedToClipboard, DoubanFM.Resources.Resources.SuccessfullyCopied, MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 
@@ -2063,22 +2063,22 @@ namespace DoubanFM
 		{
 			resetting = true;
 
-			if (MessageBox.Show("确定要重置所有设置吗？\n重置后软件将自动重启。", "请注意", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
-			{
-				try
-				{
-					App.DeleteSettings();
-					App.NeverSaveSettings();
-					_mappedFile.Dispose();
-					//关闭当前程序并启动一个新的程序
-					App.Current.Shutdown();
-					Process.Start(System.Reflection.Assembly.GetEntryAssembly().GetModules()[0].FullyQualifiedName);
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.Message, "重置设置失败", MessageBoxButton.OK, MessageBoxImage.Error);
-				}
-			}
+            if (MessageBox.Show(DoubanFM.Resources.Resources.ResetWarning, null, MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+            {
+                try
+                {
+                    App.DeleteSettings();
+                    App.NeverSaveSettings();
+                    _mappedFile.Dispose();
+                    //关闭当前程序并启动一个新的程序
+                    App.Current.Shutdown();
+                    Process.Start(System.Reflection.Assembly.GetEntryAssembly().GetModules()[0].FullyQualifiedName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, DoubanFM.Resources.Resources.ResetFailed, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
 
 			resetting = false;
 			_leftPanelMouseLeaveTimer.Start();
@@ -2092,7 +2092,7 @@ namespace DoubanFM
 			dialog.AddExtension = true;
 			//dialog.CheckPathExists = true;
 			dialog.DefaultExt = ".zip";
-			dialog.Filter = "zip文件|*.zip";
+            dialog.Filter = string.Format("{0}|*.zip", DoubanFM.Resources.Resources.ZipFileFilterName);
 			dialog.FileName = "DoubanFMSettings.zip";
 			if (dialog.ShowDialog(this) == true)
 			{
@@ -2120,8 +2120,8 @@ namespace DoubanFM
 			dialog.AddExtension = true;
 			dialog.CheckFileExists = true;
 			dialog.DefaultExt = ".zip";
-			dialog.Filter = "zip文件|*.zip";
-			dialog.FileName = "DoubanFMSettings.zip";
+            dialog.Filter = string.Format("{0}|*.zip", DoubanFM.Resources.Resources.ZipFileFilterName);
+            dialog.FileName = "DoubanFMSettings.zip";
 			if (dialog.ShowDialog(this) == true)
 			{
 				string currentDirectory = Environment.CurrentDirectory;

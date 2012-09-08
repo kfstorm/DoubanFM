@@ -435,7 +435,7 @@ namespace DoubanFM
 				// Create the formatted text based on the properties set.
 				Geometry geometry = new FormattedText(
 					text == null ? "" : text,
-					CultureInfo.GetCultureInfo("zh-cn"),
+					CultureInfo.CurrentUICulture,
 					FlowDirection.LeftToRight,
 					new Typeface(LyricsFontFamily == null ? SystemFonts.MessageFontFamily : LyricsFontFamily, FontStyles.Normal, LyricsFontWeight, FontStretches.Normal),
 					LyricsFontSize,

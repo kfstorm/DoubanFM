@@ -84,7 +84,7 @@ namespace DoubanFM.NotifyIcon
 			if (_player.CurrentSong != null)
 			{
 				new Share(_player).Go();
-				MessageBox.Show(App.Current.MainWindow, "地址已复制到剪贴板", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(App.Current.MainWindow, DoubanFM.Resources.Resources.UrlCopyedToClipboard, DoubanFM.Resources.Resources.SuccessfullyCopied, MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 

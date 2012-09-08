@@ -4,11 +4,13 @@
  * Website : http://www.kfstorm.com
  * */
 
+using System.Collections.Generic;
 using System.Windows.Data;
 using System;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
+using DoubanFM.Core;
 
 namespace DoubanFM
 {
@@ -353,15 +355,15 @@ namespace DoubanFM
 			switch ((HorizontalAlignment)value)
 			{
 				case HorizontalAlignment.Center:
-					return "居中";
+                    return DoubanFM.Resources.Resources.CenterAlignment;
 				case HorizontalAlignment.Left:
-					return "左对齐";
+                    return DoubanFM.Resources.Resources.LeftAlignment;
 				case HorizontalAlignment.Right:
-					return "右对齐";
+                    return DoubanFM.Resources.Resources.RightAlignment;
 				case HorizontalAlignment.Stretch:
-					return "两端对齐";
+                    return DoubanFM.Resources.Resources.StretchAlignment;
 				default:
-					return "……";
+					return string.Empty;
 			}
 		}
 
@@ -381,15 +383,15 @@ namespace DoubanFM
 			switch ((VerticalAlignment)value)
 			{
 				case VerticalAlignment.Center:
-					return "居中";
+                    return DoubanFM.Resources.Resources.CenterAlignment;
 				case VerticalAlignment.Top:
-					return "上对齐";
+                    return DoubanFM.Resources.Resources.TopAlignment;
 				case VerticalAlignment.Bottom:
-					return "下对齐";
+                    return DoubanFM.Resources.Resources.BottomAlignment;
 				case VerticalAlignment.Stretch:
-					return "两端对齐";
+                    return DoubanFM.Resources.Resources.StretchAlignment;
 				default:
-					return "……";
+                    return string.Empty;
 			}
 		}
 
@@ -404,11 +406,31 @@ namespace DoubanFM
 	/// </summary>
 	public class ShareSitesToStringConverter : IValueConverter
 	{
+        public static Dictionary<Core.Share.Sites, string> SiteName;
+
+        static ShareSitesToStringConverter()
+        {
+            SiteName = new Dictionary<Share.Sites, string>
+                           {
+                                { Core.Share.Sites.Douban, Resources.Resources.ShareSiteDouban },
+                                { Core.Share.Sites.Facebook, Resources.Resources.ShareSiteFacebook },
+                                { Core.Share.Sites.Fanfou, Resources.Resources.ShareSiteFanfou },
+                                { Core.Share.Sites.Kaixin, Resources.Resources.ShareSiteKaixin },
+                                { Core.Share.Sites.Msn, Resources.Resources.ShareSiteMsn },
+                                { Core.Share.Sites.Renren, Resources.Resources.ShareSiteRenren },
+                                { Core.Share.Sites.TencentWeibo, Resources.Resources.ShareSiteTencentWeibo },
+                                { Core.Share.Sites.Twitter, Resources.Resources.ShareSiteTwitter },
+                                { Core.Share.Sites.Weibo, Resources.Resources.ShareSiteWeibo },
+                                { Core.Share.Sites.Qzone, Resources.Resources.ShareSiteQzone },
+                                { Core.Share.Sites.None, Resources.Resources.ShareSiteNone }
+                           };
+        }
+
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			if (Enum.IsDefined(typeof(Core.Share.Sites), value))
 			{
-				return Core.Share.SiteName[(Core.Share.Sites)value];
+				return SiteName[(Core.Share.Sites)value];
 			}
 			else
 			{

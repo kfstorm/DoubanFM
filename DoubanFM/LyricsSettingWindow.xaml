@@ -8,8 +8,9 @@ Website : http://www.kfstorm.com
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:DoubanFM"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:resx="clr-namespace:DoubanFM.Resources"
 		x:Name="Window"
-		Title="歌词设置" Background="#FF813131">
+		Title="{x:Static resx:Resources.LyricsSettingsButton}" Background="#FF813131">
 	<Window.Resources>
 		<local:OpacityToTransparencyConverter x:Key="OpacityToTransparencyConverter"/>
 		<local:HorizontalAlignmentToStringConverter x:Key="HorizontalAlignmentToStringConverter"/>
@@ -25,34 +26,29 @@ Website : http://www.kfstorm.com
 				<ColumnDefinition/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<CheckBox Grid.ColumnSpan="2" x:Name="CbShowLyrics" Checked="CbShowLyrics_Checked" Unchecked="CbShowLyrics_Unchecked" Margin="0,2">显示歌词</CheckBox>
-			<StackPanel Grid.Row="1" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}">
-				<CheckBox x:Name="CbEnableDesktopLyrics" IsChecked="{Binding Path=LyricsSetting.EnableDesktopLyrics, ElementName=Window}" Checked="CbEnableDesktopLyrics_Checked" Unchecked="CbEnableDesktopLyrics_Unchecked" Margin="0,2">桌面歌词</CheckBox>
-				<Label FontSize="11" Padding="0">会占用一定CPU</Label>
+            <CheckBox Grid.ColumnSpan="2" x:Name="CbShowLyrics" Checked="CbShowLyrics_Checked" Unchecked="CbShowLyrics_Unchecked" Margin="0,2" Content="{x:Static resx:Resources.CbShowLyrics}"/>
+            <StackPanel Grid.Row="1" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}">
+                <CheckBox x:Name="CbEnableDesktopLyrics" IsChecked="{Binding Path=LyricsSetting.EnableDesktopLyrics, ElementName=Window}" Checked="CbEnableDesktopLyrics_Checked" Unchecked="CbEnableDesktopLyrics_Unchecked" Margin="0,2" Content="{x:Static resx:Resources.CbEnableDesktopLyrics}"/>
+                <Label FontSize="11" Padding="0" Content="{x:Static resx:Resources.LyricsSettingsWindowOccupyCPULabel}"/>
 			</StackPanel>
-			<CheckBox Grid.Row="1" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked" Margin="0,2">内嵌歌词</CheckBox>
-		</Grid>
-		<GroupBox Header="桌面歌词设置" Margin="0,2">
+            <CheckBox Grid.Row="1" Grid.Column="1" x:Name="CbEnableEmbeddedLyrics" IsEnabled="{Binding IsChecked, ElementName=CbShowLyrics}" IsChecked="{Binding Path=LyricsSetting.EnableEmbeddedLyrics, ElementName=Window}" Checked="CbEnableEmbeddedLyrics_Checked" Unchecked="CbEnableEmbeddedLyrics_Unchecked" Margin="0,2" Content="{x:Static resx:Resources.CbEnableEmbeddedLyrics}"/>
+        </Grid>
+        <GroupBox Header="{x:Static resx:Resources.LyricsSettingsWindowDesktopLyricsGroupBox}" Margin="0,2">
 			<StackPanel>
 				<Grid Width="300" HorizontalAlignment="Left">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<RadioButton IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window}" Content="单行歌词" Margin="0,2"/>
-					<RadioButton Grid.Column="1" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Content="双行歌词" Margin="0,2"/>
+                    <RadioButton IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window}" Content="{x:Static resx:Resources.LyricsSettingsWindowSingleLineLyricsRadioButton}" Margin="0,2"/>
+                    <RadioButton Grid.Column="1" IsChecked="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Content="{x:Static resx:Resources.LyricsSettingsWindowDoubleLineLyricsRadioButton}" Margin="0,2"/>
 				</Grid>
 				<StackPanel Margin="0,2">
-					<CheckBox IsChecked="{Binding LyricsSetting.ForceTopMost, ElementName=Window}" Margin="0,2">
-						强力置顶
-						<CheckBox.ToolTip>
-							强力置顶可有效解决桌面歌词置顶失效的问题，但桌面歌词可能会覆盖在某些全屏应用上。
-						</CheckBox.ToolTip>
-					</CheckBox>
-					<CheckBox IsChecked="{Binding LyricsSetting.HideWhenPause, ElementName=Window}" Margin="0,2">音乐暂停时隐藏</CheckBox>
+                    <CheckBox IsChecked="{Binding LyricsSetting.ForceTopMost, ElementName=Window}" Margin="0,2" Content="{x:Static resx:Resources.LyricsSettingsWindowTopMostCb}" ToolTip="{x:Static resx:Resources.LyricsSettingsWindowTopMostCbToolTip}" />
+                    <CheckBox IsChecked="{Binding LyricsSetting.HideWhenPause, ElementName=Window}" Margin="0,2" Content="{x:Static resx:Resources.LyricsSettingsWindowHideWhenPauseCb}"/>
 					<StackPanel Orientation="Horizontal" Margin="0,2">
-						<TextBlock VerticalAlignment="Center">输出显示器</TextBlock>
-						<ComboBox x:Name="cbOutputScreen" VerticalAlignment="Center" Width="100" Margin="10,0,0,0" SelectionChanged="cbOutputScreen_SelectionChanged"/>
+                        <TextBlock VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowOutputDisplayTB}"/>
+						<ComboBox x:Name="cbOutputScreen" VerticalAlignment="Center" MinWidth="100" Margin="10,0,0,0" SelectionChanged="cbOutputScreen_SelectionChanged"/>
 					</StackPanel>
 				</StackPanel>
 				<Grid>
@@ -64,164 +60,109 @@ Website : http://www.kfstorm.com
 						<ColumnDefinition/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<GroupBox Header="文字">
-						<UniformGrid Rows="4">
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<TextBlock VerticalAlignment="Center">字体</TextBlock>
-								<local:FontPicker x:Name="FpFontPicker" Grid.Column="1" Margin="0,2" Height="24" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
-							</Grid>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<TextBlock VerticalAlignment="Center">大小</TextBlock>
-								<Slider x:Name="SliderFontSize" Grid.Column="1" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="0,2" SmallChange="0.2" LargeChange="5"/>
-							</Grid>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<TextBlock VerticalAlignment="Center">粗细</TextBlock>
-								<Slider x:Name="SliderFontWeight" Grid.Column="1" Value="{Binding LyricsSetting.FontWeight, ElementName=Window}" Maximum="900" Minimum="100" Margin="0,2" SmallChange="5" LargeChange="50"/>
-							</Grid>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<TextBlock VerticalAlignment="Center">描边粗细</TextBlock>
-								<Slider x:Name="SliderStrokeWeight" Grid.Column="1" Value="{Binding LyricsSetting.StrokeWeight, ElementName=Window}" Maximum="3" Minimum="0" Margin="0,2" SmallChange="0.05" LargeChange="0.3"/>
-							</Grid>
-						</UniformGrid>
-					</GroupBox>
-					<GroupBox Header="颜色" Grid.Column="1">
-						<UniformGrid Rows="4">
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<TextBlock VerticalAlignment="Center">前景色</TextBlock>
-								<Grid Grid.Column="1">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="Auto"/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<CheckBox x:Name="CbAutoForeground" Margin="20,2" VerticalAlignment="Center" IsChecked="{Binding LyricsSetting.AutoForeground, ElementName=Window}" Click="CbAutoForeground_Click">自动</CheckBox>
-									<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}" IsEnabled="{Binding LyricsSetting.AutoForeground, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Height="24"/>
-								</Grid>
-							</Grid>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<TextBlock VerticalAlignment="Center">描边色</TextBlock>
-								<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}" Height="24"/>
-							</Grid>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<TextBlock VerticalAlignment="Center">阴影色</TextBlock>
-								<local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}" IsAlphaEnabled="False" Height="24"/>
-							</Grid>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<TextBlock VerticalAlignment="Center">透明度</TextBlock>
-								<Slider x:Name="SliderOpacity" Grid.Column="1" Value="{Binding LyricsSetting.Opacity, ElementName=Window, Converter={StaticResource OpacityToTransparencyConverter}}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.01" LargeChange="0.1" RenderTransformOrigin="0.5,0.5"/>
-							</Grid>
-						</UniformGrid>
-					</GroupBox>
-					<GroupBox Header="布局" Grid.Row="1" Grid.ColumnSpan="2">
+                    <GroupBox Header="{x:Static resx:Resources.LyricsSettingsWindowWritingGB}">
 						<Grid>
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition/>
-								<ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition/>
 							</Grid.ColumnDefinitions>
-							<UniformGrid Rows="4" Margin="0,0,5,0">
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="60"/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<TextBlock VerticalAlignment="Center">顶部间距</TextBlock>
-									<Slider x:Name="SliderTopMargin" Grid.Column="1" Value="{Binding LyricsSetting.TopMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
-								</Grid>
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="60"/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<TextBlock VerticalAlignment="Center">底部间距</TextBlock>
-									<Slider x:Name="SliderBottomMargin" Grid.Column="1" Value="{Binding LyricsSetting.BottomMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
-								</Grid>
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="60"/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<TextBlock VerticalAlignment="Center">左间距</TextBlock>
-									<Slider x:Name="SliderLeftMargin" Grid.Column="1" Value="{Binding LyricsSetting.LeftMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
-								</Grid>
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="60"/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<TextBlock VerticalAlignment="Center">右间距</TextBlock>
-									<Slider x:Name="SliderRightMargin" Grid.Column="1" Value="{Binding LyricsSetting.RightMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
-								</Grid>
-							</UniformGrid>
-							<UniformGrid Rows="4" Margin="5,0,0,0" Grid.Column="1">
-								<Grid Margin="0,2">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="80"/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<TextBlock VerticalAlignment="Center">水平对齐方式</TextBlock>
-									<ComboBox x:Name="CbHorizontalAlignment" Grid.Column="1" SelectedItem="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}" Height="24">
-										<ComboBox.ItemTemplate>
-											<DataTemplate DataType="{x:Type HorizontalAlignment}">
-												<TextBlock Text="{Binding Converter={StaticResource HorizontalAlignmentToStringConverter}}"/>
-											</DataTemplate>
-										</ComboBox.ItemTemplate>
-										<HorizontalAlignment>Left</HorizontalAlignment>
-										<HorizontalAlignment>Center</HorizontalAlignment>
-										<HorizontalAlignment>Right</HorizontalAlignment>
-									</ComboBox>
-								</Grid>
-								<Grid Margin="0,2">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="80"/>
-										<ColumnDefinition/>
-									</Grid.ColumnDefinitions>
-									<TextBlock VerticalAlignment="Center">垂直对齐方式</TextBlock>
-									<ComboBox x:Name="CbVerticalAlignment" Grid.Column="1" SelectedItem="{Binding LyricsSetting.VerticalAlignment, ElementName=Window}" Height="24">
-										<ComboBox.ItemTemplate>
-											<DataTemplate DataType="{x:Type VerticalAlignment}">
-												<TextBlock Text="{Binding Converter={StaticResource VerticalAlignmentToStringConverter}}"/>
-											</DataTemplate>
-										</ComboBox.ItemTemplate>
-										<VerticalAlignment>Top</VerticalAlignment>
-										<VerticalAlignment>Center</VerticalAlignment>
-										<VerticalAlignment>Bottom</VerticalAlignment>
-									</ComboBox>
-								</Grid>
-								<CheckBox x:Name="CbShowLyricsBackground" Margin="0,2" VerticalAlignment="Center" Click="CbShowLyricsBackground_Click">显示歌词边界，以方便调整布局</CheckBox>
-							</UniformGrid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowTypefaceTB}"/>
+							<local:FontPicker x:Name="FpFontPicker" Grid.Column="2" Margin="0,2" Height="24" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
+							<TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowSizeTB}"/>
+                            <Slider Grid.Row="1" x:Name="SliderFontSize" Grid.Column="2" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="0,2" SmallChange="0.2" LargeChange="5"/>
+                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowThicknessTB}"/>
+                            <Slider Grid.Row="2" x:Name="SliderFontWeight" Grid.Column="2" Value="{Binding LyricsSetting.FontWeight, ElementName=Window}" Maximum="900" Minimum="100" Margin="0,2" SmallChange="5" LargeChange="50"/>
+                            <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowStrokeWeightTB}"/>
+                            <Slider Grid.Row="3" x:Name="SliderStrokeWeight" Grid.Column="2" Value="{Binding LyricsSetting.StrokeWeight, ElementName=Window}" Maximum="3" Minimum="0" Margin="0,2" SmallChange="0.05" LargeChange="0.3"/>
 						</Grid>
 					</GroupBox>
+                    <GroupBox Header="{x:Static resx:Resources.LyricsSettingsWindowColorGB}" Grid.Column="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowForegroundColorTB}"/>
+                            <Grid Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox x:Name="CbAutoForeground" Margin="5,2" VerticalAlignment="Center" IsChecked="{Binding LyricsSetting.AutoForeground, ElementName=Window}" Click="CbAutoForeground_Click" Content="{x:Static resx:Resources.CbAutoForeground}"/>
+                                <local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}" IsEnabled="{Binding LyricsSetting.AutoForeground, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Height="24"/>
+                            </Grid>
+                            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowStrokeColorTB}"/>
+                            <local:PopupableColorPicker Grid.Row="1" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}" Height="24"/>
+                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowShadowColorTB}"/>
+                            <local:PopupableColorPicker Grid.Row="2" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}" IsAlphaEnabled="False" Height="24"/>
+                            <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowTransparencyTB}"/>
+                            <Slider Grid.Row="3" x:Name="SliderOpacity" Grid.Column="2" Value="{Binding LyricsSetting.Opacity, ElementName=Window, Converter={StaticResource OpacityToTransparencyConverter}}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.01" LargeChange="0.1" RenderTransformOrigin="0.5,0.5"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="{x:Static resx:Resources.LyricsSettingsWindowLayoutGB}" Grid.Row="1" Grid.ColumnSpan="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowMarginTopTB}"/>
+                            <Slider x:Name="SliderTopMargin" Grid.Column="2" Value="{Binding LyricsSetting.TopMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
+                            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowMarginBottomTB}"/>
+                            <Slider Grid.Row="1" x:Name="SliderBottomMargin" Grid.Column="2" Value="{Binding LyricsSetting.BottomMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
+                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowMarginLeftTB}"/>
+                            <Slider Grid.Row="2" x:Name="SliderLeftMargin" Grid.Column="2" Value="{Binding LyricsSetting.LeftMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
+                            <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowMarginRightTB}"/>
+                            <Slider Grid.Row="3" x:Name="SliderRightMargin" Grid.Column="2" Value="{Binding LyricsSetting.RightMargin, ElementName=Window}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.001" LargeChange="0.1"/>
+                            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowHorizontalAlignmentTB}"/>
+                            <ComboBox x:Name="CbHorizontalAlignment" Grid.Column="6" SelectedItem="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}" Height="24">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type HorizontalAlignment}">
+                                        <TextBlock Text="{Binding Converter={StaticResource HorizontalAlignmentToStringConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                                <HorizontalAlignment>Left</HorizontalAlignment>
+                                <HorizontalAlignment>Center</HorizontalAlignment>
+                                <HorizontalAlignment>Right</HorizontalAlignment>
+                            </ComboBox>
+                            <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowVerticalAlignmentTB}"/>
+                            <ComboBox Grid.Row="1" x:Name="CbVerticalAlignment" Grid.Column="6" SelectedItem="{Binding LyricsSetting.VerticalAlignment, ElementName=Window}" Height="24">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type VerticalAlignment}">
+                                        <TextBlock Text="{Binding Converter={StaticResource VerticalAlignmentToStringConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                                <VerticalAlignment>Top</VerticalAlignment>
+                                <VerticalAlignment>Center</VerticalAlignment>
+                                <VerticalAlignment>Bottom</VerticalAlignment>
+                            </ComboBox>
+                            <CheckBox Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="3" x:Name="CbShowLyricsBackground" Margin="0,2" VerticalAlignment="Center" Click="CbShowLyricsBackground_Click" Content="{x:Static resx:Resources.CbShowLyricsBackground}"/>
+                        </Grid>
+                    </GroupBox>
 				</Grid>
 			</StackPanel>
 		</GroupBox>
