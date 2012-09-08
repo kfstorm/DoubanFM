@@ -323,7 +323,7 @@ Website : http://www.kfstorm.com
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:FontPicker}">
-					<ComboBox x:Name="PART_FontComboBox" IsEditable="True" MinWidth="200"  FontFamily="{TemplateBinding Font}">
+					<ComboBox x:Name="PART_FontComboBox" IsEditable="True" FontFamily="{TemplateBinding Font}">
 						<ComboBox.ItemsPanel>
 							<ItemsPanelTemplate>
 								<VirtualizingStackPanel/>
