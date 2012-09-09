@@ -79,13 +79,11 @@ Website : http://www.kfstorm.com
 				<ControlTemplate TargetType="{x:Type local:HotKeySettingControl}">
 					<Grid Background="{TemplateBinding Background}">
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto"/>
 							<ColumnDefinition/>
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
-						<ContentPresenter/>
-						<TextBox x:Name="PART_HotKeyText" Grid.Column="1" Margin="10,0" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
-						<Button x:Name="PART_Clear" Grid.Column="2" Style="{StaticResource ClearHotKeyStyle}"/>
+						<TextBox x:Name="PART_HotKeyText" Margin="10,0" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
+						<Button x:Name="PART_Clear" Grid.Column="1" Style="{StaticResource ClearHotKeyStyle}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

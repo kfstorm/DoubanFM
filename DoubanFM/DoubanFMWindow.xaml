@@ -369,9 +369,9 @@ Website : http://www.kfstorm.com
 					</TabItem>
 					<TabItem x:Name="Account" Header="{StaticResource TabItemAccount}">
 						<Grid>
-							<Grid x:Name="AccountPanel" Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
-								<Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
-									<DockPanel Margin="20">
+                            <Grid x:Name="AccountPanel" Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
+                                	<DockPanel Margin="10">
 										<StackPanel DockPanel.Dock="Top">
 											<Grid>
 												<Grid.RowDefinitions>
@@ -397,18 +397,14 @@ Website : http://www.kfstorm.com
 												<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding UserAssistant.ShowLogOnFailedHint, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}" Margin="0,2"/>
 												<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="{x:Static resx:Resources.LoginButton}" HorizontalAlignment="Right" Width="100" Height="40" FontSize="16" Margin="0,5"/>
 											</StackPanel>
-
 										</StackPanel>
 										<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
-											<Button x:Name="ButtonSignUp" Content="{x:Static resx:Resources.RegisterButton}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Height="30" Click="ButtonSignUp_Click" Margin="0,5"/>
-											<Grid VerticalAlignment="Bottom" Width="210">
-												<Grid.ColumnDefinitions>
-													<ColumnDefinition/>
-													<ColumnDefinition/>
-												</Grid.ColumnDefinitions>
-												<CheckBox x:Name="CheckBoxRememberPassword" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Static resx:Resources.RememberMeCheckBox}" IsChecked="{Binding Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
-												<CheckBox Grid.Column="1" x:Name="CheckBoxAutoLogOnNextTime" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Static resx:Resources.AutoLoginCheckBox}" IsChecked="{Binding Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
-											</Grid>
+											<Button x:Name="ButtonSignUp" Content="{x:Static resx:Resources.RegisterButton}" HorizontalAlignment="Center" Padding="10,2" Click="ButtonSignUp_Click" Margin="0,5"/>
+                                            <DockPanel MinWidth="150" Margin="0,5" HorizontalAlignment="Center">
+                                                <CheckBox x:Name="CheckBoxRememberPassword" DockPanel.Dock="Left" Content="{x:Static resx:Resources.RememberPasswordCheckBox}" IsChecked="{Binding Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}"/>
+												<CheckBox x:Name="CheckBoxAutoLogOnNextTime" DockPanel.Dock="Right" Content="{x:Static resx:Resources.AutoLoginCheckBox}" IsChecked="{Binding Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}"/>
+                                                <Border MinWidth="5" MaxWidth="20"/>
+                                            </DockPanel>
 										</StackPanel>
 									</DockPanel>
 								</Grid>

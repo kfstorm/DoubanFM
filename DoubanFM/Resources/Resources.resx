@@ -214,8 +214,8 @@
   <data name="RegisterButton" xml:space="preserve">
     <value>Register</value>
   </data>
-  <data name="RememberMeCheckBox" xml:space="preserve">
-    <value>Remember me</value>
+  <data name="RememberPasswordCheckBox" xml:space="preserve">
+    <value>Remember password</value>
   </data>
   <data name="AutoLoginCheckBox" xml:space="preserve">
     <value>Auto login</value>

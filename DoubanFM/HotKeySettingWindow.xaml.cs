@@ -34,7 +34,7 @@ namespace DoubanFM
 			InitializeComponent();
 
 			HotKeys = hotKeys;
-			foreach (var child in (this.Content as Panel).Children)
+            foreach (var child in HotKeysGrid.Children)
 			{
 				if (child is HotKeySettingControl)
 				{
@@ -48,7 +48,7 @@ namespace DoubanFM
 		private void Ok_Click(object sender, RoutedEventArgs e)
 		{
 			HotKeys.Clear();
-			foreach (var child in (this.Content as Panel).Children)
+            foreach (var child in HotKeysGrid.Children)
 			{
 				if (child is HotKeySettingControl)
 				{

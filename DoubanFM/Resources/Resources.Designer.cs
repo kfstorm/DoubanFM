@@ -1520,11 +1520,11 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remember me.
+        ///   Looks up a localized string similar to Remember password.
         /// </summary>
-        public static string RememberMeCheckBox {
+        public static string RememberPasswordCheckBox {
             get {
-                return ResourceManager.GetString("RememberMeCheckBox", resourceCulture);
+                return ResourceManager.GetString("RememberPasswordCheckBox", resourceCulture);
             }
         }
         

@@ -25,7 +25,7 @@ namespace DoubanFM
 	/// </summary>
 	[TemplatePartAttribute(Name = "PART_HotKeyText", Type = typeof(TextBox))]
 	[TemplatePartAttribute(Name = "PART_Clear", Type = typeof(Button))]
-	public class HotKeySettingControl : ContentControl
+	public class HotKeySettingControl : Control
 	{
 		/// <summary>
 		/// 标识Command依赖项属性

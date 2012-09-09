@@ -214,11 +214,11 @@
   <data name="RegisterButton" xml:space="preserve">
     <value>注册</value>
   </data>
-  <data name="RememberMeCheckBox" xml:space="preserve">
+  <data name="RememberPasswordCheckBox" xml:space="preserve">
     <value>记住密码</value>
   </data>
   <data name="AutoLoginCheckBox" xml:space="preserve">
-    <value>下次自动登录</value>
+    <value>自动登录</value>
   </data>
   <data name="TotalFormatString" xml:space="preserve">
     <value>累积收听{0}首</value>

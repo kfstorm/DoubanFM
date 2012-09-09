@@ -15,48 +15,65 @@ Website : http://www.kfstorm.com
 	Title="{x:Static resx:Resources.HotKeySettingsButton}" Background="#FF852929">
 	<Window.Resources>
 		<Style TargetType="{x:Type local:HotKeySettingControl}">
-			<Setter Property="HorizontalContentAlignment" Value="Center"/>
-			<Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="0,2"/>
 		</Style>
+        <Style x:Key="HotKeyHintStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0,2"/>
+        </Style>
 	</Window.Resources>
     <StackPanel Margin="10" Width="300" >
-		<local:HotKeySettingControl Command="Like" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowLikeHotkeyTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="Never" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowDontPlayHotkeyTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="PlayPause" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowPlayPauseHotkeyTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="Next" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowNextHotkeyTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-        <TextBlock FontSize="11" Margin="0,2" Text="{x:Static resx:Resources.HotKeySettingWindowMediaKeyInfoTextBlock}"/>
-        <local:HotKeySettingControl Command="ShowMinimize" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowShowMinimizeTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="ShowHide" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowShowHideTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="ShowHideLyrics" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowShowHideLyricsTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="OneKeyShare" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowShareKeyTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="SearchDownload" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowSearchDownloadTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="VolumeUp" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowVolumeIncreaseTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="VolumeDown" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowVolumeDecreaseTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
-		<local:HotKeySettingControl Command="MuteSwitch" Height="20" Margin="0,2">
-            <TextBlock Width="140" VerticalAlignment="Center"><Run Text="{x:Static resx:Resources.HotKeySettingWindowMuteSwitchTextBlock}"/></TextBlock>
-		</local:HotKeySettingControl>
+        <Grid x:Name="HotKeysGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{x:Static resx:Resources.HotKeySettingWindowLikeHotkeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Column="1" Command="Like"/>
+            <TextBlock Grid.Row="1" Text="{x:Static resx:Resources.HotKeySettingWindowDontPlayHotkeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="1" Grid.Column="1" Command="Never"/>
+            <TextBlock Grid.Row="2" Text="{x:Static resx:Resources.HotKeySettingWindowPlayPauseHotkeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="2" Grid.Column="1" Command="PlayPause"/>
+            <TextBlock Grid.Row="3" Text="{x:Static resx:Resources.HotKeySettingWindowNextHotkeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="3" Grid.Column="1" Command="Next"/>
+            <TextBlock Grid.Row="4" Grid.ColumnSpan="2" FontSize="11" Margin="0,2" HorizontalAlignment="Center" Text="{x:Static resx:Resources.HotKeySettingWindowMediaKeyInfoTextBlock}"/>
+            <TextBlock Grid.Row="5" Text="{x:Static resx:Resources.HotKeySettingWindowShowMinimizeTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="5" Grid.Column="1" Command="ShowMinimize"/>
+            <TextBlock Grid.Row="6" Text="{x:Static resx:Resources.HotKeySettingWindowShowHideTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="6" Grid.Column="1" Command="ShowHide"/>
+            <TextBlock Grid.Row="7" Text="{x:Static resx:Resources.HotKeySettingWindowShowHideLyricsTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="7" Grid.Column="1" Command="ShowHideLyrics"/>
+            <TextBlock Grid.Row="8" Text="{x:Static resx:Resources.HotKeySettingWindowShareKeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="8" Grid.Column="1" Command="OneKeyShare"/>
+            <TextBlock Grid.Row="9" Text="{x:Static resx:Resources.HotKeySettingWindowSearchDownloadTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="9" Grid.Column="1" Command="SearchDownload"/>
+            <TextBlock Grid.Row="10" Text="{x:Static resx:Resources.HotKeySettingWindowVolumeIncreaseTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="10" Grid.Column="1" Command="VolumeUp"/>
+            <TextBlock Grid.Row="11" Text="{x:Static resx:Resources.HotKeySettingWindowVolumeDecreaseTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="11" Grid.Column="1" Command="VolumeDown"/>
+            <TextBlock Grid.Row="12" Text="{x:Static resx:Resources.HotKeySettingWindowMuteSwitchTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="12" Grid.Column="1" Command="MuteSwitch"/>
+        </Grid>
 		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="40" Margin="5">
 			<Button x:Name="Ok" Click="Ok_Click" Style="{DynamicResource OKButtonStyle}"/>
 			<Button x:Name="Cancel" Margin="20,0,0,0" Click="Cancel_Click" Style="{DynamicResource CancelButtonStyle}"/>
