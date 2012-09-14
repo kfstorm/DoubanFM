@@ -521,6 +521,10 @@ namespace DoubanFM
                 string message = string.Format(DoubanFM.Resources.Resources.GetPlayListFailedMessage, e.Message);
 				Debug.WriteLine(message);
                 MessageBox.Show(this, message, DoubanFM.Resources.Resources.ApplicationWillClose, MessageBoxButton.OK, MessageBoxImage.Error);
+                if (e.Message.ToLower().Contains("wrong channel"))
+                {
+                    _player.Settings.LastChannel = null;
+                }
 				this.Close();
 			});
 			//报告播放完毕的信息失败
