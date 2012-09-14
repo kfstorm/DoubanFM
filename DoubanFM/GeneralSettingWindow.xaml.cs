@@ -153,7 +153,7 @@ namespace DoubanFM
 				{
 					CbOutputDevice.SelectedItem = e.RemovedItems[0];
 				}
-				MessageBox.Show(ex.Message, null, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(ex.Message, string.Empty, MessageBoxButton.OK, MessageBoxImage.Error);
 				error = false;
 			}
 		}
@@ -174,7 +174,7 @@ namespace DoubanFM
                         if (!changed)
                         {
                             changed = true;
-                            MessageBox.Show(this, DoubanFM.Resources.Resources.LanguageChangedHint, null, MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show(this, DoubanFM.Resources.Resources.LanguageChangedHint, string.Empty, MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                 }

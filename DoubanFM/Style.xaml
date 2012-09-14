@@ -883,7 +883,7 @@ Website : http://www.kfstorm.com
 		</Setter>
 	</Style>
 	<Style x:Key="ShareFanfouStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
-        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareTencentWeibo}"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareFanfou}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">

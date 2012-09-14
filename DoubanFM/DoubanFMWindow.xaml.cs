@@ -351,7 +351,7 @@ namespace DoubanFM
 			}
 			catch (Bass.BassInitializationFailureException ex)
 			{
-				MessageBox.Show(ex.Message, null, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(ex.Message, string.Empty, MessageBoxButton.OK, MessageBoxImage.Error);
 				App.Current.Shutdown(0);
 			}
 		}
@@ -2067,7 +2067,7 @@ namespace DoubanFM
 		{
 			resetting = true;
 
-            if (MessageBox.Show(DoubanFM.Resources.Resources.ResetWarning, null, MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+            if (MessageBox.Show(DoubanFM.Resources.Resources.ResetWarning, string.Empty, MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
             {
                 try
                 {
