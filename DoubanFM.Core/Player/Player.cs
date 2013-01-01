@@ -373,12 +373,11 @@ namespace DoubanFM.Core
 			bool lastTimeLoggedOn = Settings.LastTimeLoggedOn;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					ChannelInfo channelInfo = null;
-					string file = null;
 					//如果用户上次退出软件时处于未登录状态，则启动时不更新登录状态
 					if (lastTimeLoggedOn)
 					{
-						while (true)
+					    string file;
+					    while (true)
 						{
 							Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
 							file = new ConnectionBase().Get("http://douban.fm/");
@@ -394,28 +393,7 @@ namespace DoubanFM.Core
 						UserAssistant.Update(file);
 					}
 
-					while (true)
-					{
-						Debug.WriteLine(DateTime.Now + " 获取频道列表……");
-						file = new ConnectionBase().Get("http://doubanfmcloud-channelinfo.stor.sinaapp.com/channelinfo");
-						Debug.WriteLine(DateTime.Now + " 获取频道列表完成");
-						if (string.IsNullOrEmpty(file))
-						{
-							TakeABreak();
-							continue;
-						}
-						channelInfo = new ChannelInfo(Json.ChannelInfo.FromJson(file));
-						if (channelInfo == null || !channelInfo.IsEffective)
-						{
-							Debug.WriteLine(DateTime.Now + " 获取频道列表失败");
-							TakeABreak();
-						}
-						else
-						{
-							Debug.WriteLine(DateTime.Now + " 获取频道列表成功");
-							break;
-						}
-					}
+				    var channelInfo = GetChannelInfo();
 					
 					Dispatcher.Invoke(new Action(() =>
 						{
@@ -433,6 +411,80 @@ namespace DoubanFM.Core
 						}));
 				}));
 		}
+
+        /// <summary>
+        /// 根据情况从本地或服务器获取频道列表。
+        /// </summary>
+        /// <returns>频道列表</returns>
+        private static ChannelInfo GetChannelInfo()
+        {
+            var localPath = Path.Combine(ConnectionBase.DataFolder, "channelinfo");
+            ChannelInfo localChannelInfo = null;
+
+            //尝试获取本地频道列表
+            try
+            {
+                if (File.Exists(localPath))
+                {
+                    var localChannelInfoTime = File.GetLastWriteTime(localPath);
+                    var content = File.ReadAllText(localPath);
+                    var channelInfo = new ChannelInfo(Json.ChannelInfo.FromJson(content));
+                    if (channelInfo.IsEffective)
+                    {
+                        localChannelInfo = channelInfo;
+                    }
+
+                    //满足条件时采用本地频道列表
+                    var distance = TimeSpan.FromHours(6);
+                    if (localChannelInfo != null && DateTime.Now - localChannelInfoTime < distance)
+                    {
+                        return localChannelInfo;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(DateTime.Now + " 获取本地频道列表失败：" + ex.Message);
+            }
+
+            //尝试获取服务器频道列表
+            int tryCount = 0;
+            while (true)
+            {
+                //获取服务器频道列表多次失败后采用本地频道列表
+                if (tryCount == 5 && localChannelInfo != null) return localChannelInfo;
+
+                ++tryCount;
+
+                Debug.WriteLine(DateTime.Now + " 获取频道列表……");
+                var file = new ConnectionBase().Get("http://doubanfmcloud-channelinfo.stor.sinaapp.com/channelinfo");
+                Debug.WriteLine(DateTime.Now + " 获取频道列表完成");
+                if (string.IsNullOrEmpty(file))
+                {
+                    TakeABreak();
+                    continue;
+                }
+                var channelInfo = new ChannelInfo(Json.ChannelInfo.FromJson(file));
+                if (!channelInfo.IsEffective)
+                {
+                    Debug.WriteLine(DateTime.Now + " 获取频道列表失败");
+                    TakeABreak();
+                }
+                else
+                {
+                    Debug.WriteLine(DateTime.Now + " 获取频道列表成功");
+                    try
+                    {
+                        File.WriteAllText(localPath, file);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(DateTime.Now + " 写入本地频道列表失败：" + ex.Message);
+                    }
+                    return channelInfo;
+                }
+            }
+        }
 
 		/// <summary>
 		/// 刚启动时选择一个频道

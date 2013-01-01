@@ -5,9 +5,6 @@
  * */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DoubanFM.Core
 {
@@ -17,14 +14,17 @@ namespace DoubanFM.Core
 	[Flags]
 	public enum DownloadSite
 	{
-		None = 0x0,
 		/// <summary>
-		/// 谷歌音乐(www.google.cn/music)
+        /// 巨鲸音乐(www.top100.cn)
 		/// </summary>
-		GoogleMusic = 0x1,
+		//Top100 = 0x1,
 		/// <summary>
-		/// 百度听(ting.baidu.com)
+		/// 百度音乐(music.baidu.com)
 		/// </summary>
-		BaiduTing = 0x2
+		BaiduMusic = 0x2,
+        /// <summary>
+        /// QQ音乐(y.qq.com)
+        /// </summary>
+        QQMusic = 0x4
 	}
 }

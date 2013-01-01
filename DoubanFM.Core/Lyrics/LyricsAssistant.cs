@@ -31,14 +31,14 @@ namespace DoubanFM.Core
 		/// <param name="title">标题</param>
 		public static Lyrics GetLyrics(string artist, string title)
 		{
-			if (string.IsNullOrEmpty(artist) && string.IsNullOrEmpty(title)) return null;
+            if (string.IsNullOrEmpty(artist) && string.IsNullOrEmpty(title)) return null;
 			if (title.ToLower().Contains("instrumental")) return null;
 
 			//获取所有可能的歌词
 			Parameters parameters = new Parameters();
 			parameters["Artist"] = Encode(artist);
 			parameters["Title"] = Encode(title);
-			parameters["Flag"] = "0";
+			parameters["Flag"] = "2";
 
 			foreach (var server in servers)
 			{
@@ -117,14 +117,19 @@ namespace DoubanFM.Core
 		static string Encode(string data)
 		{
 			if (data == null) return "";
-			string temp = data.Replace(" ", "").Replace("'", "").ToLower();
-			byte[] bytes = Encoding.Unicode.GetBytes(temp);
-			StringBuilder sb = new StringBuilder();
-			foreach (var b in bytes)
-			{
-				sb.Append(Uri.HexEscape((char)b).Replace("%", ""));
-			}
-			return sb.ToString();
+            var index = data.IndexOfAny(new char[] { '(', '[', '{', '（' });
+            if (index != -1)
+            {
+                data = data.Substring(0, index);
+            }
+            data = new string(data.Where(ch => char.IsLetterOrDigit(ch)).ToArray());
+            var bytes = Encoding.Unicode.GetBytes(data);
+            StringBuilder sb = new StringBuilder();
+            foreach (var b in bytes)
+            {
+                sb.Append(b.ToString("X2"));
+            }
+            return sb.ToString();
 		}
 
 		/// <summary>

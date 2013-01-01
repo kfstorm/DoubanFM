@@ -32,38 +32,40 @@ namespace DoubanFM.Core
 			if (artist == null) artist = string.Empty;
 			if (album == null) album = string.Empty;
 			string keyword = GetKeyword(title, artist, album);
-			if (Settings.DownloadSite.HasFlag(DownloadSite.GoogleMusic))
+			if (Settings.DownloadSite.HasFlag(DownloadSite.BaiduMusic))
 			{
-				GoogleMusicSearch(keyword);
+				BaiduMusicSearch(keyword);
 			}
-			if (Settings.DownloadSite.HasFlag(DownloadSite.BaiduTing))
-			{
-				BaiduTingSearch(keyword);
-			}
+            if (Settings.DownloadSite.HasFlag(DownloadSite.QQMusic))
+            {
+                QQMusicSearch(keyword);
+            }
 		}
-		/// <summary>
-		/// 搜索谷歌音乐
+		
+        /// <summary>
+		/// 搜索百度音乐
 		/// </summary>
 		/// <param name="keyword">关键词</param>
-		private static void GoogleMusicSearch(string keyword)
-		{
-			Parameters parameters = new Parameters();
-			parameters["q"] = keyword;
-			string url = ConnectionBase.ConstructUrlWithParameters("http://www.google.cn/music/search", parameters);
-			UrlHelper.OpenLink(url);
-		}
-
-		/// <summary>
-		/// 搜索百度听
-		/// </summary>
-		/// <param name="keyword">关键词</param>
-		private static void BaiduTingSearch(string keyword)
+		private static void BaiduMusicSearch(string keyword)
 		{
 			Parameters parameters = new Parameters();
 			parameters["key"] = keyword;
-			string url = ConnectionBase.ConstructUrlWithParameters("http://ting.baidu.com/search", parameters);
+			string url = ConnectionBase.ConstructUrlWithParameters("http://music.baidu.com/search", parameters);
 			UrlHelper.OpenLink(url);
 		}
+
+        /// <summary>
+        /// 搜索QQ音乐
+        /// </summary>
+        /// <param name="keyword">关键词</param>
+        private static void QQMusicSearch(string keyword)
+        {
+            string url = string.Format("http://y.qq.com/#type=soso&p={0}",
+                                       Uri.EscapeDataString(
+                                           string.Format("?p=1&catZhida=1&lossless=0&t=100&utf8=1&w={0}",
+                                                         Uri.EscapeDataString(keyword))));
+            UrlHelper.OpenLink(url);
+        }
 
 		/// <summary>
 		/// 获取用于搜索的关键词

@@ -9,8 +9,8 @@ set imagedir=Images
 set tempdir=Temp
 set outputdir=Output
 set compile="C:\Program Files (x86)\NSIS\Unicode\makensis.exe"
-set setup=DoubanFMSetup_2.0.5.exe
-set version=2.0.5.16231
+set setup=DoubanFMSetup_2.0.8.0.exe
+set version=2.0.8.0
 
 :copy
 xcopy "%imagedir%" "%tempdir%\" /Q/E/Y
@@ -53,5 +53,5 @@ if exist "%tempdir%" rmdir "%tempdir%" /s /q
 goto :eof
 
 :SignFile
-signtool sign /f ..\key.pfx /p "%1" /t "http://timestamp.globalsign.com/scripts/timstamp.dll" "%2"
+signtool sign /f ..\key.pfx /p "%1" "%2"
 @exit /B %errorlevel%

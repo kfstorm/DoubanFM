@@ -356,11 +356,8 @@
   <data name="TrimBracketsCheckBox" xml:space="preserve">
     <value>搜索下载时自动剔除歌曲信息中的括号内容</value>
   </data>
-  <data name="CbSearchGoogleMusic" xml:space="preserve">
-    <value>搜索谷歌音乐</value>
-  </data>
-  <data name="CbSearchBaiduTing" xml:space="preserve">
-    <value>搜索百度听</value>
+  <data name="CbSearchBaiduMusic" xml:space="preserve">
+    <value>搜索百度音乐</value>
   </data>
   <data name="ProxyServerGroupBox" xml:space="preserve">
     <value>代理服务器</value>
@@ -809,5 +806,8 @@
   </data>
   <data name="LanguageChangedHint" xml:space="preserve">
     <value>显示语言设置已改变，下次启动豆瓣电台时生效。</value>
+  </data>
+  <data name="CbSearchQQMusic" xml:space="preserve">
+    <value>搜索QQ音乐</value>
   </data>
 </root>

@@ -34,9 +34,9 @@ Website : http://www.kfstorm.com
 			<StackPanel>
                 <CheckBox Margin="0,2" IsChecked="{Binding Settings.SearchAlbum, Source={StaticResource Player}}" Content="{x:Static resx:Resources.AlbumSearchCheckBox}"/>
                 <CheckBox Margin="0,2" IsChecked="{Binding Settings.TrimBrackets, Source={StaticResource Player}}" Content="{x:Static resx:Resources.TrimBracketsCheckBox}"/>
-                <CheckBox Margin="0,2" x:Name="CbSearchGoogleMusic" Click="CbSearchGoogleMusic_Click" Content="{x:Static resx:Resources.CbSearchGoogleMusic}"/>
-                <CheckBox Margin="0,2" x:Name="CbSearchBaiduTing" Click="CbSearchBaiduTing_Click" Content="{x:Static resx:Resources.CbSearchBaiduTing}"/>
-			</StackPanel>
+                <CheckBox Margin="0,2" x:Name="CbSearchBaiduMusic" Click="CbSearchBaiduMusic_Click" Content="{x:Static resx:Resources.CbSearchBaiduMusic}"/>
+                <CheckBox Margin="0,2" x:Name="CbSearchQQMusic" Click="CbSearchQQMusic_Click" Content="{x:Static resx:Resources.CbSearchQQMusic}"/>
+            </StackPanel>
 		</GroupBox>
 		<GroupBox Header="{x:Static resx:Resources.ProxyServerGroupBox}" Margin="0,2">
 			<StackPanel>

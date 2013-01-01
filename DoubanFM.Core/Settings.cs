@@ -58,7 +58,7 @@ namespace DoubanFM.Core
             new PropertyMetadata(Environment.OSVersion.Version >= new Version(6,0)
                 && Environment.OSVersion.Version < new Version(6, 2)
                 ? 0.2 : 0));
-		public static readonly DependencyProperty DownloadSiteProperty = DependencyProperty.Register("DownloadSite", typeof(DownloadSite), typeof(Settings), new PropertyMetadata(DownloadSite.GoogleMusic | DownloadSite.BaiduTing));
+        public static readonly DependencyProperty DownloadSiteProperty = DependencyProperty.Register("DownloadSite", typeof(DownloadSite), typeof(Settings), new PropertyMetadata(Enum.GetValues(typeof(DownloadSite)).Cast<DownloadSite>().Aggregate((DownloadSite)0, (left, right) => left | right)));
 		public static readonly DependencyProperty TrimBracketsProperty = DependencyProperty.Register("TrimBrackets", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty SearchAlbumProperty = DependencyProperty.Register("SearchAlbum", typeof(bool), typeof(Settings), new PropertyMetadata(false));
 		public static readonly DependencyProperty LocationLeftProperty = DependencyProperty.Register("LocationLeft", typeof(double), typeof(Settings), new PropertyMetadata(double.NaN));

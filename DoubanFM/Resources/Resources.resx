@@ -359,11 +359,8 @@ Surprise for you!</value>
   <data name="TrimBracketsCheckBox" xml:space="preserve">
     <value>Auto remove brackets and their contents.</value>
   </data>
-  <data name="CbSearchGoogleMusic" xml:space="preserve">
-    <value>Search Google Music</value>
-  </data>
-  <data name="CbSearchBaiduTing" xml:space="preserve">
-    <value>Search Baidu Ting</value>
+  <data name="CbSearchBaiduMusic" xml:space="preserve">
+    <value>Search Baidu Music</value>
   </data>
   <data name="ProxyServerGroupBox" xml:space="preserve">
     <value>Proxy</value>
@@ -809,5 +806,8 @@ Application will restart after reset.</value>
   </data>
   <data name="LanguageChangedHint" xml:space="preserve">
     <value>Language setting is changed. It will take effect the next time you start DoubanFM.</value>
+  </data>
+  <data name="CbSearchQQMusic" xml:space="preserve">
+    <value>Search QQ Music</value>
   </data>
 </root>

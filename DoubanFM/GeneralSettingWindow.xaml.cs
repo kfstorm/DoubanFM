@@ -25,8 +25,8 @@ namespace DoubanFM
             InitializeComponent();
             player = (Player)FindResource("Player");
 
-            CbSearchGoogleMusic.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.GoogleMusic);
-            CbSearchBaiduTing.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.BaiduTing);
+            CbSearchBaiduMusic.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.BaiduMusic);
+            CbSearchQQMusic.IsChecked = DownloadSearch.Settings.DownloadSite.HasFlag(DownloadSite.QQMusic);
 
             //Init proxy setting.
             switch (player.Settings.ProxyKind)
@@ -83,29 +83,29 @@ namespace DoubanFM
 			(Owner as DoubanFMWindow).ApplyProxy();
 		}
 
-		private void CbSearchGoogleMusic_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void CbSearchBaiduMusic_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			if (CbSearchGoogleMusic.IsChecked == true)
+			if (CbSearchBaiduMusic.IsChecked == true)
 			{
-				DownloadSearch.Settings.DownloadSite |= DownloadSite.GoogleMusic;
+				DownloadSearch.Settings.DownloadSite |= DownloadSite.BaiduMusic;
 			}
 			else
 			{
-				DownloadSearch.Settings.DownloadSite &= ~DownloadSite.GoogleMusic;
+				DownloadSearch.Settings.DownloadSite &= ~DownloadSite.BaiduMusic;
 			}
 		}
 
-		private void CbSearchBaiduTing_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			if (CbSearchBaiduTing.IsChecked == true)
-			{
-				DownloadSearch.Settings.DownloadSite |= DownloadSite.BaiduTing;
-			}
-			else
-			{
-				DownloadSearch.Settings.DownloadSite &= ~DownloadSite.BaiduTing;
-			}
-		}
+        private void CbSearchQQMusic_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (CbSearchQQMusic.IsChecked == true)
+            {
+                DownloadSearch.Settings.DownloadSite |= DownloadSite.QQMusic;
+            }
+            else
+            {
+                DownloadSearch.Settings.DownloadSite &= ~DownloadSite.QQMusic;
+            }
+        }
 
 		private void ProxyKindChanged(object sender, RoutedEventArgs e)
 		{
