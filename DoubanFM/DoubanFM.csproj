@@ -110,6 +110,7 @@
     </ApplicationDefinition>
     <Compile Include="Aero\AeroGlassCompositionChangedEventArgs.cs" />
     <Compile Include="Aero\AeroHelper.cs" />
+    <Compile Include="AppCommand.cs" />
     <Compile Include="ChildWindowBase.cs" />
     <Compile Include="ColorPicker\ColorPicker.cs" />
     <Compile Include="ColorPicker\ColorSpectrumSlider.cs" />
@@ -152,9 +153,7 @@
     <Compile Include="HelpWindow.xaml.cs">
       <DependentUpon>HelpWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HotKey\HookEventArgs.cs" />
     <Compile Include="HotKey\HotKey.cs" />
-    <Compile Include="HotKey\KeyboardHook.cs" />
     <Compile Include="NotifyIcon\PopupControlPanel.xaml.cs">
       <DependentUpon>PopupControlPanel.xaml</DependentUpon>
     </Compile>

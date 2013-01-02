@@ -53,5 +53,5 @@ if exist "%tempdir%" rmdir "%tempdir%" /s /q
 goto :eof
 
 :SignFile
-signtool sign /f ..\key.pfx /p "%1" "%2"
+signtool sign /f ..\key.pfx /p "%1" /t "http://timestamp.globalsign.com/scripts/timstamp.dll" "%2"
 @exit /B %errorlevel%

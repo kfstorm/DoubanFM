@@ -207,7 +207,7 @@ namespace DoubanFM
 			InitLyrics();
 			InitShareSetting();
 			InitBackground();
-			InitKeyboardHook();
+			InitAppCommand();
 		}
 
 		/// <summary>
@@ -277,32 +277,46 @@ namespace DoubanFM
 		}
 
 		/// <summary>
-		/// 键盘钩子
+		/// 用于响应多媒体按键
 		/// </summary>
-		private KeyboardHook hook;
+		private AppCommand appCommand;
 
 		/// <summary>
-		/// 初始化键盘钩子
+		/// 初始化AppCommand
 		/// </summary>
-		private void InitKeyboardHook()
+		private void InitAppCommand()
 		{
-			hook = new KeyboardHook();
-			hook.KeyUp += new KeyboardHook.HookEventHandler((sender, e) =>
-			{
-				if (this.IsLoaded)
-				{
-					//按下了媒体暂停播放键
-					if (e.Key == Key.MediaPlayPause)
-					{
-						PlayPause();
-					}
-					//按下了媒体下一曲目键
-					else if (e.Key == Key.MediaNextTrack)
-					{
-						Next();
-					}
-				}
-			});
+            appCommand = new AppCommand(this);
+		    appCommand.Fire += (sender, e) =>
+		        {
+		            if (this.IsLoaded)
+		            {
+		                switch (e.Command)
+		                {
+		                        //按下了暂停键
+		                    case AppCommand.Command.APPCOMMAND_MEDIA_PAUSE:
+		                        Pause();
+		                        e.Handled = true;
+		                        break;
+		                        //按下了播放键
+		                    case AppCommand.Command.APPCOMMAND_MEDIA_PLAY:
+		                        Play();
+		                        e.Handled = true;
+		                        break;
+		                        //按下了播放/暂停键
+		                    case AppCommand.Command.APPCOMMAND_MEDIA_PLAY_PAUSE:
+		                        PlayPause();
+		                        e.Handled = true;
+		                        break;
+		                        //按下了下一首键
+		                    case AppCommand.Command.APPCOMMAND_MEDIA_NEXTTRACK:
+		                        Next();
+		                        e.Handled = true;
+		                        break;
+		                }
+		            }
+		        };
+            appCommand.Start();
 		}
 
 		/// <summary>
@@ -1592,6 +1606,10 @@ namespace DoubanFM
 			{
 				HotKeys.UnRegister();
 			}
+            if (appCommand != null)
+            {
+                appCommand.Dispose();
+            }
 			if (NotifyIcon != null)
 				NotifyIcon.Dispose();
 			if (_player != null)
