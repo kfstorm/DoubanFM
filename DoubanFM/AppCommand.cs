@@ -134,17 +134,17 @@ namespace DoubanFM
 
         protected static Command GetAppCommandLParam(IntPtr lParam)
         {
-            return (Command) ((short) (((ushort) ((((uint) (lParam)) >> 16) & 0xffff)) & ~FAPPCOMMAND_MASK));
+            return (Command) ((short) (((ushort) ((((uint) lParam.ToInt64()) >> 16) & 0xffff)) & ~FAPPCOMMAND_MASK));
         }
 
         protected static Device GetDeviceLParam(IntPtr lParam)
         {
-            return (Device) ((ushort) (((ushort) ((((uint) (lParam)) >> 16) & 0xffff)) & FAPPCOMMAND_MASK));
+            return (Device) ((ushort) (((ushort) ((((uint) lParam.ToInt64()) >> 16) & 0xffff)) & FAPPCOMMAND_MASK));
         }
 
         protected static Keys GetKeyStateLParam(IntPtr lParam)
         {
-            return (Keys) ((ushort) (((uint) (lParam)) & 0xffff));
+            return (Keys) ((ushort) (((uint) lParam.ToInt64()) & 0xffff));
         }
 
         public void Stop()
