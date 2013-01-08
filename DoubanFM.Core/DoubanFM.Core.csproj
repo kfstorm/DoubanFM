@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="DownloadSearch\DownloadSearch.cs" />
     <Compile Include="DownloadSearch\DownloadSite.cs" />
+    <Compile Include="Json\SongInfo.cs" />
+    <Compile Include="Lyrics\LyricsHelper.cs" />
     <Compile Include="Player\Channel.cs" />
     <Compile Include="Player\ChannelInfo.cs" />
     <Compile Include="ConnectionBase.cs" />
@@ -63,7 +65,7 @@
     <Compile Include="Json\Song.cs" />
     <Compile Include="Json\UserInfo.cs" />
     <Compile Include="Lyrics\Lyrics.cs" />
-    <Compile Include="Lyrics\LyricsAssistant.cs" />
+    <Compile Include="Lyrics\TTPlayerLyrics.cs" />
     <Compile Include="Lyrics\LyricsItem.cs" />
     <Compile Include="Lyrics\LyricsResult.cs" />
     <Compile Include="ChannelSearch\ChannelSearch.cs" />
@@ -90,12 +92,6 @@
     <Compile Include="UrlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DoubanFM.Bass\DoubanFM.Bass.csproj">
-      <Project>{62324cfd-03ff-44b4-9204-66bae86972b6}</Project>
-      <Name>DoubanFM.Bass</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -104,6 +100,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.zh-CN.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DoubanFM.Bass\DoubanFM.Bass.csproj">
+      <Project>{62324cfd-03ff-44b4-9204-66bae86972b6}</Project>
+      <Name>DoubanFM.Bass</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

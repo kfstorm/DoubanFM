@@ -21,30 +21,48 @@ namespace DoubanFM.Core.Json
 	public class LogOnResult
 	{
 		/// <summary>
-		/// 用户信息
+		/// 用户ID
 		/// </summary>
 		[DataMember]
-		public UserInfo user_info { get; set; }
+		public string user_id { get; set; }
 
-		/// <summary>
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        [DataMember]
+        public string err { get; set; }
+
+        /// <summary>
+        /// Token
+        /// </summary>
+        [DataMember]
+        public string token { get; set; }
+
+        /// <summary>
+        /// Expire
+        /// </summary>
+        [DataMember]
+        public string expire { get; set; }
+
+        /// <summary>
 		/// 是否发生错误
 		/// </summary>
 		[DataMember]
 		public bool r { get; set; }
 
-		/// <summary>
-		/// 错误信息
-		/// </summary>
-		[DataMember]
-		public string err_msg { get; set; }
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        [DataMember]
+        public string user_name { get; set; }
 
-		/// <summary>
-		/// 错误代码
-		/// </summary>
-		[DataMember]
-		public int err_no { get; set; }
+        /// <summary>
+        /// 电子邮箱
+        /// </summary>
+        [DataMember]
+        public string email { get; set; }
 
-		/// <summary>
+        /// <summary>
 		/// 从JSON生成
 		/// </summary>
 		/// <param name="json">JSON字符串</param>

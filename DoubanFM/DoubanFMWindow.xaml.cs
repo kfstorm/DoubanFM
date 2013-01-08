@@ -215,7 +215,9 @@ namespace DoubanFM
 		/// </summary>
 		private void InitPlayerSettings()
 		{
+		    TbUsername.Text = _player.Settings.User.Username;
 			PbPassword.Password = _player.Settings.User.Password;
+            LbNickname.Content = _player.Settings.User.Nickname;
 			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
 			if (channel != null) _player.Settings.LastChannel = channel;
 			if (_player.Settings.ScaleTransform != 1.0)
@@ -475,6 +477,7 @@ namespace DoubanFM
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录已成功");
 				RefreshMyChannels();
+			    LbNickname.Content = _player.Settings.User.Nickname;
 			});
 			//注销已成功
 			_player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
@@ -1154,7 +1157,7 @@ namespace DoubanFM
 			downloadingLyrics = song;
 			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
 			{
-				Lyrics lyrics = LyricsAssistant.GetLyrics(song.Artist, song.Title);
+				Lyrics lyrics = LyricsHelper.GetLyrics(song);
 				Dispatcher.Invoke(new Action(() =>
 				{
 					if (_player.CurrentSong == song) SetLyrics(lyrics);
@@ -1612,10 +1615,16 @@ namespace DoubanFM
             }
 			if (NotifyIcon != null)
 				NotifyIcon.Dispose();
-			if (_player != null)
-				_player.Dispose();
 			SaveSettings();
 		}
+
+        /// <summary>
+        /// 更新yonghum
+        /// </summary>
+        private void TbUsername_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            _player.Settings.User.Username = TbUsername.Text;
+        }
 
 		/// <summary>
 		/// 更新密码
@@ -1625,16 +1634,15 @@ namespace DoubanFM
 			_player.Settings.User.Password = PbPassword.Password;
 		}
 
-		/// <summary>
-		/// 登录
-		/// </summary>
-		private void ButtonLogOn_Click(object sender, RoutedEventArgs e)
-		{
-			_player.UserAssistant.LogOn(_player.UserAssistant.HasCaptcha ? CaptchaText.Text : null);
-			CaptchaText.Text = null;
-		}
+	    /// <summary>
+	    /// 登录
+	    /// </summary>
+	    private void ButtonLogOn_Click(object sender, RoutedEventArgs e)
+	    {
+	        _player.UserAssistant.LogOn();
+	    }
 
-		/// <summary>
+	    /// <summary>
 		/// 注销
 		/// </summary>
 		private void ButtonLogOff_Click(object sender, RoutedEventArgs e)
@@ -2037,22 +2045,22 @@ namespace DoubanFM
 			window.Show();
 		}
 
-		private void HlPlayed_Click(object sender, RoutedEventArgs e)
-		{
-			Core.UrlHelper.OpenLink("http://douban.fm/mine?type=played");
-		}
+        //private void HlPlayed_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Core.UrlHelper.OpenLink("http://douban.fm/mine?type=played");
+        //}
 
-		private void HlLiked_Click(object sender, RoutedEventArgs e)
-		{
-			Core.UrlHelper.OpenLink("http://douban.fm/mine?type=liked");
-		}
+        //private void HlLiked_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Core.UrlHelper.OpenLink("http://douban.fm/mine?type=liked");
+        //}
 
-		private void HlBanned_Click(object sender, RoutedEventArgs e)
-		{
-			Core.UrlHelper.OpenLink("http://douban.fm/mine?type=banned");
-		}
+        //private void HlBanned_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Core.UrlHelper.OpenLink("http://douban.fm/mine?type=banned");
+        //}
 
-		private void NotifyIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
+        private void NotifyIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
 		{
 			if (this.IsVisible)
 				this.HideMinimized();
@@ -2173,27 +2181,27 @@ namespace DoubanFM
 			SearchDownload();
 		}
 
-		private void ButtonRefreshCaptcha_Click(object sender, RoutedEventArgs e)
-		{
-			_player.UserAssistant.UpdateCaptcha();
-		}
+        //private void ButtonRefreshCaptcha_Click(object sender, RoutedEventArgs e)
+        //{
+        //    _player.UserAssistant.UpdateCaptcha();
+        //}
 
-		private void ControlPanel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-		{
-			if (e.OriginalSource == ControlPanel)
-			{
-				if (e.AddedItems.Contains(Account))
-				{
-					if (_player.UserAssistant.CurrentState == UserAssistant.State.LoggedOff)
-					{
-						if (!_player.UserAssistant.HasCaptcha)
-						{
-							_player.UserAssistant.UpdateCaptcha();
-						}
-					}
-				}
-			}
-		}
+        //private void ControlPanel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        //{
+        //    if (e.OriginalSource == ControlPanel)
+        //    {
+        //        if (e.AddedItems.Contains(Account))
+        //        {
+        //            if (_player.UserAssistant.CurrentState == UserAssistant.State.LoggedOff)
+        //            {
+        //                if (!_player.UserAssistant.HasCaptcha)
+        //                {
+        //                    _player.UserAssistant.UpdateCaptcha();
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
 		private bool recordLocation = false;
 

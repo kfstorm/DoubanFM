@@ -28,9 +28,9 @@ namespace DoubanFM.Core
 		#region 依赖项属性
 
 		public static readonly DependencyProperty UserProperty = DependencyProperty.Register("User", typeof(User), typeof(Settings));
-		public static readonly DependencyProperty RememberPasswordProperty = DependencyProperty.Register("RememberPassword", typeof(bool), typeof(Settings));
-		public static readonly DependencyProperty AutoLogOnNextTimeProperty = DependencyProperty.Register("AutoLogOnNextTime", typeof(bool), typeof(Settings), new PropertyMetadata(true));
-		public static readonly DependencyProperty RememberLastChannelProperty = DependencyProperty.Register("RememberLastChannel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		//public static readonly DependencyProperty RememberPasswordProperty = DependencyProperty.Register("RememberPassword", typeof(bool), typeof(Settings));
+		//public static readonly DependencyProperty AutoLogOnNextTimeProperty = DependencyProperty.Register("AutoLogOnNextTime", typeof(bool), typeof(Settings), new PropertyMetadata(true));
+		//public static readonly DependencyProperty RememberLastChannelProperty = DependencyProperty.Register("RememberLastChannel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty LastChannelProperty = DependencyProperty.Register("LastChannel", typeof(Channel), typeof(Settings));
 		public static readonly DependencyProperty IsMutedProperty = DependencyProperty.Register("IsMuted", typeof(bool), typeof(Settings));
 		public static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof(double), typeof(Settings), new PropertyMetadata(1.0));
@@ -69,7 +69,7 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty AdjustVolumeWithMouseWheelProperty = DependencyProperty.Register("AdjustVolumeWithMouseWheel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		public static readonly DependencyProperty UserKeyProperty = DependencyProperty.Register("UserKey", typeof(string), typeof(Settings), new PropertyMetadata(Guid.NewGuid().ToString("N")));
 		public static readonly DependencyProperty FavoriteChannelsProperty = DependencyProperty.Register("FavoriteChannels", typeof(List<Channel>), typeof(Settings), new PropertyMetadata(new List<Channel>()));
-		public static readonly DependencyProperty LastTimeLoggedOnProperty = DependencyProperty.Register("LastTimeLoggedOn", typeof(bool), typeof(Settings), new PropertyMetadata(false));
+		//public static readonly DependencyProperty LastTimeLoggedOnProperty = DependencyProperty.Register("LastTimeLoggedOn", typeof(bool), typeof(Settings), new PropertyMetadata(false));
         public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceInfo?), typeof(Settings), new PropertyMetadata(null));
         public static readonly DependencyProperty CultureInfoProperty = DependencyProperty.Register("CultureInfo", typeof(CultureInfo), typeof(Settings), new PropertyMetadata(Thread.CurrentThread.CurrentCulture));
         #endregion
@@ -95,6 +95,11 @@ namespace DoubanFM.Core
 		}
 		#endregion
 
+        /// <summary>
+        /// 当前应用的设置
+        /// </summary>
+        public static Settings Current { get; set; }
+
 		/// <summary>
 		/// 用户
 		/// </summary>
@@ -103,30 +108,30 @@ namespace DoubanFM.Core
 			get { return (User)GetValue(UserProperty); }
 			set { SetValue(UserProperty, value); }
 		}
-		/// <summary>
-		/// 记住密码
-		/// </summary>
-		public bool RememberPassword
-		{
-			get { return (bool)GetValue(RememberPasswordProperty); }
-			set { SetValue(RememberPasswordProperty, value); }
-		}
-		/// <summary>
-		/// 下次自动登录
-		/// </summary>
-		public bool AutoLogOnNextTime
-		{
-			get { return (bool)GetValue(AutoLogOnNextTimeProperty); }
-			set { SetValue(AutoLogOnNextTimeProperty, value); }
-		}
-		/// <summary>
-		/// 记住最后播放的频道
-		/// </summary>
-		public bool RememberLastChannel
-		{
-			get { return (bool)GetValue(RememberLastChannelProperty); }
-			set { SetValue(RememberLastChannelProperty, value); }
-		}
+        ///// <summary>
+        ///// 记住密码
+        ///// </summary>
+        //public bool RememberPassword
+        //{
+        //    get { return (bool)GetValue(RememberPasswordProperty); }
+        //    set { SetValue(RememberPasswordProperty, value); }
+        //}
+        ///// <summary>
+        ///// 下次自动登录
+        ///// </summary>
+        //public bool AutoLogOnNextTime
+        //{
+        //    get { return (bool)GetValue(AutoLogOnNextTimeProperty); }
+        //    set { SetValue(AutoLogOnNextTimeProperty, value); }
+        //}
+        ///// <summary>
+        ///// 记住最后播放的频道
+        ///// </summary>
+        //public bool RememberLastChannel
+        //{
+        //    get { return (bool)GetValue(RememberLastChannelProperty); }
+        //    set { SetValue(RememberLastChannelProperty, value); }
+        //}
 		/// <summary>
 		/// 最后播放的频道
 		/// </summary>
@@ -406,14 +411,14 @@ namespace DoubanFM.Core
 			set { SetValue(FavoriteChannelsProperty, value); }
 		}
 
-		/// <summary>
-		/// 最后一次是否成功登录
-		/// </summary>
-		public bool LastTimeLoggedOn
-		{
-			get { return (bool)GetValue(LastTimeLoggedOnProperty); }
-			set { SetValue(LastTimeLoggedOnProperty, value); }
-		}
+        ///// <summary>
+        ///// 最后一次是否成功登录
+        ///// </summary>
+        //public bool LastTimeLoggedOn
+        //{
+        //    get { return (bool)GetValue(LastTimeLoggedOnProperty); }
+        //    set { SetValue(LastTimeLoggedOnProperty, value); }
+        //}
 
 		/// <summary>
 		/// 设备（空代表默认设备）
@@ -452,12 +457,12 @@ namespace DoubanFM.Core
 		{
 			try { User = (User)info.GetValue("User", typeof(User)); }
 			catch { }
-			try { RememberPassword = info.GetBoolean("RememberPassword"); }
-			catch { }
-			try { AutoLogOnNextTime = info.GetBoolean("AutoLogOnNextTime"); }
-			catch { }
-			try { RememberLastChannel = info.GetBoolean("RememberLastChannel"); }
-			catch { }
+            //try { RememberPassword = info.GetBoolean("RememberPassword"); }
+            //catch { }
+            //try { AutoLogOnNextTime = info.GetBoolean("AutoLogOnNextTime"); }
+            //catch { }
+            //try { RememberLastChannel = info.GetBoolean("RememberLastChannel"); }
+            //catch { }
 			try { LastChannel = (Channel)info.GetValue("LastChannel", typeof(Channel)); }
 			catch { }
 			try { IsMuted = info.GetBoolean("IsMuted"); }
@@ -536,8 +541,8 @@ namespace DoubanFM.Core
 			catch { }
 			try { FavoriteChannels = (List<Channel>)info.GetValue("FavoriteChannels", typeof(List<Channel>)); }
 			catch { }
-			try { LastTimeLoggedOn = info.GetBoolean("LastTimeLoggedOn"); }
-			catch { }
+            //try { LastTimeLoggedOn = info.GetBoolean("LastTimeLoggedOn"); }
+            //catch { }
 			try { Device = (DeviceInfo?)info.GetValue("Device", typeof(DeviceInfo?)); }
 			catch { }
             try { CultureInfo = (CultureInfo)info.GetValue("CultureInfo", typeof(CultureInfo)); }
@@ -554,9 +559,9 @@ namespace DoubanFM.Core
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("User", User);
-			info.AddValue("RememberPassword", RememberPassword);
-			info.AddValue("AutoLogOnNextTime", AutoLogOnNextTime);
-			info.AddValue("RememberLastChannel", RememberLastChannel);
+            //info.AddValue("RememberPassword", RememberPassword);
+			//info.AddValue("AutoLogOnNextTime", AutoLogOnNextTime);
+            //info.AddValue("RememberLastChannel", RememberLastChannel);
 			info.AddValue("LastChannel", LastChannel);
 			info.AddValue("IsMuted", IsMuted);
 			info.AddValue("Volume", Volume);
@@ -600,7 +605,7 @@ namespace DoubanFM.Core
 			info.AddValue("AdjustVolumeWithMouseWheel", AdjustVolumeWithMouseWheel);
 			info.AddValue("UserKey", UserKey);
 			info.AddValue("FavoriteChannels", FavoriteChannels);
-			info.AddValue("LastTimeLoggedOn", LastTimeLoggedOn);
+            //info.AddValue("LastTimeLoggedOn", LastTimeLoggedOn);
 			info.AddValue("Device", Device);
             info.AddValue("CultureInfo", CultureInfo);
 		}
@@ -635,10 +640,10 @@ namespace DoubanFM.Core
 		internal void Save()
 		{
 			string tempPassword = User.Password;
-			if (!RememberPassword)
-				User.Password = "";
-			Channel tempLastChannel = LastChannel;
-			if (!RememberLastChannel) LastChannel = null;
+			//if (!RememberPassword)
+			User.Password = "";
+			//Channel tempLastChannel = LastChannel;
+			//if (!RememberLastChannel) LastChannel = null;
 
 			try
 			{
@@ -653,7 +658,7 @@ namespace DoubanFM.Core
 			catch { }
 
 			User.Password = tempPassword;
-			LastChannel = tempLastChannel;
+			//LastChannel = tempLastChannel;
 		}
 	}
 }

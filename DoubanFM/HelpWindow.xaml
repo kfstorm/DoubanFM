@@ -199,14 +199,14 @@ Website : http://www.kfstorm.com
                         <Run Text="{x:Static resx:Resources.HelpWindowParagraphShareParagraph2}"/>
                     </Paragraph>
                 </Section>
-                <Section>
+                <!--<Section>
                     <Paragraph Style="{StaticResource Header1StyleKey}">
                         <Run Text="{x:Static resx:Resources.HelpWindowParagraphLogin1}"/>
                     </Paragraph>
                     <Paragraph Style="{StaticResource TextStyleKey}">
                         <Run Text="{x:Static resx:Resources.HelpWindowParagraphLogin2}"/>
                     </Paragraph>
-                </Section>
+                </Section>-->
                 <Section>
                     <Paragraph Style="{StaticResource Header1StyleKey}">
                         <Run Text="{x:Static resx:Resources.HelpWindowParagraphProgramCrashes1}"/>

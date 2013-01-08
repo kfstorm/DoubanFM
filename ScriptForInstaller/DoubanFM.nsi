@@ -55,6 +55,7 @@ Section "MainSection" SEC01
   SetOverwrite on
   File "LICENSE.txt"
   File "README.txt"
+  File "version.dat"
   File "Bass.Net.dll"
   File "DoubanFM.Bass.dll"
   File "DoubanFM.Core.dll"
@@ -152,6 +153,7 @@ DeleteExe:
   Delete "$INSTDIR\WPFSoundVisualizationLib.dll"
   Delete "$INSTDIR\LICENSE.txt"
   Delete "$INSTDIR\README.txt"
+  Delete "$INSTDIR\version.dat"
   Delete "$INSTDIR\x86\bass.dll"
   Delete "$INSTDIR\x64\bass.dll"
   Delete "$INSTDIR\Bass.Net.dll"

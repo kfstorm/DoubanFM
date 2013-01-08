@@ -189,7 +189,7 @@ namespace DoubanFM.Core
 				return false;
 			if (Object.ReferenceEquals(this, other))
 				return true;
-			return Id == other.Id && Name == other.Name && ((string.IsNullOrEmpty(Context) && string.IsNullOrEmpty(other.Context)) || Context == other.Context);
+			return Id == other.Id && ((string.IsNullOrEmpty(Context) && string.IsNullOrEmpty(other.Context)) || Context == other.Context);
 		}
 
 		public static bool operator ==(Channel lhs, Channel rhs)

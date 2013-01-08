@@ -41,22 +41,32 @@ namespace DoubanFM
 		/// </summary>
 		public static bool Started { get; set; }
 
-		static App()
-		{
-			Started = false;
+	    static App()
+	    {
+	        Started = false;
 
-			try
-			{
-				AppVersion = ApplicationDeployment.CurrentDeployment.CurrentVersion;
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex.Message);
-				AppVersion = typeof(App).Assembly.GetName().Version;
-			}
-		}
+	        try
+	        {
+	            AppVersion = ApplicationDeployment.CurrentDeployment.CurrentVersion;
+	        }
+	        catch (Exception ex)
+	        {
+	            Debug.WriteLine(ex.Message);
+	            try
+	            {
+	                var exePath = System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName;
+	                var versionPath = Path.Combine(Path.GetDirectoryName(exePath), "version.dat");
+	                AppVersion = Version.Parse(File.ReadAllText(versionPath));
+	            }
+	            catch (Exception ex2)
+	            {
+	                Debug.WriteLine(ex2.Message);
+	                AppVersion = typeof (App).Assembly.GetName().Version;
+	            }
+	        }
+	    }
 
-		public App()
+	    public App()
 		{
 			//只允许运行一个实例
 			bool createdNew = false;
@@ -319,7 +329,7 @@ namespace DoubanFM
 		}
 
 		/// <summary>
-		/// 删除设置
+		/// 保存设置
 		/// </summary>
 		/// <param name="mainWindow">软件的主窗口</param>
 		public void SaveSettings(DoubanFMWindow mainWindow = null)

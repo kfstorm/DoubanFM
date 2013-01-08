@@ -20,7 +20,7 @@ Website : http://www.kfstorm.com
             <ComboBox x:Name="CbLanguage" Grid.Column="1"/>
         </Grid>
         <CheckBox x:Name="CheckBoxAdjustVolumeWithMouseWheel" Content="{x:Static resx:Resources.CheckBoxAdjustVolumeWithMouseWheel}" IsChecked="{Binding Settings.AdjustVolumeWithMouseWheel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
-        <CheckBox x:Name="CheckBoxRememberLastChannel" Content="{x:Static resx:Resources.CheckBoxRememberLastChannel}" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
+        <!--<CheckBox x:Name="CheckBoxRememberLastChannel" Content="{x:Static resx:Resources.CheckBoxRememberLastChannel}" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>-->
         <CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="{x:Static resx:Resources.CheckBoxIsSearchFilterEnabled}" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
 		<Grid Margin="0,2">
 			<Grid.ColumnDefinitions>

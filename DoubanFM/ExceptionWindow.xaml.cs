@@ -137,7 +137,7 @@ namespace DoubanFM
 			catch (Exception ex)
 			{
 				Debug.WriteLine(ex.Message);
-				sb.AppendLine("非ClickOnce应用程序");
+				sb.AppendLine(string.Format("非ClickOnce应用程序。应用程序版本：{0}", App.AppVersion));
 			}
 
 			sb.AppendLine("DoubanFM.exe版本：" + GetAssemblyVersion(typeof(App)));
@@ -287,10 +287,7 @@ namespace DoubanFM
 						SendReport(ExceptionMessage, userMessage, SystemInformation);
 					}
 					catch { }
-					Dispatcher.BeginInvoke(new Action(() =>
-						{
-							this.Close();
-						}));
+					Dispatcher.BeginInvoke(new Action(this.Close));
 				}));
 			}
 			else

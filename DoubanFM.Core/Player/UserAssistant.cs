@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Threading;
 using System.Diagnostics;
+using DoubanFM.Core.Json;
 
 namespace DoubanFM.Core
 {
@@ -27,8 +28,8 @@ namespace DoubanFM.Core
 		public static readonly DependencyProperty IsLoggedOffProperty = DependencyProperty.Register("IsLoggedOff", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty IsLoggingOnProperty = DependencyProperty.Register("IsLoggingOn", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty IsLoggingOffProperty = DependencyProperty.Register("IsLoggingOff", typeof(bool), typeof(UserAssistant));
-		public static readonly DependencyProperty HasCaptchaProperty = DependencyProperty.Register("HasCaptcha", typeof(bool), typeof(UserAssistant));
-		public static readonly DependencyProperty CaptchaUrlProperty = DependencyProperty.Register("CaptchaUrl", typeof(string), typeof(UserAssistant));
+        //public static readonly DependencyProperty HasCaptchaProperty = DependencyProperty.Register("HasCaptcha", typeof(bool), typeof(UserAssistant));
+        //public static readonly DependencyProperty CaptchaUrlProperty = DependencyProperty.Register("CaptchaUrl", typeof(string), typeof(UserAssistant));
 		public static readonly DependencyProperty ShowLogOnFailedHintProperty = DependencyProperty.Register("ShowLogOnFailedHint", typeof(bool), typeof(UserAssistant));
 		public static readonly DependencyProperty LogOnFailedMessageProperty = DependencyProperty.Register("LogOnFailedMessage", typeof(string), typeof(UserAssistant));
 
@@ -82,7 +83,7 @@ namespace DoubanFM.Core
 					SetValue(IsLoggedOffProperty, CurrentState == State.LoggedOff);
 					SetValue(IsLoggingOnProperty, CurrentState == State.LoggingOn);
 					SetValue(IsLoggingOffProperty, CurrentState == State.LoggingOff);
-					Settings.LastTimeLoggedOn = IsLoggedOn;
+					//Settings.LastTimeLoggedOn = IsLoggedOn;
 					ShowLogOnFailedHint = false;
 					if (lastState == State.LoggingOn)
 						if (CurrentState == State.LoggedOn)
@@ -97,16 +98,16 @@ namespace DoubanFM.Core
 							RaiseLogOffSucceedEvent();
 						else if (CurrentState == State.LoggedOn)
 							RaiseLogOffFailedEvent();
-					//假定登录时始终需要验证码
-					if (lastState == State.LoggingOn && CurrentState == State.LoggedOff) // && (HasCaptcha || ErrorNo == 1011))
-					{
-						UpdateCaptcha();
-					}
-					//假定登录时始终需要验证码
-					else if (lastState == State.LoggingOff && CurrentState == State.LoggedOff)// && HasCaptcha)
-					{
-						UpdateCaptcha();
-					}
+                    ////假定登录时始终需要验证码
+                    //if (lastState == State.LoggingOn && CurrentState == State.LoggedOff) // && (HasCaptcha || ErrorNo == 1011))
+                    //{
+                    //    UpdateCaptcha();
+                    //}
+                    ////假定登录时始终需要验证码
+                    //else if (lastState == State.LoggingOff && CurrentState == State.LoggedOff)// && HasCaptcha)
+                    //{
+                    //    UpdateCaptcha();
+                    //}
 				}
 			}
 		}
@@ -142,32 +143,28 @@ namespace DoubanFM.Core
 			get { return (string)GetValue(LogOnFailedMessageProperty); }
 			protected set { SetValue(LogOnFailedMessageProperty, value); }
 		}
-		/// <summary>
-		/// 错误代码
-		/// </summary>
-		public int ErrorNo { get; set; }
-		/// <summary>
-		/// 验证码URL
-		/// </summary>
-		public string CaptchaUrl
-		{
-			get
-			{
-				return (string)GetValue(CaptchaUrlProperty);
-			}
-			protected set
-			{
-				SetValue(CaptchaUrlProperty, value);
-			}
-		}
-		/// <summary>
-		/// 是否要求输入验证码
-		/// </summary>
-		public bool HasCaptcha
-		{
-			get { return (bool)GetValue(HasCaptchaProperty); }
-			set { SetValue(HasCaptchaProperty, value); }
-		}
+        ///// <summary>
+        ///// 验证码URL
+        ///// </summary>
+        //public string CaptchaUrl
+        //{
+        //    get
+        //    {
+        //        return (string)GetValue(CaptchaUrlProperty);
+        //    }
+        //    protected set
+        //    {
+        //        SetValue(CaptchaUrlProperty, value);
+        //    }
+        //}
+        ///// <summary>
+        ///// 是否要求输入验证码
+        ///// </summary>
+        //public bool HasCaptcha
+        //{
+        //    get { return (bool)GetValue(HasCaptchaProperty); }
+        //    set { SetValue(HasCaptchaProperty, value); }
+        //}
 
 		#endregion
 
@@ -214,175 +211,255 @@ namespace DoubanFM.Core
 
 		#region 私有变量
 
-		/// <summary>
-		/// 验证码ID
-		/// </summary>
-		private string captchaId;
+        ///// <summary>
+        ///// 验证码ID
+        ///// </summary>
+        //private string captchaId;
 		
 		#endregion
 
 		#region 成员方法
 
-		/// <summary>
-		/// 更新验证码
-		/// </summary>
-		public void UpdateCaptcha()
-		{
-			HasCaptcha = true;
-			captchaId = null;
-			CaptchaUrl = null;
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-				{
-					captchaId = new ConnectionBase().Get("http://douban.fm/j/new_captcha");
-					Dispatcher.BeginInvoke(new Action(() =>
-						{
-							if (string.IsNullOrEmpty(captchaId))
-							{
-								HasCaptcha = false;
-								captchaId = null;
-								CaptchaUrl = null;
-							}
-							else
-							{
-								captchaId = captchaId.Trim('\"');
-								HasCaptcha = true;
-								CaptchaUrl = @"http://douban.fm/misc/captcha?size=m&id=" + captchaId;
-							}
-						}));
-				}));
-		}
+        ///// <summary>
+        ///// 更新验证码
+        ///// </summary>
+        //public void UpdateCaptcha()
+        //{
+        //    HasCaptcha = true;
+        //    captchaId = null;
+        //    CaptchaUrl = null;
+        //    ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+        //        {
+        //            captchaId = new ConnectionBase().Get("http://douban.fm/j/new_captcha");
+        //            Dispatcher.BeginInvoke(new Action(() =>
+        //                {
+        //                    if (string.IsNullOrEmpty(captchaId))
+        //                    {
+        //                        HasCaptcha = false;
+        //                        captchaId = null;
+        //                        CaptchaUrl = null;
+        //                    }
+        //                    else
+        //                    {
+        //                        captchaId = captchaId.Trim('\"');
+        //                        HasCaptcha = true;
+        //                        CaptchaUrl = @"http://douban.fm/misc/captcha?size=m&id=" + captchaId;
+        //                    }
+        //                }));
+        //        }));
+        //}
 
-		/// <summary>
-		/// 根据douban.fm的主页的HTML代码更新登录状态
-		/// </summary>
-		/// <param name="html">HTML文件</param>
-		internal void Update(string html)
-		{
-			if (!string.IsNullOrEmpty(html))
-			{
-				//获取昵称和播放记录
-				Match match2 = Regex.Match(html, @"id=""user_name"">(?!{{)(.*)<i></i></span>", RegexOptions.None);
-				string nickname = match2.Groups[1].Value;
-				Match match3 = Regex.Match(html, @"累积收听.*?(\d+).*?首");
-				int played = 0;
-				int.TryParse(match3.Groups[1].Value, out played);
-				Match match4 = Regex.Match(html, @"加红心.*?(\d+).*?首");
-				int liked = 0;
-				int.TryParse(match4.Groups[1].Value, out liked);
-				Match match5 = Regex.Match(html, @"(\d+).*?首不再播放");
-				int banned = 0;
-				int.TryParse(match5.Groups[1].Value, out banned);
+        ///// <summary>
+        ///// 根据douban.fm的主页的HTML代码更新登录状态
+        ///// </summary>
+        ///// <param name="html">HTML文件</param>
+        //internal void Update(string html)
+        //{
+        //    if (!string.IsNullOrEmpty(html))
+        //    {
+        //        //获取昵称和播放记录
+        //        Match match2 = Regex.Match(html, @"""user_name""[^<>]*?>(?!{{)([^<>]*?)\s*<", RegexOptions.Singleline);
 
-				//更改属性
-				Dispatcher.Invoke(new Action(() =>
-				{
-					/*System.Diagnostics.Debug.WriteLine("**********************************************************************");
-					System.Diagnostics.Debug.WriteLine(DateTime.Now + " 以下是本次“登录/注销”返回的结果页面");
-					System.Diagnostics.Debug.Indent();
-					System.Diagnostics.Debug.WriteLine(html);
-					System.Diagnostics.Debug.Unindent();
-					System.Diagnostics.Debug.WriteLine("**********************************************************************");
-					*/
-					if (!string.IsNullOrEmpty(nickname))
-					{
-						Settings.User.Nickname = nickname;
-						Settings.User.Played = played;
-						Settings.User.Liked = liked;
-						Settings.User.Banned = banned;
-						System.Diagnostics.Debug.WriteLine("已登录");
-						CurrentState = State.LoggedOn;
-					}
-					else
-					{
-						Settings.User.Nickname = string.Empty;
-						System.Diagnostics.Debug.WriteLine("已注销");
-						CurrentState = State.LoggedOff;
-					}
-				}));
-			}
-			else
-				Dispatcher.Invoke(new Action(() =>
-					{
-						if (CurrentState == State.LoggingOn) CurrentState = State.LoggedOff;
-						else if (CurrentState == State.LoggingOff) CurrentState = State.LoggedOn;
-						else if (CurrentState == State.Unknown) CurrentState = State.LoggedOff;
-						else CurrentState = State.LoggedOff;
-					}));
-		}
+        //        string nickname = match2.Groups[1].Value;
+        //        Match match3 = Regex.Match(html, @"累积收听.*?(\d+).*?首");
+        //        int played = 0;
+        //        int.TryParse(match3.Groups[1].Value, out played);
+        //        Match match4 = Regex.Match(html, @"加红心.*?(\d+).*?首");
+        //        int liked = 0;
+        //        int.TryParse(match4.Groups[1].Value, out liked);
+        //        Match match5 = Regex.Match(html, @"(\d+).*?首不再播放");
+        //        int banned = 0;
+        //        int.TryParse(match5.Groups[1].Value, out banned);
+
+        //        //更改属性
+        //        Dispatcher.Invoke(new Action(() =>
+        //        {
+        //            /*System.Diagnostics.Debug.WriteLine("**********************************************************************");
+        //            System.Diagnostics.Debug.WriteLine(DateTime.Now + " 以下是本次“登录/注销”返回的结果页面");
+        //            System.Diagnostics.Debug.Indent();
+        //            System.Diagnostics.Debug.WriteLine(html);
+        //            System.Diagnostics.Debug.Unindent();
+        //            System.Diagnostics.Debug.WriteLine("**********************************************************************");
+        //            */
+        //            if (!string.IsNullOrEmpty(nickname))
+        //            {
+        //                Settings.User.Nickname = nickname;
+        //                Settings.User.Played = played;
+        //                Settings.User.Liked = liked;
+        //                Settings.User.Banned = banned;
+        //                System.Diagnostics.Debug.WriteLine("已登录");
+        //                CurrentState = State.LoggedOn;
+        //            }
+        //            else
+        //            {
+        //                Settings.User.Nickname = string.Empty;
+        //                System.Diagnostics.Debug.WriteLine("已注销");
+        //                CurrentState = State.LoggedOff;
+        //            }
+        //        }));
+        //    }
+        //    else
+        //        Dispatcher.Invoke(new Action(() =>
+        //            {
+        //                if (CurrentState == State.LoggingOn) CurrentState = State.LoggedOff;
+        //                else if (CurrentState == State.LoggingOff) CurrentState = State.LoggedOn;
+        //                else if (CurrentState == State.Unknown) CurrentState = State.LoggedOff;
+        //                else CurrentState = State.LoggedOff;
+        //            }));
+        //}
 		/// <summary>
 		/// 根据服务器返回的登录结果更新登录状态
 		/// </summary>
-		internal void UpdateWhenLogOn(Json.LogOnResult result)
+		private void UpdateWhenLogOn(Json.LogOnResult result)
 		{
-			if (result != null && result.r == false && result.user_info != null)
-			{
-				Dispatcher.Invoke(new Action(() =>
-				{
-					//System.Diagnostics.Debug.WriteLine("注销链接：");
-					//System.Diagnostics.Debug.WriteLine(_logOffLink);
-					/*System.Diagnostics.Debug.WriteLine("**********************************************************************");
-					System.Diagnostics.Debug.WriteLine(DateTime.Now + " 以下是本次“登录/注销”返回的结果");
-					System.Diagnostics.Debug.Indent();
-					System.Diagnostics.Debug.WriteLine(html);
-					System.Diagnostics.Debug.Unindent();
-					System.Diagnostics.Debug.WriteLine("**********************************************************************");
-					*/
-					Settings.User.Nickname = result.user_info.name;
-					Settings.User.Played = result.user_info.play_record.played;
-					Settings.User.Liked = result.user_info.play_record.liked;
-					Settings.User.Banned = result.user_info.play_record.banned;
-					LogOnFailedMessage = null;
-					ErrorNo = 0;
-					System.Diagnostics.Debug.WriteLine("已登录");
-					CurrentState = State.LoggedOn;
-				}));
-			}
-			else
-				Dispatcher.Invoke(new Action(() =>
-				{
-					if (result != null)
-					{
-						Debug.WriteLine(result.err_no + ":" + result.err_msg);
-						LogOnFailedMessage = result.err_msg;
-						ErrorNo = result.err_no;
-					}
-					else
-					{
-						LogOnFailedMessage = Resources.Resources.UnknownError;
-						ErrorNo = 0;
-					}
-					if (CurrentState == State.LoggingOn) CurrentState = State.LoggedOff;
-					else if (CurrentState == State.LoggingOff) CurrentState = State.LoggedOn;
-					else if (CurrentState == State.Unknown) CurrentState = State.LoggedOff;
-					else CurrentState = State.LoggedOff;
-				}));
+            Debug.Assert(result != null, "result != null");
+		    if (result.r == false)
+		    {
+		        Dispatcher.Invoke(new Action(() =>
+		            {
+		                //System.Diagnostics.Debug.WriteLine("注销链接：");
+		                //System.Diagnostics.Debug.WriteLine(_logOffLink);
+		                /*System.Diagnostics.Debug.WriteLine("**********************************************************************");
+                    System.Diagnostics.Debug.WriteLine(DateTime.Now + " 以下是本次“登录/注销”返回的结果");
+                    System.Diagnostics.Debug.Indent();
+                    System.Diagnostics.Debug.WriteLine(html);
+                    System.Diagnostics.Debug.Unindent();
+                    System.Diagnostics.Debug.WriteLine("**********************************************************************");
+                    */
+		                Settings.User.UserID = result.user_id;
+		                Settings.User.Token = result.token;
+		                Settings.User.Expire = result.expire;
+		                Settings.User.Nickname = result.user_name;
+		                Settings.User.Email = result.email;
+		                //Settings.User.Played = result.user_info.play_record.played;
+		                //Settings.User.Liked = result.user_info.play_record.liked;
+		                //Settings.User.Banned = result.user_info.play_record.banned;
+		                LogOnFailedMessage = null;
+		                System.Diagnostics.Debug.WriteLine("已登录");
+		                CurrentState = State.LoggedOn;
+		            }));
+		    }
+		    else
+		        Dispatcher.Invoke(new Action(() =>
+		            {
+		                Debug.WriteLine(result.err);
+		                switch (result.err)
+		                {
+                            case "invalid_username":
+		                        LogOnFailedMessage = Resources.Resources.InvalidUsername;
+		                        break;
+                            case "wrong_password":
+		                        LogOnFailedMessage = Resources.Resources.WrongPassword;
+		                        break;
+                            case null:
+                            case "":
+                            case "unknown_error":
+                                LogOnFailedMessage = Resources.Resources.UnknownError;
+		                        break;
+                            default:
+		                        LogOnFailedMessage = result.err;
+		                        break;
+		                }
+		                CurrentState = State.LoggedOff;
+		            }));
 		}
 		/// <summary>
 		/// 登录
 		/// </summary>
-		/// <param name="captcha">用户填写的验证码</param>
-		public void LogOn(string captcha = null)
+		public void LogOn()
 		{
 			if (CurrentState != State.LoggedOff) return;
 			CurrentState = State.LoggingOn;
-			Parameters parameters = new Parameters();
-			parameters["source"] = "radio";
-			parameters["alias"] = Settings.User.Username;
-			parameters["form_password"] = Settings.User.Password;
-			parameters["captcha_solution"] = captcha;
-			parameters["captcha_id"] = captchaId;
-			if (Settings.AutoLogOnNextTime)
-				parameters["remember"] = "on";
-			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
-				{
-					string file = new ConnectionBase().Post("http://douban.fm/j/login", Encoding.UTF8.GetBytes(parameters.ToString()));
-					System.Diagnostics.Debug.WriteLine("登录结果：");
-					System.Diagnostics.Debug.WriteLine(file);
-					var result = Json.LogOnResult.FromJson(file);
-					Dispatcher.Invoke(new Action(() => { UpdateWhenLogOn(result); }));
-				}));
+		    var username = Settings.User.Username ?? string.Empty;
+		    var password = Settings.User.Password ?? string.Empty;
+		    ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
+		        {
+		            Json.LogOnResult result = null;
+		            List<string> errorMessages = new List<string>();
+		            if (Regex.Match(username, @"^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$").Success)
+		            {
+		                var result_email = LogOnWithEmail(username, password);
+		                if (result_email != null)
+		                {
+		                    if (!result_email.r)
+		                    {
+		                        result = result_email;
+		                    }
+		                    else
+		                    {
+		                        errorMessages.Add(result_email.err);
+		                    }
+		                }
+		            }
+		            if (result == null)
+		            {
+		                var result_username = LogOnWithUsername(username, password);
+		                if (result_username != null)
+		                {
+		                    if (!result_username.r)
+		                    {
+		                        result = result_username;
+		                    }
+		                    else
+		                    {
+		                        errorMessages.Add(result_username.err);
+		                    }
+		                }
+		            }
+		            if (result == null)
+		            {
+		                result = new LogOnResult() {r = true};
+		                var invalidUsername = new[] {"invalid_user_name", "invalidate_email", "wrong_email"};
+		                errorMessages =
+		                    (from message in errorMessages
+		                     where !string.IsNullOrEmpty(message)
+		                     select invalidUsername.Contains(message) ? "invalid_username" : message).Distinct().ToList();
+		                if (errorMessages.Count == 0)
+		                {
+		                    result.err = "unknown_error";
+		                }
+		                else
+		                {
+		                    result.err = errorMessages.FirstOrDefault(message => message != "invalid_username") ??
+		                                 errorMessages[0];
+		                }
+		            }
+		            UpdateWhenLogOn(result);
+		        }));
 		}
-		/// <summary>
+        /// <summary>
+        /// 使用用户名登录
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="password">密码</param>
+        /// <returns>登录结果</returns>
+        private Json.LogOnResult LogOnWithUsername(string username, string password)
+        {
+            Parameters parameters = new Parameters();
+            parameters["app_name"] = "radio_desktop_win";
+            parameters["version"] = "100";
+            parameters["username"] = username;
+            parameters["password"] = password;
+            string file = new ConnectionBase().Post(ConnectionBase.ConstructUrlWithParameters("http://www.douban.com/j/app/login", parameters), new byte[0]);
+            return Json.LogOnResult.FromJson(file);
+        }
+        /// <summary>
+        /// 使用邮箱登录
+        /// </summary>
+        /// <param name="email">邮箱</param>
+        /// <param name="password">密码</param>
+        /// <returns>登录结果</returns>
+        private Json.LogOnResult LogOnWithEmail(string email, string password)
+        {
+            Parameters parameters = new Parameters();
+            parameters["app_name"] = "radio_desktop_win";
+            parameters["version"] = "100";
+            parameters["email"] = email;
+            parameters["password"] = password;
+            string file = new ConnectionBase().Post(ConnectionBase.ConstructUrlWithParameters("http://www.douban.com/j/app/login", parameters), new byte[0]);
+            return Json.LogOnResult.FromJson(file);
+        }
+        /// <summary>
 		/// 注销
 		/// </summary>
 		public void LogOff()
@@ -394,12 +471,15 @@ namespace DoubanFM.Core
 			//仅仅是清除Cookie而已
 			ConnectionBase.ClearCookie();
 			Settings.User.Nickname = string.Empty;
-			Settings.User.Played = 0;
-			Settings.User.Liked = 0;
-			Settings.User.Banned = 0;
-			CurrentState = State.LoggedOff;
+            Settings.User.Token = string.Empty;
+            Settings.User.Expire = string.Empty;
+            Settings.User.Email = string.Empty;
+            Settings.User.UserID = string.Empty;
+            //Settings.User.Played = 0;
+            //Settings.User.Liked = 0;
+            //Settings.User.Banned = 0;
+            CurrentState = State.LoggedOff;
 			LogOnFailedMessage = null;
-			ErrorNo = 0;
 		}
 
 		#endregion

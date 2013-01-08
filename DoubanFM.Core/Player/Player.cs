@@ -18,7 +18,7 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// 播放器核心
 	/// </summary>
-	public class Player : DependencyObject, IDisposable
+	public class Player : DependencyObject
 	{
 		#region 依赖项属性
 
@@ -370,28 +370,28 @@ namespace DoubanFM.Core
 		{
 			if (IsInitialized) return;
 			Debug.WriteLine(DateTime.Now + " 播放器核心初始化中");
-			bool lastTimeLoggedOn = Settings.LastTimeLoggedOn;
+			//bool lastTimeLoggedOn = Settings.LastTimeLoggedOn;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
 				{
-					//如果用户上次退出软件时处于未登录状态，则启动时不更新登录状态
-					if (lastTimeLoggedOn)
-					{
-					    string file;
-					    while (true)
-						{
-							Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
-							file = new ConnectionBase().Get("http://douban.fm/");
-							Debug.WriteLine(DateTime.Now + " 刷新完成");
-							if (!string.IsNullOrEmpty(file))
-							{
-								break;
-							}
-							TakeABreak();
-						}
+                    ////如果用户上次退出软件时处于未登录状态，则启动时不更新登录状态
+                    //if (lastTimeLoggedOn)
+                    //{
+                    //    string file;
+                    //    while (true)
+                    //    {
+                    //        Debug.WriteLine(DateTime.Now + " 刷新豆瓣FM主页……");
+                    //        file = new ConnectionBase().Get("http://douban.fm/");
+                    //        Debug.WriteLine(DateTime.Now + " 刷新完成");
+                    //        if (!string.IsNullOrEmpty(file))
+                    //        {
+                    //            break;
+                    //        }
+                    //        TakeABreak();
+                    //    }
 
-						//更新用户的登录状态
-						UserAssistant.Update(file);
-					}
+                    //    //更新用户的登录状态
+                    //    UserAssistant.Update(file);
+                    //}
 
 				    var channelInfo = GetChannelInfo();
 					
@@ -401,9 +401,19 @@ namespace DoubanFM.Core
 							当上次退出时是登录状态，但之后在浏览器里注销后，再打开软件会显示未登录，
 							但Cookie还在，如果不清除Cookie，第一次登录会失败，清除后第一次登录也能成功
 							 * */
-							if (UserAssistant.CurrentState != Core.UserAssistant.State.LoggedOn)
-								UserAssistant.LogOff();
+                            //if (UserAssistant.CurrentState != Core.UserAssistant.State.LoggedOn)
+                            //    UserAssistant.LogOff();
 							ChannelInfo = channelInfo;
+                            if (!string.IsNullOrEmpty(Settings.User.Token) &&
+                                !string.IsNullOrEmpty(Settings.User.Expire) &&
+                                !string.IsNullOrEmpty(Settings.User.UserID))
+                            {
+                                UserAssistant.CurrentState = UserAssistant.State.LoggedOn;
+                            }
+                            else
+                            {
+                                UserAssistant.CurrentState = UserAssistant.State.LoggedOff;
+                            }
 							IsInitialized = true;
 							Debug.WriteLine(DateTime.Now + " 播放器核心初始化完成");
 							//选择一个频道
@@ -532,10 +542,10 @@ namespace DoubanFM.Core
 		public void CurrentSongFinishedPlaying()
 		{
 			RaiseStopedEvent();
-			if (UserAssistant.IsLoggedOn)
-			{
-				++Settings.User.Played;
-			}
+            //if (UserAssistant.IsLoggedOn)
+            //{
+            //    ++Settings.User.Played;
+            //}
 			ChangeToNextSong("e");
 		}
 		/// <summary>
@@ -569,10 +579,10 @@ namespace DoubanFM.Core
 			if (CurrentSong == null) return;
 			if (CurrentSong.Like) return;
 			CurrentSong.Like = true;
-			if (UserAssistant.IsLoggedOn)
-			{
-				++Settings.User.Liked;
-			}
+            //if (UserAssistant.IsLoggedOn)
+            //{
+            //    ++Settings.User.Liked;
+            //}
 			Report("r", false);
 		}
 		/// <summary>
@@ -583,10 +593,10 @@ namespace DoubanFM.Core
 			if (CurrentSong == null) return;
 			if (!CurrentSong.Like) return;
 			CurrentSong.Like = false;
-			if (UserAssistant.IsLoggedOn)
-			{
-				--Settings.User.Liked;
-			}
+            //if (UserAssistant.IsLoggedOn)
+            //{
+            //    --Settings.User.Liked;
+            //}
 			Report("u", false);
 		}
 		/// <summary>
@@ -599,10 +609,10 @@ namespace DoubanFM.Core
 			if (CurrentSong == null) return;
 			if (_neverring) return;
 			RaiseStopedEvent();
-			if (UserAssistant.IsLoggedOn)
-			{
-				++Settings.User.Banned;
-			}
+            //if (UserAssistant.IsLoggedOn)
+            //{
+            //    ++Settings.User.Banned;
+            //}
 
 			ChangeToNextSong("b");
 		}
@@ -656,6 +666,7 @@ namespace DoubanFM.Core
 		void LoadSettings()
 		{
 			Settings = Core.Settings.Load();
+		    Settings.Current = Settings;
 		}
 		/// <summary>
 		/// 保存偏好设置
@@ -674,18 +685,6 @@ namespace DoubanFM.Core
 			return ConnectionBase.SaveCookies();
 		}
 
-		private bool disposed;
-		/// <summary>
-		/// 执行与释放或重置非托管资源相关的应用程序定义的任务。
-		/// </summary>
-		/// <param name="saveSettings">是否保存设置</param>
-		public void Dispose()
-		{
-			if (disposed) return;
-			if (UserAssistant.IsLoggedOn && !Settings.AutoLogOnNextTime)
-				UserAssistant.LogOff();
-			disposed = true;
-		}
 		/// <summary>
 		/// 获取全新的播放列表
 		/// type=n
@@ -715,7 +714,7 @@ namespace DoubanFM.Core
 					PlayerState ps = GetPlayerState();
 					while (true)
 					{
-						pl = PlayList.GetPlayList(ps.CurrentSong, ps.CurrentChannel, type);
+						pl = PlayList.GetPlayList(ps, type);
 						if ((type == "p" || type == "n") && pl.Count == 0) TakeABreak();
 						else if (type == "e") break;
 						else if (ps.CurrentChannel.IsDj) break;
@@ -773,7 +772,7 @@ namespace DoubanFM.Core
 			PlayerState ps = GetPlayerState();
 			while (_playListSongs.Count == 0)
 			{
-				pl = PlayList.GetPlayList(ps.CurrentSong, ps.CurrentChannel, "p");
+				pl = PlayList.GetPlayList(ps, "p");
 				if (pl.Count == 0)
 					TakeABreak();
 				else
@@ -792,20 +791,24 @@ namespace DoubanFM.Core
 		{
 			Thread.Sleep(5000);
 		}
-		/// <summary>
-		/// 获取当前状态，用于向线程池加入任务时传递参数
-		/// </summary>
-		/// <returns></returns>
-		PlayerState GetPlayerState()
-		{
-			PlayerState ps = null;
-			if (CheckAccess())
-				ps = new PlayerState(CurrentChannel == null ? null : (Channel)CurrentChannel.Clone(), CurrentSong == null ? null : (Song)CurrentSong.Clone());
-			else
-				Dispatcher.Invoke(new Action(() => { ps = GetPlayerState(); }));
-			return ps;
-		}
-		/// <summary>
+
+	    /// <summary>
+	    /// 获取当前状态，用于向线程池加入任务时传递参数
+	    /// </summary>
+	    /// <returns></returns>
+	    private PlayerState GetPlayerState()
+	    {
+	        PlayerState ps = null;
+	        if (CheckAccess())
+	            ps = new PlayerState(Settings.User == null ? null : (User) Settings.User.Clone(),
+	                                 CurrentChannel == null ? null : (Channel) CurrentChannel.Clone(),
+	                                 CurrentSong == null ? null : (Song) CurrentSong.Clone());
+	        else
+	            Dispatcher.Invoke(new Action(() => { ps = GetPlayerState(); }));
+	        return ps;
+	    }
+
+	    /// <summary>
 		/// 是否可以加入收藏
 		/// </summary>
 		/// <param name="channel">频道</param>
@@ -867,8 +870,9 @@ namespace DoubanFM.Core
 		/// <summary>
 		/// 记录播放器的状态
 		/// </summary>
-		class PlayerState
+		internal class PlayerState
 		{
+            public User CurrentUser { get; set; }
 			/// <summary>
 			/// 当前频道
 			/// </summary>
@@ -878,8 +882,9 @@ namespace DoubanFM.Core
 			/// </summary>
 			public Song CurrentSong { get; set; }
 
-			internal PlayerState(Channel currentChannel, Song currentSong)
+			internal PlayerState(User currentUser, Channel currentChannel, Song currentSong)
 			{
+			    CurrentUser = currentUser;
 				CurrentChannel = currentChannel;
 				CurrentSong = currentSong;
 			}

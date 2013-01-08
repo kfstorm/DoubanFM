@@ -236,7 +236,7 @@ Website : http://www.kfstorm.com
 				<ColumnDefinition Width="300"/>
 			</Grid.ColumnDefinitions>
 			<Grid x:Name="LeftPanel" Background="Transparent" Panel.ZIndex="1" ClipToBounds="True" MouseLeave="LeftPanel_MouseLeave" MouseEnter="LeftPanel_MouseEnter">
-				<TabControl x:Name="ControlPanel" Style="{StaticResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}" SelectionChanged="ControlPanel_SelectionChanged">
+				<TabControl x:Name="ControlPanel" Style="{StaticResource ControlPanelStyle}" ClipToBounds="True" FocusVisualStyle="{x:Null}">
 					<TabItem Header="{StaticResource TabItemChannels}">
 						<Grid>
 							<Grid x:Name="ChannelsGrid" Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -371,40 +371,44 @@ Website : http://www.kfstorm.com
 						<Grid>
                             <Grid x:Name="AccountPanel" Visibility="{Binding IsInitialized, Source={StaticResource Player}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Grid x:Name="LogOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggedOff, Source={StaticResource Player}}">
-                                	<DockPanel Margin="10">
+                                	<DockPanel Margin="20">
 										<StackPanel DockPanel.Dock="Top">
 											<Grid>
 												<Grid.RowDefinitions>
 													<RowDefinition/>
 													<RowDefinition/>
-													<RowDefinition Height="Auto"/>
+													<!--<RowDefinition Height="Auto"/>-->
 												</Grid.RowDefinitions>
 												<Grid.ColumnDefinitions>
-													<ColumnDefinition Width="70"/>
+													<ColumnDefinition Width="Auto"/>
 													<ColumnDefinition/>
 												</Grid.ColumnDefinitions>
-												<TextBlock VerticalAlignment="Center" Text="{x:Static resx:Resources.EmailUserNameBlock}"/>
-												<TextBlock VerticalAlignment="Center" Grid.Row="1" Text="{x:Static resx:Resources.PasswordBlock}" Margin="0,2"/>
-												<TextBox x:Name="TbUsername" Grid.Column="1" Text="{Binding Settings.User.Username, Mode=TwoWay, Source={StaticResource Player}}" Margin="0,2"/>
-												<PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="0,2" PasswordChanged="PbPassword_PasswordChanged" />
-                                                <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.VerificationCaptchaBlock}" Visibility="{Binding Visibility, ElementName=CaptchaText}"/>
-												<TextBox x:Name="CaptchaText" Grid.Row="2" Grid.Column="1" Margin="0,2" Visibility="{Binding UserAssistant.HasCaptcha, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+												<TextBlock VerticalAlignment="Center" Text="{x:Static resx:Resources.EmailUserNameBlock}" Margin="0,2,2,2" FontSize="14"/>
+                                                <TextBlock VerticalAlignment="Center" Grid.Row="1" Text="{x:Static resx:Resources.PasswordBlock}" Margin="0,2,2,2" FontSize="14"/>
+												<TextBox x:Name="TbUsername" Grid.Column="1" Margin="2,2,0,2" TextChanged="TbUsername_OnTextChanged"/>
+                                                <PasswordBox x:Name="PbPassword" Grid.Row="1" Grid.Column="1" Margin="2,2,0,2" PasswordChanged="PbPassword_PasswordChanged" />
+                                                <!--<TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.VerificationCaptchaBlock}" Visibility="{Binding Visibility, ElementName=CaptchaText}"/>
+												<TextBox x:Name="CaptchaText" Grid.Row="2" Grid.Column="1" Margin="0,2" Visibility="{Binding UserAssistant.HasCaptcha, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>-->
 											</Grid>
-                                            <Button x:Name="ButtonRefreshCaptcha" Grid.Column="2" Click="ButtonRefreshCaptcha_Click" Padding="0" Height="40" BorderThickness="0" ToolTip="{x:Static resx:Resources.RefreshVerificationCaptchaButton}" IsTabStop="False" Visibility="{Binding Visibility, ElementName=CaptchaText}" Margin="0,2" Cursor="Hand">
+                                            <!--<Button x:Name="ButtonRefreshCaptcha" Grid.Column="2" Click="ButtonRefreshCaptcha_Click" Padding="0" Height="40" BorderThickness="0" ToolTip="{x:Static resx:Resources.RefreshVerificationCaptchaButton}" IsTabStop="False" Visibility="{Binding Visibility, ElementName=CaptchaText}" Margin="0,2" Cursor="Hand">
 												<Image x:Name="Captcha" Stretch="Fill" Source="{Binding UserAssistant.CaptchaUrl, Source={StaticResource Player}}"/>
-											</Button>
+											</Button>-->
 											<StackPanel Margin="0,2">
 												<TextBlock x:Name="LogOnFailedHint" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding UserAssistant.ShowLogOnFailedHint, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Player}}" Text="{Binding UserAssistant.LogOnFailedMessage, Source={StaticResource Player}}" Margin="0,2"/>
-												<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="{x:Static resx:Resources.LoginButton}" HorizontalAlignment="Right" Width="100" Height="40" FontSize="16" Margin="0,5"/>
+												<Button x:Name="ButtonLogOn" Grid.Column="1" Click="ButtonLogOn_Click" IsDefault="True" Content="{x:Static resx:Resources.LoginButton}" HorizontalAlignment="Right" Width="100" Height="40" FontSize="16" Margin="0,20"/>
 											</StackPanel>
 										</StackPanel>
 										<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
-											<Button x:Name="ButtonSignUp" Content="{x:Static resx:Resources.RegisterButton}" HorizontalAlignment="Center" Padding="10,2" Click="ButtonSignUp_Click" Margin="0,5"/>
-                                            <DockPanel MinWidth="150" Margin="0,5" HorizontalAlignment="Center">
+                                            <TextBlock HorizontalAlignment="Right" FontSize="14">
+											    <Hyperlink x:Name="HlPlayed" Click="ButtonSignUp_Click" Foreground="White">
+												    <Run Text="{x:Static resx:Resources.RegisterButton}"/>
+											    </Hyperlink>
+                                            </TextBlock>
+                                            <!--<DockPanel MinWidth="150" Margin="0,5" HorizontalAlignment="Center">
                                                 <CheckBox x:Name="CheckBoxRememberPassword" DockPanel.Dock="Left" Content="{x:Static resx:Resources.RememberPasswordCheckBox}" IsChecked="{Binding Settings.RememberPassword, Mode=TwoWay, Source={StaticResource Player}}"/>
 												<CheckBox x:Name="CheckBoxAutoLogOnNextTime" DockPanel.Dock="Right" Content="{x:Static resx:Resources.AutoLoginCheckBox}" IsChecked="{Binding Settings.AutoLogOnNextTime, Mode=TwoWay, Source={StaticResource Player}}"/>
                                                 <Border MinWidth="5" MaxWidth="20"/>
-                                            </DockPanel>
+                                            </DockPanel>-->
 										</StackPanel>
 									</DockPanel>
 								</Grid>
@@ -415,8 +419,8 @@ Website : http://www.kfstorm.com
 										<RowDefinition/>
 										<RowDefinition/>
 									</Grid.RowDefinitions>
-									<Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Settings.User.Nickname, Source={StaticResource Player}}" FontSize="24"/>
-									<StackPanel Grid.Row="1" VerticalAlignment="Center" TextElement.FontSize="14">
+									<Label x:Name="LbNickname" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+									<!--<StackPanel Grid.Row="1" VerticalAlignment="Center" TextElement.FontSize="14">
 										<TextBlock HorizontalAlignment="Center">
 											<Hyperlink x:Name="HlPlayed" Click="HlPlayed_Click" Foreground="White">
 												<Run Text="{Binding Settings.User.Played, Source={StaticResource Player}, StringFormat={x:Static resx:Resources.TotalFormatString}}"/>
@@ -432,7 +436,7 @@ Website : http://www.kfstorm.com
 												<Run Text="{Binding Settings.User.Banned, Source={StaticResource Player}, StringFormat={x:Static resx:Resources.NoLongerPlayFormatString}}"/>
 											</Hyperlink>
 										</TextBlock>
-									</StackPanel>
+									</StackPanel>-->
                                     <Label Grid.Row="2" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="{x:Static resx:Resources.TheLoggedLabel}"/>
                                     <Button Grid.Row="3" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="{x:Static resx:Resources.LogoutButton}" FontSize="16"/>
 								</Grid>

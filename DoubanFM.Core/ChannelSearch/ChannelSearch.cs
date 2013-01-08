@@ -257,20 +257,20 @@ namespace DoubanFM.Core
 				}
 
 				//找出专辑
-				mc = Regex.Matches(file, @"<tr.*?class=\""item\"">.*?</tr>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                mc = Regex.Matches(file, @"<tr[^<>]*?class=\""item\""[^<>]*?>.*?</tr>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 				foreach (Match mm in mc)
 				{
 					string temp = mm.Groups[0].Value;
-					string titleTemp = Regex.Match(temp, @"<a.*?class=\""nbg\"".*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
-					string subject = Regex.Match(titleTemp, @"href=\"".*?subject/(\d+)", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
-					string title = Regex.Match(titleTemp, @".*?title=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
-					string link = Regex.Match(titleTemp, @".*?href=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
-					string pictureTemp = Regex.Match(temp, @"<img.*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
-					string picture = Regex.Match(pictureTemp, @".*?src=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
-					Match ma = Regex.Match(temp, @".*?href=\""http://douban\.fm/\?context=([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    string titleTemp = Regex.Match(temp, @"<a[^<>]*?class=\""nbg\""[^<>]*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
+                    string subject = Regex.Match(titleTemp, @"href=\""[^<>]*?subject/(\d+)", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+					string title = Regex.Match(titleTemp, @"title=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+					string link = Regex.Match(titleTemp, @"href=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+                    string pictureTemp = Regex.Match(temp, @"<img[^<>]*?/?>", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[0].Value;
+					string picture = Regex.Match(pictureTemp, @"src=\""([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+					Match ma = Regex.Match(temp, @"href=\""http://douban\.fm/\?context=([^\""]+)\""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
 					string context = null;
-					if (ma != null && ma.Success) context = ma.Groups[1].Value;
+					if (ma.Success) context = ma.Groups[1].Value;
 					if (string.IsNullOrEmpty(context))
 					{
 						context = MakeContext(subject);

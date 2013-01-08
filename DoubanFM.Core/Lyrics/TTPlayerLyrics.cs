@@ -17,7 +17,7 @@ namespace DoubanFM.Core
 	/// <summary>
 	/// 用于搜索歌词的工具，使用千千静听的歌词服务器
 	/// </summary>
-	public static class LyricsAssistant
+	internal static class TTPlayerLyrics
 	{
 		/// <summary>
 		/// 歌词服务器列表

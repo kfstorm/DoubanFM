@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -84,11 +85,19 @@ namespace DoubanFM.Core
 		/// <param name="code">Lrc代码</param>
 		public Lyrics(string code)
 		{
-			LrcCode = code;
-			LrcCodeParse();
-			DictionaryParse();
-			GetSortedTimes();
-			CurrentIndex = -1;
+		    try
+		    {
+		        LrcCode = code;
+		        LrcCodeParse();
+		        DictionaryParse();
+		        GetSortedTimes();
+		        CurrentIndex = -1;
+		    }
+		    catch (Exception ex)
+		    {
+		        Debug.WriteLine(ex.ToString());
+		        throw;
+		    }
 		}
 
 		#endregion
@@ -107,7 +116,7 @@ namespace DoubanFM.Core
 			{
 				if (!string.IsNullOrEmpty(lines[i]))
 				{
-					Match mc = Regex.Match(lines[i], @"((?'titles'\[.*?\])+)(?'content'.*)", RegexOptions.None);
+					Match mc = Regex.Match(lines[i], @"(?'titles'\[.*?\])+(?'content'.*)", RegexOptions.None);
 					if (mc.Success)
 					{
 						string content = mc.Groups["content"].Value;
