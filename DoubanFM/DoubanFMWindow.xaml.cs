@@ -1330,16 +1330,19 @@ namespace DoubanFM
 			{
 				if (_player.Settings.ShowBalloonWhenSongChanged && !NotifyIcon.TrayPopupResolved.IsOpen && !NotifyIcon.TrayToolTipResolved.IsOpen)
 				{
-					if (!stoped && CustomBaloon == null && _player.CurrentSong == lastSong)
-					{
-						CustomBaloon = new NotifyIcon.BalloonSongInfo();
-						var image = CustomBaloon.Cover.Source as BitmapSource;
-						if (image != null && !image.IsDownloading)
-						{
-							CustomBaloon.Cover.Opacity = 1;
-						}
-						NotifyIcon.ShowCustomBalloon(CustomBaloon, System.Windows.Controls.Primitives.PopupAnimation.Fade, 5000);
-					}
+				    if (!IsActive)
+				    {
+				        if (!stoped && CustomBaloon == null && _player.CurrentSong == lastSong)
+				        {
+				            CustomBaloon = new NotifyIcon.BalloonSongInfo();
+				            var image = CustomBaloon.Cover.Source as BitmapSource;
+				            if (image != null && !image.IsDownloading)
+				            {
+				                CustomBaloon.Cover.Opacity = 1;
+				            }
+				            NotifyIcon.ShowCustomBalloon(CustomBaloon, System.Windows.Controls.Primitives.PopupAnimation.Fade, 5000);
+				        }
+				    }
 				}
 				timer.Stop();
 			};
