@@ -217,7 +217,7 @@ namespace DoubanFM
 		{
 		    TbUsername.Text = _player.Settings.User.Username;
 			PbPassword.Password = _player.Settings.User.Password;
-            LbNickname.Content = _player.Settings.User.Nickname;
+            TbNickname.Text = _player.Settings.User.Nickname;
 			Channel channel = Channel.FromCommandLineArgs(System.Environment.GetCommandLineArgs().ToList());
 			if (channel != null) _player.Settings.LastChannel = channel;
 			if (_player.Settings.ScaleTransform != 1.0)
@@ -477,7 +477,7 @@ namespace DoubanFM
 			{
 				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录已成功");
 				RefreshMyChannels();
-			    LbNickname.Content = _player.Settings.User.Nickname;
+			    TbNickname.Text = _player.Settings.User.Nickname;
 			});
 			//注销已成功
 			_player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>

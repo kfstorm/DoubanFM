@@ -419,7 +419,7 @@ Website : http://www.kfstorm.com
 										<RowDefinition/>
 										<RowDefinition/>
 									</Grid.RowDefinitions>
-									<Label x:Name="LbNickname" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+									<TextBlock x:Name="TbNickname" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
 									<!--<StackPanel Grid.Row="1" VerticalAlignment="Center" TextElement.FontSize="14">
 										<TextBlock HorizontalAlignment="Center">
 											<Hyperlink x:Name="HlPlayed" Click="HlPlayed_Click" Foreground="White">
