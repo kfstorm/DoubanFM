@@ -14,17 +14,17 @@ using System.IO;
 
 namespace DoubanFM.Core.Json
 {
-	/// <summary>
-	/// JSON格式的登录结果
-	/// </summary>
-	[DataContract]
-	public class LogOnResult
-	{
-		/// <summary>
-		/// 用户ID
-		/// </summary>
-		[DataMember]
-		public string user_id { get; set; }
+    /// <summary>
+    /// JSON格式的登录结果
+    /// </summary>
+    [DataContract]
+    public class LogOnResult
+    {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        [DataMember]
+        public string user_id { get; set; }
 
         /// <summary>
         /// 错误信息
@@ -45,10 +45,10 @@ namespace DoubanFM.Core.Json
         public string expire { get; set; }
 
         /// <summary>
-		/// 是否发生错误
-		/// </summary>
-		[DataMember]
-		public bool r { get; set; }
+        /// 是否发生错误
+        /// </summary>
+        [DataMember]
+        public bool r { get; set; }
 
         /// <summary>
         /// 昵称
@@ -62,23 +62,5 @@ namespace DoubanFM.Core.Json
         [DataMember]
         public string email { get; set; }
 
-        /// <summary>
-		/// 从JSON生成
-		/// </summary>
-		/// <param name="json">JSON字符串</param>
-		/// <returns></returns>
-		public static LogOnResult FromJson(string json)
-		{
-			try
-			{
-				DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(LogOnResult));
-				using (MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(json)))
-					return (LogOnResult)ser.ReadObject(stream);
-			}
-			catch
-			{
-				return null;
-			}
-		}
-	}
+    }
 }

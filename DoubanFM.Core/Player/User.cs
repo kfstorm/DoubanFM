@@ -47,30 +47,28 @@ namespace DoubanFM.Core
         /// Expire
         /// </summary>
         public string Expire { get; set; }
-        ///// <summary>
-        ///// 累计播放数量
-        ///// </summary>
-        //public int Played
-        //{
-        //    get { return (int)GetValue(PlayedProperty); }
-        //    set { SetValue(PlayedProperty, value); }
-        //}
-        ///// <summary>
-        ///// 加红心数量
-        ///// </summary>
-        //public int Liked
-        //{
-        //    get { return (int)GetValue(LikedProperty); }
-        //    set { SetValue(LikedProperty, value); }
-        //}
-        ///// <summary>
-        ///// 不再播放数量
-        ///// </summary>
-        //public int Banned
-        //{
-        //    get { return (int)GetValue(BannedProperty); }
-        //    set { SetValue(BannedProperty, value); }
-        //}
+        /// <summary>
+        /// 累计播放数量
+        /// </summary>
+        public int Played { get; set; }
+        /// <summary>
+        /// 加红心数量
+        /// </summary>
+        public int Liked { get; set; }
+        /// <summary>
+        /// 不再播放数量
+        /// </summary>
+        public int Banned { get; set; }
+
+        /// <summary>
+        /// 是否使用Pro服务
+        /// </summary>
+        public bool IsPro { get; set; }
+
+        /// <summary>
+        /// Pro服务比特率设置
+        /// </summary>
+        public ProRate ProRate { get; set; }
 
 		internal User(string username, string password)
 		{
@@ -100,65 +98,75 @@ namespace DoubanFM.Core
 	        catch
 	        {
 	        }
+	        try
+	        {
+	            UserID = info.GetString("UserID");
+	        }
+	        catch
+	        {
+	        }
+	        try
+	        {
+	            Nickname = info.GetString("Nickname");
+	        }
+	        catch
+	        {
+	        }
+	        try
+	        {
+	            Email = info.GetString("Email");
+	        }
+	        catch
+	        {
+	        }
+	        try
+	        {
+	            Token = info.GetString("Token");
+	        }
+	        catch
+	        {
+	        }
+	        try
+	        {
+	            Expire = info.GetString("Expire");
+	        }
+	        catch
+	        {
+	        }
+	        try
+	        {
+	            Played = info.GetInt32("Played");
+	        }
+	        catch
+	        {
+	        }
+	        try
+	        {
+	            Liked = info.GetInt32("Liked");
+	        }
+	        catch
+	        {
+	        }
+	        try
+	        {
+	            Banned = info.GetInt32("Banned");
+	        }
+	        catch
+	        {
+	        }
+	        try
+	        {
+	            IsPro = info.GetBoolean("IsPro");
+	        }
+	        catch{}
             try
             {
-                UserID = info.GetString("UserID");
+                ProRate = (ProRate) info.GetValue("ProRate", typeof (ProRate));
             }
             catch
             {
+                
             }
-            try
-            {
-                Nickname = info.GetString("Nickname");
-            }
-            catch
-            {
-            }
-            try
-            {
-                Email = info.GetString("Email");
-            }
-            catch
-            {
-            }
-            try
-            {
-                Token = info.GetString("Token");
-            }
-            catch
-            {
-            }
-            try
-            {
-                Expire = info.GetString("Expire");
-            }
-            catch
-            {
-            }
-            //try
-	        //{
-	        //    Played = info.GetInt32("Played");
-	        //}
-	        //catch
-	        //{
-	        //    Played = def.Played;
-	        //}
-	        //try
-	        //{
-	        //    Liked = info.GetInt32("Liked");
-	        //}
-	        //catch
-	        //{
-	        //    Liked = def.Liked;
-	        //}
-	        //try
-	        //{
-	        //    Banned = info.GetInt32("Banned");
-	        //}
-	        //catch
-	        //{
-	        //    Banned = def.Banned;
-	        //}
 	    }
 
 	    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -170,10 +178,12 @@ namespace DoubanFM.Core
             info.AddValue("Email", Email);
             info.AddValue("Token", Token);
             info.AddValue("Expire", Expire);
-            //info.AddValue("Played", Played);
-            //info.AddValue("Liked", Liked);
-            //info.AddValue("Banned", Banned);
-		}
+            info.AddValue("Played", Played);
+            info.AddValue("Liked", Liked);
+            info.AddValue("Banned", Banned);
+            info.AddValue("IsPro", IsPro);
+            info.AddValue("ProRate", ProRate);
+        }
 
 	    public object Clone()
 	    {

@@ -323,9 +323,11 @@ namespace DoubanFM
 		/// </summary>
 		public static void DeleteSettingsIfEmergant()
 		{
+#if !DEBUG
 			if (Started && DateTime.Now - StartTime >= TimeSpan.FromSeconds(5)) return;
 			NeverSaveSettings();
 			DeleteSettings();
+#endif
 		}
 
 		/// <summary>

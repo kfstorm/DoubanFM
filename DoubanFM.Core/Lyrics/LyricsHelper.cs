@@ -39,7 +39,7 @@ namespace DoubanFM.Core
             var content = new ConnectionBase().Get(url);
             if (string.IsNullOrEmpty(content)) return null;
 
-            var songInfo = Json.SongInfo.FromJson(content);
+            var songInfo = Json.JsonHelper.FromJson<Json.SongInfo>(content);
             if (songInfo == null || string.IsNullOrEmpty(songInfo.Lyric)) return null;
             
             try

@@ -221,10 +221,10 @@
     <value>Auto login</value>
   </data>
   <data name="TotalFormatString" xml:space="preserve">
-    <value>Total: {0}</value>
+    <value>Played: {0}</value>
   </data>
   <data name="PlusHeartsFormatString" xml:space="preserve">
-    <value>Like: {0}</value>
+    <value>Liked: {0}</value>
   </data>
   <data name="NoLongerPlayFormatString" xml:space="preserve">
     <value>Banned: {0}</value>
@@ -809,5 +809,8 @@ Application will restart after reset.</value>
   </data>
   <data name="CbSearchQQMusic" xml:space="preserve">
     <value>Search QQ Music</value>
+  </data>
+  <data name="BitRate" xml:space="preserve">
+    <value>Bit rate</value>
   </data>
 </root>

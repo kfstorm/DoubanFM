@@ -10,22 +10,16 @@ using DoubanFM.NotifyIcon;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Deployment.Application;
 using System.Diagnostics;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -383,176 +377,190 @@ namespace DoubanFM
 		/// <summary>
 		/// 给播放器的各种事件添加处理代码
 		/// </summary>
-		private void AddPlayerEventListener()
-		{
-			//启动播放器完成
-			_player.Initialized += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器完成");
+        private void AddPlayerEventListener()
+        {
+            //启动播放器完成
+            _player.Initialized += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 启动播放器完成");
 
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine");
-				InitBassEngine();
-				SpectrumAnalyzer.RegisterSoundPlayer(BassEngine.Instance);
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine完成");
+                UpdateProPanel();
 
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表");
-				ShowChannels();
-				if (PersonalChannels.Items.Count == 0)
-				{
-					ButtonPublic.IsChecked = true;
-				}
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表完成");
-			});
-			//频道已改变
-			_player.CurrentChannelChanged += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 频道已改变，当前频道为" + _player.CurrentChannel);
-				CloseCurrentBalloon();
-				ChangeChosenChannelList();
-				//更新JumpList
-				//if (!_player.CurrentChannel.IsDj)
-				AddChannelToJumpList(_player.CurrentChannel);
-			});
-			//歌曲已改变
-			_player.CurrentSongChanged += new EventHandler((o, e) =>
-			{
-				CloseCurrentBalloon();
-				if (_player.CurrentSong != null)
-				{
-					Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲已改变，当前歌曲为" + _player.CurrentSong);
-					BassEngine.Instance.Stop();
-					stoped = false;
-					VolumeDirectIn.Begin();
-					Update();
-					Play();			//在暂停时按下一首，加载歌曲后会结束暂停，开始播放
-					BassEngine.Instance.Play();
-				}
-			});
-			//音乐已暂停
-			_player.Paused += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已暂停");
-				CheckBoxPause.IsChecked = !_player.IsPlaying;
-				PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
-				PauseThumb.Description = DoubanFM.Resources.Resources.PlayThumbButton;
-				VolumeFadeOut.Begin();
-				if (_player.Settings.ShowLyrics && _lyricsSetting.HideWhenPause && _lyricsSetting.EnableDesktopLyrics)
-				{
-					HideDesktopLyrics();
-				}
-			});
-			//音乐已播放
-			_player.Played += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已播放");
-				CheckBoxPause.IsChecked = !_player.IsPlaying;
-				PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine");
+                InitBassEngine();
+                SpectrumAnalyzer.RegisterSoundPlayer(BassEngine.Instance);
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 初始化BassEngine完成");
+
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表");
+                ShowChannels();
+                if (PersonalChannels.Items.Count == 0)
+                {
+                    ButtonPublic.IsChecked = true;
+                }
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 显示频道列表完成");
+            });
+            //频道已改变
+            _player.CurrentChannelChanged += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 频道已改变，当前频道为" + _player.CurrentChannel);
+                CloseCurrentBalloon();
+                ChangeChosenChannelList();
+                //更新JumpList
+                //if (!_player.CurrentChannel.IsDj)
+                AddChannelToJumpList(_player.CurrentChannel);
+            });
+            //歌曲已改变
+            _player.CurrentSongChanged += new EventHandler((o, e) =>
+            {
+                CloseCurrentBalloon();
+                if (_player.CurrentSong != null)
+                {
+                    Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 歌曲已改变，当前歌曲为" + _player.CurrentSong);
+                    BassEngine.Instance.Stop();
+                    stoped = false;
+                    VolumeDirectIn.Begin();
+                    Update();
+                    Play();			//在暂停时按下一首，加载歌曲后会结束暂停，开始播放
+                    BassEngine.Instance.Play();
+                }
+            });
+            //音乐已暂停
+            _player.Paused += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已暂停");
+                CheckBoxPause.IsChecked = !_player.IsPlaying;
+                PauseThumb.ImageSource = (ImageSource)FindResource("PlayThumbImage");
+                PauseThumb.Description = DoubanFM.Resources.Resources.PlayThumbButton;
+                VolumeFadeOut.Begin();
+                if (_player.Settings.ShowLyrics && _lyricsSetting.HideWhenPause && _lyricsSetting.EnableDesktopLyrics)
+                {
+                    HideDesktopLyrics();
+                }
+            });
+            //音乐已播放
+            _player.Played += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已播放");
+                CheckBoxPause.IsChecked = !_player.IsPlaying;
+                PauseThumb.ImageSource = (ImageSource)FindResource("PauseThumbImage");
                 PauseThumb.Description = DoubanFM.Resources.Resources.PauseThumbButton;
-				VolumeFadeIn.Begin();
-				BassEngine.Instance.Play();
-				if (_player.Settings.ShowLyrics && _lyricsSetting.EnableDesktopLyrics)
-				{
-					ShowDesktopLyrics();
-				}
-			});
-			//音乐已停止
-			_player.Stoped += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已停止");
-				CloseCurrentBalloon();
+                VolumeFadeIn.Begin();
+                BassEngine.Instance.Play();
+                if (_player.Settings.ShowLyrics && _lyricsSetting.EnableDesktopLyrics)
+                {
+                    ShowDesktopLyrics();
+                }
+            });
+            //音乐已停止
+            _player.Stoped += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 音乐已停止");
+                CloseCurrentBalloon();
 
-				stoped = true;
-				VolumeFadeOut.Begin();
-				SetLyrics(null);
-			});
-			//登录失败
-			_player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录失败");
-				/*if (_player.UserAssistant.HasCaptcha)
-					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
-			});
-			//登录已成功
-			_player.UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录已成功");
-				RefreshMyChannels();
-			    TbNickname.Text = _player.Settings.User.Nickname;
-			});
-			//注销已成功
-			_player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 注销已成功");
-				/*if (_player.UserAssistant.HasCaptcha)
-					Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
-				RefreshMyChannels();
-			});
-			//红心状态改变
-			_player.IsLikedChanged += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsLiked ? " 已加红心" : " 已去红心"));
-				CheckBoxLike.IsChecked = _player.IsLiked;
-				if (_player.IsLikedEnabled)
-					if (_player.IsLiked)
-					{
-						LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
+                stoped = true;
+                VolumeFadeOut.Begin();
+                SetLyrics(null);
+            });
+            //登录失败
+            _player.UserAssistant.LogOnFailed += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录失败");
+                /*if (_player.UserAssistant.HasCaptcha)
+                    Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
+            });
+            //登录已成功
+            _player.UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 登录已成功");
+                RefreshMyChannels();
+                TbNickname.Text = _player.Settings.User.Nickname;
+                UpdateProPanel();
+            });
+            //注销已成功
+            _player.UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 注销已成功");
+                /*if (_player.UserAssistant.HasCaptcha)
+                    Captcha.Source = new BitmapImage(new Uri(_player.UserAssistant.CaptchaUrl));*/
+                RefreshMyChannels();
+                UpdateProPanel();
+            });
+            //红心状态改变
+            _player.IsLikedChanged += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsLiked ? " 已加红心" : " 已去红心"));
+                CheckBoxLike.IsChecked = _player.IsLiked;
+                if (_player.IsLikedEnabled)
+                    if (_player.IsLiked)
+                    {
+                        LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
                         LikeThumb.Description = DoubanFM.Resources.Resources.UnlikeThumbButton;
-						//NotifyIcon_Heart.Image = NotifyIconImage_Like_Like;
-					}
-					else
-					{
-						LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+                        //NotifyIcon_Heart.Image = NotifyIconImage_Like_Like;
+                    }
+                    else
+                    {
+                        LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
                         LikeThumb.Description = DoubanFM.Resources.Resources.LikeThumbButton;
-						//NotifyIcon_Heart.Image = NotifyIconImage_Like_Unlike;
-					}
-				else
-					LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
-			});
-			//红心功能启用状态改变
-			_player.IsLikedEnabledChanged += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsLikedEnabled ? " 加红心功能已启用" : " 加红心功能已禁用"));
-				if (_player.IsLikedEnabled)
-					if (_player.IsLiked)
-						LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
-					else LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
-				else
-					LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
-				LikeThumb.IsEnabled = _player.IsLikedEnabled;
-				//NotifyIcon_Heart.Enabled = _player.IsLikedEnabled;
-			});
-			//垃圾桶功能启用状态改变
-			_player.IsNeverEnabledChanged += new EventHandler((o, e) =>
-			{
-				Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsNeverEnabled ? " 垃圾桶功能已启用" : " 垃圾桶功能已禁用"));
-				if (_player.IsNeverEnabled)
-					NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
-				else
-					NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage_Disabled");
-				NeverThumb.IsEnabled = _player.IsNeverEnabled;
-				//NotifyIcon_Never.Enabled = _player.IsNeverEnabled;
-			});
-			//获取播放列表失败
-			_player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
-			{
+                        //NotifyIcon_Heart.Image = NotifyIconImage_Like_Unlike;
+                    }
+                else
+                    LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
+            });
+            //红心功能启用状态改变
+            _player.IsLikedEnabledChanged += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsLikedEnabled ? " 加红心功能已启用" : " 加红心功能已禁用"));
+                if (_player.IsLikedEnabled)
+                    if (_player.IsLiked)
+                        LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage");
+                    else LikeThumb.ImageSource = (ImageSource)FindResource("UnlikeThumbImage");
+                else
+                    LikeThumb.ImageSource = (ImageSource)FindResource("LikeThumbImage_Disabled");
+                LikeThumb.IsEnabled = _player.IsLikedEnabled;
+                //NotifyIcon_Heart.Enabled = _player.IsLikedEnabled;
+            });
+            //垃圾桶功能启用状态改变
+            _player.IsNeverEnabledChanged += new EventHandler((o, e) =>
+            {
+                Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + (_player.IsNeverEnabled ? " 垃圾桶功能已启用" : " 垃圾桶功能已禁用"));
+                if (_player.IsNeverEnabled)
+                    NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage");
+                else
+                    NeverThumb.ImageSource = (ImageSource)FindResource("NeverThumbImage_Disabled");
+                NeverThumb.IsEnabled = _player.IsNeverEnabled;
+                //NotifyIcon_Never.Enabled = _player.IsNeverEnabled;
+            });
+            //获取播放列表失败
+            _player.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
+            {
                 string message = string.Format(DoubanFM.Resources.Resources.GetPlayListFailedMessage, e.Message);
-				Debug.WriteLine(message);
+                Debug.WriteLine(message);
                 MessageBox.Show(this, message, DoubanFM.Resources.Resources.ApplicationWillClose, MessageBoxButton.OK, MessageBoxImage.Error);
                 if (e.Message.ToLower().Contains("wrong channel"))
                 {
                     _player.Settings.LastChannel = null;
                 }
-				this.Close();
-			});
-			//报告播放完毕的信息失败
-			_player.FinishedPlayingReportFailed += new EventHandler<ErrorEventArgs>((o, e) =>
-			{
-				string message = e.GetException().Message;
-				Debug.WriteLine(message);
+                this.Close();
+            });
+            //报告播放完毕的信息失败
+            _player.FinishedPlayingReportFailed += new EventHandler<ErrorEventArgs>((o, e) =>
+            {
+                string message = e.GetException().Message;
+                Debug.WriteLine(message);
                 MessageBox.Show(this, message, DoubanFM.Resources.Resources.ApplicationWillClose, MessageBoxButton.OK, MessageBoxImage.Error);
-				this.Close();
-			});
-		}
+                this.Close();
+            });
+            //用户的播放记录发生改变
+		    _player.PlayRecordChanged += delegate
+		        {
+		            RunPlayed.Text = string.Format(DoubanFM.Resources.Resources.TotalFormatString,
+		                                           _player.Settings.User.Played);
+		            RunLiked.Text = string.Format(DoubanFM.Resources.Resources.PlusHeartsFormatString,
+		                                          _player.Settings.User.Liked);
+		            RunBanned.Text = string.Format(DoubanFM.Resources.Resources.NoLongerPlayFormatString,
+		                                           _player.Settings.User.Banned);
+		        };
+        }
 
 		/// <summary>
 		/// 初始化成员变量
@@ -929,7 +937,27 @@ namespace DoubanFM
 
 		#region 其他
 
-		/// <summary>
+	    /// <summary>
+	    /// 更新Pro设置面板
+	    /// </summary>
+	    private void UpdateProPanel()
+	    {
+	        ProRate target;
+	        if (_player.UserAssistant.IsLoggedOn && _player.Settings.User.IsPro)
+	        {
+	            ProPanel.Visibility = Visibility.Visible;
+	            target = _player.Settings.User.ProRate;
+	        }
+	        else
+	        {
+	            ProPanel.Visibility = Visibility.Collapsed;
+	            target = ProRate.Kbps64;
+	        }
+	        CbBitRateSelector.SelectedItem =
+	            CbBitRateSelector.Items.OfType<FrameworkElement>().First(item => (ProRate) item.Tag == target);
+	    }
+
+	    /// <summary>
 		/// 更换输出设备
 		/// </summary>
 		/// <param name="device">设备</param>
@@ -2048,20 +2076,20 @@ namespace DoubanFM
 			window.Show();
 		}
 
-        //private void HlPlayed_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Core.UrlHelper.OpenLink("http://douban.fm/mine?type=played");
-        //}
+        private void HlPlayed_Click(object sender, RoutedEventArgs e)
+        {
+            Core.UrlHelper.OpenLink("http://douban.fm/mine?type=played");
+        }
 
-        //private void HlLiked_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Core.UrlHelper.OpenLink("http://douban.fm/mine?type=liked");
-        //}
+        private void HlLiked_Click(object sender, RoutedEventArgs e)
+        {
+            Core.UrlHelper.OpenLink("http://douban.fm/mine?type=liked");
+        }
 
-        //private void HlBanned_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Core.UrlHelper.OpenLink("http://douban.fm/mine?type=banned");
-        //}
+        private void HlBanned_Click(object sender, RoutedEventArgs e)
+        {
+            Core.UrlHelper.OpenLink("http://douban.fm/mine?type=banned");
+        }
 
         private void NotifyIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
 		{
@@ -2308,6 +2336,20 @@ namespace DoubanFM
 			App.StartTime = DateTime.Now;
 		}
 
+        private void CbBitRateSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                var newRate = (ProRate) ((ComboBoxItem) e.AddedItems[0]).Tag;
+                if (_player.Settings.User.ProRate != newRate)
+                {
+                    _player.Settings.User.ProRate = newRate;
+                    _player.ProRateChanged();
+                }
+            }
+        }
+
 		#endregion 事件响应
+
 	}
 }

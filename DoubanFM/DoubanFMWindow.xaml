@@ -400,7 +400,7 @@ Website : http://www.kfstorm.com
 										</StackPanel>
 										<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                                             <TextBlock HorizontalAlignment="Right" FontSize="14">
-											    <Hyperlink x:Name="HlPlayed" Click="ButtonSignUp_Click" Foreground="White">
+											    <Hyperlink x:Name="ButtonSignUp" Click="ButtonSignUp_Click" Foreground="White">
 												    <Run Text="{x:Static resx:Resources.RegisterButton}"/>
 											    </Hyperlink>
                                             </TextBlock>
@@ -416,29 +416,42 @@ Website : http://www.kfstorm.com
 									<Grid.RowDefinitions>
 										<RowDefinition/>
 										<RowDefinition Height="Auto"/>
-										<RowDefinition/>
-										<RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+										<!--<RowDefinition/>-->
 									</Grid.RowDefinitions>
-									<TextBlock x:Name="TbNickname" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
-									<!--<StackPanel Grid.Row="1" VerticalAlignment="Center" TextElement.FontSize="14">
+									<TextBlock x:Name="TbNickname" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+									<StackPanel Grid.Row="1" VerticalAlignment="Center" TextElement.FontSize="14">
 										<TextBlock HorizontalAlignment="Center">
 											<Hyperlink x:Name="HlPlayed" Click="HlPlayed_Click" Foreground="White">
-												<Run Text="{Binding Settings.User.Played, Source={StaticResource Player}, StringFormat={x:Static resx:Resources.TotalFormatString}}"/>
+												<Run x:Name="RunPlayed"/>
 											</Hyperlink>
 										</TextBlock>
 										<TextBlock HorizontalAlignment="Center">
 											<Hyperlink x:Name="HlLiked" Click="HlLiked_Click" Foreground="White">
-												<Run Text="{Binding Settings.User.Liked, Source={StaticResource Player}, StringFormat={x:Static resx:Resources.PlusHeartsFormatString}}"/>
+												<Run x:Name="RunLiked"/>
 											</Hyperlink>
 										</TextBlock>
 										<TextBlock HorizontalAlignment="Center">
 											<Hyperlink x:Name="HlBanned" Click="HlBanned_Click" Foreground="White">
-												<Run Text="{Binding Settings.User.Banned, Source={StaticResource Player}, StringFormat={x:Static resx:Resources.NoLongerPlayFormatString}}"/>
+												<Run x:Name="RunBanned"/>
 											</Hyperlink>
 										</TextBlock>
-									</StackPanel>-->
-                                    <Label Grid.Row="2" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="{x:Static resx:Resources.TheLoggedLabel}"/>
-                                    <Button Grid.Row="3" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Margin="10" Click="ButtonLogOff_Click" Content="{x:Static resx:Resources.LogoutButton}" FontSize="16"/>
+									</StackPanel>
+                                    <Grid x:Name="ProPanel" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontSize="14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{x:Static resx:Resources.BitRate}" Margin="0,0,5,0"/>
+                                        <ComboBox x:Name="CbBitRateSelector" Grid.Column="1" SelectionChanged="CbBitRateSelector_OnSelectionChanged" MinWidth="100">
+                                            <ComboBoxItem Content="64 kbps" Tag="{x:Static core:ProRate.Kbps64}"/>
+                                            <ComboBoxItem Content="128 kbps" Tag="{x:Static core:ProRate.Kbps128}"/>
+                                            <ComboBoxItem Content="192 kbps" Tag="{x:Static core:ProRate.Kbps192}"/>
+                                        </ComboBox>
+                                    </Grid>
+                                    <!--<Label Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Content="{x:Static resx:Resources.TheLoggedLabel}"/>-->
+                                    <Button Grid.Row="3" x:Name="ButtonLogOff" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,5" Click="ButtonLogOff_Click" Content="{x:Static resx:Resources.LogoutButton}" FontSize="16"/>
 								</Grid>
 								<Grid x:Name="LoggingOnPanel" Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=UserAssistant.IsLoggingOn, Source={StaticResource Player}}">
 									<Label FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{x:Static resx:Resources.LoggingInLabel}"/>
@@ -513,7 +526,7 @@ Website : http://www.kfstorm.com
 									<Button x:Name="BtnDonate" Grid.Column="1" Style="{StaticResource DonateStyle}" Click="BtnDonate_Click"/>
 									<Button x:Name="VisitOfficialWebsite" Grid.Column="2" Click="VisitOfficialWebsite_Click" Style="{StaticResource DoubanFMOfficialWebsiteStyle}"/>
 								</Grid>
-								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011-2012 K.F.Storm</Label>
+								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011-2013 K.F.Storm</Label>
 							</Grid>
 						</Border>
 					</TabItem>

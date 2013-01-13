@@ -27,7 +27,7 @@ namespace DoubanFM.Core
 	{
 		#region 依赖项属性
 
-		public static readonly DependencyProperty UserProperty = DependencyProperty.Register("User", typeof(User), typeof(Settings));
+		//public static readonly DependencyProperty UserProperty = DependencyProperty.Register("User", typeof(User), typeof(Settings));
 		//public static readonly DependencyProperty RememberPasswordProperty = DependencyProperty.Register("RememberPassword", typeof(bool), typeof(Settings));
 		//public static readonly DependencyProperty AutoLogOnNextTimeProperty = DependencyProperty.Register("AutoLogOnNextTime", typeof(bool), typeof(Settings), new PropertyMetadata(true));
 		//public static readonly DependencyProperty RememberLastChannelProperty = DependencyProperty.Register("RememberLastChannel", typeof(bool), typeof(Settings), new PropertyMetadata(true));
@@ -100,15 +100,12 @@ namespace DoubanFM.Core
         /// </summary>
         public static Settings Current { get; set; }
 
-		/// <summary>
-		/// 用户
-		/// </summary>
-		public User User
-		{
-			get { return (User)GetValue(UserProperty); }
-			set { SetValue(UserProperty, value); }
-		}
-        ///// <summary>
+	    /// <summary>
+	    /// 用户
+	    /// </summary>
+	    public User User { get; set; }
+
+	    ///// <summary>
         ///// 记住密码
         ///// </summary>
         //public bool RememberPassword

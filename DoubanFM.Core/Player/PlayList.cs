@@ -62,11 +62,31 @@ namespace DoubanFM.Core
 			random.NextBytes(bytes);
 			parameters["r"] = (BitConverter.ToUInt64(bytes, 0) % 0xFFFFFFFFFF).ToString("x10");
 
+            if (playerState.CurrentUser.IsPro)
+            {
+                string kbps = null;
+                switch (playerState.CurrentUser.ProRate)
+                {
+                    case ProRate.Kbps64:
+                        kbps = "64";
+                        break;
+                    case ProRate.Kbps128:
+                        kbps = "128";
+                        break;
+                    case ProRate.Kbps192:
+                        kbps = "192";
+                        break;
+                    default:
+                        break;
+                }
+                parameters["kbps"] = kbps;
+            }
+
             string url = ConnectionBase.ConstructUrlWithParameters("http://www.douban.com/j/app/radio/people", parameters);
 
 			//获取列表
 			string json = new ConnectionBase().Get(url, @"application/json, text/javascript, */*; q=0.01", @"http://douban.fm");
-			var jsonPlayList = Json.PlayList.FromJson(json);
+			var jsonPlayList = Json.JsonHelper.FromJson<Json.PlayList>(json);
 			if (jsonPlayList != null && jsonPlayList.r)
 				RaiseGetPlayListFailedEvent(json);
 			PlayList pl = new PlayList(jsonPlayList);

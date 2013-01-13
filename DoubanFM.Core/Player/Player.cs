@@ -314,6 +314,18 @@ namespace DoubanFM.Core
 			}
 		}
 
+        /// <summary>
+        /// 当用户的播放记录发生改变时发生。
+        /// </summary>
+        public event EventHandler PlayRecordChanged;
+        private void RaisePlayRecordChangedEvent()
+        {
+            if (PlayRecordChanged != null)
+            {
+                PlayRecordChanged(this, EventArgs.Empty);
+            }
+        }
+
 		#endregion
 
 		#region 构造及初始化
@@ -327,12 +339,8 @@ namespace DoubanFM.Core
 			ChannelSearch = new ChannelSearch(Settings);
 			DownloadSearch.Settings = Settings;
 
-			//频道改变时更新红心和垃圾桶的启用状态
-			CurrentChannelChanged += new EventHandler((o, e) =>
-			{
-				IsLikedEnabled = true;
-				IsNeverEnabled = UserAssistant.IsLoggedOn;
-			});
+            //加红心功能始终启用
+		    IsLikedEnabled = true;
 
 			//歌曲改变时更新红心状态
 			CurrentSongChanged += new EventHandler((o, e) =>
@@ -343,25 +351,24 @@ namespace DoubanFM.Core
 				}
 			});
 
-			//登录成功后更新垃圾桶启用状态
-			UserAssistant.LogOnSucceed += new EventHandler((o, e) =>
-			{
-				IsNeverEnabled = CurrentChannel.IsPersonal;
-			});
-
-			//注销成功后更新垃圾桶启用状态；如果正在播放私人兆赫，则更换为公共兆赫
-			UserAssistant.LogOffSucceed += new EventHandler((o, e) =>
-			{
-				IsNeverEnabled = false;
-				if (CurrentChannel.IsPersonal && !CurrentChannel.IsSpecial)
-					CurrentChannel = ChannelInfo.Public.First();
-			});
+            UserAssistant.CurrentStateChanged += (o, e) =>
+                {
+                    //更新IsNeverEnabled
+                    IsNeverEnabled = UserAssistant.CurrentState == UserAssistant.State.LoggedOn || UserAssistant.CurrentState == UserAssistant.State.LoggingOff;
+                    switch ((UserAssistant.State) e.NewValue)
+                    {
+                        case UserAssistant.State.LoggedOn:
+                            RaisePlayRecordChangedEvent();
+                            break;
+                        case UserAssistant.State.LoggedOff:
+                            if (CurrentChannel != null && CurrentChannel.IsPersonal && !CurrentChannel.IsSpecial)
+                                CurrentChannel = ChannelInfo.Public.First();
+                            break;
+                    }
+                };
 
 			//获取播放列表失败后引发事件
-			PlayList.GetPlayListFailed += new EventHandler<PlayList.PlayListEventArgs>((o, e) =>
-			{
-				Dispatcher.Invoke(new Action(() => { RaiseGetPlayListFailedEvent(e); }));
-			});
+			PlayList.GetPlayListFailed += (o, e) => Dispatcher.Invoke(new Action(() => RaiseGetPlayListFailedEvent(e)));
 		}
 		/// <summary>
 		/// 播放器初始化
@@ -392,7 +399,7 @@ namespace DoubanFM.Core
                     //    //更新用户的登录状态
                     //    UserAssistant.Update(file);
                     //}
-
+                    UserAssistant.Initialize();
 				    var channelInfo = GetChannelInfo();
 					
 					Dispatcher.Invoke(new Action(() =>
@@ -404,16 +411,7 @@ namespace DoubanFM.Core
                             //if (UserAssistant.CurrentState != Core.UserAssistant.State.LoggedOn)
                             //    UserAssistant.LogOff();
 							ChannelInfo = channelInfo;
-                            if (!string.IsNullOrEmpty(Settings.User.Token) &&
-                                !string.IsNullOrEmpty(Settings.User.Expire) &&
-                                !string.IsNullOrEmpty(Settings.User.UserID))
-                            {
-                                UserAssistant.CurrentState = UserAssistant.State.LoggedOn;
-                            }
-                            else
-                            {
-                                UserAssistant.CurrentState = UserAssistant.State.LoggedOff;
-                            }
+                            RaisePlayRecordChangedEvent();
 							IsInitialized = true;
 							Debug.WriteLine(DateTime.Now + " 播放器核心初始化完成");
 							//选择一个频道
@@ -438,7 +436,7 @@ namespace DoubanFM.Core
                 {
                     var localChannelInfoTime = File.GetLastWriteTime(localPath);
                     var content = File.ReadAllText(localPath);
-                    var channelInfo = new ChannelInfo(Json.ChannelInfo.FromJson(content));
+                    var channelInfo = new ChannelInfo(Json.JsonHelper.FromJson<Json.ChannelInfo>(content));
                     if (channelInfo.IsEffective)
                     {
                         localChannelInfo = channelInfo;
@@ -474,7 +472,7 @@ namespace DoubanFM.Core
                     TakeABreak();
                     continue;
                 }
-                var channelInfo = new ChannelInfo(Json.ChannelInfo.FromJson(file));
+                var channelInfo = new ChannelInfo(Json.JsonHelper.FromJson<Json.ChannelInfo>(file));
                 if (!channelInfo.IsEffective)
                 {
                     Debug.WriteLine(DateTime.Now + " 获取频道列表失败");
@@ -534,6 +532,14 @@ namespace DoubanFM.Core
 
 		#region 播放器控制
 
+        /// <summary>
+        /// 码率设置已改变
+        /// </summary>
+        public void ProRateChanged()
+        {
+            Report("n", false);
+        }
+
 		/// <summary>
 		/// 歌曲自然播放完毕，添加播放记录或请求新播放列表。
 		/// type=e
@@ -542,10 +548,11 @@ namespace DoubanFM.Core
 		public void CurrentSongFinishedPlaying()
 		{
 			RaiseStopedEvent();
-            //if (UserAssistant.IsLoggedOn)
-            //{
-            //    ++Settings.User.Played;
-            //}
+            if (UserAssistant.IsLoggedOn)
+            {
+                ++Settings.User.Played;
+                RaisePlayRecordChangedEvent();
+            }
 			ChangeToNextSong("e");
 		}
 		/// <summary>
@@ -579,10 +586,11 @@ namespace DoubanFM.Core
 			if (CurrentSong == null) return;
 			if (CurrentSong.Like) return;
 			CurrentSong.Like = true;
-            //if (UserAssistant.IsLoggedOn)
-            //{
-            //    ++Settings.User.Liked;
-            //}
+            if (UserAssistant.IsLoggedOn)
+            {
+                ++Settings.User.Liked;
+                RaisePlayRecordChangedEvent();
+            }
 			Report("r", false);
 		}
 		/// <summary>
@@ -593,10 +601,11 @@ namespace DoubanFM.Core
 			if (CurrentSong == null) return;
 			if (!CurrentSong.Like) return;
 			CurrentSong.Like = false;
-            //if (UserAssistant.IsLoggedOn)
-            //{
-            //    --Settings.User.Liked;
-            //}
+            if (UserAssistant.IsLoggedOn)
+            {
+                --Settings.User.Liked;
+                RaisePlayRecordChangedEvent();
+            }
 			Report("u", false);
 		}
 		/// <summary>
@@ -609,10 +618,11 @@ namespace DoubanFM.Core
 			if (CurrentSong == null) return;
 			if (_neverring) return;
 			RaiseStopedEvent();
-            //if (UserAssistant.IsLoggedOn)
-            //{
-            //    ++Settings.User.Banned;
-            //}
+            if (UserAssistant.IsLoggedOn)
+            {
+                ++Settings.User.Banned;
+                RaisePlayRecordChangedEvent();
+            }
 
 			ChangeToNextSong("b");
 		}

@@ -810,4 +810,7 @@
   <data name="CbSearchQQMusic" xml:space="preserve">
     <value>搜索QQ音乐</value>
   </data>
+  <data name="BitRate" xml:space="preserve">
+    <value>码率</value>
+  </data>
 </root>

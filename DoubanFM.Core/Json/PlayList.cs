@@ -18,13 +18,14 @@ namespace DoubanFM.Core.Json
     /// JSON格式的播放列表
     /// </summary>
     [DataContract]
-    class PlayList
+    internal class PlayList
     {
-		/// <summary>
-		/// 是否发生错误
-		/// </summary>
+        /// <summary>
+        /// 是否发生错误
+        /// </summary>
         [DataMember]
         public bool r { get; set; }
+
         /// <summary>
         /// 播放列表里的歌曲
         /// </summary>
@@ -34,24 +35,6 @@ namespace DoubanFM.Core.Json
         public PlayList()
         {
             song = new List<Song>();
-        }
-        /// <summary>
-        /// 从JSON生成
-        /// </summary>
-        /// <param name="json">JSON字符串</param>
-        /// <returns></returns>
-        public static PlayList FromJson(string json)
-        {
-            try
-            {
-                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(PlayList));
-                using (MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(json)))
-                    return (PlayList)ser.ReadObject(stream);
-            }
-            catch
-            {
-                return null;
-            }
         }
     }
 }

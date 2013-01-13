@@ -57,23 +57,5 @@ namespace DoubanFM.Core.Json
         [DataMember(Name = "artist_gene")]
         public string ArtistGene { get; set; }
 
-        /// <summary>
-        /// 从JSON生成
-        /// </summary>
-        /// <param name="json">JSON字符串</param>
-        /// <returns></returns>
-        public static SongInfo FromJson(string json)
-        {
-            try
-            {
-                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof (SongInfo));
-                using (MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(json)))
-                    return (SongInfo) ser.ReadObject(stream);
-            }
-            catch
-            {
-                return null;
-            }
-        }
     }
 }
