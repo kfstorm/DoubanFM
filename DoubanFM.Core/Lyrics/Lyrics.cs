@@ -116,13 +116,16 @@ namespace DoubanFM.Core
 			{
 				if (!string.IsNullOrEmpty(lines[i]))
 				{
-					Match mc = Regex.Match(lines[i], @"(?'titles'\[.*?\])+(?'content'.*)", RegexOptions.None);
-					if (mc.Success)
-					{
-						string content = mc.Groups["content"].Value;
-						foreach (Capture title in mc.Groups["titles"].Captures)
-							Dictionary[title.Value] = content;		//不要用Add方法，有可能有重复项
-					}
+                    var mc = Regex.Matches(lines[i], @"(?'titles'\[(\d+:\d+(\.\d+)?|(ti|ar|al|by|offset):.*?)\])+(?'content'.+?(?=\[(\d+:\d+(\.\d+)?|(ti|ar|al|by|offset):.*?)\])|.*$)", RegexOptions.None);
+				    foreach (Match ma in mc)
+				    {
+                        if (ma.Success)
+                        {
+                            string content = ma.Groups["content"].Value;
+                            foreach (Capture title in ma.Groups["titles"].Captures)
+                                Dictionary[title.Value] = content;		//不要用Add方法，有可能有重复项
+                        }
+                    }
 				}
 			}
 		}
@@ -136,7 +139,7 @@ namespace DoubanFM.Core
 			{
 				{
 					//分析时间
-					Match mc = Regex.Match(keyvalue.Key, @"\[(?'minutes'\d+):(?'seconds'\d+(\.\d+)?)\]", RegexOptions.None);
+                    Match mc = Regex.Match(keyvalue.Key, @"\[(?'minutes'\d+):(?'seconds'\d+(\.\d+)?)\]", RegexOptions.None);
 					if (mc.Success)
 					{
 						int minutes = int.Parse(mc.Groups["minutes"].Value);
