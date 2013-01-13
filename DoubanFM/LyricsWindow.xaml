@@ -100,10 +100,10 @@ Website : http://www.kfstorm.com
 				</Border.Width>
 			</Border>
 			<Grid x:Name="GrayPanel">
-				<Grid x:Name="LyricsRoot" VerticalAlignment="{Binding LyricsSetting.VerticalAlignment, ElementName=Window}" ClipToBounds="True" HorizontalAlignment="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}">
-					<Grid.Effect>
-						<DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
-					</Grid.Effect>
+                <Grid.Effect>
+                    <DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
+                </Grid.Effect>
+                <Grid x:Name="LyricsRoot" VerticalAlignment="{Binding LyricsSetting.VerticalAlignment, ElementName=Window}" ClipToBounds="True" HorizontalAlignment="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}">
 					<UniformGrid x:Name="DoubleLine" Rows="3" Columns="1" Visibility="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}">
 						<UniformGrid.RenderTransform>
 							<TranslateTransform x:Name="Offset" Y="{Binding Height, ElementName=Lyrics3Root}"/>
