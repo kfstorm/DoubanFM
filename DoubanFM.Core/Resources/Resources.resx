@@ -130,6 +130,6 @@
     <value>Unknown error</value>
   </data>
   <data name="WrongPassword" xml:space="preserve">
-    <value>Wrong password</value>
+    <value>Incorrect password</value>
   </data>
 </root>

@@ -414,7 +414,7 @@
     <value>大小写不敏感：</value>
   </data>
   <data name="HelpWindowParagraphFontSet8" xml:space="preserve">
-    <value>字体前后可以有空格</value>
+    <value>字体前后可以有空格。</value>
   </data>
   <data name="HelpWindowParagraphFontSet9" xml:space="preserve">
     <value>字体后也可以加上Light、SemiLight、SemiBold、Bold等文字来强制指定粗细，这样即使在歌词设置里调整粗细，也不会影响到强制指定粗细的字体。（有些字体可能不支持那么多种粗细变化，中文一般只有两种，而有些英文字体则多一些，比如Vista和Win7系统中的Segoe UI，可以设置Light、SemiBold和Bold，不能设置SemiLight）</value>
@@ -444,7 +444,7 @@
     <value>向我反应</value>
   </data>
   <data name="HelpWindowParagraphProgramCrashes4" xml:space="preserve">
-    <value> ，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。</value>
+    <value>，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。</value>
   </data>
   <data name="HelpWindowParagraphProgramCrashes5" xml:space="preserve">
     <value>查看错误日志的方法</value>
@@ -462,7 +462,7 @@
     <value>请打开浏览器进入</value>
   </data>
   <data name="HelpWindowParagraphOpenBrowser2" xml:space="preserve">
-    <value> 并登录，检查一下自己的帐号是否存在异常，有可能是帐号被锁定，或者帐号未激活。</value>
+    <value>并登录，检查一下自己的帐号是否存在异常，有可能是帐号被锁定，或者帐号未激活。</value>
   </data>
   <data name="HelpWindowParagraphDisclaimer1" xml:space="preserve">
     <value>声明：本软件为第三方客户端，并非豆瓣FM官方客户端。</value>

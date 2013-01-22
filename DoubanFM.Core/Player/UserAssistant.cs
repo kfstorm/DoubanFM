@@ -383,7 +383,7 @@ namespace DoubanFM.Core
 		        {
 		            LogOnResult result = null;
 		            List<string> errorMessages = new List<string>();
-		            if (Regex.Match(username, @"^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$").Success)
+		            if (Regex.Match(username, @"^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$", RegexOptions.IgnoreCase).Success)
 		            {
 		                var resultEmail = LogOnWithEmail(username, password);
 		                if (resultEmail != null)

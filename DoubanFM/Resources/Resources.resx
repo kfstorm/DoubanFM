@@ -128,10 +128,10 @@
     <value>Like</value>
   </data>
   <data name="UnlikeThumbButton" xml:space="preserve">
-    <value>Unlike</value>
+    <value>Cancel like</value>
   </data>
   <data name="DontPlayThumbButton" xml:space="preserve">
-    <value>Never play</value>
+    <value>Never play again</value>
   </data>
   <data name="PauseThumbButton" xml:space="preserve">
     <value>Pause</value>
@@ -179,7 +179,7 @@
     <value>DJ</value>
   </data>
   <data name="DJSearchTextBlock" xml:space="preserve">
-    <value>Click 'Search' to list all channels.</value>
+    <value>Click 'Search' for all channels</value>
   </data>
   <data name="PleaseWaitLabel" xml:space="preserve">
     <value>Please Wait</value>
@@ -188,13 +188,13 @@
     <value>Searching...</value>
   </data>
   <data name="ConsistentResultsLabel" xml:space="preserve">
-    <value>Search results are from music.douban.com.</value>
+    <value>Search results from music.douban.com</value>
   </data>
   <data name="SearchResultsCanNotListenLabel" xml:space="preserve">
     <value>"Remove search results that can not be played" is checked.</value>
   </data>
   <data name="MayNextResultsLabel" xml:space="preserve">
-    <value>Go to next page to see more results.</value>
+    <value>Check out the next page</value>
   </data>
   <data name="EmailUserNameBlock" xml:space="preserve">
     <value>Username</value>
@@ -227,7 +227,7 @@
     <value>Liked: {0}</value>
   </data>
   <data name="NoLongerPlayFormatString" xml:space="preserve">
-    <value>Banned: {0}</value>
+    <value>Disliked: {0}</value>
   </data>
   <data name="TheLoggedLabel" xml:space="preserve">
     <value>Logged in</value>
@@ -305,32 +305,32 @@
     <value>A third-party client</value>
   </data>
   <data name="CopyUrlButton" xml:space="preserve">
-    <value>Share (click this to copy the URL)</value>
+    <value>Share (click to copy link)</value>
   </data>
   <data name="ShareKeyButton" xml:space="preserve">
     <value>One-key share</value>
   </data>
   <data name="DownloadSearchButton" xml:space="preserve">
-    <value>Search for music downloads.</value>
+    <value>Search for music downloads</value>
   </data>
   <data name="AvailableAfterLoginBorder" xml:space="preserve">
     <value>Available after login</value>
   </data>
   <data name="FirstTimePanelTextBlock" xml:space="preserve">
     <value>Move the mouse to the cover
-Surprise for you!</value>
+Surprise!</value>
   </data>
   <data name="ExceptionWindowTitle" xml:space="preserve">
-    <value>An Error Occured</value>
+    <value>An error has occured</value>
   </data>
   <data name="ShortMessageTextBlock" xml:space="preserve">
     <value>Error summary:</value>
   </data>
   <data name="UserMessageTextBlock" xml:space="preserve">
-    <value>Please explain what you were doing, to help with analyzing the problem.</value>
+    <value>Please kindly explain what exactly you were doing. This will help me analyze the problem.</value>
   </data>
   <data name="ViewErrorMessageButton" xml:space="preserve">
-    <value>View the error report.</value>
+    <value>View the error report</value>
   </data>
   <data name="SendErrorButton" xml:space="preserve">
     <value>Send error report</value>
@@ -339,13 +339,13 @@ Surprise for you!</value>
     <value>Close</value>
   </data>
   <data name="CheckBoxAdjustVolumeWithMouseWheel" xml:space="preserve">
-    <value>Adjust volume with mouse wheel.</value>
+    <value>Adjust volume with mouse wheel</value>
   </data>
   <data name="CheckBoxRememberLastChannel" xml:space="preserve">
-    <value>Remember last played channel.</value>
+    <value>Remember channel played last</value>
   </data>
   <data name="CheckBoxIsSearchFilterEnabled" xml:space="preserve">
-    <value>Remove search results that can not be played.</value>
+    <value>Remove search results that can not be played</value>
   </data>
   <data name="DownloadSearchSettingsGroupBox" xml:space="preserve">
     <value>Download Searching Settings</value>
@@ -354,10 +354,10 @@ Surprise for you!</value>
     <value>Output device</value>
   </data>
   <data name="AlbumSearchCheckBox" xml:space="preserve">
-    <value>Include album title.</value>
+    <value>Include album title</value>
   </data>
   <data name="TrimBracketsCheckBox" xml:space="preserve">
-    <value>Auto remove brackets and their contents.</value>
+    <value>Auto remove brackets and their contents</value>
   </data>
   <data name="CbSearchBaiduMusic" xml:space="preserve">
     <value>Search Baidu Music</value>
@@ -387,7 +387,7 @@ Surprise for you!</value>
     <value>Leave username/password blank if not required.</value>
   </data>
   <data name="BtnApplyProxy" xml:space="preserve">
-    <value>Apply now</value>
+    <value>Apply</value>
   </data>
   <data name="HelpWindowTitle" xml:space="preserve">
     <value>Help</value>
@@ -399,46 +399,46 @@ Surprise for you!</value>
     <value>How to set a font?</value>
   </data>
   <data name="HelpWindowParagraphFontSet2" xml:space="preserve">
-    <value>The software can utilize multiple fonts at the same time. Most chinese fonts do not looks good with English words. So sometimes an English font set is need. Here is an example:</value>
+    <value>You can set multiple fonts in this application. When you use some Chinese fonts, you will find their Latin glyphs don't look so nice. So it is necessary to specify fonts for Chinese and English respectively. Here's an example:</value>
   </data>
   <data name="HelpWindowParagraphFontSet3" xml:space="preserve">
     <value>豆瓣电台 豆瓣電台 DoubanFM 1234567</value>
   </data>
   <data name="HelpWindowParagraphFontSet4" xml:space="preserve">
-    <value>The font settings allows for different fonts with priority differences, seperated by commas (both half-width and full-width comma are taken). A font in the front of fonts has a higher priority. If none of these fonts can display a specific word, system font will be used. Usually English font is in the front and Chinese font is behind. You can type in “Century,华文新魏” to use multiple fonts, instead of selecting from drop down menu. If an Chinese font has a higher priority than an English font, the English font will have no effect because the Chinese font contains glyphs of English words usually. For example:</value>
+    <value>Multiple fonts can be designated here with descending priority and separated by commas (either half-width or full-width will do). If some certain text can not be displayed in any designated fonts, the system default font will be used. Usually the English font is put before the Chinese one. The font should be set by inputing the name of the font like "Century,华文新魏", rather than selecting from the drop-down list. An English font that is designated after the Chinese font will often fail to apply because Chinese fonts already include English glyphs. Here's an example:</value>
   </data>
   <data name="HelpWindowParagraphFontSet5" xml:space="preserve">
-    <value>If a specified font is not found, it will be ignored.</value>
+    <value>The font not found in the system will be ignored. Other fonts will function as normal.</value>
   </data>
   <data name="HelpWindowParagraphFontSet6" xml:space="preserve">
-    <value>From above, You can see that 华文新魏 doesn't have the glyphs of Traditional Chinese characters. Traditional Chinese characters will be displayed with default font. You can set a third font to avoid this:</value>
+    <value>From the example above, we can see that 华文新魏 does not include Traditional Chinese characters, so those ones will be shown in default font. Here we can set a third font:</value>
   </data>
   <data name="HelpWindowParagraphFontSet7" xml:space="preserve">
-    <value>Case insensitive:</value>
+    <value>Case-insensitive:</value>
   </data>
   <data name="HelpWindowParagraphFontSet8" xml:space="preserve">
-    <value>Whitespaces are allowed before and after a font</value>
+    <value>Spaces are allowed before and after a font.</value>
   </data>
   <data name="HelpWindowParagraphFontSet9" xml:space="preserve">
-    <value>Light, SemiLight, SemiBold and Bold can also be added after the font to force to a specified weight. So that adjusting weight will not affect this font. (Some fonts may not have variety of weights. Usually there are only two weights for Chinese fonts and some English fonts. Others can have many kind of weights. i.e. Segoe UI supports Light, SemiBold and Bold, but not SemiLight).</value>
+    <value>Light, SemiLight, SemiBold and Bold can also be added after the font to specify a weight. So that adjusting weight in lyrics settings will not affect the font itself. (Some fonts might not have a variety of weights. Usually there are only two weights for Chinese fonts. English fonts have more. A good example is that Segoe UI supports Light, SemiBold and Bold, but not SemiLight.)</value>
   </data>
   <data name="HelpWindowParagraphFontSet10" xml:space="preserve">
-    <value>You can set fonts with names in languages other than English.</value>
+    <value>When you set the fonts, you can use the font name in multiple languages. All fonts have English names and non-English fonts, for the most of times, have non-English names. For example, 宋体 has a English name "SimSun", while 新宋体 has the English name "NSimsun". 楷体 has its English name as "KaiTi"; the English name of 微软雅黑 is Microsoft YaHei. In Taiwan, the default Windows 7 Chinese font is 微軟正黑體, whose English name is Microsoft Jhenghei. In this application, only fonts that have Simplified Chinese names are shown in Chinese, others are shown in English. Therefore, 微软雅黑 is still 微软雅黑 in the drop-down list, 微軟正黑體 is called Microsoft Jhenghei and DFKai-SB stands for 標楷體.</value>
   </data>
   <data name="HelpWindowParagraphShareParagraph1" xml:space="preserve">
-    <value>Why others can not hear the music what I share from the shared URL?</value>
+    <value>Why others can not listen to the music that I share by link?</value>
   </data>
   <data name="HelpWindowParagraphShareParagraph2" xml:space="preserve">
-    <value>Douban only allows some websites linked to douban.fm. i.e. Click shared URL from renren.com will be redirected to homepage of douban.fm. You can copy the URL, then paste it to the address bar of browser.</value>
+    <value>Douban disallows some users to jump from certain websites. For example, when you click the link from RenRen.com, it would direct you to the front page of Douban.fm, which is effectively the same as visiting douban.fm in the broswer. You can copy the shared link and paste it into the address bar of the browser, then you can listen to the music.</value>
   </data>
   <data name="HelpWindowParagraphLogin1" xml:space="preserve">
-    <value>Why is it that when I'm already logged in and 'Auto login' is checked, it will not login automatically in the next time I run this software?</value>
+    <value>I logged in and checked "Auto Log in". Why auto log in doesn't function when I open the application next time?</value>
   </data>
   <data name="HelpWindowParagraphLogin2" xml:space="preserve">
-    <value>Usually It's because you logged out through a browser. You can be logged out for many reasons. Such as using multiple browser to login, then you logged out through one of these browsers. You will be logged out in other browsers automatically. In this software too. Try to avoid logging out at any place.</value>
+    <value>Usually it's because you log out in a browser. Once you log out from one place, all other pages will be logged out too, including this application. That is to say, if you log in Douban in multiple browsers and log out in one of them, you will find your douban account is logged out in all broswers. So the only solution to this problem is to avoid logging out at other pages.</value>
   </data>
   <data name="HelpWindowParagraphProgramCrashes1" xml:space="preserve">
-    <value>The program crashes.</value>
+    <value>The program crashed.</value>
   </data>
   <data name="HelpWindowParagraphProgramCrashes2" xml:space="preserve">
     <value>If the program crashes,</value>
@@ -447,28 +447,28 @@ Surprise for you!</value>
     <value>contact me</value>
   </data>
   <data name="HelpWindowParagraphProgramCrashes4" xml:space="preserve">
-    <value>. Try to describe clearly what happened. What channel are you listening to? It would be helpful to send me the error log as well.</value>
+    <value>. Please try to explain as detailed as possible what you were doing, or what channel you were listening to. Reports with error log are preferred.</value>
   </data>
   <data name="HelpWindowParagraphProgramCrashes5" xml:space="preserve">
-    <value>How to find the error log?</value>
+    <value>Where to find the error log?</value>
   </data>
   <data name="HelpWindowParagraphFontModification1" xml:space="preserve">
-    <value>How to avoid seeing words unclearly when modifying font in UI?</value>
+    <value>What to do with unclear texts after font changes?</value>
   </data>
   <data name="HelpWindowParagraphFontModification2" xml:space="preserve">
-    <value>You can zoom in main window so that the words are easier to read.</value>
+    <value>You can zoom in main window so that the words are easier to be read.</value>
   </data>
   <data name="HelpWindowParagraphFontModification3" xml:space="preserve">
-    <value>Why do I need to reset the settings if I can't login, in order to continue using this software?</value>
+    <value>Why I can't use the software once logged in until I reset all the settings?</value>
   </data>
   <data name="HelpWindowParagraphOpenBrowser1" xml:space="preserve">
     <value>Go to</value>
   </data>
   <data name="HelpWindowParagraphOpenBrowser2" xml:space="preserve">
-    <value> and login. Check if your account has an unnormal state, like locked or not activated.</value>
+    <value>and login. Please check if you account has abnormal usage records. It might be that your account is locked or yet to be actived.</value>
   </data>
   <data name="HelpWindowParagraphDisclaimer1" xml:space="preserve">
-    <value>Disclaimer: This software is a third-party client, not the official DoubanFM client.</value>
+    <value>Disclaimer: This software is a third-party client, not official.</value>
   </data>
   <data name="HelpWindowParagraphDisclaimer2" xml:space="preserve">
     <value>Author:</value>
@@ -477,7 +477,7 @@ Surprise for you!</value>
     <value>Homepage:</value>
   </data>
   <data name="HelpWindowParagraphDisclaimer4" xml:space="preserve">
-    <value>The Web version of the FAQ:</value>
+    <value>The Web version FAQ:</value>
   </data>
   <data name="HelpWindowParagraphDisclaimer5" xml:space="preserve">
     <value>DoubanFM official website:</value>
@@ -489,7 +489,7 @@ Surprise for you!</value>
     <value>Like</value>
   </data>
   <data name="HotKeySettingWindowDontPlayHotkeyTextBlock" xml:space="preserve">
-    <value>Never play</value>
+    <value>Never play again</value>
   </data>
   <data name="HotKeySettingWindowPlayPauseHotkeyTextBlock" xml:space="preserve">
     <value>Play/Pause</value>
@@ -543,13 +543,13 @@ Surprise for you!</value>
     <value>Single line</value>
   </data>
   <data name="LyricsSettingsWindowDoubleLineLyricsRadioButton" xml:space="preserve">
-    <value>Two lines</value>
+    <value>Double lines</value>
   </data>
   <data name="LyricsSettingsWindowTopMostCb" xml:space="preserve">
-    <value>Force on topmost</value>
+    <value>Force on top</value>
   </data>
   <data name="LyricsSettingsWindowTopMostCbToolTip" xml:space="preserve">
-    <value>Force on topmost can effectively solve the problem of lyrics not displaying over applications. But it may display over some full screen applications as well.</value>
+    <value>Force on top can do the magic when you got the problem that lyrics are not shown on top. However, it may still show when running some fullscreen programs.</value>
   </data>
   <data name="LyricsSettingsWindowHideWhenPauseCb" xml:space="preserve">
     <value>Hide when music is paused</value>
@@ -561,7 +561,7 @@ Surprise for you!</value>
     <value>Font</value>
   </data>
   <data name="LyricsSettingsWindowTypefaceTB" xml:space="preserve">
-    <value>Typeface</value>
+    <value>Font</value>
   </data>
   <data name="LyricsSettingsWindowSizeTB" xml:space="preserve">
     <value>Size</value>
@@ -612,13 +612,13 @@ Surprise for you!</value>
     <value>V. Alignment</value>
   </data>
   <data name="CbShowLyricsBackground" xml:space="preserve">
-    <value>Show lyrics border to help adjust layout.</value>
+    <value>Show lyrics borders to help adjust layout</value>
   </data>
   <data name="LyricsWindowLyricsRoot1TB" xml:space="preserve">
     <value>Placeholder</value>
   </data>
   <data name="ShareSettingsWindowShareButtonLabel" xml:space="preserve">
-    <value>Share buttons to display:</value>
+    <value>Share buttons to show:</value>
   </data>
   <data name="ShareSettingsWindowEnableKeyShareCb" xml:space="preserve">
     <value>Enable one-key share</value>
@@ -627,22 +627,22 @@ Surprise for you!</value>
     <value>Sites to share on when use one-key share:</value>
   </data>
   <data name="UISettingsWindowPopupCb" xml:space="preserve">
-    <value>Popup a balloon when playing song is changed.</value>
+    <value>Popup when switching to a new song</value>
   </data>
   <data name="CheckBoxTopMost" xml:space="preserve">
-    <value>Always on topmost</value>
+    <value>Always on top</value>
   </data>
   <data name="CheckBoxAlwaysShowNotifyIcon" xml:space="preserve">
     <value>Always show tray icon</value>
   </data>
   <data name="RadioButtonSlideCoverWhenMouseMove" xml:space="preserve">
-    <value>Slide cover when the mouse hovers over.</value>
+    <value>Slide cover when the mouse hovers over</value>
   </data>
   <data name="CheckBoxOpenAlbumInfoWhenClickCover" xml:space="preserve">
-    <value>Open album info when cover is clicked.</value>
+    <value>Open album info when cover is clicked</value>
   </data>
   <data name="RadioButtonSlideCoverWhenClick" xml:space="preserve">
-    <value>Slide cover when clicked.</value>
+    <value>Slide cover when clicked</value>
   </data>
   <data name="UISettingsWindowMainInterfaceScaleTextBlock" xml:space="preserve">
     <value>Main UI scale</value>
@@ -657,7 +657,7 @@ Surprise for you!</value>
     <value>Window background</value>
   </data>
   <data name="UISettingsWindowWindowManualColorCB" xml:space="preserve">
-    <value>Manually specify the color.</value>
+    <value>Custom color</value>
   </data>
   <data name="UISettingsWindowWindowSpectrumCB" xml:space="preserve">
     <value>Spectrum</value>
@@ -768,13 +768,13 @@ Surprise for you!</value>
     <value>Artist</value>
   </data>
   <data name="GetPlayListFailedMessage" xml:space="preserve">
-    <value>Get play list failed : {0}</value>
+    <value>Obtaining play list failed : {0}</value>
   </data>
   <data name="Listen" xml:space="preserve">
     <value>Listen</value>
   </data>
   <data name="ResetFailed" xml:space="preserve">
-    <value>Failed to reset settings</value>
+    <value>Reset failed</value>
   </data>
   <data name="ResetWarning" xml:space="preserve">
     <value>Are you sure to reset settings?
@@ -793,10 +793,10 @@ Application will restart after reset.</value>
     <value>Share on Tencent Weibo</value>
   </data>
   <data name="SuccessfullyCopied" xml:space="preserve">
-    <value>Successfully copied</value>
+    <value>Copy successful</value>
   </data>
   <data name="UrlCopyedToClipboard" xml:space="preserve">
-    <value>Copyed URL to clipboard</value>
+    <value>Link copied to clipborad</value>
   </data>
   <data name="ZipFileFilterName" xml:space="preserve">
     <value>Zip files</value>
@@ -805,7 +805,7 @@ Application will restart after reset.</value>
     <value>Language</value>
   </data>
   <data name="LanguageChangedHint" xml:space="preserve">
-    <value>Language setting is changed. It will take effect the next time you start DoubanFM.</value>
+    <value>Language setting changed and will take effect at the next start up.</value>
   </data>
   <data name="CbSearchQQMusic" xml:space="preserve">
     <value>Search QQ Music</value>

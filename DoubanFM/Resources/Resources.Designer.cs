@@ -79,7 +79,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Include album title. 的本地化字符串。
+        ///   查找类似 Include album title 的本地化字符串。
         /// </summary>
         public static string AlbumSearchCheckBox {
             get {
@@ -142,7 +142,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Apply now 的本地化字符串。
+        ///   查找类似 Apply 的本地化字符串。
         /// </summary>
         public static string BtnApplyProxy {
             get {
@@ -214,7 +214,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Show lyrics border to help adjust layout. 的本地化字符串。
+        ///   查找类似 Show lyrics borders to help adjust layout 的本地化字符串。
         /// </summary>
         public static string CbShowLyricsBackground {
             get {
@@ -241,7 +241,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Adjust volume with mouse wheel. 的本地化字符串。
+        ///   查找类似 Adjust volume with mouse wheel 的本地化字符串。
         /// </summary>
         public static string CheckBoxAdjustVolumeWithMouseWheel {
             get {
@@ -259,7 +259,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Remove search results that can not be played. 的本地化字符串。
+        ///   查找类似 Remove search results that can not be played 的本地化字符串。
         /// </summary>
         public static string CheckBoxIsSearchFilterEnabled {
             get {
@@ -268,7 +268,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Open album info when cover is clicked. 的本地化字符串。
+        ///   查找类似 Open album info when cover is clicked 的本地化字符串。
         /// </summary>
         public static string CheckBoxOpenAlbumInfoWhenClickCover {
             get {
@@ -277,7 +277,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Remember last played channel. 的本地化字符串。
+        ///   查找类似 Remember channel played last 的本地化字符串。
         /// </summary>
         public static string CheckBoxRememberLastChannel {
             get {
@@ -286,7 +286,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Always on topmost 的本地化字符串。
+        ///   查找类似 Always on top 的本地化字符串。
         /// </summary>
         public static string CheckBoxTopMost {
             get {
@@ -322,7 +322,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Search results are from music.douban.com. 的本地化字符串。
+        ///   查找类似 Search results from music.douban.com 的本地化字符串。
         /// </summary>
         public static string ConsistentResultsLabel {
             get {
@@ -331,7 +331,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Share (click this to copy the URL) 的本地化字符串。
+        ///   查找类似 Share (click to copy link) 的本地化字符串。
         /// </summary>
         public static string CopyUrlButton {
             get {
@@ -358,7 +358,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Click &apos;Search&apos; to list all channels. 的本地化字符串。
+        ///   查找类似 Click &apos;Search&apos; for all channels 的本地化字符串。
         /// </summary>
         public static string DJSearchTextBlock {
             get {
@@ -376,7 +376,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Never play 的本地化字符串。
+        ///   查找类似 Never play again 的本地化字符串。
         /// </summary>
         public static string DontPlayThumbButton {
             get {
@@ -394,7 +394,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Search for music downloads. 的本地化字符串。
+        ///   查找类似 Search for music downloads 的本地化字符串。
         /// </summary>
         public static string DownloadSearchButton {
             get {
@@ -421,7 +421,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 An Error Occured 的本地化字符串。
+        ///   查找类似 An error has occured 的本地化字符串。
         /// </summary>
         public static string ExceptionWindowTitle {
             get {
@@ -467,7 +467,7 @@ namespace DoubanFM.Resources {
         
         /// <summary>
         ///   查找类似 Move the mouse to the cover
-        ///Surprise for you! 的本地化字符串。
+        ///Surprise! 的本地化字符串。
         /// </summary>
         public static string FirstTimePanelTextBlock {
             get {
@@ -485,7 +485,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Get play list failed : {0} 的本地化字符串。
+        ///   查找类似 Obtaining play list failed : {0} 的本地化字符串。
         /// </summary>
         public static string GetPlayListFailedMessage {
             get {
@@ -503,7 +503,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Disclaimer: This software is a third-party client, not the official DoubanFM client. 的本地化字符串。
+        ///   查找类似 Disclaimer: This software is a third-party client, not official. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphDisclaimer1 {
             get {
@@ -530,7 +530,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 The Web version of the FAQ: 的本地化字符串。
+        ///   查找类似 The Web version FAQ: 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphDisclaimer4 {
             get {
@@ -557,7 +557,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 How to avoid seeing words unclearly when modifying font in UI? 的本地化字符串。
+        ///   查找类似 What to do with unclear texts after font changes? 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontModification1 {
             get {
@@ -566,7 +566,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 You can zoom in main window so that the words are easier to read. 的本地化字符串。
+        ///   查找类似 You can zoom in main window so that the words are easier to be read. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontModification2 {
             get {
@@ -575,7 +575,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Why do I need to reset the settings if I can&apos;t login, in order to continue using this software? 的本地化字符串。
+        ///   查找类似 Why I can&apos;t use the software once logged in until I reset all the settings? 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontModification3 {
             get {
@@ -593,7 +593,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 You can set fonts with names in languages other than English. 的本地化字符串。
+        ///   查找类似 When you set the fonts, you can use the font name in multiple languages. All fonts have English names and non-English fonts, for the most of times, have non-English names. For example, 宋体 has a English name &quot;SimSun&quot;, while 新宋体 has the English name &quot;NSimsun&quot;. 楷体 has its English name as &quot;KaiTi&quot;; the English name of 微软雅黑 is Microsoft YaHei. In Taiwan, the default Windows 7 Chinese font is 微軟正黑體, whose English name is Microsoft Jhenghei. In this application, only fonts that have Simplified Chinese names are sho [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontSet10 {
             get {
@@ -602,7 +602,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 The software can utilize multiple fonts at the same time. Most chinese fonts do not looks good with English words. So sometimes an English font set is need. Here is an example: 的本地化字符串。
+        ///   查找类似 You can set multiple fonts in this application. When you use some Chinese fonts, you will find their Latin glyphs don&apos;t look so nice. So it is necessary to specify fonts for Chinese and English respectively. Here&apos;s an example: 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontSet2 {
             get {
@@ -620,7 +620,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 The font settings allows for different fonts with priority differences, seperated by commas (both half-width and full-width comma are taken). A font in the front of fonts has a higher priority. If none of these fonts can display a specific word, system font will be used. Usually English font is in the front and Chinese font is behind. You can type in “Century,华文新魏” to use multiple fonts, instead of selecting from drop down menu. If an Chinese font has a higher priority than an English font, the English font [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///   查找类似 Multiple fonts can be designated here with descending priority and separated by commas (either half-width or full-width will do). If some certain text can not be displayed in any designated fonts, the system default font will be used. Usually the English font is put before the Chinese one. The font should be set by inputing the name of the font like &quot;Century,华文新魏&quot;, rather than selecting from the drop-down list. An English font that is designated after the Chinese font will often fail to apply because Chines [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontSet4 {
             get {
@@ -629,7 +629,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 If a specified font is not found, it will be ignored. 的本地化字符串。
+        ///   查找类似 The font not found in the system will be ignored. Other fonts will function as normal. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontSet5 {
             get {
@@ -638,7 +638,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 From above, You can see that 华文新魏 doesn&apos;t have the glyphs of Traditional Chinese characters. Traditional Chinese characters will be displayed with default font. You can set a third font to avoid this: 的本地化字符串。
+        ///   查找类似 From the example above, we can see that 华文新魏 does not include Traditional Chinese characters, so those ones will be shown in default font. Here we can set a third font: 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontSet6 {
             get {
@@ -647,7 +647,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Case insensitive: 的本地化字符串。
+        ///   查找类似 Case-insensitive: 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontSet7 {
             get {
@@ -656,7 +656,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Whitespaces are allowed before and after a font 的本地化字符串。
+        ///   查找类似 Spaces are allowed before and after a font. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontSet8 {
             get {
@@ -665,7 +665,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Light, SemiLight, SemiBold and Bold can also be added after the font to force to a specified weight. So that adjusting weight will not affect this font. (Some fonts may not have variety of weights. Usually there are only two weights for Chinese fonts and some English fonts. Others can have many kind of weights. i.e. Segoe UI supports Light, SemiBold and Bold, but not SemiLight). 的本地化字符串。
+        ///   查找类似 Light, SemiLight, SemiBold and Bold can also be added after the font to specify a weight. So that adjusting weight in lyrics settings will not affect the font itself. (Some fonts might not have a variety of weights. Usually there are only two weights for Chinese fonts. English fonts have more. A good example is that Segoe UI supports Light, SemiBold and Bold, but not SemiLight.) 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphFontSet9 {
             get {
@@ -674,7 +674,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Why is it that when I&apos;m already logged in and &apos;Auto login&apos; is checked, it will not login automatically in the next time I run this software? 的本地化字符串。
+        ///   查找类似 I logged in and checked &quot;Auto Log in&quot;. Why auto log in doesn&apos;t function when I open the application next time? 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphLogin1 {
             get {
@@ -683,7 +683,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Usually It&apos;s because you logged out through a browser. You can be logged out for many reasons. Such as using multiple browser to login, then you logged out through one of these browsers. You will be logged out in other browsers automatically. In this software too. Try to avoid logging out at any place. 的本地化字符串。
+        ///   查找类似 Usually it&apos;s because you log out in a browser. Once you log out from one place, all other pages will be logged out too, including this application. That is to say, if you log in Douban in multiple browsers and log out in one of them, you will find your douban account is logged out in all broswers. So the only solution to this problem is to avoid logging out at other pages. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphLogin2 {
             get {
@@ -701,7 +701,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似  and login. Check if your account has an unnormal state, like locked or not activated. 的本地化字符串。
+        ///   查找类似 and login. Please check if you account has abnormal usage records. It might be that your account is locked or yet to be actived. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphOpenBrowser2 {
             get {
@@ -710,7 +710,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 The program crashes. 的本地化字符串。
+        ///   查找类似 The program crashed. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphProgramCrashes1 {
             get {
@@ -737,7 +737,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 . Try to describe clearly what happened. What channel are you listening to? It would be helpful to send me the error log as well. 的本地化字符串。
+        ///   查找类似 . Please try to explain as detailed as possible what you were doing, or what channel you were listening to. Reports with error log are preferred. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphProgramCrashes4 {
             get {
@@ -746,7 +746,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 How to find the error log? 的本地化字符串。
+        ///   查找类似 Where to find the error log? 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphProgramCrashes5 {
             get {
@@ -755,7 +755,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Why others can not hear the music what I share from the shared URL? 的本地化字符串。
+        ///   查找类似 Why others can not listen to the music that I share by link? 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphShareParagraph1 {
             get {
@@ -764,7 +764,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Douban only allows some websites linked to douban.fm. i.e. Click shared URL from renren.com will be redirected to homepage of douban.fm. You can copy the URL, then paste it to the address bar of browser. 的本地化字符串。
+        ///   查找类似 Douban disallows some users to jump from certain websites. For example, when you click the link from RenRen.com, it would direct you to the front page of Douban.fm, which is effectively the same as visiting douban.fm in the broswer. You can copy the shared link and paste it into the address bar of the browser, then you can listen to the music. 的本地化字符串。
         /// </summary>
         public static string HelpWindowParagraphShareParagraph2 {
             get {
@@ -818,7 +818,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Never play 的本地化字符串。
+        ///   查找类似 Never play again 的本地化字符串。
         /// </summary>
         public static string HotKeySettingWindowDontPlayHotkeyTextBlock {
             get {
@@ -962,7 +962,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Language setting is changed. It will take effect the next time you start DoubanFM. 的本地化字符串。
+        ///   查找类似 Language setting changed and will take effect at the next start up. 的本地化字符串。
         /// </summary>
         public static string LanguageChangedHint {
             get {
@@ -1070,7 +1070,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Two lines 的本地化字符串。
+        ///   查找类似 Double lines 的本地化字符串。
         /// </summary>
         public static string LyricsSettingsWindowDoubleLineLyricsRadioButton {
             get {
@@ -1223,7 +1223,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Force on topmost 的本地化字符串。
+        ///   查找类似 Force on top 的本地化字符串。
         /// </summary>
         public static string LyricsSettingsWindowTopMostCb {
             get {
@@ -1232,7 +1232,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Force on topmost can effectively solve the problem of lyrics not displaying over applications. But it may display over some full screen applications as well. 的本地化字符串。
+        ///   查找类似 Force on top can do the magic when you got the problem that lyrics are not shown on top. However, it may still show when running some fullscreen programs. 的本地化字符串。
         /// </summary>
         public static string LyricsSettingsWindowTopMostCbToolTip {
             get {
@@ -1250,7 +1250,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Typeface 的本地化字符串。
+        ///   查找类似 Font 的本地化字符串。
         /// </summary>
         public static string LyricsSettingsWindowTypefaceTB {
             get {
@@ -1286,7 +1286,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Go to next page to see more results. 的本地化字符串。
+        ///   查找类似 Check out the next page 的本地化字符串。
         /// </summary>
         public static string MayNextResultsLabel {
             get {
@@ -1331,7 +1331,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Banned: {0} 的本地化字符串。
+        ///   查找类似 Disliked: {0} 的本地化字符串。
         /// </summary>
         public static string NoLongerPlayFormatString {
             get {
@@ -1457,7 +1457,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Slide cover when clicked. 的本地化字符串。
+        ///   查找类似 Slide cover when clicked 的本地化字符串。
         /// </summary>
         public static string RadioButtonSlideCoverWhenClick {
             get {
@@ -1466,7 +1466,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Slide cover when the mouse hovers over. 的本地化字符串。
+        ///   查找类似 Slide cover when the mouse hovers over 的本地化字符串。
         /// </summary>
         public static string RadioButtonSlideCoverWhenMouseMove {
             get {
@@ -1547,7 +1547,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Failed to reset settings 的本地化字符串。
+        ///   查找类似 Reset failed 的本地化字符串。
         /// </summary>
         public static string ResetFailed {
             get {
@@ -1755,7 +1755,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Share buttons to display: 的本地化字符串。
+        ///   查找类似 Share buttons to show: 的本地化字符串。
         /// </summary>
         public static string ShareSettingsWindowShareButtonLabel {
             get {
@@ -1935,7 +1935,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Successfully copied 的本地化字符串。
+        ///   查找类似 Copy successful 的本地化字符串。
         /// </summary>
         public static string SuccessfullyCopied {
             get {
@@ -1980,7 +1980,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Auto remove brackets and their contents. 的本地化字符串。
+        ///   查找类似 Auto remove brackets and their contents 的本地化字符串。
         /// </summary>
         public static string TrimBracketsCheckBox {
             get {
@@ -2007,7 +2007,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Popup a balloon when playing song is changed. 的本地化字符串。
+        ///   查找类似 Popup when switching to a new song 的本地化字符串。
         /// </summary>
         public static string UISettingsWindowPopupCb {
             get {
@@ -2025,7 +2025,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Manually specify the color. 的本地化字符串。
+        ///   查找类似 Custom color 的本地化字符串。
         /// </summary>
         public static string UISettingsWindowWindowManualColorCB {
             get {
@@ -2052,7 +2052,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Unlike 的本地化字符串。
+        ///   查找类似 Cancel like 的本地化字符串。
         /// </summary>
         public static string UnlikeThumbButton {
             get {
@@ -2070,7 +2070,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Copyed URL to clipboard 的本地化字符串。
+        ///   查找类似 Link copied to clipborad 的本地化字符串。
         /// </summary>
         public static string UrlCopyedToClipboard {
             get {
@@ -2079,7 +2079,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 Please explain what you were doing, to help with analyzing the problem. 的本地化字符串。
+        ///   查找类似 Please kindly explain what exactly you were doing. This will help me analyze the problem. 的本地化字符串。
         /// </summary>
         public static string UserMessageTextBlock {
             get {
@@ -2106,7 +2106,7 @@ namespace DoubanFM.Resources {
         }
         
         /// <summary>
-        ///   查找类似 View the error report. 的本地化字符串。
+        ///   查找类似 View the error report 的本地化字符串。
         /// </summary>
         public static string ViewErrorMessageButton {
             get {
