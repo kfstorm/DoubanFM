@@ -57,7 +57,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 滑动封面的计时器
 		/// </summary>
-		private DispatcherTimer _slideCoverRightTimer, _slideCoverLeftTimer, _leftPanelMouseLeaveTimer;
+		private DispatcherTimer _slideCoverRightTimer, _slideCoverLeftTimer, _windowMouseLeaveTimer;
 
 		/// <summary>
 		/// 当前显示的封面
@@ -598,9 +598,9 @@ namespace DoubanFM
 			_slideCoverLeftTimer = new DispatcherTimer();
 			_slideCoverLeftTimer.Interval = new TimeSpan(5000000);
 			_slideCoverLeftTimer.Tick += new EventHandler(SlideCoverLeftTimer_Tick);
-			_leftPanelMouseLeaveTimer = new DispatcherTimer();
-			_leftPanelMouseLeaveTimer.Interval = TimeSpan.FromSeconds(1);
-			_leftPanelMouseLeaveTimer.Tick += _leftPanelMouseLeaveTimer_Tick;
+			_windowMouseLeaveTimer = new DispatcherTimer();
+			_windowMouseLeaveTimer.Interval = TimeSpan.FromSeconds(1);
+			_windowMouseLeaveTimer.Tick += WindowMouseLeaveTimerTick;
 		}
 
 		/// <summary>
@@ -1956,17 +1956,24 @@ namespace DoubanFM
 			Debug.WriteLine(App.GetPreciseTime(DateTime.Now) + " 加载热键设置完成");
 
 			//初始化窗口位置
-			if (!double.IsNaN(_player.Settings.LocationLeft))
-			{
-				var rect = new Rect(_player.Settings.LocationLeft,
-					_player.Settings.LocationTop,
-					this.RestoreBounds.Width,
-					this.RestoreBounds.Height);
-				var workArea = Screen.GetWorkingArea(rect);
-				this.Left = Math.Max(workArea.Left, Math.Min(workArea.Right - RestoreBounds.Width, rect.Left));
-				this.Top = Math.Max(workArea.Top, Math.Min(workArea.Bottom - RestoreBounds.Height, rect.Top));
-			}
-			recordLocation = true;
+		    if (!double.IsNaN(_player.Settings.LocationLeft))
+		    {
+		        double width = 0;
+		        double height = 0;
+		        if (!RestoreBounds.IsEmpty)
+		        {
+		            width = RestoreBounds.Width;
+		            height = RestoreBounds.Height;
+		        }
+		        var rect = new Rect(_player.Settings.LocationLeft,
+		                            _player.Settings.LocationTop,
+		                            width,
+		                            height);
+		        var workArea = Screen.GetWorkingArea(rect);
+		        this.Left = Math.Max(workArea.Left, Math.Min(workArea.Right - width, rect.Left));
+		        this.Top = Math.Max(workArea.Top, Math.Min(workArea.Bottom - height, rect.Top));
+		    }
+		    recordLocation = true;
 
 			//设置歌词显示
 			if (_player.Settings.ShowLyrics)
@@ -1992,7 +1999,7 @@ namespace DoubanFM
 		{
 			ButtonGeneralSetting.IsEnabled = false;
 			GeneralSettingWindow window = new GeneralSettingWindow();
-			window.Closed += delegate { ButtonGeneralSetting.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
+			window.Closed += delegate { ButtonGeneralSetting.IsEnabled = true; _windowMouseLeaveTimer.Start(); };
 			window.Show();
 		}
 
@@ -2000,7 +2007,7 @@ namespace DoubanFM
 		{
 			ButtonUISetting.IsEnabled = false;
 			UISettingWindow window = new UISettingWindow();
-			window.Closed += delegate { ButtonUISetting.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
+			window.Closed += delegate { ButtonUISetting.IsEnabled = true; _windowMouseLeaveTimer.Start(); };
 			window.Show();
 		}
 
@@ -2013,7 +2020,7 @@ namespace DoubanFM
 				binding.Source = _player.Settings;
 				window.CbShowLyrics.SetBinding(CheckBox.IsCheckedProperty, binding);
 			}
-			window.Closed += delegate { ButtonLyricsSetting.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
+			window.Closed += delegate { ButtonLyricsSetting.IsEnabled = true; _windowMouseLeaveTimer.Start(); };
 			window.Show();
 		}
 
@@ -2021,7 +2028,7 @@ namespace DoubanFM
 		{
 			ButtonShareSetting.IsEnabled = false;
 			ShareSettingWindow window = new ShareSettingWindow(ShareSetting);
-			window.Closed += delegate { ButtonShareSetting.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
+			window.Closed += delegate { ButtonShareSetting.IsEnabled = true; _windowMouseLeaveTimer.Start(); };
 			window.Show();
 		}
 
@@ -2034,7 +2041,7 @@ namespace DoubanFM
 			hotKeyWindow.Closed += new EventHandler((o, ee) =>
 			{
 				ButtonHotKeySettings.IsEnabled = true;
-				_leftPanelMouseLeaveTimer.Start();
+				_windowMouseLeaveTimer.Start();
 				HotKeys = hotKeyWindow.HotKeys;
 				AddLogicToHotKeys(HotKeys);
 				HotKeys.Register(this);
@@ -2072,7 +2079,7 @@ namespace DoubanFM
 		{
 			BtnHelp.IsEnabled = false;
 			HelpWindow window = new HelpWindow();
-			window.Closed += delegate { BtnHelp.IsEnabled = true; _leftPanelMouseLeaveTimer.Start(); };
+			window.Closed += delegate { BtnHelp.IsEnabled = true; _windowMouseLeaveTimer.Start(); };
 			window.Show();
 		}
 
@@ -2142,7 +2149,7 @@ namespace DoubanFM
             }
 
 			resetting = false;
-			_leftPanelMouseLeaveTimer.Start();
+			_windowMouseLeaveTimer.Start();
 		}
 
 		private void BtnExportSettings_Click(object sender, RoutedEventArgs e)
@@ -2170,7 +2177,7 @@ namespace DoubanFM
 			}
 
 			resetting = false;
-			_leftPanelMouseLeaveTimer.Start();
+			_windowMouseLeaveTimer.Start();
 		}
 
 		private void BtnImportSettings_Click(object sender, RoutedEventArgs e)
@@ -2204,7 +2211,7 @@ namespace DoubanFM
 			}
 
 			resetting = false;
-			_leftPanelMouseLeaveTimer.Start();
+			_windowMouseLeaveTimer.Start();
 		}
 
 		private void BtnDownloadSearch_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -2303,26 +2310,26 @@ namespace DoubanFM
 			}
 		}
 
-		private void LeftPanel_MouseLeave(object sender, MouseEventArgs e)
+		private void Window_MouseLeave(object sender, MouseEventArgs e)
 		{
-			if (NoChildren()) _leftPanelMouseLeaveTimer.Start();
+            if (NoChildWindows()) _windowMouseLeaveTimer.Start();
 		}
 
-		private void LeftPanel_MouseEnter(object sender, MouseEventArgs e)
+		private void Window_MouseEnter(object sender, MouseEventArgs e)
 		{
-			_leftPanelMouseLeaveTimer.Stop();
+			_windowMouseLeaveTimer.Stop();
 		}
 
-		private void _leftPanelMouseLeaveTimer_Tick(object sender, EventArgs e)
+		private void WindowMouseLeaveTimerTick(object sender, EventArgs e)
 		{
-			if (NoChildren())
+			if (NoChildWindows())
 			{
 				SlideCoverLeftStoryboard.Begin();
 			}
-			_leftPanelMouseLeaveTimer.Stop();
+			_windowMouseLeaveTimer.Stop();
 		}
 
-		private bool NoChildren()
+		private bool NoChildWindows()
 		{
 			if (resetting) return false;
 			List<Window> children = OwnedWindows.OfType<Window>().ToList();
