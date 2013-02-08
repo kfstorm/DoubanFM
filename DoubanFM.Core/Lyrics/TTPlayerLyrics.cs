@@ -198,8 +198,8 @@ namespace DoubanFM.Core
 		/// </summary>
 		static int Distance(string a, string b)
 		{
-			if (string.IsNullOrEmpty(a)) return b.Length;
-			if (string.IsNullOrEmpty(a)) return a.Length;
+            if (string.IsNullOrEmpty(a)) return b == null ? 0 : b.Length;
+            if (string.IsNullOrEmpty(b)) return a.Length;
 			int[][] d = new int[a.Length + 1][];
 			for (int i = 0; i < d.Length; ++i)
 				d[i] = new int[b.Length + 1];
