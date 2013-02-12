@@ -6,13 +6,8 @@
 
 using DoubanFM.Interop;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Interop;
-using System.Windows.Media;
 
 namespace DoubanFM
 {
@@ -84,6 +79,11 @@ namespace DoubanFM
 		/// </summary>
 		private bool pressed = false;
 
+        /// <summary>
+        /// 鼠标相对于窗口的位置
+        /// </summary>
+	    private Point? mousePosition;
+
 		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
 		{
 			pressed = true;
@@ -96,9 +96,15 @@ namespace DoubanFM
 			base.OnMouseRightButtonUp(e);
 		}
 
+        protected override void OnMouseEnter(System.Windows.Input.MouseEventArgs e)
+        {
+            mousePosition = e.GetPosition(this);
+        }
+
 		protected override void OnMouseLeave(System.Windows.Input.MouseEventArgs e)
 		{
 			pressed = false;
+		    mousePosition = null;
 			base.OnMouseLeave(e);
 		}
 
@@ -108,12 +114,22 @@ namespace DoubanFM
 		protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
 		{
 			base.OnMouseMove(e);
-			if (!IsDraging && pressed && System.Windows.Input.Mouse.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+
+            //当鼠标没动，但有控件在鼠标下方移动时，仍会触发MouseMove事件，所以要根据鼠标位置来判断是否真的移动了。
+            //只有鼠标真的移动了，才可能触发窗口拖动。
+            var newPosition = e.GetPosition(this);
+		    bool moved = mousePosition.HasValue && newPosition != mousePosition.Value;
+		    mousePosition = newPosition;
+
+            if (!IsDraging && pressed && System.Windows.Input.Mouse.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
 			{
-				IsDraging = true;
-				DragMove();
-				pressed = false;
-				IsDraging = false;
+			    if (moved)
+			    {
+			        IsDraging = true;
+			        DragMove();
+			        pressed = false;
+			        IsDraging = false;
+			    }
 			}
 		}
 
