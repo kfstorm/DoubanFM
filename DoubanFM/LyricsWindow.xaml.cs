@@ -40,8 +40,10 @@ namespace DoubanFM
 
 		private Lyrics _lyrics;
 
+	    private LyricsShower _lyricsShower;
+
 		/// <summary>
-		/// 歌词分析器
+		/// 歌词
 		/// </summary>
 		public Lyrics Lyrics
 		{
@@ -51,12 +53,13 @@ namespace DoubanFM
 				if (_lyrics != value)
 				{
 					_lyrics = value;
-					_lyricsCurrentIndex = int.MinValue;
+				    _lyricsShower = _lyrics == null ? null : new LyricsShower(_lyrics);
+                    _lyricsCurrentIndex = int.MinValue;
 				}
 			}
 		}
 
-		/// <summary>
+        /// <summary>
 		/// 当前歌词所在位置
 		/// </summary>
 		private int _lyricsCurrentIndex = int.MinValue;
@@ -177,14 +180,16 @@ namespace DoubanFM
 		/// </summary>
 		public void Refresh(TimeSpan time)
 		{
-			if (_lyrics != null)
-			{
-				_lyrics.Refresh(time + ((DoubleAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[0]).KeyFrames[0].KeyTime.TimeSpan);
-				if (_lyrics.CurrentIndex != _lyricsCurrentIndex)
+            if (_lyricsShower != null)
+            {
+                _lyricsShower.CurrentTime = time +
+                                            ((DoubleAnimationUsingKeyFrames) ChangeLyricsStoryboard.Children[0])
+                                                .KeyFrames[0].KeyTime.TimeSpan;
+                if (_lyricsShower.CurrentIndex != _lyricsCurrentIndex)
 				{
-					_lyricsCurrentIndex = _lyrics.CurrentIndex;
-					string next2Lyrics = (_lyrics.CurrentIndex + 2 >= _lyrics.SortedTimes.Count) ? null : _lyrics.TimeAndLyrics[_lyrics.SortedTimes[_lyrics.CurrentIndex + 2]];
-					ChangeLyrics(_lyrics.CurrentLyrics, _lyrics.NextLyrics, next2Lyrics);
+                    _lyricsCurrentIndex = _lyricsShower.CurrentIndex;
+                    string next2Lyrics = (_lyricsShower.CurrentIndex + 2 >= _lyricsShower.SortedTimes.Count) ? null : _lyricsShower.TimeAndLyrics[_lyricsShower.SortedTimes[_lyricsShower.CurrentIndex + 2]];
+                    ChangeLyrics(_lyricsShower.CurrentLyrics, _lyricsShower.NextLyrics, next2Lyrics);
 				}
 			}
 			else

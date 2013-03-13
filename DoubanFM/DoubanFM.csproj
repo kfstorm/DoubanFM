@@ -132,6 +132,7 @@
     <Compile Include="Interop\WH.cs" />
     <Compile Include="Interop\WM.cs" />
     <Compile Include="Interop\WS.cs" />
+    <Compile Include="LyricsShower.cs" />
     <Compile Include="Resources\Resources.zh-CN.Designer.cs">
       <DependentUpon>Resources.zh-CN.resx</DependentUpon>
       <DesignTime>True</DesignTime>

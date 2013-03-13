@@ -124,7 +124,7 @@
     <value>我正在收听 《{0}》 - {1}</value>
   </data>
   <data name="ShareTextPartTwo" xml:space="preserve">
-    <value>（来自K.F.Storm豆瓣电台{0} - {1}）</value>
+    <value>（来自 K.F.Storm 豆瓣电台{0} - {1}）</value>
   </data>
   <data name="UnknownError" xml:space="preserve">
     <value>未知错误</value>

@@ -155,7 +155,7 @@
     <value>分享到新浪微博</value>
   </data>
   <data name="ShareMsn" xml:space="preserve">
-    <value>分享到MSN</value>
+    <value>分享到 MSN</value>
   </data>
   <data name="ShareKaixin" xml:space="preserve">
     <value>分享到开心网</value>
@@ -164,10 +164,10 @@
     <value>分享到人人网</value>
   </data>
   <data name="ShareFacebook" xml:space="preserve">
-    <value>分享到Facebook</value>
+    <value>分享到 Facebook</value>
   </data>
   <data name="ShareTwitter" xml:space="preserve">
-    <value>分享到Twitter</value>
+    <value>分享到 Twitter</value>
   </data>
   <data name="PersonalRadioRB" xml:space="preserve">
     <value>我的电台</value>
@@ -176,7 +176,7 @@
     <value>公共兆赫</value>
   </data>
   <data name="DJRadioRB" xml:space="preserve">
-    <value>DJ兆赫</value>
+    <value>DJ 兆赫</value>
   </data>
   <data name="DJSearchTextBlock" xml:space="preserve">
     <value>点击搜索列出所有频道</value>
@@ -185,10 +185,10 @@
     <value>请稍候</value>
   </data>
   <data name="SearchingLabel" xml:space="preserve">
-    <value>正在搜索...</value>
+    <value>正在搜索 ...</value>
   </data>
   <data name="ConsistentResultsLabel" xml:space="preserve">
-    <value>搜索结果来自music.douban.com</value>
+    <value>搜索结果来自 music.douban.com</value>
   </data>
   <data name="SearchResultsCanNotListenLabel" xml:space="preserve">
     <value>您开启了自动剔除无法收听的项目</value>
@@ -221,13 +221,13 @@
     <value>自动登录</value>
   </data>
   <data name="TotalFormatString" xml:space="preserve">
-    <value>累积收听{0}首</value>
+    <value>累积收听 {0} 首</value>
   </data>
   <data name="PlusHeartsFormatString" xml:space="preserve">
-    <value>加红心{0}首</value>
+    <value>加红心 {0} 首</value>
   </data>
   <data name="NoLongerPlayFormatString" xml:space="preserve">
-    <value>{0}首不再播放</value>
+    <value>{0} 首不再播放</value>
   </data>
   <data name="TheLoggedLabel" xml:space="preserve">
     <value>已登录</value>
@@ -417,16 +417,16 @@
     <value>字体前后可以有空格。</value>
   </data>
   <data name="HelpWindowParagraphFontSet9" xml:space="preserve">
-    <value>字体后也可以加上Light、SemiLight、SemiBold、Bold等文字来强制指定粗细，这样即使在歌词设置里调整粗细，也不会影响到强制指定粗细的字体。（有些字体可能不支持那么多种粗细变化，中文一般只有两种，而有些英文字体则多一些，比如Vista和Win7系统中的Segoe UI，可以设置Light、SemiBold和Bold，不能设置SemiLight）</value>
+    <value>字体后也可以加上 Light、SemiLight、SemiBold、Bold 等文字来强制指定粗细，这样即使在歌词设置里调整粗细，也不会影响到强制指定粗细的字体。（有些字体可能不支持那么多种粗细变化，中文一般只有两种，而有些英文字体则多一些，比如 Vista 和 Win 7 系统中的 Segoe UI，可以设置 Light、SemiBold 和 Bold，不能设置 SemiLight）</value>
   </data>
   <data name="HelpWindowParagraphFontSet10" xml:space="preserve">
-    <value>设置字体时可以用不同语言的字体名。所有的字体都有英文名字，而非英文字体一般都有非英文的名字。比如宋体的英文名是SimSun，新宋体的英文名是NSimSun，楷体的英文名是KaiTi，微软雅黑的英文名是Microsoft YaHei。台湾地区的Win7中默认字体是微軟正黑體，英文名是Microsoft JhengHei。本软件中选择字体时只把有简体中文名称的字体显示中文名，其他字体显示英文名，所以微软雅黑在下拉列表里叫微软雅黑，而微軟正黑體在下拉列表里叫Microsoft JhengHei，还有比如標楷體的英文叫DFKai-SB。</value>
+    <value>设置字体时可以用不同语言的字体名。所有的字体都有英文名字，而非英文字体一般都有非英文的名字。比如宋体的英文名是 SimSun，新宋体的英文名是 NSimSun，楷体的英文名是 KaiTi，微软雅黑的英文名是 Microsoft YaHei。台湾地区的 Win 7 中默认字体是微軟正黑體，英文名是 Microsoft JhengHei。本软件中选择字体时只把有简体中文名称的字体显示中文名，其他字体显示英文名，所以微软雅黑在下拉列表里叫微软雅黑，而微軟正黑體在下拉列表里叫 Microsoft JhengHei，还有比如標楷體的英文叫 DFKai-SB。</value>
   </data>
   <data name="HelpWindowParagraphShareParagraph1" xml:space="preserve">
     <value>为什么点击分享到其他网站的链接后不能听到我分享的那首音乐？</value>
   </data>
   <data name="HelpWindowParagraphShareParagraph2" xml:space="preserve">
-    <value>这是因为豆瓣对网页做了手脚，会查看你是从哪个网站过来的，从某些网站（比如人人）进入豆瓣电台的网站会转到豆瓣电台的首页（也就是和直接在浏览器里输入douban.fm一样）。可以把分享的链接复制出来，粘贴到浏览器地址栏里打开，就可以听到分享的歌曲了。</value>
+    <value>这是因为豆瓣对网页做了手脚，会查看你是从哪个网站过来的，从某些网站（比如人人）进入豆瓣电台的网站会转到豆瓣电台的首页（也就是和直接在浏览器里输入 douban.fm 一样）。可以把分享的链接复制出来，粘贴到浏览器地址栏里打开，就可以听到分享的歌曲了。</value>
   </data>
   <data name="HelpWindowParagraphLogin1" xml:space="preserve">
     <value>为什么本来已经登录了，并且勾选了下次自动登录，结果下次打开软件时却没有自动登录？</value>
@@ -474,7 +474,7 @@
     <value>软件主页：</value>
   </data>
   <data name="HelpWindowParagraphDisclaimer4" xml:space="preserve">
-    <value>网页版FAQ：</value>
+    <value>网页版 FAQ：</value>
   </data>
   <data name="HelpWindowParagraphDisclaimer5" xml:space="preserve">
     <value>豆瓣FM官方网站：</value>
@@ -501,10 +501,10 @@
     <value>显示/最小化</value>
   </data>
   <data name="HotKeySettingWindowShowHideTextBlock" xml:space="preserve">
-    <value>显示/隐藏 窗口</value>
+    <value>显示/隐藏窗口</value>
   </data>
   <data name="HotKeySettingWindowShowHideLyricsTextBlock" xml:space="preserve">
-    <value>显示/隐藏 歌词</value>
+    <value>显示/隐藏歌词</value>
   </data>
   <data name="HotKeySettingWindowShareKeyTextBlock" xml:space="preserve">
     <value>一键分享</value>
@@ -528,7 +528,7 @@
     <value>桌面歌词</value>
   </data>
   <data name="LyricsSettingsWindowOccupyCPULabel" xml:space="preserve">
-    <value>会占用一定CPU</value>
+    <value>会占用一定 CPU</value>
   </data>
   <data name="CbEnableEmbeddedLyrics" xml:space="preserve">
     <value>内嵌歌词</value>
@@ -696,7 +696,7 @@
     <value>清除</value>
   </data>
   <data name="OutputScreenFormatString" xml:space="preserve">
-    <value>显示器{0}</value>
+    <value>显示器 {0}</value>
   </data>
   <data name="CenterAlignment" xml:space="preserve">
     <value>居中</value>
@@ -753,7 +753,7 @@
     <value>新浪微博</value>
   </data>
   <data name="ShareSiteQzone" xml:space="preserve">
-    <value>QQ空间</value>
+    <value>QQ 空间</value>
   </data>
   <data name="ShareSiteNone" xml:space="preserve">
     <value>*复制网址到剪贴板*</value>
@@ -787,7 +787,7 @@
     <value>分享到饭否</value>
   </data>
   <data name="ShareQzone" xml:space="preserve">
-    <value>分享到QQ空间</value>
+    <value>分享到 QQ 空间</value>
   </data>
   <data name="ShareTencentWeibo" xml:space="preserve">
     <value>分享到腾讯微博</value>
@@ -799,7 +799,7 @@
     <value>地址已复制到剪贴板</value>
   </data>
   <data name="ZipFileFilterName" xml:space="preserve">
-    <value>zip文件</value>
+    <value>zip 文件</value>
   </data>
   <data name="LanguageTextBlock" xml:space="preserve">
     <value>显示语言</value>
@@ -808,7 +808,7 @@
     <value>显示语言设置已改变，下次启动豆瓣电台时生效。</value>
   </data>
   <data name="CbSearchQQMusic" xml:space="preserve">
-    <value>搜索QQ音乐</value>
+    <value>搜索 QQ 音乐</value>
   </data>
   <data name="BitRate" xml:space="preserve">
     <value>码率</value>
