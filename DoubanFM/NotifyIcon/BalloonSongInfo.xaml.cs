@@ -5,18 +5,10 @@
  * */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Media.Animation;
 using System.Windows.Controls.Primitives;
 
@@ -25,7 +17,7 @@ namespace DoubanFM.NotifyIcon
 	/// <summary>
 	/// 显示歌曲信息的气泡
 	/// </summary>
-	public partial class BalloonSongInfo : UserControl
+	public partial class BalloonSongInfo
 	{
 		public BalloonSongInfo()
 		{
@@ -49,15 +41,16 @@ namespace DoubanFM.NotifyIcon
 
 		private void FadeOut_Completed(object sender, EventArgs e)
 		{
-			((Popup)this.Parent).IsOpen = false;
+			((Popup)Parent).IsOpen = false;
 		}
 
-		private void userControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-		{
-			((DoubanFMWindow)App.Current.MainWindow).ShowFront();
-		}
+	    private void userControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+	    {
+	        var mainWindow = Application.Current.MainWindow as DoubanFMWindow;
+	        if (mainWindow != null) mainWindow.ShowFront();
+	    }
 
-		/// <summary>
+	    /// <summary>
 		/// 清除歌曲和频道的绑定
 		/// </summary>
 		public void ClearBindings()

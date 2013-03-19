@@ -4,19 +4,7 @@
  * Website : http://www.kfstorm.com
  * */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using DoubanFM.Core;
 using System.Windows.Media.Animation;
 
@@ -25,13 +13,13 @@ namespace DoubanFM.NotifyIcon
 	/// <summary>
 	/// 托盘控制面板
 	/// </summary>
-	public partial class PopupControlPanel : UserControl
+	public partial class PopupControlPanel
 	{
 		public PopupControlPanel()
 		{
 			InitializeComponent();
 
-			_player = FindResource("Player") as Player;
+			player = FindResource("Player") as Player;
 		}
 
 		/// <summary>
@@ -49,58 +37,73 @@ namespace DoubanFM.NotifyIcon
 			((Storyboard)FindResource("HideCover")).Begin();
 		}
 
-		private Player _player;
+		private readonly Player player;
 
 		private void ButtonNext_Click(object sender, RoutedEventArgs e)
 		{
-			(App.Current.MainWindow as DoubanFMWindow).Next();
+            var mainWindow = Application.Current.MainWindow as DoubanFMWindow;
+            if (mainWindow != null) mainWindow.Next();
 		}
 
 		private void ButtonNever_Click(object sender, RoutedEventArgs e)
 		{
-			(App.Current.MainWindow as DoubanFMWindow).Never();
+            var mainWindow = Application.Current.MainWindow as DoubanFMWindow;
+            if (mainWindow != null) mainWindow.Never();
 		}
 
-		private void ShareButton_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void ShareButton_Click(object sender, RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			if (_player.CurrentSong != null)
-				new Share(_player, (Share.Sites)((FrameworkElement)e.Source).Tag).Go();
+			if (player.CurrentSong != null)
+				new Share(player, (Share.Sites)((FrameworkElement)e.Source).Tag).Go();
 		}
 
-		private void CheckBoxShowLyrics_Checked(object sender, System.Windows.RoutedEventArgs e)
+		private void CheckBoxShowLyrics_Checked(object sender, RoutedEventArgs e)
 		{
 			// 在此处添加事件处理程序实现。
-			if (_player != null) (App.Current.MainWindow as DoubanFMWindow).ShowLyrics();
+            if (player != null)
+            {
+                var mainWindow = Application.Current.MainWindow as DoubanFMWindow;
+                if (mainWindow != null) mainWindow.ShowLyrics();
+            }
 		}
 
-		private void CheckBoxShowLyrics_Unchecked(object sender, RoutedEventArgs e)
+	    private void CheckBoxShowLyrics_Unchecked(object sender, RoutedEventArgs e)
+	    {
+	        if (player != null)
+	        {
+	            var mainWindow = Application.Current.MainWindow as DoubanFMWindow;
+	            if (mainWindow != null) mainWindow.HideLyrics();
+	        }
+	    }
+
+	    private void BtnCopyUrl_Click(object sender, RoutedEventArgs e)
+	    {
+	        if (player.CurrentSong != null)
+	        {
+	            new Share(player).Go();
+	            MessageBox.Show(Application.Current.MainWindow, DoubanFM.Resources.Resources.UrlCopyedToClipboard,
+	                            DoubanFM.Resources.Resources.SuccessfullyCopied, MessageBoxButton.OK,
+	                            MessageBoxImage.Information);
+	        }
+	    }
+
+	    private void BtnOneKeyShare_Click(object sender, RoutedEventArgs e)
 		{
-			if (_player != null) (App.Current.MainWindow as DoubanFMWindow).HideLyrics();
+		    var mainWindow = Application.Current.MainWindow as DoubanFMWindow;
+            if (mainWindow != null) mainWindow.OneKeyShare();
 		}
 
-		private void BtnCopyUrl_Click(object sender, RoutedEventArgs e)
+	    private void ButtonExit_Click(object sender, RoutedEventArgs e)
 		{
-			if (_player.CurrentSong != null)
-			{
-				new Share(_player).Go();
-                MessageBox.Show(App.Current.MainWindow, DoubanFM.Resources.Resources.UrlCopyedToClipboard, DoubanFM.Resources.Resources.SuccessfullyCopied, MessageBoxButton.OK, MessageBoxImage.Information);
-			}
+            var mainWindow = Application.Current.MainWindow as DoubanFMWindow;
+            if (mainWindow != null) mainWindow.Close();
 		}
 
-		private void BtnOneKeyShare_Click(object sender, RoutedEventArgs e)
-		{
-			(App.Current.MainWindow as DoubanFMWindow).OneKeyShare();
-		}
-		
-		private void ButtonExit_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			App.Current.MainWindow.Close();
-		}
-
-		private void BtnDownloadSearch_Click(object sender, System.Windows.RoutedEventArgs e)
-		{
-			(App.Current.MainWindow as DoubanFMWindow).SearchDownload();
-		}
+	    private void BtnDownloadSearch_Click(object sender, RoutedEventArgs e)
+	    {
+            var mainWindow = Application.Current.MainWindow as DoubanFMWindow;
+            if (mainWindow != null) mainWindow.SearchDownload();
+	    }
 	}
 }
