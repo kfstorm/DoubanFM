@@ -140,7 +140,7 @@ Website : http://www.kfstorm.com
 				</EasingThicknessKeyFrame>
 			</ThicknessAnimationUsingKeyFrames>
 		</Storyboard>
-		<Storyboard x:Key="OnVolumeControlMouseLeave">
+		<Storyboard x:Key="OnVolumeControlMouseLeave" BeginTime="0:0:1">
 			<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="BdVolumeControl">
 				<EasingThicknessKeyFrame KeyTime="0:0:1" Value="0,0,-65,0">
 					<EasingThicknessKeyFrame.EasingFunction>
