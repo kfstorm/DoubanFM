@@ -35,11 +35,6 @@ namespace DoubanFM.Core
         public Dictionary<TimeSpan, string> TimeAndLyrics { get; set; }
 
         /// <summary>
-        /// 排过序的时间列表
-        /// </summary>
-        public List<TimeSpan> SortedTimes { get; private set; }
-
-        /// <summary>
         /// 返回歌词的标题
         /// </summary>
         public string Title { get; private set; }
@@ -79,7 +74,6 @@ namespace DoubanFM.Core
                 LrcCode = code;
                 LrcCodeParse();
                 DictionaryParse();
-                GetSortedTimes();
             }
             catch (Exception ex)
             {
@@ -157,17 +151,6 @@ namespace DoubanFM.Core
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// 从时间、歌词字典中返回排过序的时间列表
-        /// </summary>
-        protected void GetSortedTimes()
-        {
-            TimeSpan[] timesArray = new TimeSpan[TimeAndLyrics.Count];
-            TimeAndLyrics.Keys.CopyTo(timesArray, 0);
-            SortedTimes = new List<TimeSpan>(timesArray);
-            SortedTimes.Sort();
         }
 
         #endregion
