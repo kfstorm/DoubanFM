@@ -150,11 +150,19 @@ Website : http://www.kfstorm.com
 			</ThicknessAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="VolumeFadeOut" Completed="VolumeFadeOut_Completed">
-			<DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="0" Duration="0:0:1"/>
-		</Storyboard>
+            <DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="0" Duration="0:0:1">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
 		<Storyboard x:Key="VolumeFadeIn">
-			<DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="1" Duration="0:0:1"/>
-		</Storyboard>
+            <DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="1" Duration="0:0:1">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
 		<Storyboard x:Key="VolumeDirectIn">
 			<DoubleAnimation Storyboard.TargetProperty="VolumeFadeParameter" Storyboard.TargetName="Window" To="1" Duration="0"/>
 		</Storyboard>
@@ -534,36 +542,38 @@ Website : http://www.kfstorm.com
 			</Grid>
 			<Grid x:Name="RightPanel" Grid.Column="1" Background="Transparent" ClipToBounds="True" MouseMove="RightPanel_MouseMove">
 				<Grid x:Name="SpectrumPanel" Height="50" Margin="-5,0,-5,-15" VerticalAlignment="Bottom" Opacity="{Binding Settings.SpectrumTransparency, Source={StaticResource Player}, Converter={StaticResource OpacityToTransparencyConverter}}" Visibility="{Binding Settings.ShowSpectrum, Source={StaticResource Player}, Converter={StaticResource BoolToVisibilityConverter}}">
-					<Grid.Effect>
-						<BlurEffect Radius="7"/>
-					</Grid.Effect>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Rectangle RenderTransformOrigin="0.5,0.5">
-						<Rectangle.RenderTransform>
-							<ScaleTransform ScaleX="-1"/>
-						</Rectangle.RenderTransform>
-						<Rectangle.Fill>
-							<VisualBrush Visual="{Binding ElementName=SpectrumAnalyzer}" Stretch="None" AlignmentX="Left" AlignmentY="Bottom"/>
-						</Rectangle.Fill>
-					</Rectangle>
-					<sound:SpectrumAnalyzer x:Name="SpectrumAnalyzer" Grid.Column="1" BarSpacing="0" PeakStyle="{x:Null}" IsFrequencyScaleLinear="True" Margin="-1,0,0,-1" AveragePeaks="True">
-						<sound:SpectrumAnalyzer.BarStyle>
-							<Style TargetType="{x:Type Rectangle}">
-								<Setter Property="Fill">
-									<Setter.Value>
-										<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" x:Name="BarBrush">
-											<GradientStop Color="{Binding (GradientBrush.GradientStops)[1].Color, Converter={StaticResource ToTransparentColorConverter}, RelativeSource={RelativeSource AncestorType={x:Type LinearGradientBrush}}}" Offset="0"/>
-											<GradientStop Color="{Binding Settings.SpectrumColor, Source={StaticResource Player}}" Offset="0.7"/>
-										</LinearGradientBrush>
-									</Setter.Value>
-								</Setter>
-							</Style>
-						</sound:SpectrumAnalyzer.BarStyle>
-					</sound:SpectrumAnalyzer>
-				</Grid>
+                    <Grid Opacity="{Binding VolumeFadeParameter, ElementName=Window}">
+					    <Grid.Effect>
+						    <BlurEffect Radius="7"/>
+					    </Grid.Effect>
+					    <Grid.ColumnDefinitions>
+						    <ColumnDefinition/>
+						    <ColumnDefinition/>
+					    </Grid.ColumnDefinitions>
+					    <Rectangle RenderTransformOrigin="0.5,0.5">
+						    <Rectangle.RenderTransform>
+							    <ScaleTransform ScaleX="-1"/>
+						    </Rectangle.RenderTransform>
+						    <Rectangle.Fill>
+							    <VisualBrush Visual="{Binding ElementName=SpectrumAnalyzer}" Stretch="None" AlignmentX="Left" AlignmentY="Bottom"/>
+						    </Rectangle.Fill>
+					    </Rectangle>
+					    <sound:SpectrumAnalyzer x:Name="SpectrumAnalyzer" Grid.Column="1" BarSpacing="0" PeakStyle="{x:Null}" IsFrequencyScaleLinear="True" Margin="-1,0,0,-1" AveragePeaks="True">
+						    <sound:SpectrumAnalyzer.BarStyle>
+							    <Style TargetType="{x:Type Rectangle}">
+								    <Setter Property="Fill">
+									    <Setter.Value>
+										    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" x:Name="BarBrush">
+											    <GradientStop Color="{Binding (GradientBrush.GradientStops)[1].Color, Converter={StaticResource ToTransparentColorConverter}, RelativeSource={RelativeSource AncestorType={x:Type LinearGradientBrush}}}" Offset="0"/>
+											    <GradientStop Color="{Binding Settings.SpectrumColor, Source={StaticResource Player}}" Offset="0.7"/>
+										    </LinearGradientBrush>
+									    </Setter.Value>
+								    </Setter>
+							    </Style>
+						    </sound:SpectrumAnalyzer.BarStyle>
+					    </sound:SpectrumAnalyzer>
+                    </Grid>
+                </Grid>
 				<Grid Margin="15,10,10,10">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>

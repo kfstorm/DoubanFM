@@ -1200,6 +1200,7 @@ namespace DoubanFM
 		{
 			RefreshMyChannels();
 			PublicChannels.ItemsSource = new ObservableCollection<Channel>(_player.ChannelInfo.Public);
+            ShowDjChannels(null);
 		}
 
 		/// <summary>
