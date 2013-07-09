@@ -492,12 +492,21 @@ namespace DoubanFM.Core
 	    public void Initialize()
 	    {
 	        bool loggedOn = false;
+	        bool expired = false;
 	        if (!string.IsNullOrEmpty(Settings.User.UserID) && !string.IsNullOrEmpty(Settings.User.Token) &&
 	            !string.IsNullOrEmpty(Settings.User.Expire))
 	        {
 	            loggedOn = UpdateUserInfo();
+	            if (!loggedOn) expired = true;
 	        }
-	        Dispatcher.Invoke(new Action(() => { CurrentState = loggedOn ? State.LoggedOn : State.LoggedOff; }));
+	        Dispatcher.Invoke(new Action(() =>
+	            {
+	                CurrentState = loggedOn ? State.LoggedOn : State.LoggedOff;
+                    if (expired)
+                    {
+                        Settings.User = new User(Settings.User.Username, Settings.User.Password);
+                    }
+	            }));
 	    }
 
         /// <summary>

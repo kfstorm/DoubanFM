@@ -813,4 +813,10 @@ Application will restart after reset.</value>
   <data name="BitRate" xml:space="preserve">
     <value>Bit rate</value>
   </data>
+  <data name="UserExpiredCaption" xml:space="preserve">
+    <value>Your login status has expired</value>
+  </data>
+  <data name="UserExpiredMessage" xml:space="preserve">
+    <value>Your login status has expired. Please login again.</value>
+  </data>
 </root>

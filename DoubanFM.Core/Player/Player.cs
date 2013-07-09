@@ -326,6 +326,18 @@ namespace DoubanFM.Core
             }
         }
 
+        /// <summary>
+        /// 当用户的登录状态过期时发生。
+        /// </summary>
+        public event EventHandler UserExpired;
+        private void RaiseUserExpiredEvent()
+        {
+            if (UserExpired != null)
+            {
+                UserExpired(this, EventArgs.Empty);
+            }
+        }
+
 		#endregion
 
 		#region 构造及初始化
@@ -399,7 +411,12 @@ namespace DoubanFM.Core
                     //    //更新用户的登录状态
                     //    UserAssistant.Update(file);
                     //}
+
+                    //检查用户登录状态是否已过期。
+                    bool expired = !string.IsNullOrEmpty(UserAssistant.Settings.User.Token);
                     UserAssistant.Initialize();
+                    expired = expired && string.IsNullOrEmpty(UserAssistant.Settings.User.Token);
+
 				    var channelInfo = GetChannelInfo();
 					
 					Dispatcher.Invoke(new Action(() =>
@@ -414,6 +431,12 @@ namespace DoubanFM.Core
                             RaisePlayRecordChangedEvent();
 							IsInitialized = true;
 							Debug.WriteLine(DateTime.Now + " 播放器核心初始化完成");
+                           
+                            if (expired)
+                            {
+                                RaiseUserExpiredEvent();
+                            }
+
 							//选择一个频道
 							ChooseChannelAtStartup();
 						}));

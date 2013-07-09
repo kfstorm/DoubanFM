@@ -560,6 +560,13 @@ namespace DoubanFM
 		            RunBanned.Text = string.Format(DoubanFM.Resources.Resources.NoLongerPlayFormatString,
 		                                           _player.Settings.User.Banned);
 		        };
+            //用户的登录状态已过期
+            _player.UserExpired += delegate
+                {
+                    MessageBox.Show(DoubanFM.Resources.Resources.UserExpiredMessage,
+                                    DoubanFM.Resources.Resources.UserExpiredCaption, MessageBoxButton.OK,
+                                    MessageBoxImage.Warning);
+                };
         }
 
 		/// <summary>

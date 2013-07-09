@@ -813,4 +813,10 @@
   <data name="BitRate" xml:space="preserve">
     <value>码率</value>
   </data>
+  <data name="UserExpiredCaption" xml:space="preserve">
+    <value>您的登录状态已过期</value>
+  </data>
+  <data name="UserExpiredMessage" xml:space="preserve">
+    <value>您的登录状态已过期，请重新登录。</value>
+  </data>
 </root>
