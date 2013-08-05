@@ -26,6 +26,8 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
+using System.Security.AccessControl;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,8 +35,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using Hardcodet.Wpf.TaskbarNotification.Interop;
-using Point=Hardcodet.Wpf.TaskbarNotification.Interop.Point;
-
+using Point = Hardcodet.Wpf.TaskbarNotification.Interop.Point;
 
 
 namespace Hardcodet.Wpf.TaskbarNotification
@@ -207,7 +208,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
 	  popup.Placement = PlacementMode.AbsolutePoint;
 	  popup.StaysOpen = true;
 
-	  Point position = TrayInfo.GetTrayLocation();
+	  var position = TrayInfo.GetTrayLocation();
 	  popup.HorizontalOffset = position.X -1;
 	  popup.VerticalOffset = position.Y -1;
 
@@ -368,8 +369,10 @@ namespace Hardcodet.Wpf.TaskbarNotification
 
 
 	  //get mouse coordinates
-	  Point cursorPosition = new Point();
-	  WinApi.GetCursorPos(ref cursorPosition);
+	  Point apiCursorPosition = new Point();
+      WinApi.GetCursorPos(ref apiCursorPosition);
+	  var cursorPosition = apiCursorPosition.ToWpfPoint();
+        
 
 	  bool isLeftClickCommandInvoked = false;
 	  
@@ -619,7 +622,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
 	/// Displays the <see cref="TrayPopup"/> control if
 	/// it was set.
 	/// </summary>
-	private void ShowTrayPopup(Point cursorPosition)
+	private void ShowTrayPopup(System.Windows.Point cursorPosition)
 	{
 	  if (IsDisposed) return;
 
@@ -671,7 +674,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
 	/// Displays the <see cref="ContextMenu"/> if
 	/// it was set.
 	/// </summary>
-	private void ShowContextMenu(Point cursorPosition)
+    private void ShowContextMenu(System.Windows.Point cursorPosition)
 	{
 	  if (IsDisposed) return;
 
