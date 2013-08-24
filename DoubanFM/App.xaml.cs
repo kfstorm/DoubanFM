@@ -8,7 +8,6 @@ using DoubanFM.Core;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Deployment.Application;
 using System.Diagnostics;
 using System.Globalization;
@@ -115,6 +114,7 @@ namespace DoubanFM
 					Debug.WriteLine("**********************************************************************");
 					Debug.WriteLine("豆瓣电台出现错误：" + App.GetPreciseTime(DateTime.Now));
 					Debug.WriteLine("**********************************************************************");
+                    Debug.WriteLine(e.ExceptionObject.ToString());
 
 					try
 					{

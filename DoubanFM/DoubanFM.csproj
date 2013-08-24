@@ -88,7 +88,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
@@ -108,8 +107,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Aero\AeroGlassCompositionChangedEventArgs.cs" />
-    <Compile Include="Aero\AeroHelper.cs" />
     <Compile Include="AppCommand.cs" />
     <Compile Include="ChildWindowBase.cs" />
     <Compile Include="ColorPicker\ColorPicker.cs" />
@@ -119,13 +116,10 @@
       <DependentUpon>PopupableColorPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="FilePackage.cs" />
-    <Compile Include="Interop\DWM_BLURBEHIND.cs" />
-    <Compile Include="Interop\DWM_THUMBNAIL_PROPERTIES.cs" />
     <Compile Include="Interop\GWL.cs" />
     <Compile Include="Interop\HOOKPROC.cs" />
     <Compile Include="Interop\HWND.cs" />
     <Compile Include="Interop\KBDLLHOOKSTRUCT.cs" />
-    <Compile Include="Interop\MARGINS.cs" />
     <Compile Include="Interop\NativeMethods.cs" />
     <Compile Include="Interop\RECT.cs" />
     <Compile Include="Interop\SWP.cs" />
@@ -307,6 +301,10 @@
     <ProjectReference Include="..\DoubanFM.Core\DoubanFM.Core.csproj">
       <Project>{AA75B5E6-F373-49D7-B2E0-16C3E57321F7}</Project>
       <Name>DoubanFM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DwmHelper\DwmHelper.csproj">
+      <Project>{368cdbe6-0ba2-4dad-aceb-fbb8eedb1bd7}</Project>
+      <Name>DwmHelper</Name>
     </ProjectReference>
     <ProjectReference Include="..\NotifyIconWpf\NotifyIconWpf.csproj">
       <Project>{7AC63864-7638-41C4-969C-D3197EF2BED9}</Project>

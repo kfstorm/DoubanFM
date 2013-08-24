@@ -417,7 +417,7 @@ namespace DoubanFM.Bass
 
 			onlineFileWorker = new Thread(new ThreadStart(() =>
 				{
-					int handle = Un4seen.Bass.Bass.BASS_StreamCreateURL(url, 0, Un4seen.Bass.BASSFlag.BASS_DEFAULT, null, IntPtr.Zero);
+					int handle = Un4seen.Bass.Bass.BASS_StreamCreateURL(url, 0, Un4seen.Bass.BASSFlag.BASS_STREAM_BLOCK, null, IntPtr.Zero);
 					
 					Application.Current.Dispatcher.BeginInvoke(new Action(() =>
 						{

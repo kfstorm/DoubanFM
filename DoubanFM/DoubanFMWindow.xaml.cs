@@ -189,6 +189,7 @@ namespace DoubanFM
 		{
 			InitializeComponent();
 			InitMemberVariables();
+            InitFirstTimeSettings();
             InitPlayerSettings();
 			ClearOldTempFiles();
 			ClearSetupFiles();
@@ -203,6 +204,20 @@ namespace DoubanFM
 			InitBackground();
 			InitAppCommand();
 		}
+
+        /// <summary>
+        /// Initialize default settings if it's first time.
+        /// </summary>
+	    private void InitFirstTimeSettings()
+	    {
+	        if (_player.Settings.FirstTime)
+	        {
+	            _player.Settings.BackgroundTransparency = Kfstorm.DwmHelper.DwmHelper.IsDwmSupported &&
+	                                                      Kfstorm.DwmHelper.DwmHelper.IsAeroGlassEffectEnabled
+	                ? 0.2
+	                : 0;
+	        }
+	    }
 
 		/// <summary>
 		/// 初始化播放器设置

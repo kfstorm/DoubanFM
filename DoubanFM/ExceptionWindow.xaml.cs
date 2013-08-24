@@ -143,7 +143,8 @@ namespace DoubanFM
 			sb.AppendLine("DoubanFM.exe版本：" + GetAssemblyVersion(typeof(App)));
 			sb.AppendLine("DoubanFM.Core.dll版本：" + GetAssemblyVersion(typeof(Player)));
 			sb.AppendLine("DoubanFM.Bass.dll版本：" + GetAssemblyVersion(typeof(Bass.BassEngine)));
-			sb.AppendLine("NotifyIconWpf.dll版本：" + GetAssemblyVersion(typeof(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon)));
+            sb.AppendLine("NotifyIconWpf.dll版本：" + GetAssemblyVersion(typeof(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon)));
+            sb.AppendLine("DwmHelper.dll版本：" + GetAssemblyVersion(typeof(Kfstorm.DwmHelper.DwmHelper)));
 
 			try
 			{
