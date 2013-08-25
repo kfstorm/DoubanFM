@@ -19,6 +19,7 @@ Website : http://www.kfstorm.com
             <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" Text="{x:Static resx:Resources.LanguageTextBlock}"/>
             <ComboBox x:Name="CbLanguage" Grid.Column="1"/>
         </Grid>
+        <CheckBox x:Name="CheckBoxEnableDownloadRateRestriction" Content="{x:Static resx:Resources.CheckBoxEnableDownloadRateRestriction}" IsChecked="{Binding Settings.EnableDownloadRateRestriction, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2" Click="CheckBoxEnableDownloadRateRestriction_OnClick"/>
         <CheckBox x:Name="CheckBoxAdjustVolumeWithMouseWheel" Content="{x:Static resx:Resources.CheckBoxAdjustVolumeWithMouseWheel}" IsChecked="{Binding Settings.AdjustVolumeWithMouseWheel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>
         <!--<CheckBox x:Name="CheckBoxRememberLastChannel" Content="{x:Static resx:Resources.CheckBoxRememberLastChannel}" IsChecked="{Binding Settings.RememberLastChannel, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>-->
         <CheckBox x:Name="CheckBoxIsSearchFilterEnabled" Content="{x:Static resx:Resources.CheckBoxIsSearchFilterEnabled}" IsChecked="{Binding Settings.IsSearchFilterEnabled, Mode=TwoWay, Source={StaticResource Player}}" VerticalAlignment="Center" Margin="0,2"/>

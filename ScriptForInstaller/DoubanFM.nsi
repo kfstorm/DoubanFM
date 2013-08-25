@@ -56,6 +56,7 @@ Section "MainSection" SEC01
   File "LICENSE.txt"
   File "README.txt"
   File "version.dat"
+  File "DoubanFM.exe.config"
   File "Bass.Net.dll"
   File "DwmHelper.dll"
   File "DoubanFM.Bass.dll"
@@ -149,6 +150,7 @@ Section Uninstall
 DeleteExe:
   Delete "$INSTDIR\uninst.exe"
   Delete "$INSTDIR\DoubanFM.exe"
+  Delete "$INSTDIR\DoubanFM.exe.config"
   Delete "$INSTDIR\DoubanFM.Core.dll"
   Delete "$INSTDIR\Hardcodet.Wpf.TaskbarNotification.dll"
   Delete "$INSTDIR\WPFSoundVisualizationLib.dll"

@@ -180,5 +180,10 @@ namespace DoubanFM
                 }
             }
         }
+
+	    private void CheckBoxEnableDownloadRateRestriction_OnClick(object sender, RoutedEventArgs e)
+	    {
+            Bass.BassEngine.Instance.SetDownloadRateRestriction(CheckBoxEnableDownloadRateRestriction.IsChecked == true);
+	    }
 	}
 }

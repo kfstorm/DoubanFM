@@ -819,4 +819,7 @@ Application will restart after reset.</value>
   <data name="UserExpiredMessage" xml:space="preserve">
     <value>Your login status has expired. Please login again.</value>
   </data>
+  <data name="CheckBoxEnableDownloadRateRestriction" xml:space="preserve">
+    <value>Limit download speed</value>
+  </data>
 </root>

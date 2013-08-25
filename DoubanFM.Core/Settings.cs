@@ -68,6 +68,7 @@ namespace DoubanFM.Core
 		//public static readonly DependencyProperty LastTimeLoggedOnProperty = DependencyProperty.Register("LastTimeLoggedOn", typeof(bool), typeof(Settings), new PropertyMetadata(false));
         public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceInfo?), typeof(Settings), new PropertyMetadata(null));
         public static readonly DependencyProperty CultureInfoProperty = DependencyProperty.Register("CultureInfo", typeof(CultureInfo), typeof(Settings), new PropertyMetadata(Thread.CurrentThread.CurrentCulture));
+        public static readonly DependencyProperty EnableDownloadRateRestrictionProperty = DependencyProperty.Register("EnableDownloadRateRestriction", typeof(bool), typeof(Settings));
         #endregion
 
 		#region ProxyKinds
@@ -431,6 +432,15 @@ namespace DoubanFM.Core
             set { SetValue(CultureInfoProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether download rate restriction is enabled.
+        /// </summary>
+        public bool EnableDownloadRateRestriction
+        {
+            get { return (bool)GetValue(EnableDownloadRateRestrictionProperty); }
+            set { SetValue(EnableDownloadRateRestrictionProperty, value); }
+        }
+
 		/// <summary>
 		/// 数据保存文件夹
 		/// </summary>
@@ -540,6 +550,8 @@ namespace DoubanFM.Core
 			catch { }
             try { CultureInfo = (CultureInfo)info.GetValue("CultureInfo", typeof(CultureInfo)); }
             catch { }
+            try { EnableDownloadRateRestriction = info.GetBoolean("EnableDownloadRateRestriction"); }
+            catch { }
             
 			//向下兼容
 			if (!AutoBackground && Background.A != 255)
@@ -601,6 +613,7 @@ namespace DoubanFM.Core
             //info.AddValue("LastTimeLoggedOn", LastTimeLoggedOn);
 			info.AddValue("Device", Device);
             info.AddValue("CultureInfo", CultureInfo);
+            info.AddValue("EnableDownloadRateRestriction", EnableDownloadRateRestriction);
 		}
 
 		/// <summary>

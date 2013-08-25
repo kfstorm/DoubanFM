@@ -819,4 +819,7 @@
   <data name="UserExpiredMessage" xml:space="preserve">
     <value>您的登录状态已过期，请重新登录。</value>
   </data>
+  <data name="CheckBoxEnableDownloadRateRestriction" xml:space="preserve">
+    <value>开启下载限速</value>
+  </data>
 </root>

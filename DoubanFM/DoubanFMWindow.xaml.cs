@@ -373,6 +373,7 @@ namespace DoubanFM
 			{
 				Bass.BassEngine.ExplicitInitialize(_player.Settings.Device);
 				_player.Settings.Device = Bass.BassEngine.Instance.Device;
+			    BassEngine.Instance.SetDownloadRateRestriction(_player.Settings.EnableDownloadRateRestriction);
 			}
 			catch (Bass.BassInitializationFailureException ex)
 			{

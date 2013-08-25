@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.IO;
 using System.Windows.Threading;
@@ -28,12 +30,14 @@ namespace DoubanFM.Bass
 		/// 用于更新播放进度的计时器
 		/// </summary>
 		private readonly DispatcherTimer positionTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
-		private readonly int maxFFT = (int)(Un4seen.Bass.BASSData.BASS_DATA_AVAILABLE | Un4seen.Bass.BASSData.BASS_DATA_FFT4096);
-		/// <summary>
+        private readonly int maxFFT = (int)Enum.Parse(typeof(Un4seen.Bass.BASSData), ConfigurationManager.AppSettings["Bass.MaxFFT"]);
+        private readonly int getFFTFrequencyIndexLength = int.Parse(ConfigurationManager.AppSettings["Bass.GetFFTFrequencyIndexLength"]);
+        /// <summary>
 		/// 当播放结束时调用
 		/// </summary>
 		private readonly Un4seen.Bass.SYNCPROC endTrackSyncProc;
-		private int sampleFrequency = 44100;
+
+	    private int sampleFrequency = int.Parse(ConfigurationManager.AppSettings["Bass.SampleFrequency"]);
 		/// <summary>
 		/// 当前流的句柄
 		/// </summary>
@@ -99,13 +103,14 @@ namespace DoubanFM.Bass
 		/// </summary>
 		private bool isMuted;
 		/// <summary>
-		/// 代理服务器设置的非托管资源句柄
-		/// </summary>
-		private IntPtr proxyHandle = IntPtr.Zero;
-		/// <summary>
 		/// 保存正在打开的文件的地址，当短时间内多次打开网络文件时，这个字段保存最后一次打开的文件，可以使其他打开文件的操作失效
 		/// </summary>
 		private string openningFile = null;
+
+	    private readonly Un4seen.Bass.BASSInit initFlags = (Un4seen.Bass.BASSInit) Enum.Parse(typeof (Un4seen.Bass.BASSInit), ConfigurationManager.AppSettings["Bass.InitFlags"]);
+
+        private static readonly Dictionary<string, IntPtr> stringHandles = new Dictionary<string, IntPtr>();
+        private Un4seen.Bass.BASSFlag openUrlConfig = (Un4seen.Bass.BASSFlag)Enum.Parse(typeof(Un4seen.Bass.BASSFlag), ConfigurationManager.AppSettings["Bass.OpenUrlConfig"]);
 		#endregion
 
 		#region Constructor
@@ -115,11 +120,9 @@ namespace DoubanFM.Bass
 			Un4seen.Bass.BassNet.Registration("yk000123@sina.com", "2X34201017282922");
 
 			//判断当前系统是32位系统还是64位系统，并加载对应版本的bass.dll
-			string targetPath;
-			if (Un4seen.Bass.Utils.Is64Bit)
-				targetPath = Path.Combine(Path.GetDirectoryName(typeof(BassEngine).Assembly.GetModules()[0].FullyQualifiedName), "x64");
-			else
-				targetPath = Path.Combine(Path.GetDirectoryName(typeof(BassEngine).Assembly.GetModules()[0].FullyQualifiedName), "x86");
+		    string exeFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetModules()[0].FullyQualifiedName);
+		    string libraryPathSetting = Un4seen.Bass.Utils.Is64Bit ? "Bass.LibraryPathX64" : "Bass.LibraryPathX86";
+		    string targetPath = Path.Combine(exeFolder, ConfigurationManager.AppSettings[libraryPathSetting]);
 
 			// now load all libs manually
 			Un4seen.Bass.Bass.LoadMe(targetPath);
@@ -128,7 +131,7 @@ namespace DoubanFM.Bass
 			//loadedPlugIns = Bass.BASS_PluginLoadDirectory(targetPath);
 			//...
 
-			Un4seen.Bass.Bass.BASS_SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_DEV_DEFAULT, true);
+            SetConfigs(ConfigurationManager.AppSettings["Bass.SetConfigOnInitialization"]);
 		}
 
 		private BassEngine(DeviceInfo? deviceInfo = null)
@@ -175,9 +178,12 @@ namespace DoubanFM.Bass
 				//foreach (int plugin in LoadedBassPlugIns.Keys)
 				//    Bass.BASS_PluginFree(plugin);
 
-				if (proxyHandle != IntPtr.Zero)
-					Marshal.FreeHGlobal(proxyHandle);
-				proxyHandle = IntPtr.Zero;
+			    foreach (var handle in stringHandles.Values)
+			    {
+                    if (handle != IntPtr.Zero)
+                        Marshal.FreeHGlobal(handle);
+                }
+                stringHandles.Clear();
 
 				_disposed = true;
 			}
@@ -254,7 +260,7 @@ namespace DoubanFM.Bass
 					{
 						handle = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
 					}
-					if (!Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, handle))
+                    if (!Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, initFlags, handle))
 					{
 						throw new Exception(Un4seen.Bass.Bass.BASS_ErrorGetCode().ToString());
 					}
@@ -361,7 +367,8 @@ namespace DoubanFM.Bass
 			Stop();
 			pendingOperation = PendingOperation.None;
 
-            int handle = Un4seen.Bass.Bass.BASS_StreamCreateFile(filename, 0, 0, Un4seen.Bass.BASSFlag.BASS_DEFAULT);
+		    var flag = (Un4seen.Bass.BASSFlag) Enum.Parse(typeof (Un4seen.Bass.BASSFlag), ConfigurationManager.AppSettings["Bass.OpenFileConfig"]);
+            int handle = Un4seen.Bass.Bass.BASS_StreamCreateFile(filename, 0, 0, flag);
 
 			if (handle != 0)
 			{
@@ -378,7 +385,7 @@ namespace DoubanFM.Bass
 					 IntPtr.Zero);
 
 				if (syncHandle == 0)
-					throw new ArgumentException("Error establishing End Sync on file stream.", "path");
+                    throw new ArgumentException("Error establishing End Sync on file stream.", "filename");
 
 				CanPlay = true;
 				RaiseOpenSucceededEvent();
@@ -417,7 +424,7 @@ namespace DoubanFM.Bass
 
 			onlineFileWorker = new Thread(new ThreadStart(() =>
 				{
-					int handle = Un4seen.Bass.Bass.BASS_StreamCreateURL(url, 0, Un4seen.Bass.BASSFlag.BASS_STREAM_BLOCK, null, IntPtr.Zero);
+                    int handle = Un4seen.Bass.Bass.BASS_StreamCreateURL(url, 0, openUrlConfig, null, IntPtr.Zero);
 					
 					Application.Current.Dispatcher.BeginInvoke(new Action(() =>
 						{
@@ -438,7 +445,7 @@ namespace DoubanFM.Bass
 										 IntPtr.Zero);
 
 									if (syncHandle == 0)
-										throw new ArgumentException("Error establishing End Sync on file stream.", "path");
+										throw new ArgumentException("Error establishing End Sync on file stream.", "url");
 
 									CanPlay = true;
 									RaiseOpenSucceededEvent();
@@ -487,13 +494,6 @@ namespace DoubanFM.Bass
 		/// <param name="password">密码</param>
 		public void SetProxy(string host, int port, string username = null, string password = null)
 		{
-			//Debug.WriteLine("已调用BassEngine.SetProxy()");
-			if (proxyHandle != IntPtr.Zero)
-			{
-				Marshal.FreeHGlobal(proxyHandle);
-				proxyHandle = IntPtr.Zero;
-			}
-
 			//格式：user:pass@server:port
 			StringBuilder sb = new StringBuilder();
 
@@ -521,14 +521,9 @@ namespace DoubanFM.Bass
 
 			string proxyString = sb.ToString();
 
-			//将String转换为字符数组
-			proxyHandle = Marshal.StringToHGlobalAnsi(proxyString);
-
-			//设置代理服务器
-			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
-			if (!result)
+			if (!SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyString))
 			{
-				throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+                throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
 		}
 
@@ -537,21 +532,11 @@ namespace DoubanFM.Bass
 		/// </summary>
 		public void UseDefaultProxy()
 		{
-			//Debug.WriteLine("已调用BassEngine.UseDefaultProxy()");
-			//释放代理服务器设置的非托管资源句柄
-			if (proxyHandle != IntPtr.Zero)
-			{
-				Marshal.FreeHGlobal(proxyHandle);
-				proxyHandle = IntPtr.Zero;
-			}
-			
 			//用长度为0的字符串来设置
-			proxyHandle = Marshal.StringToHGlobalAnsi(string.Empty);
-			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, proxyHandle);
-			if (!result)
-			{
-				throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
-			}
+            if (!SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, string.Empty))
+            {
+                throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
+            }
 		}
 
 		/// <summary>
@@ -559,22 +544,31 @@ namespace DoubanFM.Bass
 		/// </summary>
 		public void DontUseProxy()
 		{
-			//Debug.WriteLine("已调用BassEngine.DontUseProxy()");
-			//释放代理服务器设置的非托管资源句柄
-			if (proxyHandle != IntPtr.Zero)
-			{
-				Marshal.FreeHGlobal(proxyHandle);
-				proxyHandle = IntPtr.Zero;
-			}
-			//用空指针来设置
-			bool result = Un4seen.Bass.Bass.BASS_SetConfigPtr(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, IntPtr.Zero);
+            bool result = SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_PROXY, null);
 			if (!result)
 			{
 				//bass.dll中BASS_SetConfigPtr函数返回的其实是代理字符串指针，所以设置为NULL时会返回NULL，被Bass.Net封装后就永远返回false。
 				//throw new Exception("设置代理失败：" + Un4seen.Bass.Bass.BASS_ErrorGetCode());
 			}
 		}
-		#endregion
+
+	    /// <summary>
+	    /// Sets the download rate restriction.
+	    /// </summary>
+	    /// <param name="isEnabled">if set to <c>true</c> the download rate restriction is enabled.</param>
+	    public void SetDownloadRateRestriction(bool isEnabled)
+	    {
+	        if (isEnabled)
+	        {
+	            openUrlConfig |= Un4seen.Bass.BASSFlag.BASS_STREAM_RESTRATE;
+	        }
+	        else
+	        {
+	            openUrlConfig &= ~Un4seen.Bass.BASSFlag.BASS_STREAM_RESTRATE;
+	        }
+	    }
+
+	    #endregion
 
 		#region Event Handleres
 		/// <summary>
@@ -669,7 +663,7 @@ namespace DoubanFM.Bass
 		/// </summary>
 		private void Initialize(DeviceInfo? device = null)
 		{
-			positionTimer.Interval = TimeSpan.FromMilliseconds(50);
+            positionTimer.Interval = TimeSpan.FromSeconds(double.Parse(ConfigurationManager.AppSettings["Bass.ChannelPositionRefreshRate"]));
 			positionTimer.Tick += positionTimer_Tick;
 
 			IsPlaying = false;
@@ -681,13 +675,13 @@ namespace DoubanFM.Bass
 			}
 
 			int deviceNO = FindDevice(device, true);
-			if (!Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, handle))
+            if (!Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, initFlags, handle))
 			{
 				var error = Un4seen.Bass.Bass.BASS_ErrorGetCode();
 				int count = Un4seen.Bass.Bass.BASS_GetDeviceCount();
 				for (deviceNO = -1; deviceNO < count; ++deviceNO)
 				{
-					if (deviceNO != 0 && Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, Un4seen.Bass.BASSInit.BASS_DEVICE_DEFAULT, handle))
+                    if (deviceNO != 0 && Un4seen.Bass.Bass.BASS_Init(deviceNO, sampleFrequency, initFlags, handle))
 					{
 						break;
 					}
@@ -707,8 +701,6 @@ namespace DoubanFM.Bass
 				var info = Un4seen.Bass.Bass.BASS_GetDeviceInfo(Un4seen.Bass.Bass.BASS_GetDevice());
 				Device = new DeviceInfo { Driver = info.driver, Name = info.name, ID = info.id };
 			}
-
-			Un4seen.Bass.Bass.BASS_SetConfig(Un4seen.Bass.BASSConfig.BASS_CONFIG_NET_TIMEOUT, 15000);
 		}
 
 		/// <summary>
@@ -763,6 +755,93 @@ namespace DoubanFM.Bass
 				Un4seen.Bass.Bass.BASS_ChannelSetAttribute(ActiveStreamHandle, Un4seen.Bass.BASSAttribute.BASS_ATTRIB_VOL, realVolume);
 			}
 		}
+
+        /// <summary>
+        /// Set a config with string value type.
+        /// </summary>
+        /// <param name="name">config name</param>
+        /// <param name="value">string value</param>
+        /// <returns>success or not</returns>
+	    private static bool SetConfig(Un4seen.Bass.BASSConfig name, string value)
+	    {
+	        string nameString = name.ToString();
+	        if (stringHandles.ContainsKey(nameString) && stringHandles[nameString] != IntPtr.Zero)
+	        {
+	            Marshal.FreeHGlobal(stringHandles[nameString]);
+	            stringHandles.Remove(nameString);
+	        }
+
+            var handle = value == null ? IntPtr.Zero : Marshal.StringToHGlobalAnsi(value);
+            if (Un4seen.Bass.Bass.BASS_SetConfigPtr(name, handle))
+            {
+                if (handle != IntPtr.Zero)
+                {
+                    stringHandles[nameString] = handle;
+                }
+                return true;
+	        }
+            if (handle != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(handle);
+            }
+            return false;
+	    }
+
+        /// <summary>
+        /// Set configs presented as a string.
+        /// </summary>
+        /// <param name="configs">The configs.</param>
+        /// <exception cref="System.IO.InvalidDataException">
+        /// </exception>
+        /// <exception cref="System.Exception">
+        /// </exception>
+	    private static void SetConfigs(string configs)
+	    {
+            foreach (var config in configs.Split('|'))
+            {
+                if (config == string.Empty) continue;
+
+                var spaceIndex = config.IndexOf(' ');
+                if (spaceIndex == -1)
+                {
+                    throw new InvalidDataException(string.Format("Config 'Bass.SetConfigOnInitialization' is invalid. Invalid config string: {0}", config));
+                }
+                var configNameString = config.Substring(0, spaceIndex);
+                Un4seen.Bass.BASSConfig configName;
+                if (!Un4seen.Bass.BASSConfig.TryParse(configNameString, out configName)
+                    || !Enum.IsDefined(typeof(Un4seen.Bass.BASSConfig), configName))
+                {
+                    throw new InvalidDataException(string.Format("Config 'Bass.SetConfigOnInitialization' is invalid. Invalid config name: {0}", configNameString));
+                }
+
+                var configValueString = config.Substring(spaceIndex + 1);
+                int configValueInt;
+                if (int.TryParse(configValueString, out configValueInt))
+                {
+                    if (!Un4seen.Bass.Bass.BASS_SetConfig(configName, configValueInt))
+                    {
+                        throw new Exception(string.Format("Set config {0} with value {1} failed. Error code {2}",
+                            configName, configValueInt, Un4seen.Bass.Bass.BASS_ErrorGetCode()));
+                    }
+                    continue;
+                }
+                bool configValueBool;
+                if (bool.TryParse(configValueString, out configValueBool))
+                {
+                    if (!Un4seen.Bass.Bass.BASS_SetConfig(configName, configValueBool))
+                    {
+                        throw new Exception(string.Format("Set config {0} with value {1} failed. Error code {2}",
+                            configName, configValueBool, Un4seen.Bass.Bass.BASS_ErrorGetCode()));
+                    }
+                    continue;
+                }
+                if (!SetConfig(configName, configValueString))
+                {
+                    throw new Exception(string.Format("Set config {0} with value {1} failed. Error code {2}",
+                            configName, configValueString, Un4seen.Bass.Bass.BASS_ErrorGetCode()));
+                }
+            }
+	    }
 		#endregion
 
 		#region Callbacks
@@ -995,7 +1074,7 @@ namespace DoubanFM.Bass
 
 		public int GetFFTFrequencyIndex(int frequency)
 		{
-			return Un4seen.Bass.Utils.FFTFrequency2Index(frequency, 4096, sampleFrequency);
+            return Un4seen.Bass.Utils.FFTFrequency2Index(frequency, getFFTFrequencyIndexLength, sampleFrequency);
 		}
 		#endregion
 	}
