@@ -247,9 +247,9 @@ namespace DoubanFM
             {
                 return
                     Math.Sqrt((Math.Pow(c1.A - c2.A, 2) + Math.Pow(c1.R - c2.R, 2) + Math.Pow(c1.G - c2.G, 2) +
-                               Math.Pow(c1.B - c2.B, 2))/4);
+                               Math.Pow(c1.B - c2.B, 2))/4/255/255);
             }
-            return Math.Sqrt((Math.Pow(c1.R - c2.R, 2) + Math.Pow(c1.G - c2.G, 2) + Math.Pow(c1.B - c2.B, 2))/3);
+            return Math.Sqrt((Math.Pow(c1.R - c2.R, 2) + Math.Pow(c1.G - c2.G, 2) + Math.Pow(c1.B - c2.B, 2))/3/255/255);
         }
 
         /// <summary>
