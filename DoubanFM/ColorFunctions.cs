@@ -156,15 +156,15 @@ namespace DoubanFM
                     if (!forceDisableColorWeight && EnableColorWeight)
                     {
                         var color = Color.FromRgb(r, g, b);
-                        var hslolor = new HslColor(color);
-                        weight = (1 - Math.Abs(1 - 2*hslolor.Lightness))*hslolor.Saturation;
+                        var hslColor = new HslColor(color);
+                        weight = (1 - Math.Abs(1 - 2*hslColor.Lightness))*hslColor.Saturation;
                         if (weight < MinWeight)
                         {
                             weight = 0;
                         }
                         if (removeFaceColor)
                         {
-                            var difference = Difference(color, FaceColor, false);
+                            var difference = Math.Abs(new HslColor(FaceColor).Hue - hslColor.Hue)/360;
                             if (difference <= ZeroWeightFaceColorDifference)
                             {
                                 weight = 0;
