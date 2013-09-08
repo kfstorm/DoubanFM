@@ -4,6 +4,7 @@
  * Website : http://www.kfstorm.com
  * */
 
+using System.Configuration;
 using DoubanFM.Bass;
 using DoubanFM.Core;
 using DoubanFM.NotifyIcon;
@@ -1342,7 +1343,13 @@ namespace DoubanFM
 			Debug.Indent();
 			Debug.WriteLine(_player.CurrentSong.ToString());
 			Debug.Unindent();
-			ChangeCover();
+		    var pictureUrl = ConfigurationManager.AppSettings["SpecifyAlbumPictureUrl"];
+		    if (!string.IsNullOrWhiteSpace(pictureUrl))
+		    {
+                _player.CurrentSong.Picture = pictureUrl;
+		    }
+
+		    ChangeCover();
 			SetLyrics(null);
 			if (_player.Settings.ShowLyrics) DownloadLyrics();
 

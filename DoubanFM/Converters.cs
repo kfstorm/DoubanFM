@@ -96,7 +96,7 @@ namespace DoubanFM
 		{
 			if (value is SolidColorBrush)
 			{
-				SolidColorBrush brush = new SolidColorBrush(ColorFunctions.ReviseBrighter(new HSLColor(((SolidColorBrush)value).Color), ColorFunctions.ProgressBarReviseParameter).ToRGB());
+				SolidColorBrush brush = new SolidColorBrush(ColorFunctions.ReviseBrighter(new HslColor(((SolidColorBrush)value).Color), ColorFunctions.ProgressBarReviseParameter).ToRgb());
 				brush.Opacity = ((SolidColorBrush)value).Opacity;
 				if (brush.CanFreeze) brush.Freeze();
 				return brush;
@@ -203,10 +203,10 @@ namespace DoubanFM
 		{
 			if (value is SolidColorBrush)
 			{
-				HSLColor color = new HSLColor(((SolidColorBrush)value).Color);
+				HslColor color = new HslColor(((SolidColorBrush)value).Color);
 				color.Alpha = 1.0;
 				if (color.Lightness < 0.7) color.Lightness = 0.7;
-				SolidColorBrush brush = new SolidColorBrush(color.ToRGB());
+				SolidColorBrush brush = new SolidColorBrush(color.ToRgb());
 				if (brush.CanFreeze) brush.Freeze();
 				return brush;
 			}
