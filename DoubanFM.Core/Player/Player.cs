@@ -528,7 +528,7 @@ namespace DoubanFM.Core
 				Channel firstChannel = Settings.LastChannel;
 				if (firstChannel.IsPersonal && UserAssistant.IsLoggedOn ||firstChannel.IsSpecial)
 					selected = true;
-				else if (firstChannel.IsDj)
+				//else if (firstChannel.IsDj)
 				{
 					foreach (Channel channel in ChannelInfo.Dj)
 						if (channel == firstChannel)
@@ -536,7 +536,7 @@ namespace DoubanFM.Core
 							selected = true;
 						}
 				}
-				else
+				//else
 				{
 					foreach (Channel channel in ChannelInfo.Public)
 						if (channel == firstChannel)
