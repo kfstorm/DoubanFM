@@ -12,6 +12,7 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Diagnostics;
+using System.Configuration;
 
 namespace DoubanFM.Core
 {
@@ -466,7 +467,7 @@ namespace DoubanFM.Core
                     }
 
                     //满足条件时采用本地频道列表
-                    var distance = TimeSpan.FromHours(6);
+                    var distance = TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Player.ChannelInfoExpireSeconds"]));
                     if (localChannelInfo != null && DateTime.Now - localChannelInfoTime < distance)
                     {
                         return localChannelInfo;
@@ -480,10 +481,11 @@ namespace DoubanFM.Core
 
             //尝试获取服务器频道列表
             int tryCount = 0;
+            int tryCountMax = int.Parse(ConfigurationManager.AppSettings["Player.ChannelInfoRetryCount"]);
             while (true)
             {
                 //获取服务器频道列表多次失败后采用本地频道列表
-                if (tryCount == 5 && localChannelInfo != null) return localChannelInfo;
+                if (tryCount == tryCountMax && localChannelInfo != null) return localChannelInfo;
 
                 ++tryCount;
 
