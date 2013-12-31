@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Net;
 using System.IO;
@@ -50,11 +52,15 @@ namespace DoubanFM.Core
 		/// 编码
 		/// </summary>
 		public Encoding Encoding;
-		/// <summary>
-		/// 是否抛出异常
-		/// </summary>
-		public bool ThrowException;
-		/// <summary>
+        /// <summary>
+        /// 是否抛出异常
+        /// </summary>
+        public bool ThrowException;
+        /// <summary>
+        /// 是否使用Gzip编码
+        /// </summary>
+        public bool UseGzip = true;
+        /// <summary>
 		/// 数据保存文件夹
 		/// </summary>
 		public static readonly string DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"K.F.Storm\豆瓣电台");
@@ -110,11 +116,24 @@ namespace DoubanFM.Core
 				request.Referer = referer;
 				request.UserAgent = UserAgent;
 				request.ServicePoint.Expect100Continue = false;
-				using (Stream requestStream = request.GetRequestStream())
+                if (UseGzip)
+                {
+                    request.Headers["Accept-Encoding"] = "gzip, deflate";
+                }
+				using (var requestStream = request.GetRequestStream())
 					requestStream.Write(content, 0, content.Length);
-				using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
-				using (StreamReader sr = new StreamReader(responce.GetResponseStream(), Encoding))
-					file = sr.ReadToEnd();
+                using (var response = request.GetResponse() as HttpWebResponse)
+                {
+                    var stream = response.GetResponseStream();
+                    if (response.ContentEncoding.ToLower().Contains("gzip"))
+                    {
+                        stream = new GZipStream(stream, CompressionMode.Decompress);
+                    }
+                    using (var sr = new StreamReader(stream, Encoding))
+                    {
+                        file = sr.ReadToEnd();
+                    }
+                }
 			}
 			catch (Exception ex)
 			{
@@ -169,9 +188,22 @@ namespace DoubanFM.Core
 				request.Method = "GET";
 				request.Referer = referer;
 				request.UserAgent = UserAgent;
-				using (HttpWebResponse responce = request.GetResponse() as HttpWebResponse)
-				using (StreamReader sr = new StreamReader(responce.GetResponseStream(), Encoding))
-					file = sr.ReadToEnd();
+			    if (UseGzip)
+			    {
+			        request.Headers["Accept-Encoding"] = "gzip, deflate";
+			    }
+			    using (var response = request.GetResponse() as HttpWebResponse)
+			    {
+			        var stream = response.GetResponseStream();
+                    if (response.ContentEncoding.ToLower().Contains("gzip"))
+                    {
+                        stream = new GZipStream(stream, CompressionMode.Decompress);
+                    }
+			        using (var sr = new StreamReader(stream, Encoding))
+			        {
+			            file = sr.ReadToEnd();
+			        }
+			    }
 			}
 			catch (Exception ex)
 			{

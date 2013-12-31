@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.IO;
 using System.Threading;
@@ -490,7 +491,9 @@ namespace DoubanFM.Core
                 ++tryCount;
 
                 Debug.WriteLine(DateTime.Now + " 获取频道列表……");
-                var file = new ConnectionBase().Get("http://doubanfmcloud-channelinfo.stor.sinaapp.com/channelinfo");
+                var file = new ConnectionBase {UseGzip = true}.Get(
+                    string.Format(ConfigurationManager.AppSettings["Player.ChannelInfoUrlFormat"],
+                        typeof (Player).Assembly.GetName().Version));
                 Debug.WriteLine(DateTime.Now + " 获取频道列表完成");
                 if (string.IsNullOrEmpty(file))
                 {
