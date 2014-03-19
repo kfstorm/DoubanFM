@@ -111,6 +111,7 @@ namespace DoubanFM.Bass
 
         private static readonly Dictionary<string, IntPtr> stringHandles = new Dictionary<string, IntPtr>();
         private Un4seen.Bass.BASSFlag openUrlConfig = (Un4seen.Bass.BASSFlag)Enum.Parse(typeof(Un4seen.Bass.BASSFlag), ConfigurationManager.AppSettings["Bass.OpenUrlConfig"]);
+        private static readonly List<int> pluginHandles;
 		#endregion
 
 		#region Constructor
@@ -122,10 +123,26 @@ namespace DoubanFM.Bass
 			//判断当前系统是32位系统还是64位系统，并加载对应版本的bass.dll
 		    string exeFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetModules()[0].FullyQualifiedName);
 		    string libraryPathSetting = Un4seen.Bass.Utils.Is64Bit ? "Bass.LibraryPathX64" : "Bass.LibraryPathX86";
-		    string targetPath = Path.Combine(exeFolder, ConfigurationManager.AppSettings[libraryPathSetting]);
+            string bassDllBasePath = Path.Combine(exeFolder, ConfigurationManager.AppSettings[libraryPathSetting]);
 
 			// now load all libs manually
-			Un4seen.Bass.Bass.LoadMe(targetPath);
+            Un4seen.Bass.Bass.LoadMe(bassDllBasePath);
+		    var loadedPlugins =
+		        Un4seen.Bass.Bass.BASS_PluginLoadDirectory(
+		            string.Format(ConfigurationManager.AppSettings["Bass.PluginPathFormat"], bassDllBasePath));
+		    if (loadedPlugins != null)
+		    {
+		        foreach (var item in loadedPlugins)
+		        {
+		            Debug.WriteLine(string.Format("Plugin loaded: {0}", item.Value));
+		        }
+                pluginHandles = loadedPlugins.Keys.ToList();
+		    }
+		    else
+		    {
+		        pluginHandles = new List<int>();
+		    }
+		    
 			//BassMix.LoadMe(targetPath);
 			//...
 			//loadedPlugIns = Bass.BASS_PluginLoadDirectory(targetPath);
@@ -171,7 +188,11 @@ namespace DoubanFM.Bass
 					}
 				}
 				// at the end of your application call this!
-				Un4seen.Bass.Bass.BASS_Free();
+			    foreach (var handle in pluginHandles)
+			    {
+			        Un4seen.Bass.Bass.BASS_PluginFree(handle);
+			    }
+                Un4seen.Bass.Bass.BASS_Free();
 				Un4seen.Bass.Bass.FreeMe();
 				//BassMix.FreeMe(targetPath);
 				//...

@@ -4,7 +4,7 @@ set version=%1
 if "%1" == "" echo ±ÿ–Î ‰»Î∞Ê±æ∫≈£°
 if "%1" == "" goto :eof
 cd /d %~dp0
-@call "%VS110COMNTOOLS%\..\..\VC\vcvarsall.bat" x86
+@call "%VS120COMNTOOLS%\..\..\VC\vcvarsall.bat" x86
 @set "PATH=%WindowsSdkDir%bin;%PATH%"
 set projectdir=..\DoubanFM\bin\Release
 set imagedir=Images
