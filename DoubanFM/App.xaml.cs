@@ -193,7 +193,13 @@ namespace DoubanFM
 			FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.Name)));
 		}
 
-        /// <summary>
+	    protected override void OnSessionEnding(SessionEndingCancelEventArgs e)
+	    {
+            SaveSettings();
+	        base.OnSessionEnding(e);
+	    }
+
+	    /// <summary>
 		/// 获取时间的一个精确表示
 		/// </summary>
 		/// <param name="time">时间</param>
