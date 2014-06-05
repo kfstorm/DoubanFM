@@ -2300,7 +2300,7 @@ namespace DoubanFM
 
 		private void BtnDonate_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			Core.UrlHelper.OpenLink("http://me.alipay.com/kfstorm");
+            Core.UrlHelper.OpenLink("http://www.kfstorm.com/blog/%e6%8d%90%e5%8a%a9/");
 		}
 
 		private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
