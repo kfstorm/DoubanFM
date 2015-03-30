@@ -194,3 +194,10 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# NSIS output
+/ScriptForInstaller/Output/
+
+# Bass DLL
+!/DoubanFM.Bass/x86/
+!/DoubanFM.Bass/x64/
