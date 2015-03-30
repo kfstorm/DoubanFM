@@ -1,0 +1,172 @@
+﻿<!--
+Author : K.F.Storm
+Email : yk000123 at sina.com
+Website : http://www.kfstorm.com	
+-->
+<UserControl x:Class="DoubanFM.NotifyIcon.PopupControlPanel"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"
+			 xmlns:local="clr-namespace:DoubanFM"
+             xmlns:resx="clr-namespace:DoubanFM.Resources"
+			 mc:Ignorable="d" 
+			 TextOptions.TextFormattingMode="Display"
+			 Foreground="White"
+			 FontFamily="{Binding MainWindow.FontFamily, Source={x:Static Application.Current}}">
+    <UserControl.Resources>
+        <Storyboard x:Key="ShowCoverSmooth">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Cover">
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="HideCover">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Cover">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="OnVolumeControlMouseEnter">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="BdVolumeControl">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CircleEase/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="OnVolumeControlMouseLeave">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="BdVolumeControl">
+                <EasingThicknessKeyFrame KeyTime="0:0:1" Value="0,0,-65,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="BdVolumeControl">
+            <BeginStoryboard x:Name="OnVolumeControlMouseEnter_BeginStoryboard" Storyboard="{StaticResource OnVolumeControlMouseEnter}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Mouse.MouseLeave" SourceName="BdVolumeControl">
+            <BeginStoryboard x:Name="OnVolumeControlMouseLeave_BeginStoryboard" Storyboard="{StaticResource OnVolumeControlMouseLeave}"/>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <Grid>
+        <Border x:Name="ShadowBorder" Margin="10" Background="{Binding MainWindow.Background, Source={x:Static Application.Current}}">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="10"/>
+            </Border.Effect>
+        </Border>
+        <Grid Margin="{Binding Margin, ElementName=ShadowBorder}" Width="300">
+            <Grid x:Name="LayoutRoot" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid x:Name="SongPanel" Height="84" Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Width="{Binding ActualHeight, ElementName=SongPanel}" Height="{Binding Width}" Margin="0,0,10,0">
+                        <Image Source="/DoubanFM;component/Images/DoubanFM_NoCover.png" Stretch="UniformToFill"/>
+                        <Image x:Name="Cover" Source="{Binding CurrentSong.Picture, Source={StaticResource Player}}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0"/>
+                    </Grid>
+                    <Grid x:Name="SongInfo" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding CurrentChannel, Source={StaticResource Player}, TargetNullValue={x:Static resx:Resources.WindowTitle}}" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Row="1" FontSize="20" Text="{Binding CurrentSong.Title, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" FontSize="14" Text="{Binding CurrentSong.Artist, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Row="3" FontSize="14" Text="{Binding CurrentSong.Album, Source={StaticResource Player}}" TextTrimming="CharacterEllipsis"/>
+                    </Grid>
+                    <Button x:Name="ButtonExit" Grid.Column="2" Width="20" Height="20" Margin="2,0,0,0" VerticalAlignment="Top" Click="ButtonExit_Click" Style="{DynamicResource ExitStyle}"/>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="32"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" HorizontalAlignment="Right" ClipToBounds="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid x:Name="SharePanel">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.Triggers>
+                                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="1" EasingFunction="{StaticResource Smooth}" Duration="0:0:0.5"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Shares" Storyboard.TargetProperty="Opacity" To="0" EasingFunction="{StaticResource Smooth}" Duration="0:0:1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Grid.Triggers>
+                            <Viewbox StretchDirection="DownOnly" HorizontalAlignment="Right">
+                                <StackPanel x:Name="Shares" Height="24" Opacity="0" Orientation="Horizontal" ButtonBase.Click="ShareButton_Click">
+                                    <Button Style="{DynamicResource ShareDoubanStyle}" Tag="{x:Static core:Share+Sites.Douban}"/>
+                                    <Button Style="{DynamicResource ShareWeiboStyle}" Tag="{x:Static core:Share+Sites.Weibo}"/>
+                                    <Button Style="{DynamicResource ShareMsnStyle}" Tag="{x:Static core:Share+Sites.Msn}"/>
+                                    <Button Style="{DynamicResource ShareKaixinStyle}" Tag="{x:Static core:Share+Sites.Kaixin}"/>
+                                    <Button Style="{DynamicResource ShareRenenStyle}" Tag="{x:Static core:Share+Sites.Renren}"/>
+                                    <Button Style="{StaticResource ShareQzoneStyle}" Tag="{x:Static core:Share+Sites.Qzone}"/>
+                                    <Button Style="{DynamicResource ShareTencentWeiboStyle}" Tag="{x:Static core:Share+Sites.TencentWeibo}"/>
+                                    <Button Style="{DynamicResource ShareFanfouStyle}" Tag="{x:Static core:Share+Sites.Fanfou}"/>
+                                    <Button Style="{DynamicResource ShareFacebookStyle}" Tag="{x:Static core:Share+Sites.Facebook}"/>
+                                    <Button Style="{DynamicResource ShareTwitterStyle}" Tag="{x:Static core:Share+Sites.Twitter}"/>
+                                </StackPanel>
+                            </Viewbox>
+                            <Button x:Name="BtnCopyUrl" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="{x:Static resx:Resources.CopyUrlButton}" Click="BtnCopyUrl_Click" Visibility="{Binding MainWindow.ShareSetting.EnableOneKeyShare, Source={x:Static Application.Current}, Converter={StaticResource BoolReverseToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+                            <Button x:Name="BtnOneKeyShare" Grid.Column="1" Style="{StaticResource ShareStyle}" ToolTip="{x:Static resx:Resources.ShareKeyButton}" Click="BtnOneKeyShare_Click" Visibility="{Binding MainWindow.ShareSetting.EnableOneKeyShare, Source={x:Static Application.Current}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+                        </Grid>
+                        <Button x:Name="BtnDownloadSearch" Grid.Column="1" Style="{StaticResource SearchStyle}" ToolTip="{x:Static resx:Resources.DownloadSearchButton}" Click="BtnDownloadSearch_Click"/>
+                        <CheckBox x:Name="CheckBoxShowLyrics" Grid.Column="2" IsChecked="{Binding Settings.ShowLyrics, Source={StaticResource Player}}" Checked="CheckBoxShowLyrics_Checked" Unchecked="CheckBoxShowLyrics_Unchecked" Style="{DynamicResource ShowLyricsStyle}"/>
+                        <Border x:Name="BdVolumeControl" Grid.Column="3" Background="Transparent" Margin="0,0,-65,0">
+                            <Viewbox StretchDirection="DownOnly">
+                                <local:VolumeControl x:Name="VolumeControl" IsMuted="{Binding Settings.IsMuted, Mode=TwoWay, Source={StaticResource Player}}" Volume="{Binding Settings.Volume, Mode=TwoWay, Source={StaticResource Player}}" Width="150"/>
+                            </Viewbox>
+                        </Border>
+                    </Grid>
+                    <Viewbox Grid.Row="2">
+                        <Grid HorizontalAlignment="Center" Height="50" VerticalAlignment="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="38" />
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="38" />
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="32" />
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="38"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Grid.Column="0" x:Name="CheckBoxLike" Style="{DynamicResource LikeStyle}" IsChecked="{Binding Path=IsLiked, Source={StaticResource Player}}" IsEnabled="{Binding Source={StaticResource Player}, Path=IsLikedEnabled}" />
+                            <Button Grid.Column="2" x:Name="ButtonNever" Style="{DynamicResource NeverStyle}" Click="ButtonNever_Click" IsEnabled="{Binding Source={StaticResource Player}, Path=IsNeverEnabled}" />
+                            <CheckBox Grid.Column="4" x:Name="CheckBoxPause" Style="{DynamicResource PauseStyle}" IsChecked="{Binding Path=IsPlaying, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" />
+                            <Button Grid.Column="6" x:Name="ButtonNext" Click="ButtonNext_Click" Style="{DynamicResource NextStyle}"/>
+                        </Grid>
+                    </Viewbox>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,82 @@
+﻿<!--
+Author : K.F.Storm
+Email : yk000123 at sina.com
+Website : http://www.kfstorm.com	
+-->
+<local:ChildWindowBase
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:DoubanFM"
+    xmlns:resx="clr-namespace:DoubanFM.Resources"
+	mc:Ignorable="d" x:Class="DoubanFM.HotKeySettingWindow"
+	x:Name="window"
+	Title="{x:Static resx:Resources.HotKeySettingsButton}" Background="#FF852929">
+	<Window.Resources>
+		<Style TargetType="{x:Type local:HotKeySettingControl}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="0,2"/>
+		</Style>
+        <Style x:Key="HotKeyHintStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0,2"/>
+        </Style>
+	</Window.Resources>
+    <StackPanel Margin="10" Width="300" >
+        <Grid x:Name="HotKeysGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{x:Static resx:Resources.HotKeySettingWindowLikeHotkeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Column="1" Command="Like"/>
+            <TextBlock Grid.Row="1" Text="{x:Static resx:Resources.HotKeySettingWindowDontPlayHotkeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="1" Grid.Column="1" Command="Never"/>
+            <TextBlock Grid.Row="2" Text="{x:Static resx:Resources.HotKeySettingWindowPlayPauseHotkeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="2" Grid.Column="1" Command="PlayPause"/>
+            <TextBlock Grid.Row="3" Text="{x:Static resx:Resources.HotKeySettingWindowNextHotkeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="3" Grid.Column="1" Command="Next"/>
+            <TextBlock Grid.Row="4" Grid.ColumnSpan="2" FontSize="11" Margin="0,2" HorizontalAlignment="Center" Text="{x:Static resx:Resources.HotKeySettingWindowMediaKeyInfoTextBlock}"/>
+            <TextBlock Grid.Row="5" Text="{x:Static resx:Resources.HotKeySettingWindowShowMinimizeTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="5" Grid.Column="1" Command="ShowMinimize"/>
+            <TextBlock Grid.Row="6" Text="{x:Static resx:Resources.HotKeySettingWindowShowHideTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="6" Grid.Column="1" Command="ShowHide"/>
+            <TextBlock Grid.Row="7" Text="{x:Static resx:Resources.HotKeySettingWindowShowHideLyricsTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="7" Grid.Column="1" Command="ShowHideLyrics"/>
+            <TextBlock Grid.Row="8" Text="{x:Static resx:Resources.HotKeySettingWindowShareKeyTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="8" Grid.Column="1" Command="OneKeyShare"/>
+            <TextBlock Grid.Row="9" Text="{x:Static resx:Resources.HotKeySettingWindowSearchDownloadTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="9" Grid.Column="1" Command="SearchDownload"/>
+            <TextBlock Grid.Row="10" Text="{x:Static resx:Resources.HotKeySettingWindowVolumeIncreaseTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="10" Grid.Column="1" Command="VolumeUp"/>
+            <TextBlock Grid.Row="11" Text="{x:Static resx:Resources.HotKeySettingWindowVolumeDecreaseTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="11" Grid.Column="1" Command="VolumeDown"/>
+            <TextBlock Grid.Row="12" Text="{x:Static resx:Resources.HotKeySettingWindowMuteSwitchTextBlock}" Style="{StaticResource HotKeyHintStyle}"/>
+            <local:HotKeySettingControl Grid.Row="12" Grid.Column="1" Command="MuteSwitch"/>
+        </Grid>
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="40" Margin="5">
+			<Button x:Name="Ok" Click="Ok_Click" Style="{DynamicResource OKButtonStyle}"/>
+			<Button x:Name="Cancel" Margin="20,0,0,0" Click="Cancel_Click" Style="{DynamicResource CancelButtonStyle}"/>
+		</StackPanel>
+	</StackPanel>
+</local:ChildWindowBase>

@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DDDAF282-C866-4036-AAF0-146D6D74080B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DoubanFM</RootNamespace>
+    <AssemblyName>DoubanFM</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>bin\Debug\DoubanFM.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\DoubanFM.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\DoubanFM.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WPFSoundVisualizationLib">
+      <HintPath>..\WPFSoundVisualizationLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AppCommand.cs" />
+    <Compile Include="ChildWindowBase.cs" />
+    <Compile Include="ColorPicker\ColorPicker.cs" />
+    <Compile Include="ColorPicker\ColorSpectrumSlider.cs" />
+    <Compile Include="ColorPicker\HsvColor.cs" />
+    <Compile Include="ColorPicker\PopupableColorPicker.xaml.cs">
+      <DependentUpon>PopupableColorPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FilePackage.cs" />
+    <Compile Include="Interop\GWL.cs" />
+    <Compile Include="Interop\HOOKPROC.cs" />
+    <Compile Include="Interop\HWND.cs" />
+    <Compile Include="Interop\KBDLLHOOKSTRUCT.cs" />
+    <Compile Include="Interop\NativeMethods.cs" />
+    <Compile Include="Interop\RECT.cs" />
+    <Compile Include="Interop\SWP.cs" />
+    <Compile Include="Interop\WH.cs" />
+    <Compile Include="Interop\WM.cs" />
+    <Compile Include="Interop\WS.cs" />
+    <Compile Include="LyricsShower.cs" />
+    <Compile Include="Resources\Resources.zh-CN.Designer.cs">
+      <DependentUpon>Resources.zh-CN.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Resources\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="ShadowWindow.xaml.cs">
+      <DependentUpon>ShadowWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Wmi\DisplayConfiguration.cs" />
+    <Compile Include="ExceptionWindow.xaml.cs">
+      <DependentUpon>ExceptionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FontPicker\FontPicker.cs" />
+    <Compile Include="HelpWindow.xaml.cs">
+      <DependentUpon>HelpWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HotKey\HotKey.cs" />
+    <Compile Include="NotifyIcon\PopupControlPanel.xaml.cs">
+      <DependentUpon>PopupControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotifyIcon\BalloonSongInfo.xaml.cs">
+      <DependentUpon>BalloonSongInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotifyIcon\PopupLiked.xaml.cs">
+      <DependentUpon>PopupLiked.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UISettingWindow.xaml.cs">
+      <DependentUpon>UISettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GeneralSettingWindow.xaml.cs">
+      <DependentUpon>GeneralSettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HotKey\HotKeys.cs" />
+    <Compile Include="HotKey\HotKeySettingControl.cs" />
+    <Compile Include="HotKeySettingWindow.xaml.cs">
+      <DependentUpon>HotKeySettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LyricsSetting.cs" />
+    <Compile Include="LyricsSettingWindow.xaml.cs">
+      <DependentUpon>LyricsSettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LyricsWindow.xaml.cs">
+      <DependentUpon>LyricsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShareSetting.cs" />
+    <Compile Include="ShareSettingWindow.xaml.cs">
+      <DependentUpon>ShareSettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Style.xaml.cs">
+      <DependentUpon>Style.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VolumeControl.xaml.cs">
+      <DependentUpon>VolumeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowBase.cs" />
+    <Compile Include="Wmi\OperatingSystem.cs" />
+    <Compile Include="Wmi\PhysicalMemory.cs" />
+    <Compile Include="Wmi\Processor.cs" />
+    <Compile Include="Wmi\SoundDevice.cs" />
+    <Compile Include="Wmi\WmiBase.cs" />
+    <Compile Include="Screen.cs" />
+    <Page Include="ColorPicker\PopupableColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExceptionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HelpWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NotifyIcon\BalloonSongInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NotifyIcon\PopupControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NotifyIcon\PopupLiked.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShadowWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UISettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DoubanFMWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ColorFunctions.cs" />
+    <Compile Include="Converters.cs" />
+    <Compile Include="DoubanFMWindow.xaml.cs">
+      <DependentUpon>DoubanFMWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="GeneralSettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HotKeySettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LyricsSettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LyricsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ShareSettingWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Style.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VolumeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="Resources\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resources.zh-CN.resx">
+      <SubType>Designer</SubType>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.zh-CN.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\app.manifest" />
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DoubanFM.Bass\DoubanFM.Bass.csproj">
+      <Project>{62324CFD-03FF-44B4-9204-66BAE86972B6}</Project>
+      <Name>DoubanFM.Bass</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DoubanFM.Core\DoubanFM.Core.csproj">
+      <Project>{AA75B5E6-F373-49D7-B2E0-16C3E57321F7}</Project>
+      <Name>DoubanFM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DwmHelper\DwmHelper.csproj">
+      <Project>{368cdbe6-0ba2-4dad-aceb-fbb8eedb1bd7}</Project>
+      <Name>DwmHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NotifyIconWpf\NotifyIconWpf.csproj">
+      <Project>{7AC63864-7638-41C4-969C-D3197EF2BED9}</Project>
+      <Name>NotifyIconWpf</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DoubanFM_Next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DoubanFM_Pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DoubanFM_Play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DoubanFM_Like_Like.png" />
+    <Resource Include="Images\DoubanFM_Like_Unlike.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DoubanFM_Never.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DoubanFM_Never_Disabled.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DoubanFM_NoCover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DoubanFM_Like_Disabled.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon_like.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOM.PNG" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWLEFT.PNG" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWRIGHT.PNG" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWTOP.PNG" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOM.PNG" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWLEFT.PNG" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWRIGHT.PNG" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWTOP.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOMLEFT.png" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOMRIGHT.png" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWTOPLEFT.png" />
+    <Resource Include="Images\Shadow\ACTIVESHADOWTOPRIGHT.png" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOMLEFT.png" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOMRIGHT.png" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWTOPLEFT.png" />
+    <Resource Include="Images\Shadow\INACTIVESHADOWTOPRIGHT.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y "$(SolutionDir)version.dat" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,825 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="WindowTitle" xml:space="preserve">
+    <value>豆瓣电台</value>
+    <comment>The internal Visual Studio Resource editor only accepts ASCII so these will appear as squares.</comment>
+  </data>
+  <data name="WindowTitleShort" xml:space="preserve">
+    <value>豆瓣电台</value>
+  </data>
+  <data name="LikeThumbButton" xml:space="preserve">
+    <value>喜欢</value>
+  </data>
+  <data name="UnlikeThumbButton" xml:space="preserve">
+    <value>取消喜欢</value>
+  </data>
+  <data name="DontPlayThumbButton" xml:space="preserve">
+    <value>不再播放</value>
+  </data>
+  <data name="PauseThumbButton" xml:space="preserve">
+    <value>暂停</value>
+  </data>
+  <data name="PlayThumbButton" xml:space="preserve">
+    <value>播放</value>
+  </data>
+  <data name="NextThumbButton" xml:space="preserve">
+    <value>下一首</value>
+  </data>
+  <data name="FavoriteButton" xml:space="preserve">
+    <value>收藏</value>
+  </data>
+  <data name="UnfavoriteButton" xml:space="preserve">
+    <value>取消收藏</value>
+  </data>
+  <data name="ShareDouban" xml:space="preserve">
+    <value>分享到豆瓣</value>
+  </data>
+  <data name="ShareWeibo" xml:space="preserve">
+    <value>分享到新浪微博</value>
+  </data>
+  <data name="ShareMsn" xml:space="preserve">
+    <value>分享到 MSN</value>
+  </data>
+  <data name="ShareKaixin" xml:space="preserve">
+    <value>分享到开心网</value>
+  </data>
+  <data name="ShareRenren" xml:space="preserve">
+    <value>分享到人人网</value>
+  </data>
+  <data name="ShareFacebook" xml:space="preserve">
+    <value>分享到 Facebook</value>
+  </data>
+  <data name="ShareTwitter" xml:space="preserve">
+    <value>分享到 Twitter</value>
+  </data>
+  <data name="PersonalRadioRB" xml:space="preserve">
+    <value>我的电台</value>
+  </data>
+  <data name="PublicRadioRB" xml:space="preserve">
+    <value>公共兆赫</value>
+  </data>
+  <data name="DJRadioRB" xml:space="preserve">
+    <value>DJ 兆赫</value>
+  </data>
+  <data name="DJSearchTextBlock" xml:space="preserve">
+    <value>点击搜索列出所有频道</value>
+  </data>
+  <data name="PleaseWaitLabel" xml:space="preserve">
+    <value>请稍候</value>
+  </data>
+  <data name="SearchingLabel" xml:space="preserve">
+    <value>正在搜索 ...</value>
+  </data>
+  <data name="ConsistentResultsLabel" xml:space="preserve">
+    <value>搜索结果来自 music.douban.com</value>
+  </data>
+  <data name="SearchResultsCanNotListenLabel" xml:space="preserve">
+    <value>您开启了自动剔除无法收听的项目</value>
+  </data>
+  <data name="MayNextResultsLabel" xml:space="preserve">
+    <value>可能下一页就会有结果哦</value>
+  </data>
+  <data name="EmailUserNameBlock" xml:space="preserve">
+    <value>邮箱/用户名</value>
+  </data>
+  <data name="PasswordBlock" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="VerificationCaptchaBlock" xml:space="preserve">
+    <value>验证码</value>
+  </data>
+  <data name="RefreshVerificationCaptchaButton" xml:space="preserve">
+    <value>点击刷新验证码</value>
+  </data>
+  <data name="LoginButton" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="RegisterButton" xml:space="preserve">
+    <value>注册</value>
+  </data>
+  <data name="RememberPasswordCheckBox" xml:space="preserve">
+    <value>记住密码</value>
+  </data>
+  <data name="AutoLoginCheckBox" xml:space="preserve">
+    <value>自动登录</value>
+  </data>
+  <data name="TotalFormatString" xml:space="preserve">
+    <value>累积收听 {0} 首</value>
+  </data>
+  <data name="PlusHeartsFormatString" xml:space="preserve">
+    <value>加红心 {0} 首</value>
+  </data>
+  <data name="NoLongerPlayFormatString" xml:space="preserve">
+    <value>{0} 首不再播放</value>
+  </data>
+  <data name="TheLoggedLabel" xml:space="preserve">
+    <value>已登录</value>
+  </data>
+  <data name="LogoutButton" xml:space="preserve">
+    <value>注销</value>
+  </data>
+  <data name="LoggingInLabel" xml:space="preserve">
+    <value>正在登录</value>
+  </data>
+  <data name="LoggingOutLabel" xml:space="preserve">
+    <value>正在注销</value>
+  </data>
+  <data name="SettingsTab" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="InfoTab" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="SearchTab" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="ChannelsTab" xml:space="preserve">
+    <value>频道列表</value>
+  </data>
+  <data name="Minimize" xml:space="preserve">
+    <value>最小化</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>最小化到托盘</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>上一页</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一页</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Share" xml:space="preserve">
+    <value>分享</value>
+  </data>
+  <data name="GeneralSettingsButton" xml:space="preserve">
+    <value>常规设置</value>
+  </data>
+  <data name="InterfaceSettingsButton" xml:space="preserve">
+    <value>界面设置</value>
+  </data>
+  <data name="LyricsSettingsButton" xml:space="preserve">
+    <value>歌词设置</value>
+  </data>
+  <data name="HotKeySettingsButton" xml:space="preserve">
+    <value>热键设置</value>
+  </data>
+  <data name="ShareSettingsButton" xml:space="preserve">
+    <value>分享设置</value>
+  </data>
+  <data name="ImportButton" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="ExportButton" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="ThirdPartyClientsBlock" xml:space="preserve">
+    <value>第三方客户端</value>
+  </data>
+  <data name="CopyUrlButton" xml:space="preserve">
+    <value>分享（点击直接复制地址）</value>
+  </data>
+  <data name="ShareKeyButton" xml:space="preserve">
+    <value>一键分享</value>
+  </data>
+  <data name="DownloadSearchButton" xml:space="preserve">
+    <value>搜索下载</value>
+  </data>
+  <data name="AvailableAfterLoginBorder" xml:space="preserve">
+    <value>登录后可用</value>
+  </data>
+  <data name="FirstTimePanelTextBlock" xml:space="preserve">
+    <value>将鼠标移动到封面上
+有惊喜哦！</value>
+  </data>
+  <data name="ExceptionWindowTitle" xml:space="preserve">
+    <value>豆瓣电台出现错误</value>
+  </data>
+  <data name="ShortMessageTextBlock" xml:space="preserve">
+    <value>简要错误信息：</value>
+  </data>
+  <data name="UserMessageTextBlock" xml:space="preserve">
+    <value>请填写一些有关出错时的使用情况，比如正在进行什么操作等，这将有助于分析问题原因。</value>
+  </data>
+  <data name="ViewErrorMessageButton" xml:space="preserve">
+    <value>查看错误报告</value>
+  </data>
+  <data name="SendErrorButton" xml:space="preserve">
+    <value>发送错误报告</value>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="CheckBoxAdjustVolumeWithMouseWheel" xml:space="preserve">
+    <value>鼠标滚轮调节音量</value>
+  </data>
+  <data name="CheckBoxRememberLastChannel" xml:space="preserve">
+    <value>记住上次播放的频道</value>
+  </data>
+  <data name="CheckBoxIsSearchFilterEnabled" xml:space="preserve">
+    <value>在搜索结果中剔除无法收听的项目</value>
+  </data>
+  <data name="DownloadSearchSettingsGroupBox" xml:space="preserve">
+    <value>下载搜索设置</value>
+  </data>
+  <data name="OutputDevicesTextBlock" xml:space="preserve">
+    <value>输出设备</value>
+  </data>
+  <data name="AlbumSearchCheckBox" xml:space="preserve">
+    <value>搜索下载时包括专辑信息</value>
+  </data>
+  <data name="TrimBracketsCheckBox" xml:space="preserve">
+    <value>搜索下载时自动剔除歌曲信息中的括号内容</value>
+  </data>
+  <data name="CbSearchBaiduMusic" xml:space="preserve">
+    <value>搜索百度音乐</value>
+  </data>
+  <data name="ProxyServerGroupBox" xml:space="preserve">
+    <value>代理服务器</value>
+  </data>
+  <data name="RbDefaultProxy" xml:space="preserve">
+    <value>系统默认</value>
+  </data>
+  <data name="RbNoProxy" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="RbCustomProxy" xml:space="preserve">
+    <value>自定义</value>
+  </data>
+  <data name="HostComputerLabel" xml:space="preserve">
+    <value>主机</value>
+  </data>
+  <data name="PortLabel" xml:space="preserve">
+    <value>端口</value>
+  </data>
+  <data name="UserNameLabel" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="ProxyNoCredentialsLabel" xml:space="preserve">
+    <value>如果代理服务器不使用用户名和密码，请留空。</value>
+  </data>
+  <data name="BtnApplyProxy" xml:space="preserve">
+    <value>现在就应用代理设置</value>
+  </data>
+  <data name="HelpWindowTitle" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="HelpWindowParagraphTitle" xml:space="preserve">
+    <value>豆瓣电台帮助文档</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet" xml:space="preserve">
+    <value>怎么设置字体？</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet2" xml:space="preserve">
+    <value>本软件可同时设置多种字体。由于大部分中文字体的英文都不太好看，所以有时将中英文字体分别设置就很有必要了。下面是一个例子：</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet3" xml:space="preserve">
+    <value>豆瓣电台 豆瓣電台 DoubanFM 1234567</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet4" xml:space="preserve">
+    <value>字体设置有优先级区别，不同字体间用逗号分隔（半角全角均可），排在前面的字体优先使用，如果设置的多种字体都无法显示某一文字，则会使用系统默认字体显示。常见的设置是英文字体在前，中文字体在后。设置方法是手动填入类似“Century,华文新魏”这样的文字，而不是通过下拉菜单选择。如果把中文字体放在前面，就会使英文字体失效，因为中文字体中已经包含英文的字形。如下面所示：</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet5" xml:space="preserve">
+    <value>如果填写的字体在系统中找不到，则会被忽略，其后面的字体仍然能成功显示。</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet6" xml:space="preserve">
+    <value>从上面的例子可以看到，华文新魏是没有繁体中文的字形的，繁体字会显示成默认字体，所以可以设置第三种字体：</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet7" xml:space="preserve">
+    <value>大小写不敏感：</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet8" xml:space="preserve">
+    <value>字体前后可以有空格。</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet9" xml:space="preserve">
+    <value>字体后也可以加上 Light、SemiLight、SemiBold、Bold 等文字来强制指定粗细，这样即使在歌词设置里调整粗细，也不会影响到强制指定粗细的字体。（有些字体可能不支持那么多种粗细变化，中文一般只有两种，而有些英文字体则多一些，比如 Vista 和 Win 7 系统中的 Segoe UI，可以设置 Light、SemiBold 和 Bold，不能设置 SemiLight）</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet10" xml:space="preserve">
+    <value>设置字体时可以用不同语言的字体名。所有的字体都有英文名字，而非英文字体一般都有非英文的名字。比如宋体的英文名是 SimSun，新宋体的英文名是 NSimSun，楷体的英文名是 KaiTi，微软雅黑的英文名是 Microsoft YaHei。台湾地区的 Win 7 中默认字体是微軟正黑體，英文名是 Microsoft JhengHei。本软件中选择字体时只把有简体中文名称的字体显示中文名，其他字体显示英文名，所以微软雅黑在下拉列表里叫微软雅黑，而微軟正黑體在下拉列表里叫 Microsoft JhengHei，还有比如標楷體的英文叫 DFKai-SB。</value>
+  </data>
+  <data name="HelpWindowParagraphShareParagraph1" xml:space="preserve">
+    <value>为什么点击分享到其他网站的链接后不能听到我分享的那首音乐？</value>
+  </data>
+  <data name="HelpWindowParagraphShareParagraph2" xml:space="preserve">
+    <value>这是因为豆瓣对网页做了手脚，会查看你是从哪个网站过来的，从某些网站（比如人人）进入豆瓣电台的网站会转到豆瓣电台的首页（也就是和直接在浏览器里输入 douban.fm 一样）。可以把分享的链接复制出来，粘贴到浏览器地址栏里打开，就可以听到分享的歌曲了。</value>
+  </data>
+  <data name="HelpWindowParagraphLogin1" xml:space="preserve">
+    <value>为什么本来已经登录了，并且勾选了下次自动登录，结果下次打开软件时却没有自动登录？</value>
+  </data>
+  <data name="HelpWindowParagraphLogin2" xml:space="preserve">
+    <value>一般情况下是因为你在浏览器中注销过豆瓣的帐号导致的，豆瓣规定得很严，只要在一个地方注销了，所有已登录的地方都会注销（比如同时使用多个浏览器登录豆瓣，然后在其中一个浏览器注销掉，这时其他浏览器也会注销），本软件也不例外。所以只能尽量避免在任何地方注销豆瓣了。</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes1" xml:space="preserve">
+    <value>程序崩溃了……</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes2" xml:space="preserve">
+    <value>如果发生了程序崩溃的情况，请</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes3" xml:space="preserve">
+    <value>向我反应</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes4" xml:space="preserve">
+    <value>，尽量描述清楚当时正在进行什么操作，正在听什么频道等信息，最好附上错误日志。</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes5" xml:space="preserve">
+    <value>查看错误日志的方法</value>
+  </data>
+  <data name="HelpWindowParagraphFontModification1" xml:space="preserve">
+    <value>修改主界面字体后经常看不清字，怎么办？</value>
+  </data>
+  <data name="HelpWindowParagraphFontModification2" xml:space="preserve">
+    <value>可以把主界面缩放调大一点，字会清晰很多。</value>
+  </data>
+  <data name="HelpWindowParagraphFontModification3" xml:space="preserve">
+    <value>为什么登录后就无法使用了，需要重置设置才能继续使用？</value>
+  </data>
+  <data name="HelpWindowParagraphOpenBrowser1" xml:space="preserve">
+    <value>请打开浏览器进入</value>
+  </data>
+  <data name="HelpWindowParagraphOpenBrowser2" xml:space="preserve">
+    <value>并登录，检查一下自己的帐号是否存在异常，有可能是帐号被锁定，或者帐号未激活。</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer1" xml:space="preserve">
+    <value>声明：本软件为第三方客户端，并非豆瓣FM官方客户端。</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer2" xml:space="preserve">
+    <value>软件作者：</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer3" xml:space="preserve">
+    <value>软件主页：</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer4" xml:space="preserve">
+    <value>网页版 FAQ：</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer5" xml:space="preserve">
+    <value>豆瓣FM官方网站：</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer6" xml:space="preserve">
+    <value>豆瓣FM使用帮助和支持：</value>
+  </data>
+  <data name="HotKeySettingWindowLikeHotkeyTextBlock" xml:space="preserve">
+    <value>喜欢（不取消）</value>
+  </data>
+  <data name="HotKeySettingWindowDontPlayHotkeyTextBlock" xml:space="preserve">
+    <value>不再播放</value>
+  </data>
+  <data name="HotKeySettingWindowPlayPauseHotkeyTextBlock" xml:space="preserve">
+    <value>播放/暂停</value>
+  </data>
+  <data name="HotKeySettingWindowNextHotkeyTextBlock" xml:space="preserve">
+    <value>下一首</value>
+  </data>
+  <data name="HotKeySettingWindowMediaKeyInfoTextBlock" xml:space="preserve">
+    <value>多媒体键“播放/暂停”和“下一首”已自动设置</value>
+  </data>
+  <data name="HotKeySettingWindowShowMinimizeTextBlock" xml:space="preserve">
+    <value>显示/最小化</value>
+  </data>
+  <data name="HotKeySettingWindowShowHideTextBlock" xml:space="preserve">
+    <value>显示/隐藏窗口</value>
+  </data>
+  <data name="HotKeySettingWindowShowHideLyricsTextBlock" xml:space="preserve">
+    <value>显示/隐藏歌词</value>
+  </data>
+  <data name="HotKeySettingWindowShareKeyTextBlock" xml:space="preserve">
+    <value>一键分享</value>
+  </data>
+  <data name="HotKeySettingWindowSearchDownloadTextBlock" xml:space="preserve">
+    <value>搜索下载</value>
+  </data>
+  <data name="HotKeySettingWindowVolumeIncreaseTextBlock" xml:space="preserve">
+    <value>音量增大</value>
+  </data>
+  <data name="HotKeySettingWindowVolumeDecreaseTextBlock" xml:space="preserve">
+    <value>音量减小</value>
+  </data>
+  <data name="HotKeySettingWindowMuteSwitchTextBlock" xml:space="preserve">
+    <value>静音切换</value>
+  </data>
+  <data name="CbShowLyrics" xml:space="preserve">
+    <value>显示歌词</value>
+  </data>
+  <data name="CbEnableDesktopLyrics" xml:space="preserve">
+    <value>桌面歌词</value>
+  </data>
+  <data name="LyricsSettingsWindowOccupyCPULabel" xml:space="preserve">
+    <value>会占用一定 CPU</value>
+  </data>
+  <data name="CbEnableEmbeddedLyrics" xml:space="preserve">
+    <value>内嵌歌词</value>
+  </data>
+  <data name="LyricsSettingsWindowDesktopLyricsGroupBox" xml:space="preserve">
+    <value>桌面歌词设置</value>
+  </data>
+  <data name="LyricsSettingsWindowSingleLineLyricsRadioButton" xml:space="preserve">
+    <value>单行歌词</value>
+  </data>
+  <data name="LyricsSettingsWindowDoubleLineLyricsRadioButton" xml:space="preserve">
+    <value>双行歌词</value>
+  </data>
+  <data name="LyricsSettingsWindowTopMostCb" xml:space="preserve">
+    <value>强力置顶</value>
+  </data>
+  <data name="LyricsSettingsWindowTopMostCbToolTip" xml:space="preserve">
+    <value>强力置顶可有效解决桌面歌词置顶失效的问题，但桌面歌词可能会覆盖在某些全屏应用上。</value>
+  </data>
+  <data name="LyricsSettingsWindowHideWhenPauseCb" xml:space="preserve">
+    <value>音乐暂停时隐藏</value>
+  </data>
+  <data name="LyricsSettingsWindowOutputDisplayTB" xml:space="preserve">
+    <value>输出显示器</value>
+  </data>
+  <data name="LyricsSettingsWindowWritingGB" xml:space="preserve">
+    <value>文字</value>
+  </data>
+  <data name="LyricsSettingsWindowTypefaceTB" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="LyricsSettingsWindowSizeTB" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="LyricsSettingsWindowThicknessTB" xml:space="preserve">
+    <value>粗细</value>
+  </data>
+  <data name="LyricsSettingsWindowStrokeWeightTB" xml:space="preserve">
+    <value>描边粗细</value>
+  </data>
+  <data name="LyricsSettingsWindowColorGB" xml:space="preserve">
+    <value>颜色</value>
+  </data>
+  <data name="LyricsSettingsWindowForegroundColorTB" xml:space="preserve">
+    <value>前景色</value>
+  </data>
+  <data name="CbAutoForeground" xml:space="preserve">
+    <value>自动</value>
+  </data>
+  <data name="LyricsSettingsWindowStrokeColorTB" xml:space="preserve">
+    <value>描边色</value>
+  </data>
+  <data name="LyricsSettingsWindowShadowColorTB" xml:space="preserve">
+    <value>阴影色</value>
+  </data>
+  <data name="LyricsSettingsWindowTransparencyTB" xml:space="preserve">
+    <value>透明度</value>
+  </data>
+  <data name="LyricsSettingsWindowLayoutGB" xml:space="preserve">
+    <value>布局</value>
+  </data>
+  <data name="LyricsSettingsWindowMarginTopTB" xml:space="preserve">
+    <value>顶部间距</value>
+  </data>
+  <data name="LyricsSettingsWindowMarginBottomTB" xml:space="preserve">
+    <value>底部间距</value>
+  </data>
+  <data name="LyricsSettingsWindowMarginLeftTB" xml:space="preserve">
+    <value>左间距</value>
+  </data>
+  <data name="LyricsSettingsWindowMarginRightTB" xml:space="preserve">
+    <value>右间距</value>
+  </data>
+  <data name="LyricsSettingsWindowHorizontalAlignmentTB" xml:space="preserve">
+    <value>水平对齐方式</value>
+  </data>
+  <data name="LyricsSettingsWindowVerticalAlignmentTB" xml:space="preserve">
+    <value>垂直对齐方式</value>
+  </data>
+  <data name="CbShowLyricsBackground" xml:space="preserve">
+    <value>显示歌词边界，以方便调整布局</value>
+  </data>
+  <data name="LyricsWindowLyricsRoot1TB" xml:space="preserve">
+    <value>占位用</value>
+  </data>
+  <data name="ShareSettingsWindowShareButtonLabel" xml:space="preserve">
+    <value>显示分享按钮：</value>
+  </data>
+  <data name="ShareSettingsWindowEnableKeyShareCb" xml:space="preserve">
+    <value>启用一键分享</value>
+  </data>
+  <data name="ShareSettingsWindowKeyShareSiteLabel" xml:space="preserve">
+    <value>一键分享的网站：</value>
+  </data>
+  <data name="UISettingsWindowPopupCb" xml:space="preserve">
+    <value>换歌时弹出气泡</value>
+  </data>
+  <data name="CheckBoxTopMost" xml:space="preserve">
+    <value>总在最前</value>
+  </data>
+  <data name="CheckBoxAlwaysShowNotifyIcon" xml:space="preserve">
+    <value>总是显示托盘图标</value>
+  </data>
+  <data name="RadioButtonSlideCoverWhenMouseMove" xml:space="preserve">
+    <value>当鼠标移动到封面上时滑动封面</value>
+  </data>
+  <data name="CheckBoxOpenAlbumInfoWhenClickCover" xml:space="preserve">
+    <value>点击封面时打开豆瓣资料页面</value>
+  </data>
+  <data name="RadioButtonSlideCoverWhenClick" xml:space="preserve">
+    <value>当鼠标点击封面时滑动封面</value>
+  </data>
+  <data name="UISettingsWindowMainInterfaceScaleTextBlock" xml:space="preserve">
+    <value>主界面缩放</value>
+  </data>
+  <data name="BtnScaleTransformReset" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="UISettingsWindowMainInterfaceFontTextBlock" xml:space="preserve">
+    <value>主界面字体</value>
+  </data>
+  <data name="UISettingsWindowWindowBackgroundGB" xml:space="preserve">
+    <value>窗口背景</value>
+  </data>
+  <data name="UISettingsWindowWindowManualColorCB" xml:space="preserve">
+    <value>手动指定颜色</value>
+  </data>
+  <data name="UISettingsWindowWindowSpectrumCB" xml:space="preserve">
+    <value>频谱</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>捐赠</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>意见与反馈</value>
+  </data>
+  <data name="DoubanFMOfficialWebsite" xml:space="preserve">
+    <value>豆瓣FM官网</value>
+  </data>
+  <data name="CheckforUpdates" xml:space="preserve">
+    <value>检查更新</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="ShowLyrics" xml:space="preserve">
+    <value>显示歌词</value>
+  </data>
+  <data name="HideLyrics" xml:space="preserve">
+    <value>隐藏歌词</value>
+  </data>
+  <data name="SoftwareHome" xml:space="preserve">
+    <value>软件主页</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="OutputScreenFormatString" xml:space="preserve">
+    <value>显示器 {0}</value>
+  </data>
+  <data name="CenterAlignment" xml:space="preserve">
+    <value>居中</value>
+  </data>
+  <data name="LeftAlignment" xml:space="preserve">
+    <value>左对齐</value>
+  </data>
+  <data name="RightAlignment" xml:space="preserve">
+    <value>右对齐</value>
+  </data>
+  <data name="StretchAlignment" xml:space="preserve">
+    <value>两端对齐</value>
+  </data>
+  <data name="TopAlignment" xml:space="preserve">
+    <value>上对齐</value>
+  </data>
+  <data name="BottomAlignment" xml:space="preserve">
+    <value>下对齐</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="ShareText1" xml:space="preserve">
+    <value>我正在收听 《{0}》 - {1}</value>
+  </data>
+  <data name="AccountTab" xml:space="preserve">
+    <value>帐号信息</value>
+  </data>
+  <data name="ShareSiteDouban" xml:space="preserve">
+    <value>豆瓣</value>
+  </data>
+  <data name="ShareSiteFacebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="ShareSiteFanfou" xml:space="preserve">
+    <value>饭否</value>
+  </data>
+  <data name="ShareSiteKaixin" xml:space="preserve">
+    <value>开心网</value>
+  </data>
+  <data name="ShareSiteMsn" xml:space="preserve">
+    <value>MSN</value>
+  </data>
+  <data name="ShareSiteRenren" xml:space="preserve">
+    <value>人人网</value>
+  </data>
+  <data name="ShareSiteTencentWeibo" xml:space="preserve">
+    <value>腾讯微博</value>
+  </data>
+  <data name="ShareSiteTwitter" xml:space="preserve">
+    <value>Twitter</value>
+  </data>
+  <data name="ShareSiteWeibo" xml:space="preserve">
+    <value>新浪微博</value>
+  </data>
+  <data name="ShareSiteQzone" xml:space="preserve">
+    <value>QQ 空间</value>
+  </data>
+  <data name="ShareSiteNone" xml:space="preserve">
+    <value>*复制网址到剪贴板*</value>
+  </data>
+  <data name="AlbumInfoPage" xml:space="preserve">
+    <value>资料</value>
+  </data>
+  <data name="ApplicationWillClose" xml:space="preserve">
+    <value>程序即将关闭</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>艺术家</value>
+  </data>
+  <data name="GetPlayListFailedMessage" xml:space="preserve">
+    <value>获取播放列表失败：{0}</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>收听</value>
+  </data>
+  <data name="ResetFailed" xml:space="preserve">
+    <value>重置设置失败</value>
+  </data>
+  <data name="ResetWarning" xml:space="preserve">
+    <value>确定要重置所有设置吗？
+重置后软件将自动重启。</value>
+  </data>
+  <data name="SetProxyFailed" xml:space="preserve">
+    <value>设置代理失败</value>
+  </data>
+  <data name="ShareFanfou" xml:space="preserve">
+    <value>分享到饭否</value>
+  </data>
+  <data name="ShareQzone" xml:space="preserve">
+    <value>分享到 QQ 空间</value>
+  </data>
+  <data name="ShareTencentWeibo" xml:space="preserve">
+    <value>分享到腾讯微博</value>
+  </data>
+  <data name="SuccessfullyCopied" xml:space="preserve">
+    <value>复制成功</value>
+  </data>
+  <data name="UrlCopyedToClipboard" xml:space="preserve">
+    <value>地址已复制到剪贴板</value>
+  </data>
+  <data name="ZipFileFilterName" xml:space="preserve">
+    <value>zip 文件</value>
+  </data>
+  <data name="LanguageTextBlock" xml:space="preserve">
+    <value>显示语言</value>
+  </data>
+  <data name="LanguageChangedHint" xml:space="preserve">
+    <value>显示语言设置已改变，下次启动豆瓣电台时生效。</value>
+  </data>
+  <data name="CbSearchQQMusic" xml:space="preserve">
+    <value>搜索 QQ 音乐</value>
+  </data>
+  <data name="BitRate" xml:space="preserve">
+    <value>码率</value>
+  </data>
+  <data name="UserExpiredCaption" xml:space="preserve">
+    <value>您的登录状态已过期</value>
+  </data>
+  <data name="UserExpiredMessage" xml:space="preserve">
+    <value>您的登录状态已过期，请重新登录。</value>
+  </data>
+  <data name="CheckBoxEnableDownloadRateRestriction" xml:space="preserve">
+    <value>开启下载限速</value>
+  </data>
+</root>

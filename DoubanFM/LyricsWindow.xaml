@@ -1,0 +1,155 @@
+﻿<!--
+Author : K.F.Storm
+Email : yk000123 at sina.com
+Website : http://www.kfstorm.com	
+-->
+<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:DoubanFM"
+	xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:DoubanFM.Resources"
+	mc:Ignorable="PresentationOptions"
+	x:Class="DoubanFM.LyricsWindow"
+	x:Name="Window"
+	Title="" Background="{x:Null}" ShowInTaskbar="False" Topmost="True" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" ShowActivated="False" Opacity="{Binding ElementName=Window, Path=LyricsSetting.Opacity}" IsHitTestVisible="False" Loaded="Window_Loaded" Closed="Window_Closed">
+	<Window.Resources>
+		<PathGeometry x:Key="WrongFontGeometry" PresentationOptions:Freeze="True" Figures="M9.46875,24.351563 L37.875,24.351563 L37.875,28.148438 L26.765625,35.273438 L26.765625,36.539063 L47.25,36.539063 L47.25,40.007813 L26.765625,40.007813 L26.765625,48.632813 C26.765623,52.601563 24.781248,54.585938 20.8125,54.585938 C19.21875,54.585938 16.890625,54.554688 13.828125,54.492188 C13.703124,53.304688 13.515624,51.914063 13.265625,50.320313 C15.734374,50.664063 17.921875,50.835938 19.828125,50.835938 C21.890625,50.835938 22.921875,49.726563 22.921875,47.507813 L22.921875,40.007813 L0.9375,40.007813 L0.9375,36.539063 L22.921875,36.539063 L22.921875,33.585938 L32.15625,27.773438 L9.46875,27.773438 z M23.25,8.3671875 C25.218748,10.523438 26.843748,12.523438 28.125,14.367188 L25.898438,15.867188 L45.65625,15.867188 L45.65625,25.382813 L41.859375,25.382813 L41.859375,19.289063 L6.46875,19.289063 L6.46875,25.382813 L2.71875,25.382813 L2.71875,15.867188 L24.28125,15.867188 C23.125,14.226563 21.734375,12.429688 20.109375,10.476563 z M75.609375,9.0234375 L79.078125,9.0234375 L79.078125,18.585938 L94.03125,18.585938 L94.03125,21.960938 L82.101563,21.960938 C85.085938,31.679688 89.59375,38.664063 95.625,42.914063 C94.5625,44.195313 93.640625,45.351563 92.859375,46.382813 C86.609375,41.570313 82.015625,33.429688 79.078125,21.960938 L79.078125,41.742188 L85.96875,41.742188 L85.96875,45.117188 L79.078125,45.117188 L79.078125,54.914063 L75.609375,54.914063 L75.609375,45.117188 L68.71875,45.117188 L68.71875,41.742188 L75.609375,41.742188 L75.609375,21.960938 L75.492188,21.960938 C72.585938,32.757813 67.796875,41.148438 61.125,47.132813 C60.40625,46.226563 59.578125,45.242188 58.640625,44.179688 C64.671875,38.664063 69.1875,31.257813 72.1875,21.960938 L61.171875,21.960938 L61.171875,18.585938 L75.609375,18.585938 z M58.546875,8.8828125 L62.109375,9.9140625 C60.890625,13.898438 59.515625,17.640627 57.984375,21.140625 L57.984375,54.867188 L54.515625,54.867188 L54.515625,28.195313 C53.109375,30.742188 51.609375,33.132813 50.015625,35.367188 C49.546875,34.085938 49.015625,32.804688 48.421875,31.523438 C52.953125,24.898439 56.328125,17.351564 58.546875,8.8828125 z M126.51563,27.304688 C132.35938,30.867188 138,34.492188 143.4375,38.179688 L140.76563,41.882813 C134.32813,37.101563 128.8125,33.304688 124.21875,30.492188 z M97.6875,12.960938 L142.35938,12.960938 L142.35938,16.617188 L125.10938,16.617188 C123.60938,19.210939 121.60938,22.289064 119.10938,25.851563 L121.82813,25.851563 L121.82813,55.242188 L117.79688,55.242188 L117.79688,27.304688 C112.45313,33.898438 106.15625,39.523438 98.90625,44.179688 C98.125,43.054688 97.25,41.929688 96.28125,40.804688 C106.125,34.648438 114.0625,26.585938 120.09375,16.617188 L97.6875,16.617188 z M153.79688,26.507813 L153.79688,38.367188 L167.0625,38.367188 L167.0625,26.507813 z M150.09375,23.179688 L170.76563,23.179688 L170.76563,41.695313 L153.79688,41.695313 L153.79688,45.023438 L150.09375,45.023438 z M144.89063,12.679688 L191.20313,12.679688 L191.20313,16.242188 L183.42188,16.242188 L183.42188,47.976563 C183.42188,52.195313 181.375,54.320313 177.28125,54.351563 C174.34375,54.351563 171.48438,54.335938 168.70313,54.304688 C168.54688,52.867188 168.29688,51.445313 167.95313,50.039063 C171.48438,50.289063 174.17188,50.414063 176.01563,50.414063 C178.32813,50.414063 179.48438,49.164063 179.48438,46.664063 L179.48438,16.242188 L144.89063,16.242188 z M218.90625,27.210938 L218.90625,35.976563 L232.6875,35.976563 L232.6875,27.210938 z M201.98438,27.210938 C202.07813,30.242188 202.00781,33.164063 201.77344,35.976563 L215.15625,35.976563 L215.15625,27.210938 z M218.90625,15.117188 L218.90625,23.835938 L232.6875,23.835938 L232.6875,15.117188 z M201.98438,15.117188 L201.98438,23.835938 L215.15625,23.835938 L215.15625,15.117188 z M198.23438,11.648438 L236.4375,11.648438 L236.4375,48.914063 C236.4375,52.632813 234.67188,54.492188 231.14063,54.492188 C228.98438,54.492188 226.5625,54.445313 223.875,54.351563 C223.71875,53.320313 223.48438,52.023438 223.17188,50.460938 C225.89063,50.648438 228.09375,50.742188 229.78125,50.742188 C231.71875,50.742188 232.6875,49.820313 232.6875,47.976563 L232.6875,39.351563 L218.90625,39.351563 L218.90625,54.257813 L215.15625,54.257813 L215.15625,39.351563 L201.51563,39.351563 C200.98438,45.851563 199.09375,51.242188 195.84375,55.523438 C195.03125,54.492188 194.10938,53.414063 193.07813,52.289063 C195.10938,49.414063 196.48438,46.226563 197.20313,42.726563 C197.89063,39.351563 198.23438,34.570313 198.23438,28.382813 z"/>
+		<Storyboard x:Key="ChangeLyricsStoryboard">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Offset" Storyboard.TargetProperty="(TranslateTransform.Y)" FillBehavior="Stop">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<CircleEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="PathText1" Storyboard.TargetProperty="Opacity">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+			</DoubleAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText1">
+				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText2">
+				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText3">
+				<DiscreteStringKeyFrame KeyTime="0:0:0.3" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="Lyrics2Root" Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<CircleEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0.75"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="SingleLine" Storyboard.TargetProperty="Opacity">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1" EasingFunction="{StaticResource Smooth}"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="HideLyricsStoryboard">
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText1">
+				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText2">
+				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			</StringAnimationUsingKeyFrames>
+			<StringAnimationUsingKeyFrames Storyboard.TargetName="Window" Storyboard.TargetProperty="LyricsText3">
+				<DiscreteStringKeyFrame KeyTime="0" Value=""/>
+			</StringAnimationUsingKeyFrames>
+		</Storyboard>
+		<local:OpenTypeWeightToFontWeightConverter x:Key="OpenTypeWeightToFontWeightConverter"/>
+		<local:RatioToValueConverter x:Key="RatioToValueConverter"/>
+		<local:HorizontalAlignmentToRenderTransformOriginConverter x:Key="HorizontalAlignmentToRenderTransformOriginConverter"/>
+	</Window.Resources>
+	<Grid x:Name="LayoutRoot">
+		<DockPanel>
+			<Border DockPanel.Dock="Top">
+				<Border.Height>
+					<MultiBinding Converter="{StaticResource RatioToValueConverter}">
+						<Binding ElementName="Window" Path="LyricsSetting.TopMargin"/>
+						<Binding ElementName="Window" Path="ActualHeight"/>
+					</MultiBinding>
+				</Border.Height>
+			</Border>
+			<Border DockPanel.Dock="Bottom">
+				<Border.Height>
+					<MultiBinding Converter="{StaticResource RatioToValueConverter}">
+						<Binding ElementName="Window" Path="LyricsSetting.BottomMargin"/>
+						<Binding ElementName="Window" Path="ActualHeight"/>
+					</MultiBinding>
+				</Border.Height>
+			</Border>
+			<Border DockPanel.Dock="Left">
+				<Border.Width>
+					<MultiBinding Converter="{StaticResource RatioToValueConverter}">
+						<Binding ElementName="Window" Path="LyricsSetting.LeftMargin"/>
+						<Binding ElementName="Window" Path="ActualWidth"/>
+					</MultiBinding>
+				</Border.Width>
+			</Border>
+			<Border DockPanel.Dock="Right">
+				<Border.Width>
+					<MultiBinding Converter="{StaticResource RatioToValueConverter}">
+						<Binding ElementName="Window" Path="LyricsSetting.RightMargin"/>
+						<Binding ElementName="Window" Path="ActualWidth"/>
+					</MultiBinding>
+				</Border.Width>
+			</Border>
+			<Grid x:Name="GrayPanel">
+                <Grid.Effect>
+                    <DropShadowEffect x:Name="ShadowEffect" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}"/>
+                </Grid.Effect>
+                <Grid x:Name="LyricsRoot" VerticalAlignment="{Binding LyricsSetting.VerticalAlignment, ElementName=Window}" ClipToBounds="True" HorizontalAlignment="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}">
+					<UniformGrid x:Name="DoubleLine" Rows="3" Columns="1" Visibility="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolReverseToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}">
+						<UniformGrid.RenderTransform>
+							<TranslateTransform x:Name="Offset" Y="{Binding Height, ElementName=Lyrics3Root}"/>
+						</UniformGrid.RenderTransform>
+						<Viewbox x:Name="Lyrics1Root" StretchDirection="DownOnly" Height="{Binding ActualHeight, ElementName=Lyrics1Root2}" HorizontalAlignment="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}">
+							<Grid x:Name="Lyrics1Root2">
+								<Path x:Name="PathText1">
+									<Path.Stroke>
+										<SolidColorBrush Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}"/>
+									</Path.Stroke>
+								</Path>
+                                <TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}" Text="{x:Static resx:Resources.LyricsWindowLyricsRoot1TB}"/>
+							</Grid>
+						</Viewbox>
+						<Viewbox x:Name="Lyrics2Root" StretchDirection="DownOnly" RenderTransformOrigin="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window, Converter={StaticResource HorizontalAlignmentToRenderTransformOriginConverter}}" Height="{Binding ActualHeight, ElementName=Lyrics2Root2}" HorizontalAlignment="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}">
+							<Viewbox.RenderTransform>
+								<ScaleTransform ScaleX="0.75" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
+							</Viewbox.RenderTransform>
+							<Grid x:Name="Lyrics2Root2">
+								<Path x:Name="PathText2" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
+								</Path>
+                                <TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}" Text="{x:Static resx:Resources.LyricsWindowLyricsRoot1TB}"/>
+                            </Grid>
+						</Viewbox>
+						<Viewbox x:Name="Lyrics3Root" StretchDirection="DownOnly" RenderTransformOrigin="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window, Converter={StaticResource HorizontalAlignmentToRenderTransformOriginConverter}}" Height="{Binding ActualHeight, ElementName=Lyrics3Root2}" HorizontalAlignment="{Binding LyricsSetting.HorizontalAlignment, ElementName=Window}">
+							<Viewbox.RenderTransform>
+								<ScaleTransform ScaleX="0.75" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}"/>
+							</Viewbox.RenderTransform>
+							<Grid x:Name="Lyrics3Root2">
+								<Path x:Name="PathText3" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
+								</Path>
+                                <TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}" Text="{x:Static resx:Resources.LyricsWindowLyricsRoot1TB}"/>
+                            </Grid>
+						</Viewbox>
+					</UniformGrid>
+					<Grid x:Name="SingleLine" Visibility="{Binding LyricsSetting.SingleLineLyrics, ElementName=Window, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Collapsed}}">
+						<Viewbox x:Name="SingleLineLyrics1Root" StretchDirection="DownOnly">
+							<Grid>
+								<Path x:Name="SingleLinePathText1" StrokeThickness="{Binding StrokeThickness, ElementName=PathText1}" Fill="{Binding Fill, ElementName=PathText1}" Stroke="{Binding Stroke, ElementName=PathText1}">
+								</Path>
+                                <TextBlock Visibility="Hidden" FontFamily="{Binding LyricsSetting.FontFamily, ElementName=Window}" FontSize="{Binding LyricsSetting.FontSize, ElementName=Window}" FontWeight="{Binding LyricsSetting.FontWeight, ElementName=Window}" Text="{x:Static resx:Resources.LyricsWindowLyricsRoot1TB}"/>
+                            </Grid>
+						</Viewbox>
+					</Grid>
+				</Grid>
+			</Grid>
+		</DockPanel>
+	</Grid>
+</Window>

@@ -1,0 +1,1185 @@
+﻿<!--
+Author : K.F.Storm
+Email : yk000123 at sina.com
+Website : http://www.kfstorm.com	
+-->
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+    xmlns:resx="clr-namespace:DoubanFM.Resources"
+	xmlns:local="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	x:Class="DoubanFM.Style"
+	mc:Ignorable="d PresentationOptions">
+	<!-- 应该在此定义资源字典条目。-->
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/DoubanFM;component/Theme.xaml"/>
+	</ResourceDictionary.MergedDictionaries>
+	<local:WindowBackgroundToSliderForegroundConverter x:Key="WindowBackgroundToSliderForegroundConverter"/>
+	<PowerEase x:Key="Smooth" Power="3" PresentationOptions:Freeze="True"/>
+	<local:SliderThumbWidthConverter x:Key="converter1"/>
+	<local:BoolReverseConverter x:Key="BoolReverseConverter"/>
+	<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+	<local:BoolReverseToVisibilityConverter x:Key="BoolReverseToVisibilityConverter"/>
+	<local:ChannelToCanFavoriteVisibilityConverter x:Key="ChannelToCanFavoriteVisibilityConverter"/>
+	<local:BooleanChooserConverter x:Key="BooleanChooserConverter"/>
+	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+	<LinearGradientBrush x:Key="MetroColor1" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FFE93613" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFFF593A" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor2" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF9B1283" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFDC2FBA" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor3" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FFF18312" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFFFBD34" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor4" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF26ADC6" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF4ED5DE" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor5" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF98BC3A" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFBBDA49" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor6" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF1B56A7" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF207ED0" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor7" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FFD2CA00" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFD5E95F" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor8" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF258122" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF5FC44A" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor9" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF4C25BC" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFA161C6" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor10" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF2EC67D" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF69E49D" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor11" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FFFF6900" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FFFF795B" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="MetroColor12" StartPoint="0,1" EndPoint="1,0" PresentationOptions:Freeze="True">
+		<GradientStop Color="#FF709906" Offset="0" PresentationOptions:Freeze="True"/>
+		<GradientStop Color="#FF50C232" Offset="1" PresentationOptions:Freeze="True"/>
+	</LinearGradientBrush>
+
+	<AlternationConverter x:Key="AlternationConverter">
+		<StaticResource ResourceKey="MetroColor1"/>
+		<StaticResource ResourceKey="MetroColor2"/>
+		<StaticResource ResourceKey="MetroColor3"/>
+		<StaticResource ResourceKey="MetroColor4"/>
+		<StaticResource ResourceKey="MetroColor5"/>
+		<StaticResource ResourceKey="MetroColor6"/>
+		<StaticResource ResourceKey="MetroColor7"/>
+		<StaticResource ResourceKey="MetroColor8"/>
+		<StaticResource ResourceKey="MetroColor9"/>
+		<StaticResource ResourceKey="MetroColor10"/>
+		<StaticResource ResourceKey="MetroColor11"/>
+		<StaticResource ResourceKey="MetroColor12"/>
+	</AlternationConverter>
+	<Style x:Key="SliderStyleForProgress" TargetType="{x:Type Slider}">
+		<Setter Property="Height" Value="5"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Slider}">
+					<Grid>
+						<Border x:Name="TrackBackground" Background="{TemplateBinding Background}">
+							<Rectangle x:Name="PART_SelectionRange" Visibility="Hidden"/>
+						</Border>
+						<Track x:Name="PART_Track">
+							<Track.DecreaseRepeatButton>
+								<RepeatButton x:Name="LeftRepeatButton" Style="{StaticResource stScrollBtn}" Background="#7FFFFFFF" IsEnabled="False"/>
+							</Track.DecreaseRepeatButton>
+							<Track.IncreaseRepeatButton>
+								<RepeatButton x:Name="RightRepeatButton" Style="{StaticResource stScrollBtn}" Background="#7F000000" IsEnabled="False"/>
+							</Track.IncreaseRepeatButton>
+							<Track.Thumb>
+								<Thumb x:Name="Thumb" Width="0" Height="0"/>
+							</Track.Thumb>
+						</Track>
+						<Rectangle HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=LeftRepeatButton}" Fill="{TemplateBinding Foreground}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="PauseStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.PauseThumbButton}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Viewbox>
+						<Canvas Width="30" Height="30" Background="{TemplateBinding Background}">
+							<Rectangle x:Name="Rectangle" Width="10" Height="30" Canvas.Left="20" Canvas.Top="0" Stretch="Fill" Fill="{TemplateBinding Foreground}"/>
+							<Rectangle x:Name="Rectangle_0" Width="10" Height="30" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="{TemplateBinding Foreground}"/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsChecked" Value="True">
+                <Setter Property="ToolTip" Value="{x:Static resx:Resources.PlayThumbButton}"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type CheckBox}">
+							<Viewbox>
+								<Canvas Width="26" Height="30" Background="{TemplateBinding Background}">
+									<Path x:Name="Path" Width="25.981" Height="30.0003" Canvas.Left="2.87779e-007" Canvas.Top="-6.35788e-007" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 25.981,15.0001L 2.87779e-007,-6.35788e-007L 2.87779e-007,30.0003L 25.981,15.0001 Z "/>
+								</Canvas>
+							</Viewbox>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="NextStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.NextThumbButton}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="Document" Width="30" Height="20" Clip="F1 M 0,0L 30,0L 30,20L 0,20L 0,0" Background="Transparent">
+							<Canvas Width="30" Height="30" Canvas.Left="0" Canvas.Top="0">
+								<Path x:Name="Path" Width="30" Height="20" Canvas.Left="-1.98682e-008" Canvas.Top="-9.53674e-007" Stretch="Fill" Data="M 30,-9.53674e-007L 26,-9.53674e-007L 26,8L 13,-9.53674e-007L 13,8L -1.98682e-008,-9.53674e-007L -1.98682e-008,20L 13,12L 13,20L 26,12L 26,20L 30,20L 30,-9.53674e-007 Z " Fill="{TemplateBinding Foreground}"/>
+							</Canvas>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="LikeStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
+		<Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.LikeThumbButton}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Viewbox>
+						<Canvas Width="256" Height="220" Clip="F1 M 0,0L 256,0L 256,220L 0,220L 0,0" Background="{TemplateBinding Background}">
+							<Path x:Name="path" Width="256" Height="216.961" Canvas.Left="1.67144e-005" Canvas.Top="5.03886" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 128,220C 154.667,200.333 186,172 202,156C 218,140 256,94 256,69C 256,-1.99995 194.288,0.999451 176,5C 144,12 135.016,36.0526 128,44C 120.984,36.0526 112,13 80,6C 61.7118,1.99945 2.61674e-005,-0.999954 5.82235e-006,70C 2.61674e-005,95 38,140 54,156C 70,172 101.333,200.333 128,220" Stroke="{TemplateBinding BorderBrush}" StrokeStartLineCap="Round" StrokeThickness="0"/>
+						</Canvas>
+					</Viewbox>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="StrokeThickness" TargetName="path" Value="20"/>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="StrokeThickness" TargetName="path" Value="0"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsChecked" Value="True">
+				<Setter Property="Foreground" Value="#DFE75849"/>
+                <Setter Property="ToolTip" Value="{x:Static resx:Resources.UnlikeThumbButton}"/>
+			</Trigger>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="#7F222222"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="NeverStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.DontPlayThumbButton}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="185" Height="256" Canvas.Left="35.5" Canvas.Top="4.57764e-005" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 198.667,84L 198.667,236C 198.667,247.046 189.712,256 178.667,256L 77.3332,256C 66.2875,256 57.3332,247.046 57.3332,236L 57.3332,84C 57.3332,82.6301 57.471,81.2925 57.7333,80L 198.267,80C 198.529,81.2925 198.667,82.6301 198.667,84 Z M 91.2256,108.496L 91.2256,227.504L 108.774,227.504L 108.774,108.496L 91.2256,108.496 Z M 147.226,108.496L 147.226,227.504L 164.774,227.504L 164.774,108.496L 147.226,108.496 Z M 85,4.57764e-005L 171,4.57764e-005C 173.761,4.57764e-005 176,2.2386 176,5.00005L 176,32L 220.5,32L 220.5,64L 35.5,64L 35.5,32L 80,32L 80,5.00005C 80,2.2386 82.2386,4.57764e-005 85,4.57764e-005 Z M 101,16.0001C 98.2385,16.0001 95.9999,18.2387 95.9999,21.0001L 95.9999,32L 160,32L 160,21.0001C 160,18.2387 157.761,16.0001 155,16.0001L 101,16.0001 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="FavoriteStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.FavoriteButton}"/>
+		<Setter Property="BorderBrush" Value="#7FFFFFFF"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Viewbox>
+						<Canvas Width="128" Height="256" Clip="F1 M 0,0L 128,0L 128,256L 0,256L 0,0">
+							<Path Width="128" Height="256" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="{TemplateBinding BorderBrush}" Data="F1 M 0,0L 128,0L 128,256L 64,192L 0,256L 0,0 Z M 16,16L 16,216L 64,168L 112,216L 112,16L 16,16 Z "/>
+							<Path Width="96" Height="200" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 16,16L 112,16L 112,216L 64,168L 16,216L 16,16 Z "/>
+							<Path x:Name="PWhite" Width="128" Height="256" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="{TemplateBinding BorderBrush}" Data="F1 M 0,0L 128,0L 128,256L 64,192L 0,256L 0,0 Z" Visibility="Hidden"/>
+						</Canvas>
+					</Viewbox>
+					<ControlTemplate.Triggers>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked" Value="True"/>
+								<Condition Property="IsMouseOver" Value="False"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="Visibility" TargetName="PWhite" Value="Visible"/>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsChecked" Value="True"/>
+								<Condition Property="IsPressed" Value="True"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="Visibility" TargetName="PWhite" Value="Visible"/>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsChecked" Value="False">
+				<Setter Property="Foreground" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsChecked" Value="True">
+				<Setter Property="Foreground" Value="#7FFFFFFF"/>
+                <Setter Property="ToolTip" Value="{x:Static resx:Resources.UnfavoriteButton}"/>
+			</Trigger>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="BorderBrush" Value="#7F000000"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="BorderBrush" Value="#7FFFFFFF"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="ChannelStyle" TargetType="{x:Type ListBoxItem}">
+		<!--<Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>-->
+		<!--<Setter Property="FontSize" Value="20"/>-->
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Width" Value="110"/>
+		<Setter Property="MinHeight" Value="70"/>
+		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="SnapsToDevicePixels" Value="False"/>
+		<EventSetter Event="MouseEnter" Handler="Channel_MouseEnter"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBoxItem}">
+					<Grid x:Name="grid" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
+						<Grid.RenderTransform>
+							<TransformGroup>
+								<ScaleTransform/>
+								<SkewTransform/>
+								<RotateTransform/>
+								<TranslateTransform/>
+							</TransformGroup>
+						</Grid.RenderTransform>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal">
+									<Storyboard PresentationOptions:Freeze="True">
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="MouseOver">
+									<Storyboard PresentationOptions:Freeze="True">
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.2"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.2"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
+												<EasingDoubleKeyFrame.EasingFunction>
+													<CircleEase EasingMode="EaseOut"/>
+												</EasingDoubleKeyFrame.EasingFunction>
+											</EasingDoubleKeyFrame>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
+												<EasingDoubleKeyFrame.EasingFunction>
+													<CircleEase EasingMode="EaseOut"/>
+												</EasingDoubleKeyFrame.EasingFunction>
+											</EasingDoubleKeyFrame>
+										</DoubleAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled"/>
+							</VisualStateGroup>
+							<VisualStateGroup x:Name="SelectionStates">
+								<VisualState x:Name="Unselected"/>
+								<VisualState x:Name="Selected">
+									<Storyboard AutoReverse="True" RepeatBehavior="Forever" PresentationOptions:Freeze="True">
+										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
+											<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
+										</ColorAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="SelectedUnfocused">
+									<Storyboard AutoReverse="True" RepeatBehavior="Forever" PresentationOptions:Freeze="True">
+										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
+											<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
+										</ColorAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup x:Name="ValidationStates">
+								<VisualState x:Name="Valid"/>
+								<VisualState x:Name="InvalidFocused"/>
+								<VisualState x:Name="InvalidUnfocused"/>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<ContentPresenter x:Name="contentPresenter" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						<Border x:Name="border1" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent"/>
+						<CheckBox x:Name="CbFavorite" Width="16" Height="32" Margin="0,-2,8,0" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0" Visibility="{Binding Converter={StaticResource ChannelToCanFavoriteVisibilityConverter}}" Style="{StaticResource FavoriteStyle}" Click="CbFavorite_Click">
+							<CheckBox.OpacityMask>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="White"/>
+									<GradientStop Offset="0" Color="White"/>
+									<GradientStop Offset="0" Color="Transparent"/>
+									<GradientStop Offset="1" Color="Transparent"/>
+								</LinearGradientBrush>
+							</CheckBox.OpacityMask>
+						</CheckBox>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="Panel.ZIndex" Value="1"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Margin" Value="3"/>
+		<Setter Property="BorderThickness" Value="5"/>
+	</Style>
+	<Style x:Key="ChannelsStyle" TargetType="{x:Type ListBox}">
+		<Setter Property="AlternationCount" Value="12"/>
+		<Setter Property="ItemContainerStyle" Value="{StaticResource ChannelStyle}"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+		<Setter Property="ItemsPanel">
+			<Setter.Value>
+				<ItemsPanelTemplate>
+					<WrapPanel>
+					</WrapPanel>
+				</ItemsPanelTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<TextBlock Text="{Binding Name}" FontSize="20" TextWrapping="Wrap" Padding="10" TextTrimming="CharacterEllipsis"/>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBox}">
+					<ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+						<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+					</ScrollViewer>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+	
+	<Style x:Key="ControlPanelTabItemStyle" TargetType="{x:Type TabItem}">
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+		<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TabItem}">
+					<Grid x:Name="grid" SnapsToDevicePixels="true">
+						<Border x:Name="Bd" Background="{TemplateBinding Background}" >
+							<ContentPresenter x:Name="Content" ContentSource="Header" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+						</Border>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsSelected" Value="true">
+							<Setter Property="Panel.ZIndex" Value="1"/>
+							<Setter Property="Background" Value="#7F000000"/>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition SourceName="grid" Property="IsMouseOver" Value="True"/>
+								<Condition Property="IsSelected" Value="False"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="Background" Value="#7FFFFFFF"/>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="OverridesDefaultStyle" Value="True"/>
+	</Style>
+	<Style x:Key="ControlPanelStyle" TargetType="{x:Type TabControl}">
+		<Style.Resources>
+			<Storyboard x:Key="ControlPanelStoryboard" PresentationOptions:Freeze="True">
+				<DoubleAnimation Duration="0:0:0.5" From="0" To="1" Storyboard.TargetProperty="SelectedItem.Content.Opacity"/>
+			</Storyboard>
+		</Style.Resources>
+		<EventSetter Event="SelectionChanged" Handler="ControlPanelStyle_SelectionChanged"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TabControl}">
+					<Grid Background="{TemplateBinding Background}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="50"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Border Panel.ZIndex="1">
+							<StackPanel x:Name="HeaderPanel" IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+						</Border>
+						<Border x:Name="ContentPanel" Background="#7F000000" Grid.Column="1" ClipToBounds="True" >
+							<ContentPresenter x:Name="SelectedContentHost" ContentSource="SelectedContent"/>
+						</Border>
+					</Grid>	
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ItemContainerStyle" Value="{StaticResource ControlPanelTabItemStyle}"/>
+		<Setter Property="OverridesDefaultStyle" Value="True"/>
+	</Style>
+    <Border x:Key="TabItemChannels" Background="Transparent" ToolTip="{x:Static resx:Resources.ChannelsTab}">
+		<Viewbox>
+			<Canvas x:Name="DoubanFM__Channels" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+				<Canvas Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
+					<Rectangle x:Name="Rectangle" Width="32" Height="192" Canvas.Left="112" Canvas.Top="32.0001" Stretch="Fill" Fill="White"/>
+					<Rectangle x:Name="Rectangle_0" Width="24" Height="96" Canvas.Left="64" Canvas.Top="80" Stretch="Fill" Fill="White"/>
+					<Rectangle x:Name="Rectangle_1" Width="24" Height="96" Canvas.Left="16" Canvas.Top="80" Stretch="Fill" Fill="White"/>
+					<Rectangle x:Name="Rectangle_2" Width="24" Height="96" Canvas.Left="216" Canvas.Top="80" Stretch="Fill" Fill="White"/>
+					<Rectangle x:Name="Rectangle_3" Width="24" Height="96" Canvas.Left="168" Canvas.Top="80" Stretch="Fill" Fill="White"/>
+				</Canvas>
+			</Canvas>
+		</Viewbox>
+	</Border>
+    <Border x:Key="TabItemAccount" Background="Transparent" ToolTip="{x:Static resx:Resources.AccountTab}">
+		<Viewbox>
+			<Canvas x:Name="DoubanFM__Account" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+				<Canvas Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
+					<Path x:Name="Path" Width="208" Height="229.333" Canvas.Left="24" Canvas.Top="10.6667" Stretch="Fill" Fill="White" Data="M 24,240L 24,205.907C 41.4222,201.896 58.8444,197.885 71.6778,195.567C 84.5111,193.249 92.7556,192.624 97.8778,189.646C 103,186.667 105,181.333 106,177C 107,172.667 107,169.333 107,166.667C 107,164 107,162 105.5,159.667C 104,157.333 101,154.667 98.3334,152C 95.6667,149.333 93.3334,146.667 91,142.667C 88.6667,138.667 86.3334,133.333 84.3445,126.722C 82.3556,120.111 80.7111,112.222 79.0667,104.334C 78.7556,105.238 78.4445,106.143 77.7667,106.754C 77.0889,107.365 76.0445,107.682 74.6889,107.341C 73.3334,107 71.6667,106 69.5,102.833C 67.3334,99.6667 64.6667,94.3333 62.6667,90.1667C 60.6667,86 59.3334,83 59.3334,79.6667C 59.3334,76.3333 60.6667,72.6667 62.3334,70.6667C 64,68.6667 66,68.3333 68,68C 69.3334,56 70.6667,44 80.6667,32.6667C 90.6667,21.3333 109.333,10.6667 127.833,10.6667C 146.333,10.6667 164.667,21.3333 174.667,32.6667C 184.667,44 186.333,56 188,68C 190,68.3333 192,68.6667 193.667,70.6667C 195.333,72.6667 196.667,76.3333 196.667,79.6667C 196.667,83 195.333,86 193.333,90.1667C 191.333,94.3333 188.667,99.6667 186.5,102.833C 184.333,106 182.667,107 181.311,107.341C 179.956,107.682 178.911,107.365 178.233,106.754C 177.556,106.143 177.245,105.238 176.933,104.334C 175.289,112.223 173.645,120.111 171.656,126.722C 169.667,133.333 167.333,138.667 165,142.667C 162.667,146.667 160.333,149.333 157.667,152C 155,154.667 152,157.333 150.5,159.667C 149,162 149,164 149,166.667C 149,169.333 149,172.667 150,177C 151,181.333 153,186.667 158.122,189.646C 163.245,192.624 171.489,193.249 184.322,195.567C 197.156,197.885 214.578,201.896 232,205.907L 232,240L 24,240 Z "/>
+				</Canvas>
+			</Canvas>
+		</Viewbox>
+    </Border>
+    <Border x:Key="TabItemSettings" Background="Transparent" ToolTip="{x:Static resx:Resources.SettingsTab}">
+		<Viewbox>
+			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+				<Path Width="192" Height="192" Canvas.Left="32" Canvas.Top="32" Stretch="Fill" Fill="White" Data="M 128,32C 131.223,32 134.409,32.1589 137.55,32.4691L 148.399,45.1204C 156.893,47.2037 164.887,50.5586 172.168,54.9716L 188.792,53.697C 193.73,57.7421 198.258,62.2699 202.303,67.2083L 201.028,83.8324C 205.441,91.1134 208.796,99.1072 210.88,107.6L 223.531,118.45C 223.841,121.591 224,124.777 224,128C 224,131.223 223.841,134.408 223.531,137.55L 210.88,148.399C 208.796,156.892 205.441,164.886 201.028,172.168L 202.303,188.792C 198.258,193.73 193.73,198.258 188.792,202.303L 172.168,201.028C 164.887,205.441 156.893,208.796 148.399,210.88L 137.55,223.531C 134.408,223.841 131.223,224 128,224C 124.777,224 121.592,223.841 118.451,223.531L 107.601,210.88C 99.1075,208.796 91.1133,205.441 83.8319,201.028L 67.208,202.303C 62.2699,198.258 57.7423,193.73 53.6973,188.792L 54.9719,172.168C 50.5586,164.887 47.2036,156.892 45.1201,148.399L 32.469,137.549C 32.1588,134.408 32,131.223 32,128C 32,124.777 32.1588,121.591 32.4691,118.45L 45.1203,107.601C 47.2037,99.1072 50.5587,91.1132 54.9719,83.8319L 53.6973,67.2081C 57.7424,62.2698 62.2701,57.7421 67.2084,53.697L 83.8324,54.9716C 91.1135,50.5585 99.1075,47.2036 107.601,45.1202L 118.45,32.469C 121.591,32.1588 124.777,32 128,32 Z M 128,64C 92.6538,64 64,92.6538 64,128C 64,163.346 92.6538,192 128,192C 163.346,192 192,163.346 192,128C 192,92.6538 163.346,64 128,64 Z "/>
+			</Canvas>
+		</Viewbox>
+	</Border>
+    <Border x:Key="TabItemInfo" Background="Transparent" ToolTip="{x:Static resx:Resources.InfoTab}">
+		<Viewbox>
+			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+				<Path Width="192" Height="192" Canvas.Left="32" Canvas.Top="32" Stretch="Fill" Fill="White" Data="F1 M 128,32C 181.493,32 224,74.0339 224,128C 224,181.966 181.493,224 128,224C 74.5073,224 32,181.966 32,128C 32,74.0339 74.5073,32 128,32 Z M 128,52.5715C 116.639,52.5715 107.429,61.7817 107.429,73.1429C 107.429,84.5042 116.639,93.7143 128,93.7143C 139.361,93.7143 148.571,84.5042 148.571,73.1429C 148.571,61.7817 139.361,52.5715 128,52.5715 Z M 107.429,107.429L 107.429,203.429L 148.571,203.429L 148.571,107.429L 107.429,107.429 Z "/>
+			</Canvas>
+		</Viewbox>
+	</Border>
+    <Border x:Key="TabItemSearch" Background="Transparent" ToolTip="{x:Static resx:Resources.SearchTab}">
+		<Viewbox>
+			<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+				<Path Width="193.87" Height="201" Canvas.Left="31.5" Canvas.Top="31.5" Stretch="Fill" Fill="White" Data="F1 M 108,56C 79.2812,56 56,79.2812 56,108C 56,136.719 79.2812,160 108,160C 136.719,160 160,136.719 160,108C 160,79.2812 136.719,56 108,56 Z M 108,32C 149.974,32 184,66.0264 184,108C 184,122.615 179.874,136.267 172.724,147.854L 224.87,200L 192.87,232L 138.502,177.632C 129.165,181.727 118.848,184 108,184C 66.0263,184 32,149.974 32,108C 32,66.0264 66.0264,32 108,32 Z "/>
+			</Canvas>
+		</Viewbox>
+	</Border>
+	
+	<Style x:Key="MinimizeStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Minimize}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+	<Rectangle Width="192" Height="32" Canvas.Left="32" Canvas.Top="192" Stretch="Fill" Fill="{TemplateBinding Foreground}"/>
+</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ToNotifyIconStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.MinimizeToTray}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+	<Path Width="224" Height="224" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" StrokeThickness="32" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Data="M 32,32L 224,224"/>
+	<Path Width="127.5" Height="128.25" Canvas.Left="112.5" Canvas.Top="112" Stretch="Fill" StrokeThickness="32" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Data="M 128.5,224.25L 224,224L 224,128"/>
+</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ExitStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Exit}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="214.627" Height="214.627" Canvas.Left="20.6863" Canvas.Top="20.6863" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 20.6863,212.686L 105.373,128L 20.6863,43.3137L 43.3137,20.6863L 128,105.373L 212.686,20.6863L 235.314,43.3137L 150.627,128L 235.314,212.686L 212.686,235.314L 128,150.627L 43.3137,235.314L 20.6863,212.686 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ChannelSearchItemStyle" TargetType="{x:Type ListBoxItem}">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="{Binding (ItemsControl.AlternationIndex), Converter={StaticResource AlternationConverter}, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<EventSetter Event="MouseEnter" Handler="Channel_MouseEnter"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBoxItem}">
+					<Grid x:Name="grid" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
+						<Grid.RenderTransform>
+							<TransformGroup>
+								<ScaleTransform/>
+								<SkewTransform/>
+								<RotateTransform/>
+								<TranslateTransform/>
+							</TransformGroup>
+						</Grid.RenderTransform>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal">
+									<Storyboard PresentationOptions:Freeze="True">
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+										</DoubleAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="MouseOver">
+									<Storyboard PresentationOptions:Freeze="True">
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
+												<EasingDoubleKeyFrame.EasingFunction>
+													<CircleEase EasingMode="EaseOut"/>
+												</EasingDoubleKeyFrame.EasingFunction>
+											</EasingDoubleKeyFrame>
+										</DoubleAnimationUsingKeyFrames>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="OpacityMask.(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="CbFavorite" BeginTime="0:0:1">
+											<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1">
+												<EasingDoubleKeyFrame.EasingFunction>
+													<CircleEase EasingMode="EaseOut"/>
+												</EasingDoubleKeyFrame.EasingFunction>
+											</EasingDoubleKeyFrame>
+										</DoubleAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled"/>
+							</VisualStateGroup>
+							<VisualStateGroup x:Name="SelectionStates">
+								<VisualState x:Name="Unselected"/>
+								<VisualState x:Name="Selected">
+									<Storyboard AutoReverse="True" RepeatBehavior="Forever" PresentationOptions:Freeze="True">
+										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
+											<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
+										</ColorAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="SelectedUnfocused">
+									<Storyboard AutoReverse="True" RepeatBehavior="Forever" PresentationOptions:Freeze="True">
+										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="border1">
+											<EasingColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
+										</ColorAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup x:Name="ValidationStates">
+								<VisualState x:Name="Valid"/>
+								<VisualState x:Name="InvalidFocused"/>
+								<VisualState x:Name="InvalidUnfocused"/>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<ContentPresenter x:Name="contentPresenter" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						<Border x:Name="border1" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent"/>
+						<CheckBox x:Name="CbFavorite" Width="16" Height="32" Margin="0,-2,16,0" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0" Visibility="{Binding Converter={StaticResource ChannelToCanFavoriteVisibilityConverter}}" Style="{StaticResource FavoriteStyle}" Click="CbFavorite_Click">
+							<CheckBox.OpacityMask>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+									<GradientStop Offset="0" Color="White"/>
+									<GradientStop Offset="0" Color="White"/>
+									<GradientStop Offset="0" Color="Transparent"/>
+									<GradientStop Offset="1" Color="Transparent"/>
+								</LinearGradientBrush>
+							</CheckBox.OpacityMask>
+						</CheckBox>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="Panel.ZIndex" Value="1"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Margin" Value="3"/>
+		<Setter Property="BorderThickness" Value="5"/>
+	</Style>
+	<Style x:Key="SearchResultListStyle" TargetType="{x:Type ListBox}">
+		<Setter Property="Background" Value="#7F000000"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+		<Setter Property="ItemContainerStyle" Value="{StaticResource ChannelSearchItemStyle}"/>
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate DataType="{x:Type core:ChannelSearchItem}">
+					<Grid Height="70" Width="225">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="10"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Viewbox Width="70">
+							<Image Source="{Binding Picture}"/>
+						</Viewbox>
+						<Grid Grid.Column="2">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+							<TextBlock Foreground="White" Text="{Binding Title}" MaxHeight="50" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+							<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+								<TextBlock Margin="0,0,20,0" Visibility="{Binding IsArtist, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="White"><Run Text="{x:Static resx:Resources.Artist}"/></TextBlock>
+                                <TextBlock Margin="0,0,20,0" Visibility="{Binding CanContextPlay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="White"><Run Text="{x:Static resx:Resources.Listen}"/></TextBlock>
+                                <Button x:Name="Link" BorderThickness="1" Padding="0" Click="Link_Click" Tag="{Binding Link, Mode=OneWay}" Content="{x:Static resx:Resources.AlbumInfoPage}"/>
+							</StackPanel>
+						</Grid>
+					</Grid>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="AlternationCount" Value="12"/>
+	</Style>
+	<Style x:Key="SearchStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Search}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="193.87" Height="201" Canvas.Left="31.5" Canvas.Top="31.5" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 108,56C 79.2812,56 56,79.2812 56,108C 56,136.719 79.2812,160 108,160C 136.719,160 160,136.719 160,108C 160,79.2812 136.719,56 108,56 Z M 108,32C 149.974,32 184,66.0264 184,108C 184,122.615 179.874,136.267 172.724,147.854L 224.87,200L 192.87,232L 138.502,177.632C 129.165,181.727 118.848,184 108,184C 66.0263,184 32,149.974 32,108C 32,66.0264 66.0264,32 108,32 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="PreviousPageStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Previous}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="128" Clip="F1 M 0,0L 256,0L 256,128L 0,128L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="224" Height="96" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 16,64L 99.1384,16L 99.1384,40L 240,40L 240,88L 99.1384,88L 99.1384,112L 16,64 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="NextPageStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.Next}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="128" Clip="F1 M 0,0L 256,0L 256,128L 0,128L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="224" Height="96" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 240,64L 156.862,112L 156.862,88L 16,88L 16,40L 156.862,40L 156.862,16L 240,64 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="UpdateDetailStyle" TargetType="{x:Type TextBox}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TextBoxBase}">
+					<Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+						<ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+		<Setter Property="TextWrapping" Value="Wrap"/>
+		<Setter Property="Focusable" Value="False"/>
+		<Setter Property="IsReadOnly" Value="True"/>
+		<Setter Property="Cursor" Value="Arrow"/>
+		
+	</Style>
+	<Style x:Key="ShareStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Share}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__Share" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="183.478" Height="221.57" Canvas.Left="22" Canvas.Top="17.215" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 77.7556,124.284C 77.9168,125.5 78,126.74 78,128C 78,129.26 77.9168,130.5 77.7556,131.716L 162.793,186.94C 167.062,184.305 172.093,182.785 177.478,182.785C 192.942,182.785 205.478,195.321 205.478,210.785C 205.478,226.249 192.942,238.785 177.478,238.785C 162.014,238.785 149.478,226.249 149.478,210.785C 149.478,209.525 149.561,208.285 149.722,207.069L 64.6849,151.845C 60.4156,154.48 55.3853,156 50,156C 34.536,156 22,143.464 22,128C 22,112.536 34.536,100 50,100C 55.3853,100 60.4156,101.52 64.6849,104.155L 149.722,48.9313C 149.561,47.7154 149.478,46.4749 149.478,45.215C 149.478,29.751 162.014,17.215 177.478,17.215C 192.942,17.215 205.478,29.751 205.478,45.215C 205.478,60.679 192.942,73.215 177.478,73.215C 172.093,73.215 167.063,71.6947 162.793,69.0598L 77.7556,124.284 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareDoubanStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareDouban}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__ShareDouban" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+	<Path Width="220" Height="220" Canvas.Left="17.9997" Canvas.Top="18.0004" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 61.9996,18.0004L 194,18.0004C 218.3,18.0004 238,37.6998 238,62.0004L 238,194C 238,218.301 218.3,238 194,238L 61.9996,238C 37.6991,238 17.9997,218.301 17.9997,194L 17.9997,62.0004C 17.9997,37.6998 37.6991,18.0004 61.9996,18.0004 Z M 48.7836,50.9154C 43.0224,53.796 43.0224,56.6766 48.7836,59.5572L 201.455,59.5572C 207.216,56.6766 207.216,53.796 201.455,50.9154L 48.7836,50.9154 Z M 77.5895,79.7214C 67.9876,79.7214 63.1866,84.5223 63.1866,94.1243L 63.1866,128.691C 63.1866,139.254 67.9876,144.055 77.5895,143.094L 175.53,143.094C 186.092,144.055 190.893,139.254 189.933,128.691L 189.933,94.1243C 190.893,84.5223 186.092,79.7214 175.53,79.7214L 77.5895,79.7214 Z M 172.649,88.3631C 179.371,88.3631 182.251,91.2437 181.291,97.0049L 181.291,125.811C 182.251,132.532 179.371,135.413 172.649,134.453L 80.4701,134.453C 74.709,135.413 71.8284,132.532 71.8284,125.811L 71.8284,97.0049C 71.8284,91.2437 74.709,88.3631 80.4701,88.3631L 172.649,88.3631 Z M 162.567,150.296C 158.726,166.619 152.485,181.502 143.843,194.945L 107.836,194.945C 102.075,177.662 95.8333,162.778 89.1119,150.296C 83.3507,147.415 80.9502,149.336 81.9104,156.057C 86.7114,163.739 91.9925,176.701 97.7537,194.945L 45.903,194.945C 41.102,197.826 41.102,200.706 45.903,203.587L 207.216,203.587C 212.977,200.706 212.977,197.826 207.216,194.945L 153.925,194.945C 161.607,182.463 167.368,168.54 171.209,153.176C 170.249,147.415 167.368,146.455 162.567,150.296 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareWeiboStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareWeibo}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__ShareWeibo" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="209.463" Height="167.047" Canvas.Left="8.00002" Canvas.Top="58.16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 108.861,210.976C 69.1138,214.898 34.8028,196.931 32.2209,170.834C 29.639,144.743 59.7782,120.408 99.5214,116.478C 139.273,112.549 173.585,130.516 176.161,156.601C 178.739,182.706 148.613,207.043 108.861,210.976 Z M 188.361,124.35C 184.98,123.334 182.661,122.646 184.434,118.203C 188.268,108.558 188.666,100.237 184.506,94.3018C 176.712,83.1639 155.386,83.7669 130.942,94.0011C 130.942,93.9882 123.267,97.3594 125.228,91.2706C 128.99,79.1836 128.423,69.0573 122.571,63.2135C 109.308,49.9421 74.0409,63.714 43.7991,93.9475C 21.1507,116.6 8.00002,140.604 8.00002,161.363C 8.00002,201.067 58.9159,225.207 108.727,225.207C 174.026,225.207 217.463,187.268 217.463,157.146C 217.463,138.947 202.134,128.62 188.361,124.35 Z "/>
+							<Path Width="84.1582" Height="89.533" Canvas.Left="163.94" Canvas.Top="30.7096" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 231.724,51.6886C 215.955,34.2055 192.695,27.5401 171.226,32.1046L 171.217,32.1046C 166.249,33.1682 163.082,38.0561 164.145,43.0141C 165.205,47.9774 170.09,51.1488 175.059,50.0889C 190.332,46.8459 206.861,51.5898 218.071,64.0093C 229.27,76.4281 232.312,93.3668 227.515,108.216L 227.518,108.219C 225.955,113.056 228.601,118.231 233.444,119.793C 238.267,121.356 243.452,118.713 245.02,113.852C 251.75,92.9651 247.498,69.1543 231.724,51.6886 Z "/>
+							<Path Width="43.6995" Height="45.9727" Canvas.Left="171.777" Canvas.Top="63.3363" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 207.508,73.5422C 199.833,65.0275 188.5,61.7936 178.039,64.0174C 173.763,64.9288 171.038,69.1367 171.954,73.4162C 172.869,77.6777 177.074,80.4156 181.34,79.4877L 181.34,79.496C 186.453,78.415 191.998,79.992 195.75,84.1464C 199.507,88.3099 200.516,93.9825 198.904,98.9601L 198.912,98.9601C 197.572,103.115 199.846,107.582 204.005,108.928C 208.164,110.259 212.626,107.992 213.968,103.827C 217.256,93.6531 215.198,82.0553 207.508,73.5422 Z "/>
+							<Path Width="76.1243" Height="66.4617" Canvas.Left="61.0397" Canvas.Top="135.257" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 111.055,163.714C 109.665,166.089 106.593,167.233 104.184,166.242C 101.817,165.269 101.075,162.609 102.42,160.274C 103.805,157.951 106.758,156.817 109.12,157.754C 111.52,158.631 112.382,161.319 111.055,163.714 Z M 98.39,179.969C 94.5454,186.102 86.3127,188.79 80.1124,185.959C 74.0003,183.176 72.1963,176.052 76.0417,170.072C 79.8395,164.115 87.7955,161.463 93.9499,164.043C 100.177,166.697 102.165,173.774 98.39,179.969 Z M 112.833,136.561C 93.919,131.641 72.5408,141.067 64.3255,157.732C 55.9586,174.73 64.0488,193.598 83.1587,199.765C 102.952,206.149 126.284,196.367 134.395,178.02C 142.395,160.085 132.407,141.62 112.833,136.561 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareMsnStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareMsn}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__ShareMSN" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="203.603" Height="188.672" Canvas.Left="32.0317" Canvas.Top="29.9138" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 32.0317,143.932C 32.0317,124.929 49.6773,103.211 64.6082,99.1389C 63.2509,93.7095 56.4641,89.6374 56.4641,81.4933L 56.4641,71.9918C 56.4641,62.4903 71.395,48.9168 78.1818,48.9168L 84.9685,48.9168C 97.1847,48.9168 110.758,61.133 110.758,71.9918L 110.758,82.8507C 110.758,89.6374 106.686,92.3522 103.972,97.7816L 120.26,109.998L 129.761,107.283C 127.047,99.1389 114.83,95.0668 114.83,74.7065L 114.83,70.6345C 114.83,48.9168 135.191,29.9138 156.908,29.9138C 178.626,29.9138 198.986,51.6315 198.986,71.9918C 198.986,89.6374 190.842,96.4242 184.055,105.926C 209.845,119.499 235.635,138.502 235.635,177.866C 235.635,183.295 230.206,191.439 226.133,194.154C 216.632,200.941 220.704,200.941 212.56,206.37C 207.13,211.799 185.413,218.586 173.197,218.586L 141.977,218.586C 128.404,218.586 108.044,211.799 99.8995,206.37C 95.8274,202.298 97.1847,202.298 94.47,198.226C 91.7553,195.511 89.0406,194.154 86.3259,192.796C 80.8965,187.367 79.5391,181.938 79.5391,172.436C 68.6803,172.436 56.4641,169.721 49.6773,165.649C 45.6052,164.292 32.0317,150.718 32.0317,146.646L 32.0317,143.932 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareKaixinStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareKaixin}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__ShareKaixin" Width="341.333" Height="341.333" Clip="F1 M 0,0L 341.333,0L 341.333,341.333L 0,341.333L 0,0" Background="Transparent">
+							<Path Width="320.186" Height="314.669" Canvas.Left="10.4809" Canvas.Top="13.3361" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 168.22,24.2451C 176.299,17.7027 184.879,13.3361 194.264,13.3361C 195.606,13.3361 196.966,13.4259 198.343,13.6124C 208.579,14.9897 213.713,24.8022 216.639,38.2224C 221.517,60.5823 220.26,92.9585 226.25,113.011C 227.535,117.319 229.156,121.056 231.242,124.004C 247.182,146.532 330.776,130.583 330.667,156.902C 330.662,157.95 330.535,159.001 330.292,160.053C 325.824,179.415 282.493,198.913 258.521,217.138C 250.079,223.558 244.037,229.815 242.938,235.857C 239.464,254.963 249.529,293.475 246.09,313.611C 245.052,319.684 242.785,324.086 238.552,325.779C 222.276,332.289 206.094,323.628 190.562,311.348C 168.989,294.298 148.667,270.269 131.084,270.219C 120.517,270.188 105.617,283.235 91.3628,294.66C 76.8328,306.306 62.9716,316.258 55.0519,308.964C 53.0605,307.128 51.3849,305.097 49.99,302.891C 39.9999,287.104 44.3644,262.47 49.2926,237.779C 53.2667,217.847 57.607,197.878 55.0519,182.49L 54.2733,178.882C 48.1762,155.57 19.9232,118.42 12.2513,90.8552C 9.43747,80.7379 8.38032,63.9423 21.6471,60.7511C 34.4708,57.6631 56.5631,68.6664 76.1551,76.1892C 87.5554,80.5713 98.1135,83.7711 105.496,82.3324C 126.801,78.1762 145.522,42.6242 168.22,24.2451 Z M 128.161,243.9C 160.346,251.309 192.727,224.093 205.749,209.116C 208.318,211.865 211.831,213.559 215.706,213.559C 223.58,213.559 229.962,206.565 229.962,197.932C 229.962,189.3 223.58,182.306 215.706,182.306C 207.832,182.306 201.45,189.3 201.45,197.932C 201.45,200.756 202.133,203.403 203.327,205.689C 159.829,239.789 108.902,258.749 83.8422,177.688C 88.8462,175.262 92.3376,169.773 92.3376,163.389C 92.3376,154.759 85.9554,147.763 78.0817,147.763C 70.2081,147.763 63.8258,154.759 63.8258,163.389C 63.8258,172.02 70.2081,179.016 78.0817,179.016C 78.9432,179.016 79.7869,178.932 80.6063,178.772C 85.4908,201.228 98.9844,237.184 128.161,243.9 Z M 119.019,179.091C 127.892,179.091 137.118,170.87 143.614,158.296C 143.364,178.705 150.897,194.953 162.44,196.629C 176.023,198.598 190.02,179.627 193.7,154.253C 197.378,128.88 189.349,106.715 175.762,104.744C 167.219,103.505 158.513,110.548 152.313,122.255C 152.314,116.858 151.691,111.751 150.441,107.184C 147.816,97.5955 142.732,91.4852 136.124,89.9762C 135.095,89.7394 134.032,89.6209 132.963,89.6209C 120.26,89.6209 106.833,106.471 101.732,128.816C 96.1437,153.286 102.48,175.68 115.856,178.736C 116.887,178.97 117.951,179.091 119.019,179.091 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareRenenStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareRenren}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__ShareRenren" Width="256" Height="192" Clip="F1 M 0,0L 256,0L 256,192L 0,192L 0,0" Background="Transparent">
+							<Path Width="240.004" Height="134.584" Canvas.Left="8.00001" Canvas.Top="28.7079" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 113.024,85.0426C 113.024,92.3456 124.153,126.774 129.717,119.819C 138.063,109.734 143.28,93.7366 143.28,78.4351C 142.932,68.3499 135.977,41.5722 128.674,37.7468C 125.892,36.3557 118.936,50.9618 117.893,53.7439C 115.111,61.0469 113.024,67.3066 113.024,76.0007L 113.024,85.0426 Z M 87.2899,12.7079C 94.2452,13.0557 105.026,18.2721 110.59,21.402C 115.459,24.1841 127.978,36.0081 128.326,36.0081C 137.716,25.2274 152.669,14.099 168.667,12.7079C 168.667,33.9215 171.449,66.2634 164.841,83.9993C 162.059,91.9979 155.799,100.692 149.887,106.604C 147.105,109.038 131.108,122.253 127.978,122.253C 124.153,122.601 109.547,109.734 106.765,106.604C 100.157,99.9964 94.9407,93.7367 91.1153,84.3471C 84.5079,67.6544 87.2899,32.1827 87.2899,12.7079 Z M 190.576,12.7079C 210.05,12.7079 233.003,32.8782 239.958,47.1364C 250.739,69.3933 251.086,93.3889 238.567,113.559C 235.785,118.428 234.046,124.688 228.482,121.558C 223.961,118.428 220.483,115.646 216.31,112.864C 209.703,108.69 201.008,96.8665 197.183,89.9113C 187.098,70.7843 190.576,34.9648 190.576,12.7079 Z M 8.00001,76.0008C 8.00001,47.4842 36.8643,13.0557 65.3809,13.0557C 65.3809,31.4871 67.8152,70.0888 61.2077,84.6948C 56.6868,94.4322 52.8614,99.6486 45.9062,107.299C 43.1241,110.082 27.127,122.601 23.9971,123.297C 16.3463,117.732 8.00001,93.3889 8.00001,81.565L 8.00001,76.0008 Z M 184.664,147.292L 175.97,147.292C 171.101,147.292 150.235,142.076 147.801,139.294C 148.149,138.25 157.19,131.991 158.581,130.947C 162.755,127.817 164.493,125.383 167.623,121.558C 173.187,114.602 178.056,106.256 180.49,96.171C 183.968,102.431 183.968,107.647 189.185,115.298C 192.662,119.819 198.226,127.47 202.4,130.6C 205.182,132.686 206.92,134.077 210.746,136.164C 215.267,138.946 212.137,139.989 207.616,141.728C 201.704,143.815 191.271,147.292 184.664,147.292 Z M 74.7705,97.2143C 76.8571,97.2143 79.6392,107.995 80.6825,110.082C 83.1168,114.255 84.8556,117.732 87.9855,121.21C 91.4631,125.035 92.8542,127.47 97.0273,130.947C 98.7662,132.686 107.808,138.25 108.504,138.946C 89.0288,148.683 65.7287,150.77 46.2539,140.337C 40.342,137.207 46.2539,135.816 51.1226,131.991C 55.6435,128.165 57.0346,126.774 61.2078,122.601C 65.3809,118.428 74.7705,104.17 74.7705,97.2143 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareQzoneStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareQzone}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="240" Height="231.724" Canvas.Left="7.99997" Canvas.Top="12.1379" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 7.99997,103.172C 7.99997,111.448 65.931,152.828 65.931,161.103C 65.931,174.897 60.4138,191.448 57.6551,205.241C 54.8965,213.517 46.6207,243.862 57.6551,243.862C 63.1724,243.862 121.103,205.241 129.379,205.241C 134.897,205.241 187.31,243.862 203.862,243.862L 192.828,177.655L 206.621,172.138C 184.552,172.138 151.448,183.172 123.862,180.414L 74.2069,174.897L 151.448,119.724L 60.4138,111.448L 68.6896,108.69L 134.897,105.931L 187.31,108.69L 190.069,111.448L 118.345,161.103L 115.586,163.862L 156.965,169.379L 190.069,169.379L 190.069,163.862C 190.069,152.828 248,111.448 248,100.414C 248,97.6552 173.517,89.3793 165.241,89.3793C 159.724,78.3448 134.897,12.1379 126.621,12.1379C 123.862,12.1379 93.5172,81.1035 88,89.3793C 76.9655,89.3793 7.99997,94.8966 7.99997,103.172 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareTencentWeiboStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareTencentWeibo}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas x:Name="DoubanFM__ShareTencentWeibo" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="224" Height="224" Canvas.Left="15.9996" Canvas.Top="16.0005" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 56.2497,16.0005L 199.749,16.0005C 221.979,16.0005 240,34.0211 240,56.2506L 240,199.75C 240,221.98 221.979,240 199.749,240L 56.2497,240C 34.0202,240 15.9996,221.98 15.9996,199.75L 15.9996,56.2506C 15.9996,34.0211 34.0202,16.0005 56.2497,16.0005 Z M 52.3497,104.807C 53.4347,108.876 55.8762,124.338 62.1154,124.338C 64.2855,124.338 66.9982,121.897 66.9982,119.726L 66.9982,119.184C 66.9982,117.014 63.2004,111.86 62.9292,108.333L 62.3866,102.908L 62.3866,100.195C 62.3866,83.3763 77.849,67.6427 94.6677,67.6427L 97.3804,67.6427C 104.433,67.6427 114.47,72.2542 119.624,77.4084C 124.779,82.5625 129.661,92.3282 129.661,99.6525L 129.661,102.908C 129.661,105.892 128.034,112.131 126.677,115.115C 123.965,120.54 120.71,124.881 115.555,128.407C 110.673,131.662 103.62,134.646 97.6516,134.646L 93.3113,134.646C 90.5987,134.646 87.886,133.561 85.7158,133.561C 82.7318,133.561 81.3755,136.545 81.3755,139.258C 81.3755,142.784 83.5456,142.784 86.5296,143.327C 89.2423,143.869 92.2262,144.683 94.9389,144.683L 97.9229,144.683C 106.061,144.683 116.641,140.343 122.88,135.189C 131.018,128.678 133.188,124.067 137.257,115.115C 138.342,111.588 139.427,106.705 139.427,103.179L 139.427,99.6525C 139.427,77.6796 119.082,57.877 97.1091,57.877L 94.6677,57.877C 83.8169,57.877 71.0672,63.5736 64.0142,71.983C 55.0623,82.02 52.3497,91.2431 52.3497,104.807 Z M 142.14,113.487C 142.954,118.641 145.124,123.524 148.922,127.322C 152.177,130.306 158.687,133.832 163.299,133.832C 164.384,133.832 167.91,133.832 168.724,133.019C 170.081,131.934 169.809,129.763 168.453,128.95C 167.368,128.136 160.857,127.864 157.602,126.237C 151.634,123.253 147.565,116.2 147.565,109.689L 147.565,109.418C 147.565,99.6525 156.246,90.7005 166.012,90.7005L 166.825,90.7005C 176.591,90.7005 185,99.6525 185,109.418L 185,109.689C 185,112.673 183.644,117.014 182.288,119.726C 181.474,120.54 179.846,122.71 179.575,123.524C 179.575,124.88 181.474,126.508 182.559,126.779C 186.899,127.322 191.24,113.487 190.968,109.689L 190.426,103.721C 188.256,97.7536 186.899,95.0408 182.288,90.7005C 178.49,87.4453 171.979,85.0039 167.097,85.0039L 165.74,85.0039C 154.076,85.0039 141.869,95.8547 141.869,107.519L 141.597,108.062L 142.14,113.487 Z M 158.416,109.961C 158.416,112.402 159.772,115.115 161.943,116.471C 165.74,118.641 165.469,116.471 167.368,121.354C 168.995,125.966 172.251,130.306 175.506,133.832C 181.745,140.343 191.24,147.667 200.192,150.109C 203.447,151.194 204.532,147.125 201.277,145.768C 198.835,144.683 196.394,143.869 194.224,142.513C 189.883,140.343 185.814,137.359 182.016,134.375C 178.761,131.391 174.963,126.779 173.065,122.71C 167.368,111.588 174.15,118.913 174.15,109.418C 174.15,99.3811 158.416,98.8386 158.416,109.961 Z M 78.3915,111.86L 78.1203,112.131L 77.849,112.402L 77.5777,112.673C 77.0352,114.03 74.865,115.929 74.0512,117.285C 73.2374,118.641 71.8811,121.083 70.796,122.439C 68.8971,124.88 66.4557,130.577 65.3706,133.561C 63.743,137.901 62.1154,141.699 61.0303,146.039C 60.4878,148.21 58.3176,157.975 58.3176,159.874L 58.3176,161.502L 58.0463,163.672L 58.0463,163.943L 57.7751,166.385L 57.7751,166.656L 57.7751,166.927L 57.5038,171.268L 57.5038,178.863L 57.5038,182.39L 57.7751,184.56L 57.7751,185.102C 57.7751,189.443 58.8601,190.799 63.2004,190.799L 63.4717,190.528L 64.0143,190.256L 64.2855,189.985L 64.5568,189.714L 64.8281,189.443L 65.0993,189.171L 65.3706,188.9L 66.1844,188.358L 66.1844,187.544L 66.1844,187.001L 65.9131,186.459L 65.9131,185.374L 65.9131,184.831C 65.9131,184.017 65.9131,184.56 65.6419,183.746L 65.3706,178.321L 65.3706,178.049L 65.3706,169.911C 65.6419,169.369 65.6419,169.369 65.6419,168.555L 65.6419,164.486C 65.6419,156.89 69.7109,142.242 72.9661,134.917C 75.1363,130.306 83.2744,115.929 87.6147,113.216C 89.5136,113.487 91.4125,115.657 95.4815,115.657L 96.2953,115.657L 101.178,114.844C 105.79,112.402 110.13,107.79 110.13,102.365L 110.13,100.466C 110.13,93.4132 103.077,87.174 96.2953,87.174L 95.7528,87.174C 88.1572,87.174 81.6468,93.6845 81.6468,101.28C 81.6468,103.721 82.7318,106.163 82.7318,106.977C 82.7318,107.79 79.2053,110.774 78.3915,111.86 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareFanfouStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareFanfou}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="224" Height="224" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 16,16L 240,16L 240,240L 16,240L 16,16 Z M 131.559,231.743C 149.354,221.066 164.183,208.907 176.046,195.264C 188.502,209.5 202.441,221.066 217.863,229.964C 222.015,221.66 226.464,216.025 231.209,213.059C 216.38,206.534 201.848,196.154 187.612,181.918C 195.323,168.275 201.255,154.633 205.407,140.99C 209.559,127.348 213.711,110.146 217.863,89.3855L 136.897,89.3855L 136.897,57.355C 151.133,56.7619 179.308,54.0927 221.422,49.3474C 216.677,44.009 212.228,37.7809 208.076,30.663C 205.704,32.4424 196.361,34.8151 180.05,37.7809C 163.738,40.7466 143.719,42.5261 119.992,43.1193C 120.586,54.3893 121.03,64.6212 121.327,73.8152C 121.624,83.0091 121.475,97.0966 120.882,116.078C 120.289,135.059 117.323,153.447 111.985,171.241C 106.646,189.036 97.749,204.458 85.2927,217.508C 91.8174,219.287 97.4524,222.253 102.198,226.405C 109.316,217.508 115.692,207.127 121.327,195.264C 126.962,183.401 130.966,170.352 133.338,156.116C 135.711,141.88 136.897,124.085 136.897,102.732L 143.126,102.732C 146.684,134.762 154.099,160.861 165.369,181.028C 149.947,199.416 134.228,211.576 118.213,217.508C 124.144,221.66 128.593,226.405 131.559,231.743 Z M 75.5056,32.4425C 70.1672,30.663 63.6424,27.9938 55.9314,24.4348C 51.7793,40.4501 46.8857,54.6859 41.2507,67.1422C 35.6157,79.5985 28.9427,90.8684 21.2317,100.952C 25.9769,104.511 30.4256,108.96 34.5777,114.298C 42.2888,101.842 48.8135,89.9787 54.1519,78.7087L 90.6311,78.7087C 88.8516,85.2335 86.1824,93.2411 82.6235,102.732C 87.3687,103.918 92.7071,105.697 98.6387,108.07C 103.977,93.8342 108.426,79.5985 111.985,65.3627L 60.3801,65.3627C 62.7527,58.838 67.7945,47.8645 75.5056,32.4425 Z M 103.087,167.682C 99.5284,162.937 95.9695,157.895 92.4106,152.557C 89.4448,157.302 82.6235,166.199 71.9466,179.249L 71.9466,132.093C 71.9466,120.823 72.2432,111.926 72.8364,105.401L 55.0416,105.401C 55.6348,114.298 55.9314,122.899 55.9314,131.203L 55.9314,184.587C 55.3382,191.112 52.9656,196.747 48.8135,201.492C 52.3724,205.051 56.5245,209.796 61.2698,215.728C 66.0151,209.796 72.6881,201.789 81.2889,191.705C 89.8896,181.621 97.1558,173.614 103.087,167.682 Z M 160.03,102.732L 196.51,102.732C 192.951,126.458 186.426,146.922 176.935,164.123C 169.818,152.26 164.183,131.796 160.03,102.732 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareFacebookStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareFacebook}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="224" Height="230.31" Canvas.Left="16" Canvas.Top="12.8451" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 200.563,243.155L 55.4366,243.155C 33.3521,243.155 16,225.803 16,203.718L 16,47.5493C 16,28.6197 36.507,12.8451 55.4366,12.8451L 200.563,12.8451C 219.493,12.8451 240,28.6197 240,47.5493L 240,200.563C 240,224.225 224.225,243.155 200.563,243.155 Z M 137.115,128L 137.465,216.338L 176.901,216.338L 176.901,128L 203.718,128L 203.718,96.4507L 176.901,96.4507L 176.901,86.9859C 176.901,79.0986 181.634,74.3662 189.521,74.3662L 203.718,74.3662L 203.718,44.3944L 184.789,44.3944C 157.972,44.3944 137.465,55.4366 137.465,80.6761L 137.465,96.4507L 113.803,96.4507L 113.803,128L 137.115,128 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShareTwitterStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShareTwitter}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="Transparent">
+							<Path Width="224" Height="226.818" Canvas.Left="16" Canvas.Top="14.5912" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 20.2264,40.4193C 23.044,27.7401 39.0105,14.5912 54.9769,14.5912L 203.371,14.5912C 216.99,14.5912 236.243,31.9665 236.713,44.6457C 241.409,46.5241 239.53,110.86 239.53,122.13C 239.53,131.052 240.47,199.614 239.061,201.962L 240,203.371C 239.53,204.31 239.061,209.476 238.591,210.885C 237.652,214.172 236.713,215.581 235.774,217.929C 233.895,222.155 231.078,225.912 227.79,229.199C 224.973,232.017 220.746,235.304 216.99,236.713C 214.172,238.122 213.233,238.591 209.945,239.53C 208.537,240 202.901,240.47 201.962,241.409L 200.553,240.47C 198.205,241.878 100.998,240.939 88.7883,240.939C 70.0042,240.939 50.7505,242.818 38.0713,236.243C 27.2704,230.608 16.4696,217.459 16.4696,201.493L 16,56.8553L 18.348,45.1153L 18.8176,44.6457L 18.8176,41.3585L 20.2264,40.4193 Z M 166.273,142.323C 167.212,141.853 170.499,141.384 171.908,140.914C 174.725,139.975 174.256,139.505 176.604,138.566C 179.891,136.688 181.769,135.279 184.117,132.461C 187.405,129.174 193.04,120.252 193.04,114.147L 193.04,107.572C 193.04,105.224 189.283,94.8931 188.344,93.4843C 185.996,89.2579 183.178,86.4403 179.421,83.6227C 170.969,77.5178 162.046,77.9874 147.488,77.9874C 141.853,77.9874 134.34,78.457 128.704,77.9874C 125.887,77.9874 127.296,74.2306 126.826,70.9434C 125.887,66.717 126.826,66.2474 125.417,62.9602C 122.6,57.325 122.13,55.4466 117.904,51.2202C 115.556,48.8721 107.103,44.1761 106.633,43.7065L 96.3019,41.8281L 93.0147,42.2977C 84.0922,42.2977 77.9874,46.9938 72.8218,50.7506C 69.5346,53.5682 62.4906,64.369 62.4906,69.5346L 62.4906,161.577C 62.4906,175.195 72.3522,187.874 79.3962,194.918C 86.9099,202.432 100.998,207.597 116.025,207.597L 158.759,207.597C 170.969,207.597 176.134,204.78 182.239,199.145C 186.465,195.857 193.04,185.526 193.04,178.482L 193.04,175.665C 193.04,166.273 189.753,158.759 185.057,153.593C 182.709,151.245 179.891,148.897 176.604,147.019C 174.256,145.61 167.681,144.201 166.273,142.323 Z M 76.5786,74.7003C 76.5786,65.3082 85.0314,56.8554 93.4843,56.8554L 97.7107,56.8554C 105.694,56.8554 112.738,66.2474 112.738,74.7003C 113.677,93.0147 107.572,92.5451 126.356,92.5451L 159.228,92.5451C 165.803,92.5451 168.62,93.4843 171.908,96.3019C 174.725,98.1803 173.786,98.1803 175.665,100.528C 178.013,102.876 177.073,103.346 178.482,105.694C 178.482,113.677 179.891,117.434 174.256,121.66C 168.62,125.417 169.56,127.765 159.698,127.765L 112.268,127.765L 112.268,155.941C 112.268,158.289 122.6,157.35 124.948,157.35L 139.036,157.35C 148.897,157.35 157.82,157.82 166.742,157.82C 170.029,159.698 172.377,160.168 174.725,163.455C 176.134,164.864 178.952,170.029 178.952,172.847L 178.952,176.134C 178.952,185.996 170.969,193.04 160.637,193.04L 108.512,193.04C 105.224,193.04 98.1803,189.753 95.3627,188.344C 91.6059,186.465 87.8491,183.648 85.501,180.83C 80.3354,175.195 76.5786,165.333 76.5786,154.533L 76.5786,74.7003 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ShowLyricsStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.ShowLyrics}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+						<Rectangle Width="180" Height="212" Canvas.Left="38" Canvas.Top="22" Stretch="Fill" StrokeThickness="20" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}"/>
+						<Path x:Name="Path_Lyrics" Width="126.5" Height="132" Canvas.Left="64.75" Canvas.Top="62" Stretch="Fill" StrokeThickness="20" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Fill="#FFFFFFFF" Data="M 74.75,72L 180.25,72M 74.75,109.333L 164.75,109.333M 74.75,146.417L 181.25,146.917M 74.75,184L 175.75,184"/>
+					</Canvas>
+					</Viewbox>
+				<ControlTemplate.Triggers>
+					<Trigger Property="IsChecked" Value="False">
+						<Setter Property="Opacity" TargetName="Path_Lyrics" Value="0.25"/>
+					</Trigger>
+				</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsChecked" Value="True">
+                <Setter Property="ToolTip" Value="{x:Static resx:Resources.HideLyrics}"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="StandardButtonStyle" BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+		<Setter Property="Width" Value="100"/>
+		<Setter Property="Height" Value="40"/>
+	</Style>
+	<Style x:Key="OKButtonStyle" BasedOn="{StaticResource StandardButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+						<Viewbox>
+							<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+								<Path x:Name="tick" Width="256" Height="256" Canvas.Left="-3.77495e-007" Canvas.Top="-6.10352e-005" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M -3.77495e-007,160C 23.8367,186.523 80,256 80,256L 256,23.2727L 215.5,-6.10352e-005L 80,209.455L 32,128"/>
+							</Canvas>
+						</Viewbox>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="CancelButtonStyle" BasedOn="{StaticResource StandardButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+						<Viewbox>
+							<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+								<Path Width="214.627" Height="214.627" Canvas.Left="20.6863" Canvas.Top="20.6863" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 20.6863,212.686L 105.373,128L 20.6863,43.3137L 43.3137,20.6863L 128,105.373L 212.686,20.6863L 235.314,43.3137L 150.627,128L 235.314,212.686L 212.686,235.314L 128,150.627L 43.3137,235.314L 20.6863,212.686 Z "/>
+							</Canvas>
+						</Viewbox>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="RefreshWithFrameStyle" BasedOn="{StaticResource StandardButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Refresh}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+						<Viewbox>
+							<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+								<Path Width="181.849" Height="98.4234" Canvas.Left="37.0788" Canvas.Top="16.0026" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 142.83,67.0789C 153.96,69.2337 164.045,74.4295 172.152,81.9376L 127.868,84.1868L 151.27,107.413L 218.046,105.919L 218.928,39.143L 195.499,16.0026L 193.745,57.4611C 181.356,46.1563 165.998,38.3153 149.011,35.0359C 99.0236,25.355 48.5141,54.9734 37.0788,114.017L 72.8061,114.426C 79.0591,82.068 110.477,60.835 142.83,67.0789 Z "/>
+								<Path Width="181.318" Height="97.3168" Canvas.Left="37.6096" Canvas.Top="142.686" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 112.123,190.042C 100.508,187.793 90.0895,182.21 81.8482,174.176L 128.66,171.8L 105.25,148.592L 38.4823,150.054L 37.6096,216.858L 61.029,240.003L 62.7024,200.901C 74.8395,211.527 89.6217,218.949 105.924,222.103C 155.975,231.766 207.897,199.916 218.928,143.055L 182.219,142.686C 175.94,175.071 144.504,196.313 112.123,190.042 Z "/>
+							</Canvas>
+						</Viewbox>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="RetryStyle" BasedOn="{StaticResource RefreshWithFrameStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Retry}"/>
+	</Style>
+	<Style x:Key="UpdateStyle" BasedOn="{StaticResource RefreshWithFrameStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Update}"/>
+	</Style>
+	<Style x:Key="CheckUpdateStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.CheckforUpdates}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="181.849" Height="98.4234" Canvas.Left="37.0788" Canvas.Top="16.0026" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 142.83,67.0789C 153.96,69.2337 164.045,74.4295 172.152,81.9376L 127.868,84.1868L 151.27,107.413L 218.046,105.919L 218.928,39.143L 195.499,16.0026L 193.745,57.4611C 181.356,46.1563 165.998,38.3153 149.011,35.0359C 99.0236,25.355 48.5141,54.9734 37.0788,114.017L 72.8061,114.426C 79.0591,82.068 110.477,60.835 142.83,67.0789 Z "/>
+								<Path Width="181.318" Height="97.3168" Canvas.Left="37.6096" Canvas.Top="142.686" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 112.123,190.042C 100.508,187.793 90.0895,182.21 81.8482,174.176L 128.66,171.8L 105.25,148.592L 38.4823,150.054L 37.6096,216.858L 61.029,240.003L 62.7024,200.901C 74.8395,211.527 89.6217,218.949 105.924,222.103C 155.975,231.766 207.897,199.916 218.928,143.055L 182.219,142.686C 175.94,175.071 144.504,196.313 112.123,190.042 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="FeedbackStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.Feedback}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="223.999" Height="172.814" Canvas.Left="16.0013" Canvas.Top="41.5905" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 126.348,156.677C 123.852,156.677 121.366,155.864 119.294,154.248L 38.9368,91.5833L 38.9368,191.474L 217.055,191.474L 217.055,89.4038L 133.372,154.274C 131.3,155.864 128.824,156.677 126.348,156.677 Z M 126.369,130.68L 211.72,64.5365L 41.5692,64.5365L 126.369,130.68 Z M 228.533,214.404L 27.4687,214.404C 21.1393,214.404 16.0013,209.271 16.0013,202.952L 16.0013,53.0788C 16.0013,46.7494 21.1393,41.5905 27.4687,41.5905L 228.533,41.5905C 234.862,41.5905 240.001,46.7494 240.001,53.0788L 240.001,202.952C 240.001,209.271 234.862,214.404 228.533,214.404 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="DoubanFMOfficialWebsiteStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.DoubanFMOfficialWebsite}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="341.411" Height="341.411" Clip="F1 M 0,0L 341.411,0L 341.411,341.411L 0,341.411L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="298.735" Height="298.735" Canvas.Left="21.3381" Canvas.Top="21.3384" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 74.2492,46.2328C 77.8843,46.2328 80.8311,49.1795 80.8311,52.8146C 80.8311,56.4497 77.8843,59.3965 74.2492,59.3965C 70.6142,59.3965 67.6674,56.4497 67.6674,52.8146C 67.6674,49.1795 70.6142,46.2328 74.2492,46.2328 Z M 95.6831,46.2345C 99.3181,46.2345 102.265,49.1813 102.265,52.8164C 102.265,56.4514 99.3181,59.3982 95.6831,59.3982C 92.0481,59.3982 89.1013,56.4514 89.1013,52.8164C 89.1013,49.1813 92.048,46.2345 95.6831,46.2345 Z M 117.118,46.2345C 120.753,46.2345 123.7,49.1813 123.7,52.8164C 123.7,56.4514 120.753,59.3982 117.118,59.3982C 113.483,59.3982 110.536,56.4514 110.536,52.8164C 110.536,49.1813 113.483,46.2345 117.118,46.2345 Z M 138.552,46.2345C 142.187,46.2345 145.134,49.1812 145.134,52.8163C 145.134,56.4514 142.187,59.3982 138.552,59.3982C 134.918,59.3982 131.971,56.4514 131.971,52.8163C 131.971,49.1812 134.918,46.2345 138.552,46.2345 Z M 159.987,46.2345C 163.622,46.2345 166.568,49.1812 166.568,52.8163C 166.568,56.4514 163.622,59.3982 159.987,59.3982C 156.351,59.3982 153.405,56.4514 153.405,52.8163C 153.405,49.1812 156.351,46.2345 159.987,46.2345 Z M 181.421,46.2345C 185.056,46.2345 188.003,49.1812 188.003,52.8163C 188.003,56.4513 185.056,59.3981 181.421,59.3981C 177.786,59.3981 174.839,56.4513 174.839,52.8163C 174.839,49.1812 177.786,46.2345 181.421,46.2345 Z M 202.856,46.2345C 206.491,46.2345 209.438,49.1812 209.438,52.8163C 209.438,56.4513 206.491,59.3981 202.856,59.3981C 199.221,59.3981 196.274,56.4513 196.274,52.8163C 196.274,49.1812 199.221,46.2345 202.856,46.2345 Z M 224.291,46.2345C 227.926,46.2345 230.873,49.1812 230.873,52.8163C 230.873,56.4513 227.926,59.3981 224.291,59.3981C 220.656,59.3981 217.709,56.4513 217.709,52.8163C 217.709,49.1812 220.656,46.2345 224.291,46.2345 Z M 245.726,46.2345C 249.359,46.2345 252.306,49.1812 252.306,52.8163C 252.306,56.4513 249.359,59.3981 245.726,59.3981C 242.091,59.3981 239.144,56.4513 239.144,52.8163C 239.144,49.1812 242.091,46.2345 245.726,46.2345 Z M 267.159,46.2344C 270.794,46.2344 273.741,49.1812 273.741,52.8163C 273.741,56.4513 270.794,59.3981 267.159,59.3981C 263.524,59.3981 260.577,56.4513 260.577,52.8163C 260.577,49.1812 263.524,46.2344 267.159,46.2344 Z M 74.2488,67.6692C 77.8839,67.6692 80.8302,70.6159 80.8302,74.251C 80.8302,77.886 77.8839,80.8328 74.2488,80.8328C 70.6138,80.8328 67.667,77.886 67.667,74.251C 67.667,70.6159 70.6137,67.6692 74.2488,67.6692 Z M 95.6831,67.6692C 99.3182,67.6692 102.265,70.6159 102.265,74.2509C 102.265,77.886 99.3182,80.8328 95.6831,80.8328C 92.0481,80.8328 89.1013,77.886 89.1013,74.2509C 89.1013,70.6159 92.0481,67.6692 95.6831,67.6692 Z M 117.118,67.6692C 120.753,67.6692 123.7,70.6159 123.7,74.2509C 123.7,77.886 120.753,80.8328 117.118,80.8328C 113.483,80.8328 110.536,77.886 110.536,74.2509C 110.536,70.6159 113.483,67.6692 117.118,67.6692 Z M 138.552,67.6691C 142.187,67.6691 145.134,70.6159 145.134,74.2509C 145.134,77.886 142.187,80.8328 138.552,80.8328C 134.918,80.8328 131.971,77.886 131.971,74.2509C 131.971,70.6159 134.918,67.6691 138.552,67.6691 Z M 159.987,67.6691C 163.622,67.6691 166.568,70.6159 166.568,74.2509C 166.568,77.886 163.622,80.8328 159.987,80.8328C 156.352,80.8328 153.405,77.886 153.405,74.2509C 153.405,70.6159 156.352,67.6691 159.987,67.6691 Z M 181.421,67.6691C 185.056,67.6691 188.003,70.6158 188.003,74.2509C 188.003,77.886 185.056,80.8327 181.421,80.8327C 177.786,80.8327 174.84,77.886 174.84,74.2509C 174.84,70.6158 177.786,67.6691 181.421,67.6691 Z M 202.856,67.6691C 206.491,67.6691 209.438,70.6158 209.438,74.2509C 209.438,77.886 206.491,80.8327 202.856,80.8327C 199.221,80.8327 196.274,77.886 196.274,74.2509C 196.274,70.6158 199.221,67.6691 202.856,67.6691 Z M 224.291,67.6691C 227.926,67.6691 230.873,70.6158 230.873,74.2509C 230.873,77.8859 227.926,80.8327 224.291,80.8327C 220.656,80.8327 217.709,77.8859 217.709,74.2509C 217.709,70.6158 220.656,67.6691 224.291,67.6691 Z M 245.726,67.6691C 249.359,67.6691 252.306,70.6158 252.306,74.2509C 252.306,77.8859 249.359,80.8327 245.726,80.8327C 242.091,80.8327 239.144,77.8859 239.144,74.2509C 239.144,70.6158 242.091,67.6691 245.726,67.6691 Z M 267.159,67.669C 270.794,67.669 273.741,70.6158 273.741,74.2509C 273.741,77.8859 270.794,80.8327 267.159,80.8327C 263.524,80.8327 260.577,77.8859 260.577,74.2509C 260.577,70.6158 263.524,67.669 267.159,67.669 Z M 52.8141,67.669C 56.4492,67.669 59.396,70.6158 59.396,74.2508C 59.396,77.8859 56.4492,80.8327 52.8141,80.8327C 49.1793,80.8327 46.2325,77.8859 46.2325,74.2508C 46.2325,70.6158 49.1792,67.669 52.8141,67.669 Z M 288.594,67.669C 292.229,67.669 295.176,70.6158 295.176,74.2508C 295.176,77.8859 292.229,80.8326 288.594,80.8326C 284.959,80.8326 282.012,77.8859 282.012,74.2508C 282.012,70.6158 284.959,67.669 288.594,67.669 Z M 74.2488,89.1037C 77.8839,89.1037 80.8303,92.0505 80.8303,95.6856C 80.8303,99.3206 77.8839,102.267 74.2488,102.267C 70.6138,102.267 67.667,99.3206 67.667,95.6856C 67.667,92.0505 70.6138,89.1037 74.2488,89.1037 Z M 95.6832,89.1037C 99.3183,89.1037 102.265,92.0505 102.265,95.6855C 102.265,99.3206 99.3183,102.267 95.6832,102.267C 92.0482,102.267 89.1014,99.3206 89.1014,95.6855C 89.1014,92.0505 92.0482,89.1037 95.6832,89.1037 Z M 117.118,89.1037C 120.753,89.1037 123.7,92.0505 123.7,95.6855C 123.7,99.3206 120.753,102.267 117.118,102.267C 113.483,102.267 110.536,99.3206 110.536,95.6855C 110.536,92.0505 113.483,89.1037 117.118,89.1037 Z M 138.552,89.1037C 142.187,89.1037 145.134,92.0505 145.134,95.6855C 145.134,99.3206 142.187,102.267 138.552,102.267C 134.918,102.267 131.971,99.3206 131.971,95.6855C 131.971,92.0505 134.918,89.1037 138.552,89.1037 Z M 159.987,89.1037C 163.622,89.1037 166.569,92.0504 166.569,95.6855C 166.569,99.3206 163.622,102.267 159.987,102.267C 156.352,102.267 153.405,99.3206 153.405,95.6855C 153.405,92.0504 156.352,89.1037 159.987,89.1037 Z M 181.422,89.1037C 185.057,89.1037 188.003,92.0504 188.003,95.6855C 188.003,99.3205 185.057,102.267 181.422,102.267C 177.786,102.267 174.84,99.3205 174.84,95.6855C 174.84,92.0504 177.786,89.1037 181.422,89.1037 Z M 202.856,89.1037C 206.491,89.1037 209.438,92.0504 209.438,95.6855C 209.438,99.3205 206.491,102.267 202.856,102.267C 199.221,102.267 196.274,99.3205 196.274,95.6855C 196.274,92.0504 199.221,89.1037 202.856,89.1037 Z M 224.291,89.1036C 227.926,89.1036 230.873,92.0504 230.873,95.6855C 230.873,99.3205 227.926,102.267 224.291,102.267C 220.656,102.267 217.709,99.3205 217.709,95.6855C 217.709,92.0504 220.656,89.1036 224.291,89.1036 Z M 245.726,89.1036C 249.36,89.1036 252.306,92.0504 252.306,95.6854C 252.306,99.3205 249.36,102.267 245.726,102.267C 242.091,102.267 239.144,99.3205 239.144,95.6854C 239.144,92.0504 242.091,89.1036 245.726,89.1036 Z M 267.159,89.1036C 270.794,89.1036 273.741,92.0504 273.741,95.6854C 273.741,99.3205 270.794,102.267 267.159,102.267C 263.524,102.267 260.577,99.3205 260.577,95.6854C 260.577,92.0504 263.524,89.1036 267.159,89.1036 Z M 52.8142,89.1036C 56.4492,89.1036 59.396,92.0504 59.396,95.6854C 59.396,99.3205 56.4492,102.267 52.8142,102.267C 49.1793,102.267 46.2325,99.3205 46.2325,95.6854C 46.2325,92.0504 49.1793,89.1036 52.8142,89.1036 Z M 288.594,89.1036C 292.229,89.1036 295.176,92.0503 295.176,95.6854C 295.176,99.3204 292.229,102.267 288.594,102.267C 284.959,102.267 282.012,99.3204 282.012,95.6854C 282.012,92.0503 284.959,89.1036 288.594,89.1036 Z M 74.2489,110.538C 77.8839,110.538 80.8304,113.485 80.8304,117.12C 80.8304,120.755 77.8839,123.702 74.2489,123.702C 70.6139,123.702 67.6671,120.755 67.6671,117.12C 67.6671,113.485 70.6138,110.538 74.2489,110.538 Z M 95.6833,110.538C 99.3184,110.538 102.265,113.485 102.265,117.12C 102.265,120.755 99.3184,123.702 95.6833,123.702C 92.0483,123.702 89.1015,120.755 89.1015,117.12C 89.1015,113.485 92.0483,110.538 95.6833,110.538 Z M 117.118,110.538C 120.753,110.538 123.7,113.485 123.7,117.12C 123.7,120.755 120.753,123.702 117.118,123.702C 113.483,123.702 110.536,120.755 110.536,117.12C 110.536,113.485 113.483,110.538 117.118,110.538 Z M 138.552,110.538C 142.187,110.538 145.134,113.485 145.134,117.12C 145.134,120.755 142.187,123.702 138.552,123.702C 134.918,123.702 131.971,120.755 131.971,117.12C 131.971,113.485 134.918,110.538 138.552,110.538 Z M 159.987,110.538C 163.622,110.538 166.569,113.485 166.569,117.12C 166.569,120.755 163.622,123.702 159.987,123.702C 156.352,123.702 153.405,120.755 153.405,117.12C 153.405,113.485 156.352,110.538 159.987,110.538 Z M 181.422,110.538C 185.057,110.538 188.004,113.485 188.004,117.12C 188.004,120.755 185.057,123.702 181.422,123.702C 177.787,123.702 174.84,120.755 174.84,117.12C 174.84,113.485 177.787,110.538 181.422,110.538 Z M 202.857,110.538C 206.492,110.538 209.438,113.485 209.438,117.12C 209.438,120.755 206.492,123.702 202.857,123.702C 199.221,123.702 196.275,120.755 196.275,117.12C 196.275,113.485 199.221,110.538 202.857,110.538 Z M 224.291,110.538C 227.926,110.538 230.873,113.485 230.873,117.12C 230.873,120.755 227.926,123.702 224.291,123.702C 220.656,123.702 217.709,120.755 217.709,117.12C 217.709,113.485 220.656,110.538 224.291,110.538 Z M 245.726,110.538C 249.36,110.538 252.307,113.485 252.307,117.12C 252.307,120.755 249.36,123.702 245.726,123.702C 242.091,123.702 239.144,120.755 239.144,117.12C 239.144,113.485 242.091,110.538 245.726,110.538 Z M 267.16,110.538C 270.795,110.538 273.741,113.485 273.741,117.12C 273.741,120.755 270.795,123.702 267.16,123.702C 263.525,123.702 260.578,120.755 260.578,117.12C 260.578,113.485 263.525,110.538 267.16,110.538 Z M 52.8142,110.538C 56.4493,110.538 59.396,113.485 59.396,117.12C 59.396,120.755 56.4492,123.702 52.8142,123.702C 49.1793,123.702 46.2325,120.755 46.2325,117.12C 46.2325,113.485 49.1793,110.538 52.8142,110.538 Z M 288.594,110.538C 292.229,110.538 295.176,113.485 295.176,117.12C 295.176,120.755 292.229,123.702 288.594,123.702C 284.959,123.702 282.013,120.755 282.013,117.12C 282.013,113.485 284.959,110.538 288.594,110.538 Z M 74.2489,131.973C 77.884,131.973 80.8305,134.92 80.8305,138.554C 80.8305,142.189 77.884,145.136 74.2489,145.136C 70.6139,145.136 67.6671,142.189 67.6671,138.554C 67.6671,134.92 70.6139,131.973 74.2489,131.973 Z M 95.6834,131.973C 99.3185,131.973 102.265,134.92 102.265,138.554C 102.265,142.189 99.3185,145.136 95.6834,145.136C 92.0484,145.136 89.1016,142.189 89.1016,138.554C 89.1016,134.92 92.0483,131.973 95.6834,131.973 Z M 117.118,131.973C 120.753,131.973 123.7,134.92 123.7,138.554C 123.7,142.189 120.753,145.136 117.118,145.136C 113.483,145.136 110.536,142.189 110.536,138.554C 110.536,134.92 113.483,131.973 117.118,131.973 Z M 138.552,131.973C 142.187,131.973 145.134,134.92 145.134,138.554C 145.134,142.189 142.187,145.136 138.552,145.136C 134.918,145.136 131.971,142.189 131.971,138.554C 131.971,134.92 134.918,131.973 138.552,131.973 Z M 159.987,131.973C 163.622,131.973 166.569,134.92 166.569,138.554C 166.569,142.189 163.622,145.136 159.987,145.136C 156.352,145.136 153.405,142.189 153.405,138.554C 153.405,134.92 156.352,131.973 159.987,131.973 Z M 181.422,131.973C 185.057,131.973 188.004,134.92 188.004,138.554C 188.004,142.189 185.057,145.136 181.422,145.136C 177.787,145.136 174.84,142.189 174.84,138.554C 174.84,134.92 177.787,131.973 181.422,131.973 Z M 202.857,131.973C 206.492,131.973 209.439,134.92 209.439,138.554C 209.439,142.189 206.492,145.136 202.857,145.136C 199.222,145.136 196.275,142.189 196.275,138.554C 196.275,134.92 199.222,131.973 202.857,131.973 Z M 224.291,131.973C 227.926,131.973 230.873,134.92 230.873,138.554C 230.873,142.189 227.926,145.136 224.291,145.136C 220.656,145.136 217.71,142.189 217.71,138.554C 217.71,134.92 220.656,131.973 224.291,131.973 Z M 245.726,131.973C 249.36,131.973 252.307,134.92 252.307,138.554C 252.307,142.189 249.36,145.136 245.726,145.136C 242.091,145.136 239.144,142.189 239.144,138.554C 239.144,134.92 242.091,131.973 245.726,131.973 Z M 267.16,131.973C 270.795,131.973 273.742,134.92 273.742,138.554C 273.742,142.189 270.795,145.136 267.16,145.136C 263.525,145.136 260.578,142.189 260.578,138.554C 260.578,134.92 263.525,131.973 267.16,131.973 Z M 52.8143,131.973C 56.4493,131.973 59.3961,134.92 59.3961,138.554C 59.3961,142.189 56.4493,145.136 52.8143,145.136C 49.1793,145.136 46.2325,142.189 46.2325,138.554C 46.2325,134.92 49.1793,131.973 52.8143,131.973 Z M 288.595,131.973C 292.23,131.973 295.177,134.92 295.177,138.554C 295.177,142.189 292.23,145.136 288.595,145.136C 284.96,145.136 282.013,142.189 282.013,138.554C 282.013,134.92 284.96,131.973 288.595,131.973 Z M 74.249,153.407C 77.8841,153.407 80.8306,156.354 80.8306,159.989C 80.8306,163.624 77.8841,166.571 74.249,166.571C 70.614,166.571 67.6672,163.624 67.6672,159.989C 67.6672,156.354 70.614,153.407 74.249,153.407 Z M 95.6835,153.407C 99.3186,153.407 102.265,156.354 102.265,159.989C 102.265,163.624 99.3186,166.571 95.6835,166.571C 92.0485,166.571 89.1017,163.624 89.1017,159.989C 89.1017,156.354 92.0485,153.407 95.6835,153.407 Z M 117.118,153.407C 120.753,153.407 123.7,156.354 123.7,159.989C 123.7,163.624 120.753,166.571 117.118,166.571C 113.483,166.571 110.536,163.624 110.536,159.989C 110.536,156.354 113.483,153.407 117.118,153.407 Z M 138.553,153.407C 142.188,153.407 145.134,156.354 145.134,159.989C 145.134,163.624 142.188,166.571 138.553,166.571C 134.918,166.571 131.971,163.624 131.971,159.989C 131.971,156.354 134.918,153.407 138.553,153.407 Z M 159.987,153.407C 163.622,153.407 166.569,156.354 166.569,159.989C 166.569,163.624 163.622,166.571 159.987,166.571C 156.352,166.571 153.405,163.624 153.405,159.989C 153.405,156.354 156.352,153.407 159.987,153.407 Z M 181.422,153.407C 185.057,153.407 188.004,156.354 188.004,159.989C 188.004,163.624 185.057,166.571 181.422,166.571C 177.787,166.571 174.84,163.624 174.84,159.989C 174.84,156.354 177.787,153.407 181.422,153.407 Z M 202.857,153.407C 206.492,153.407 209.439,156.354 209.439,159.989C 209.439,163.624 206.492,166.571 202.857,166.571C 199.222,166.571 196.275,163.624 196.275,159.989C 196.275,156.354 199.222,153.407 202.857,153.407 Z M 224.292,153.407C 227.927,153.407 230.873,156.354 230.873,159.989C 230.873,163.624 227.927,166.571 224.292,166.571C 220.657,166.571 217.71,163.624 217.71,159.989C 217.71,156.354 220.657,153.407 224.292,153.407 Z M 245.726,153.407C 249.361,153.407 252.307,156.354 252.307,159.989C 252.307,163.624 249.361,166.571 245.726,166.571C 242.091,166.571 239.145,163.624 239.145,159.989C 239.145,156.354 242.091,153.407 245.726,153.407 Z M 267.16,153.407C 270.795,153.407 273.742,156.354 273.742,159.989C 273.742,163.624 270.795,166.571 267.16,166.571C 263.525,166.571 260.578,163.624 260.578,159.989C 260.578,156.354 263.525,153.407 267.16,153.407 Z M 52.8143,153.407C 56.4494,153.407 59.3962,156.354 59.3962,159.989C 59.3962,163.624 56.4494,166.571 52.8143,166.571C 49.1794,166.571 46.2326,163.624 46.2326,159.989C 46.2326,156.354 49.1794,153.407 52.8143,153.407 Z M 288.595,153.407C 292.23,153.407 295.177,156.354 295.177,159.989C 295.177,163.624 292.23,166.571 288.595,166.571C 284.96,166.571 282.013,163.624 282.013,159.989C 282.013,156.354 284.96,153.407 288.595,153.407 Z M 74.2491,174.842C 77.8841,174.842 80.8307,177.788 80.8307,181.423C 80.8307,185.058 77.8841,188.005 74.2491,188.005C 70.614,188.005 67.6672,185.058 67.6672,181.423C 67.6672,177.788 70.614,174.842 74.2491,174.842 Z M 95.6836,174.842C 99.3186,174.842 102.265,177.788 102.265,181.423C 102.265,185.059 99.3186,188.005 95.6836,188.005C 92.0486,188.005 89.1018,185.059 89.1018,181.423C 89.1018,177.788 92.0485,174.842 95.6836,174.842 Z M 117.118,174.842C 120.753,174.842 123.7,177.788 123.7,181.423C 123.7,185.058 120.753,188.005 117.118,188.005C 113.483,188.005 110.537,185.058 110.537,181.423C 110.537,177.788 113.483,174.842 117.118,174.842 Z M 138.553,174.842C 142.188,174.842 145.135,177.788 145.135,181.423C 145.135,185.058 142.188,188.005 138.553,188.005C 134.918,188.005 131.971,185.058 131.971,181.423C 131.971,177.788 134.918,174.842 138.553,174.842 Z M 159.987,174.842C 163.623,174.842 166.569,177.788 166.569,181.423C 166.569,185.058 163.623,188.005 159.987,188.005C 156.352,188.005 153.406,185.058 153.406,181.423C 153.406,177.788 156.352,174.842 159.987,174.842 Z M 181.422,174.842C 185.057,174.842 188.004,177.788 188.004,181.423C 188.004,185.058 185.057,188.005 181.422,188.005C 177.787,188.005 174.84,185.058 174.84,181.423C 174.84,177.788 177.787,174.842 181.422,174.842 Z M 202.857,174.842C 206.492,174.842 209.439,177.788 209.439,181.423C 209.439,185.058 206.492,188.005 202.857,188.005C 199.222,188.005 196.275,185.058 196.275,181.423C 196.275,177.788 199.222,174.842 202.857,174.842 Z M 224.292,174.842C 227.927,174.842 230.874,177.788 230.874,181.423C 230.874,185.058 227.927,188.005 224.292,188.005C 220.657,188.005 217.71,185.058 217.71,181.423C 217.71,177.788 220.657,174.842 224.292,174.842 Z M 245.727,174.842C 249.361,174.842 252.308,177.788 252.308,181.423C 252.308,185.058 249.361,188.005 245.727,188.005C 242.092,188.005 239.145,185.058 239.145,181.423C 239.145,177.788 242.091,174.842 245.727,174.842 Z M 267.161,174.842C 270.796,174.842 273.742,177.788 273.742,181.423C 273.742,185.058 270.796,188.005 267.161,188.005C 263.526,188.005 260.579,185.058 260.579,181.423C 260.579,177.788 263.526,174.842 267.161,174.842 Z M 52.8144,174.842C 56.4494,174.842 59.3962,177.788 59.3962,181.423C 59.3962,185.058 56.4494,188.005 52.8144,188.005C 49.1794,188.005 46.2326,185.058 46.2326,181.423C 46.2326,177.788 49.1794,174.842 52.8144,174.842 Z M 288.595,174.842C 292.23,174.842 295.177,177.788 295.177,181.423C 295.177,185.058 292.23,188.005 288.595,188.005C 284.96,188.005 282.014,185.058 282.014,181.423C 282.014,177.788 284.96,174.842 288.595,174.842 Z M 74.2491,196.276C 77.8842,196.276 80.8308,199.223 80.8308,202.858C 80.8308,206.493 77.8841,209.44 74.2491,209.44C 70.6141,209.44 67.6673,206.493 67.6673,202.858C 67.6673,199.223 70.6141,196.276 74.2491,196.276 Z M 95.6837,196.276C 99.3187,196.276 102.266,199.223 102.266,202.858C 102.266,206.493 99.3187,209.44 95.6837,209.44C 92.0486,209.44 89.1019,206.493 89.1019,202.858C 89.1019,199.223 92.0486,196.276 95.6837,196.276 Z M 117.118,196.276C 120.754,196.276 123.7,199.223 123.7,202.858C 123.7,206.493 120.753,209.44 117.118,209.44C 113.483,209.44 110.537,206.493 110.537,202.858C 110.537,199.223 113.483,196.276 117.118,196.276 Z M 138.553,196.276C 142.188,196.276 145.135,199.223 145.135,202.858C 145.135,206.493 142.188,209.44 138.553,209.44C 134.918,209.44 131.971,206.493 131.971,202.858C 131.971,199.223 134.918,196.276 138.553,196.276 Z M 159.988,196.276C 163.623,196.276 166.569,199.223 166.569,202.858C 166.569,206.493 163.623,209.44 159.988,209.44C 156.353,209.44 153.406,206.493 153.406,202.858C 153.406,199.223 156.353,196.276 159.988,196.276 Z M 181.422,196.276C 185.057,196.276 188.004,199.223 188.004,202.858C 188.004,206.493 185.057,209.44 181.422,209.44C 177.787,209.44 174.841,206.493 174.841,202.858C 174.841,199.223 177.787,196.276 181.422,196.276 Z M 202.857,196.276C 206.492,196.276 209.439,199.223 209.439,202.858C 209.439,206.493 206.492,209.44 202.857,209.44C 199.222,209.44 196.275,206.493 196.275,202.858C 196.275,199.223 199.222,196.276 202.857,196.276 Z M 224.292,196.276C 227.927,196.276 230.874,199.223 230.874,202.858C 230.874,206.493 227.927,209.44 224.292,209.44C 220.657,209.44 217.71,206.493 217.71,202.858C 217.71,199.223 220.657,196.276 224.292,196.276 Z M 245.727,196.276C 249.361,196.276 252.308,199.223 252.308,202.858C 252.308,206.493 249.361,209.44 245.727,209.44C 242.092,209.44 239.145,206.493 239.145,202.858C 239.145,199.223 242.092,196.276 245.727,196.276 Z M 267.161,196.276C 270.796,196.276 273.743,199.223 273.743,202.858C 273.743,206.493 270.796,209.44 267.161,209.44C 263.526,209.44 260.579,206.493 260.579,202.858C 260.579,199.223 263.526,196.276 267.161,196.276 Z M 52.8144,196.276C 56.4495,196.276 59.3963,199.223 59.3963,202.858C 59.3963,206.493 56.4495,209.44 52.8144,209.44C 49.1794,209.44 46.2327,206.493 46.2327,202.858C 46.2327,199.223 49.1794,196.276 52.8144,196.276 Z M 288.596,196.276C 292.231,196.276 295.178,199.223 295.178,202.858C 295.178,206.493 292.231,209.44 288.596,209.44C 284.961,209.44 282.014,206.493 282.014,202.858C 282.014,199.223 284.961,196.276 288.596,196.276 Z M 74.2492,217.711C 77.8842,217.711 80.8309,220.658 80.8309,224.293C 80.8309,227.928 77.8842,230.874 74.2492,230.874C 70.6141,230.874 67.6673,227.928 67.6673,224.293C 67.6673,220.658 70.6141,217.711 74.2492,217.711 Z M 95.6838,217.711C 99.3188,217.711 102.266,220.658 102.266,224.293C 102.266,227.928 99.3188,230.874 95.6838,230.874C 92.0487,230.874 89.102,227.928 89.102,224.293C 89.102,220.658 92.0487,217.711 95.6838,217.711 Z M 117.119,217.711C 120.754,217.711 123.7,220.658 123.7,224.293C 123.7,227.928 120.754,230.874 117.119,230.874C 113.483,230.874 110.537,227.928 110.537,224.293C 110.537,220.658 113.483,217.711 117.119,217.711 Z M 138.553,217.711C 142.188,217.711 145.135,220.658 145.135,224.293C 145.135,227.928 142.188,230.874 138.553,230.874C 134.918,230.874 131.971,227.928 131.971,224.293C 131.971,220.658 134.918,217.711 138.553,217.711 Z M 159.988,217.711C 163.623,217.711 166.57,220.657 166.57,224.293C 166.57,227.928 163.623,230.874 159.988,230.874C 156.353,230.874 153.406,227.928 153.406,224.293C 153.406,220.657 156.353,217.711 159.988,217.711 Z M 181.423,217.711C 185.058,217.711 188.004,220.658 188.004,224.293C 188.004,227.928 185.058,230.874 181.423,230.874C 177.788,230.874 174.841,227.928 174.841,224.293C 174.841,220.658 177.787,217.711 181.423,217.711 Z M 202.857,217.711C 206.492,217.711 209.439,220.657 209.439,224.293C 209.439,227.928 206.492,230.874 202.857,230.874C 199.222,230.874 196.276,227.928 196.276,224.293C 196.276,220.657 199.222,217.711 202.857,217.711 Z M 224.292,217.711C 227.927,217.711 230.874,220.658 230.874,224.293C 230.874,227.928 227.927,230.874 224.292,230.874C 220.657,230.874 217.71,227.928 217.71,224.293C 217.71,220.658 220.657,217.711 224.292,217.711 Z M 245.727,217.711C 249.362,217.711 252.308,220.657 252.308,224.293C 252.308,227.928 249.362,230.874 245.727,230.874C 242.092,230.874 239.145,227.928 239.145,224.293C 239.145,220.657 242.092,217.711 245.727,217.711 Z M 267.161,217.711C 270.796,217.711 273.743,220.658 273.743,224.293C 273.743,227.928 270.796,230.874 267.161,230.874C 263.526,230.874 260.579,227.928 260.579,224.293C 260.579,220.658 263.526,217.711 267.161,217.711 Z M 52.8145,217.711C 56.4495,217.711 59.3963,220.658 59.3963,224.293C 59.3963,227.928 56.4495,230.874 52.8145,230.874C 49.1795,230.874 46.2327,227.928 46.2327,224.293C 46.2327,220.658 49.1794,217.711 52.8145,217.711 Z M 288.596,217.711C 292.231,217.711 295.178,220.658 295.178,224.293C 295.178,227.928 292.231,230.874 288.596,230.874C 284.961,230.874 282.014,227.928 282.014,224.293C 282.014,220.658 284.961,217.711 288.596,217.711 Z M 74.2491,239.146C 77.8842,239.146 80.8309,242.092 80.8309,245.727C 80.8309,249.362 77.8842,252.309 74.2491,252.309C 70.6141,252.309 67.6673,249.362 67.6673,245.727C 67.6673,242.092 70.6141,239.146 74.2491,239.146 Z M 95.6838,239.146C 99.3188,239.146 102.266,242.092 102.266,245.727C 102.266,249.362 99.3188,252.309 95.6838,252.309C 92.0488,252.309 89.102,249.362 89.102,245.727C 89.102,242.092 92.0487,239.146 95.6838,239.146 Z M 117.119,239.146C 120.754,239.146 123.7,242.092 123.7,245.727C 123.7,249.362 120.754,252.309 117.119,252.309C 113.484,252.309 110.537,249.362 110.537,245.727C 110.537,242.092 113.484,239.146 117.119,239.146 Z M 138.553,239.146C 142.188,239.146 145.135,242.092 145.135,245.727C 145.135,249.362 142.188,252.309 138.553,252.309C 134.918,252.309 131.971,249.362 131.971,245.727C 131.971,242.092 134.918,239.146 138.553,239.146 Z M 52.8144,239.146C 56.4495,239.146 59.3963,242.092 59.3963,245.727C 59.3963,249.362 56.4495,252.309 52.8144,252.309C 49.1794,252.309 46.2326,249.362 46.2326,245.727C 46.2326,242.092 49.1794,239.146 52.8144,239.146 Z M 74.2491,260.58C 77.8842,260.58 80.8309,263.527 80.8309,267.162C 80.8309,270.797 77.8842,273.744 74.2491,273.744C 70.6141,273.744 67.6673,270.797 67.6673,267.162C 67.6673,263.527 70.6141,260.58 74.2491,260.58 Z M 95.6838,260.58C 99.3189,260.58 102.266,263.527 102.266,267.162C 102.266,270.797 99.3189,273.744 95.6838,273.744C 92.0488,273.744 89.102,270.797 89.102,267.162C 89.102,263.527 92.0488,260.58 95.6838,260.58 Z M 117.119,260.58C 120.754,260.58 123.7,263.527 123.7,267.162C 123.7,270.797 120.754,273.744 117.119,273.744C 113.484,273.744 110.537,270.797 110.537,267.162C 110.537,263.527 113.484,260.58 117.119,260.58 Z M 138.553,260.58C 142.188,260.58 145.135,263.527 145.135,267.162C 145.135,270.797 142.188,273.744 138.553,273.744C 134.918,273.744 131.972,270.797 131.972,267.162C 131.972,263.527 134.918,260.58 138.553,260.58 Z M 52.8144,260.58C 56.4495,260.58 59.3963,263.527 59.3963,267.162C 59.3963,270.797 56.4495,273.744 52.8144,273.744C 49.1794,273.744 46.2326,270.797 46.2326,267.162C 46.2326,263.527 49.1794,260.58 52.8144,260.58 Z M 74.1589,281.478C 77.7973,281.478 80.7468,284.427 80.7468,288.066C 80.7468,291.704 77.7973,294.654 74.1589,294.654C 70.5204,294.654 67.5709,291.704 67.5709,288.066C 67.5709,284.427 70.5204,281.478 74.1589,281.478 Z M 95.6136,281.478C 99.2521,281.478 102.202,284.427 102.202,288.066C 102.202,291.704 99.2521,294.654 95.6136,294.654C 91.9752,294.654 89.0256,291.704 89.0256,288.066C 89.0256,284.427 91.9752,281.478 95.6136,281.478 Z M 117.068,281.478C 120.707,281.478 123.656,284.427 123.656,288.066C 123.656,291.704 120.707,294.654 117.068,294.654C 113.43,294.654 110.48,291.704 110.48,288.066C 110.48,284.427 113.43,281.478 117.068,281.478 Z M 138.523,281.478C 142.162,281.478 145.111,284.427 145.111,288.066C 145.111,291.704 142.162,294.654 138.523,294.654C 134.885,294.654 131.935,291.704 131.935,288.066C 131.935,284.427 134.885,281.478 138.523,281.478 Z M 159.978,281.478C 163.617,281.478 166.566,284.427 166.566,288.066C 166.566,291.704 163.617,294.654 159.978,294.654C 156.34,294.654 153.39,291.704 153.39,288.066C 153.39,284.427 156.34,281.478 159.978,281.478 Z M 181.433,281.478C 185.071,281.478 188.021,284.427 188.021,288.066C 188.021,291.704 185.071,294.654 181.433,294.654C 177.794,294.654 174.845,291.704 174.845,288.066C 174.845,284.427 177.794,281.478 181.433,281.478 Z M 202.888,281.478C 206.526,281.478 209.476,284.427 209.476,288.066C 209.476,291.704 206.526,294.654 202.888,294.654C 199.249,294.654 196.3,291.704 196.3,288.066C 196.3,284.427 199.249,281.478 202.888,281.478 Z M 224.343,281.478C 227.981,281.478 230.931,284.427 230.931,288.066C 230.931,291.704 227.981,294.654 224.343,294.654C 220.704,294.654 217.755,291.704 217.755,288.066C 217.755,284.427 220.704,281.478 224.343,281.478 Z M 245.797,281.478C 249.436,281.478 252.385,284.427 252.385,288.066C 252.385,291.704 249.436,294.654 245.797,294.654C 242.159,294.654 239.209,291.704 239.209,288.066C 239.209,284.427 242.159,281.478 245.797,281.478 Z M 267.252,281.478C 270.891,281.478 273.84,284.427 273.84,288.066C 273.84,291.704 270.891,294.654 267.252,294.654C 263.614,294.654 260.664,291.704 260.664,288.066C 260.664,284.427 263.614,281.478 267.252,281.478 Z M 288.597,239.146C 292.232,239.146 295.178,242.092 295.178,245.727C 295.178,249.362 292.232,252.309 288.597,252.309C 284.962,252.309 282.015,249.362 282.015,245.727C 282.015,242.092 284.962,239.146 288.597,239.146 Z M 288.597,260.58C 292.232,260.58 295.178,263.527 295.178,267.162C 295.178,270.797 292.232,273.744 288.597,273.744C 284.962,273.744 282.015,270.797 282.015,267.162C 282.015,263.527 284.962,260.58 288.597,260.58 Z M 71.1388,21.3384L 270.272,21.3384C 297.777,21.3384 320.073,43.6349 320.073,71.139L 320.073,270.272C 320.073,297.777 297.777,320.073 270.272,320.073L 71.1388,320.073C 43.6346,320.073 21.3381,297.777 21.3381,270.272L 21.3381,71.139C 21.3381,43.6349 43.6346,21.3384 71.1388,21.3384 Z M 68.9155,35.3403C 51.2343,35.3403 36.9008,49.6738 36.9008,67.3551L 36.9008,274.055C 36.9008,291.737 51.2343,306.07 68.9155,306.07L 274.056,306.07C 291.737,306.07 306.07,291.737 306.07,274.055L 306.07,67.3551C 306.07,49.6738 291.737,35.3403 274.056,35.3403L 68.9155,35.3403 Z M 184.931,245.39C 190.823,245.39 195.6,250.166 195.6,256.059C 195.6,261.951 190.823,266.728 184.931,266.728C 179.039,266.728 174.262,261.951 174.262,256.059C 174.262,250.166 179.039,245.39 184.931,245.39 Z M 160.036,238.837C 162.714,238.837 165.016,240.443 166.032,242.743C 164.201,245.338 162.89,248.327 162.253,251.557C 161.56,251.806 160.814,251.942 160.036,251.942C 156.418,251.942 153.484,249.008 153.484,245.389C 153.484,241.771 156.418,238.837 160.036,238.837 Z M 202.713,238.837C 206.332,238.837 209.265,241.771 209.265,245.39C 209.265,247.237 208.501,248.905 207.271,250.096C 206.139,245.841 203.823,242.069 200.697,239.153C 201.332,238.948 202.01,238.837 202.713,238.837 Z M 160.036,260.176C 160.814,260.176 161.56,260.311 162.253,260.56C 162.89,263.79 164.201,266.779 166.032,269.374C 165.016,271.674 162.713,273.28 160.036,273.28C 156.418,273.28 153.484,270.346 153.484,266.728C 153.484,263.109 156.418,260.176 160.036,260.176 Z M 209.265,266.728C 209.265,270.346 206.332,273.28 202.713,273.28C 202.01,273.28 201.332,273.169 200.697,272.964C 203.823,270.048 206.139,266.276 207.271,262.021C 208.501,263.212 209.265,264.881 209.265,266.728 Z M 248.946,245.39C 254.838,245.39 259.615,250.166 259.615,256.059C 259.615,261.951 254.838,266.728 248.946,266.728C 243.053,266.728 238.277,261.951 238.277,256.059C 238.277,250.166 243.053,245.39 248.946,245.39 Z M 224.051,238.837C 226.728,238.837 229.03,240.443 230.047,242.743C 228.215,245.338 226.905,248.327 226.267,251.557C 225.575,251.806 224.829,251.942 224.051,251.942C 220.432,251.942 217.499,249.008 217.499,245.389C 217.499,241.771 220.432,238.837 224.051,238.837 Z M 266.728,238.837C 270.346,238.837 273.28,241.771 273.28,245.39C 273.28,247.237 272.515,248.905 271.286,250.096C 270.153,245.841 267.837,242.069 264.712,239.153C 265.347,238.948 266.024,238.837 266.728,238.837 Z M 224.051,260.176C 224.829,260.176 225.575,260.311 226.267,260.56C 226.905,263.79 228.215,266.779 230.047,269.374C 229.03,271.674 226.728,273.28 224.051,273.28C 220.432,273.28 217.499,270.346 217.499,266.728C 217.499,263.109 220.432,260.176 224.051,260.176 Z M 273.28,266.728C 273.28,270.346 270.346,273.28 266.728,273.28C 266.024,273.28 265.347,273.169 264.712,272.964C 267.837,270.048 270.153,266.276 271.286,262.021C 272.515,263.212 273.28,264.881 273.28,266.728 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="IconStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.SoftwareHome}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="224" Height="212.585" Canvas.Left="16" Canvas.Top="11.4149" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 16,96L 30.2098,96L 221.99,11.4149L 226.535,21.7194L 58.118,96L 240,96L 240,224L 16,224L 16,96 Z M 48,185C 39.1634,185 32,192.163 32,201C 32,209.837 39.1634,217 48,217C 56.8365,217 64,209.837 64,201C 64,192.163 56.8365,185 48,185 Z M 208,185C 199.163,185 192,192.163 192,201C 192,209.837 199.163,217 208,217C 216.836,217 224,209.837 224,201C 224,192.163 216.836,185 208,185 Z M 80,191.401L 80,196.5L 90.7031,196.5L 90.7031,200.953L 101.203,200.953L 101.203,196.5L 176,196.5L 176,191.401L 101.203,191.401L 101.203,185.12L 90.7031,185.12L 90.7031,191.401L 80,191.401 Z M 80,206.372L 80,211.471L 122.495,211.471L 122.495,216.557L 132.995,216.557L 132.995,211.471L 176,211.471L 176,206.372L 132.995,206.372L 132.995,200.724L 122.495,200.724L 122.495,206.372L 80,206.372 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="ClearStyle" BasedOn="{StaticResource ExitStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Clear}"/>
+	</Style>
+	<Style x:Key="ChannelCategoryStyle" TargetType="{x:Type RadioButton}">
+		<Setter Property="OverridesDefaultStyle" Value="True"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="White"/>
+		<Setter Property="BorderThickness" Value="2"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type RadioButton}">
+					<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+						<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}"/>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Padding" Value="2"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Background" Value="#7FFFFFFF"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Foreground" Value="Black"/>
+				<Setter Property="Background" Value="White"/>
+			</Trigger>
+			<Trigger Property="IsChecked" Value="True">
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="Background" Value="#BFFFFFFF"/>
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="BorderBrush" Value="#7FFFFFFF"/>
+				<Setter Property="Foreground" Value="#7FFFFFFF"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style x:Key="LoudspeakerStyle" BasedOn="{StaticResource CustomCheckBoxStyle}" TargetType="{x:Type CheckBox}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Border Background="Transparent">
+						<Viewbox>
+							<Canvas x:Name="DoubanFM__VolumeControl__Loudspeaker" Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0">
+								<Canvas x:Name="Waves" Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
+									<Viewbox x:Name="Group" Width="424" Height="448" Canvas.Left="-168" Canvas.Top="-96">
+										<Canvas Width="424" Height="448">
+											<Canvas Width="256" Height="256" x:Name="Clip" Clip="F1 M 280,224L 424,448L 424,0L 280,224 Z ">
+												<Ellipse x:Name="Ellipse" Width="400" Height="400" Canvas.Left="0" Canvas.Top="24" Stretch="Fill" StrokeThickness="16" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}"/>
+												<Ellipse x:Name="Ellipse_0" Width="336" Height="336" Canvas.Left="32" Canvas.Top="56" Stretch="Fill" StrokeThickness="16" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}"/>
+												<Ellipse x:Name="Ellipse_1" Width="272" Height="272" Canvas.Left="64" Canvas.Top="88" Stretch="Fill" StrokeThickness="16" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}"/>
+											</Canvas>
+											<Path x:Name="Path" Width="144" Height="448" Canvas.Left="280" Canvas.Top="0" Stretch="Fill" StrokeThickness="0" StrokeLineJoin="Round" Stroke="{TemplateBinding Foreground}" Data="F1 M 280,224L 424,448L 424,0L 280,224 Z "/>
+										</Canvas>
+									</Viewbox>
+								</Canvas>
+								<Canvas Width="256" Height="256" Canvas.Left="0" Canvas.Top="0">
+									<Rectangle x:Name="Rectangle" Width="32" Height="96" Canvas.Left="32" Canvas.Top="80" Stretch="Fill" StrokeThickness="1" StrokeLineJoin="Round" Fill="{TemplateBinding Foreground}"/>
+									<Path x:Name="Path_2" Width="48" Height="192" Canvas.Left="80" Canvas.Top="32" Stretch="Fill" StrokeThickness="1" StrokeLineJoin="Round" Fill="{TemplateBinding Foreground}" Data="F1 M 80,80L 128,32L 128,224L 80,176L 80,80 Z "/>
+								</Canvas>
+							</Canvas>
+						</Viewbox>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="Visibility" TargetName="Waves" Value="Hidden"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+					
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="CheckableListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBoxItem}">
+					<CheckBox x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected, Mode=TwoWay}" SnapsToDevicePixels="true">
+						<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+					</CheckBox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="CheckableListBoxStyle" BasedOn="{StaticResource {x:Type ListBox}}" TargetType="{x:Type ListBox}">
+		<Setter Property="SelectionMode" Value="Multiple"/>
+		<Setter Property="ItemContainerStyle" Value="{StaticResource CheckableListBoxItemStyle}"/>
+	</Style>
+	<Style x:Key="HelpStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+		<Setter Property="ToolTip" Value="{x:Static resx:Resources.Help}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="224" Height="224" Canvas.Left="16" Canvas.Top="16" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 128,0C 199.324,0 256,56.0452 256,128C 256,199.955 199.324,256 128,256C 56.6764,256 -5.93397e-006,199.955 -5.93397e-006,128C -5.93397e-006,56.0452 56.6764,0 128,0 Z M 145.455,178.424C 145.212,167.798 146.05,160.444 147.97,156.364C 149.889,152.283 154.828,146.848 162.788,140.061C 178.101,126.889 188.091,116.535 192.758,109C 197.424,101.465 199.758,93.4142 199.758,84.8485C 199.758,69.4949 193.242,56.0404 180.212,44.4849C 167.182,32.9293 149.677,27.1515 127.697,27.1515C 106.727,27.1515 89.8283,32.7576 77,43.9697C 64.1717,55.1818 57.2525,68.8283 56.2424,84.9091L 91.1515,89.2121C 93.5353,77.3737 97.9495,68.596 104.394,62.8788C 110.838,57.1616 118.869,54.303 128.485,54.303C 138.384,54.303 146.273,57.202 152.152,63C 158.03,68.798 160.97,75.697 160.97,83.697C 160.97,89.1919 159.333,94.1818 156.061,98.6667C 154,101.455 147.657,107.424 137.03,116.576C 126.404,125.727 119.303,133.98 115.727,141.333C 112.151,148.687 110.364,157.98 110.364,169.212L 110.545,178.424L 145.455,178.424 Z M 110.545,228.848L 149.333,228.848L 149.333,190.061L 110.545,190.061L 110.545,228.848 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<Style x:Key="DonateStyle" BasedOn="{StaticResource CustomButtonStyle}" TargetType="{x:Type Button}">
+        <Setter Property="ToolTip" Value="{x:Static resx:Resources.Donate}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Viewbox>
+						<Canvas Width="256" Height="256" Clip="F1 M 0,0L 256,0L 256,256L 0,256L 0,0" Background="{TemplateBinding Background}">
+							<Path Width="158.051" Height="224" Canvas.Left="48.9745" Canvas.Top="15.9998" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="M 199.216,177.13L 148.578,177.13L 148.578,240L 199.216,240L 199.216,177.13 Z M 56.7721,240L 107.344,240L 107.344,177.13L 56.7721,177.13L 56.7721,240 Z M 148.572,132.119L 148.572,164.111L 207.025,164.111L 207.025,132.119L 202.247,111.559L 143.946,111.559L 148.22,132.119L 148.572,132.119 Z M 107.551,132.119L 111.835,111.559L 53.7432,111.559L 48.9745,132.119L 48.9745,164.111L 107.342,164.111L 107.342,132.119L 107.551,132.119 Z M 131.339,99.163C 149.786,99.163 173.135,98.2874 181.292,94.2516C 194.218,87.7979 199.53,72.0354 193.114,59.0806C 188.64,50.1142 179.636,44.5363 169.622,44.5363C 165.539,44.5363 161.617,45.4692 157.943,47.2872C 156.344,48.0677 154.498,49.4479 152.48,51.1708C 153.498,47.6394 154.155,44.5173 154.155,42.1949C 154.126,27.7552 142.361,15.9998 127.912,15.9998C 113.435,16.019 101.708,27.8028 101.708,42.252C 101.708,44.5173 102.317,47.5537 103.336,51.009C 101.384,49.3718 99.5853,48.0487 98.0433,47.2872C 94.3787,45.4692 90.4571,44.5363 86.3832,44.5363C 76.3601,44.5363 67.3462,50.1142 62.8915,59.0806C 56.4569,72.0354 61.7492,87.7979 74.723,94.2516C 82.8328,98.2874 106.153,99.1536 124.609,99.163L 127.979,99.163L 131.339,99.163 Z M 81.5897,80.3992C 76.2688,77.7626 74.0986,71.29 76.7351,65.9692C 78.5627,62.276 82.2559,59.9821 86.3774,59.9821C 88.0527,59.9821 89.6613,60.3724 91.1747,61.1243C 94.5252,62.7901 103.32,72.5751 112.154,83.5594C 95.2772,83.074 84.2833,81.7414 81.5897,80.3992 Z M 117.173,42.233C 117.163,36.3029 121.98,31.4674 127.91,31.4484C 133.859,31.4484 138.703,36.2839 138.703,42.2139C 138.703,45.9736 133.859,58.205 127.948,70.9978C 122.018,58.1669 117.173,45.8975 117.173,42.233 Z M 164.839,61.1205C 166.343,60.3781 167.923,59.9878 169.618,59.9878C 173.749,59.9878 177.423,62.2913 179.27,65.9559C 181.897,71.2862 179.717,77.7589 174.415,80.3954C 171.712,81.7376 160.727,83.0796 143.842,83.5556C 152.665,72.5713 161.46,62.7957 164.839,61.1205 Z "/>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

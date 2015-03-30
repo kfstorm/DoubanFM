@@ -1,0 +1,825 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="WindowTitle" xml:space="preserve">
+    <value>DoubanFM</value>
+    <comment>The internal Visual Studio Resource editor only accepts ASCII so these will appear as squares.</comment>
+  </data>
+  <data name="WindowTitleShort" xml:space="preserve">
+    <value>DoubanFM</value>
+  </data>
+  <data name="LikeThumbButton" xml:space="preserve">
+    <value>Like</value>
+  </data>
+  <data name="UnlikeThumbButton" xml:space="preserve">
+    <value>Cancel like</value>
+  </data>
+  <data name="DontPlayThumbButton" xml:space="preserve">
+    <value>Never play again</value>
+  </data>
+  <data name="PauseThumbButton" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="PlayThumbButton" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="NextThumbButton" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="FavoriteButton" xml:space="preserve">
+    <value>Add to favorites</value>
+  </data>
+  <data name="UnfavoriteButton" xml:space="preserve">
+    <value>Remove from favorites</value>
+  </data>
+  <data name="ShareDouban" xml:space="preserve">
+    <value>Share on Douban</value>
+  </data>
+  <data name="ShareWeibo" xml:space="preserve">
+    <value>Share on Sina Weibo</value>
+  </data>
+  <data name="ShareMsn" xml:space="preserve">
+    <value>Share on MSN</value>
+  </data>
+  <data name="ShareKaixin" xml:space="preserve">
+    <value>Share on Kaixin</value>
+  </data>
+  <data name="ShareRenren" xml:space="preserve">
+    <value>Share on Renren</value>
+  </data>
+  <data name="ShareFacebook" xml:space="preserve">
+    <value>Share on Facebook</value>
+  </data>
+  <data name="ShareTwitter" xml:space="preserve">
+    <value>Share on Twitter</value>
+  </data>
+  <data name="PersonalRadioRB" xml:space="preserve">
+    <value>Personal</value>
+  </data>
+  <data name="PublicRadioRB" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="DJRadioRB" xml:space="preserve">
+    <value>DJ</value>
+  </data>
+  <data name="DJSearchTextBlock" xml:space="preserve">
+    <value>Click 'Search' for all channels</value>
+  </data>
+  <data name="PleaseWaitLabel" xml:space="preserve">
+    <value>Please Wait</value>
+  </data>
+  <data name="SearchingLabel" xml:space="preserve">
+    <value>Searching...</value>
+  </data>
+  <data name="ConsistentResultsLabel" xml:space="preserve">
+    <value>Search results from music.douban.com</value>
+  </data>
+  <data name="SearchResultsCanNotListenLabel" xml:space="preserve">
+    <value>"Remove search results that can not be played" is checked.</value>
+  </data>
+  <data name="MayNextResultsLabel" xml:space="preserve">
+    <value>Check out the next page</value>
+  </data>
+  <data name="EmailUserNameBlock" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="PasswordBlock" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="VerificationCaptchaBlock" xml:space="preserve">
+    <value>Captcha</value>
+  </data>
+  <data name="RefreshVerificationCaptchaButton" xml:space="preserve">
+    <value>Click to refresh captcha.</value>
+  </data>
+  <data name="LoginButton" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="RegisterButton" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="RememberPasswordCheckBox" xml:space="preserve">
+    <value>Remember password</value>
+  </data>
+  <data name="AutoLoginCheckBox" xml:space="preserve">
+    <value>Auto login</value>
+  </data>
+  <data name="TotalFormatString" xml:space="preserve">
+    <value>Played: {0}</value>
+  </data>
+  <data name="PlusHeartsFormatString" xml:space="preserve">
+    <value>Liked: {0}</value>
+  </data>
+  <data name="NoLongerPlayFormatString" xml:space="preserve">
+    <value>Disliked: {0}</value>
+  </data>
+  <data name="TheLoggedLabel" xml:space="preserve">
+    <value>Logged in</value>
+  </data>
+  <data name="LogoutButton" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="LoggingInLabel" xml:space="preserve">
+    <value>Logging In</value>
+  </data>
+  <data name="LoggingOutLabel" xml:space="preserve">
+    <value>Logging Out</value>
+  </data>
+  <data name="SettingsTab" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="InfoTab" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="SearchTab" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="AccountTab" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="ChannelsTab" xml:space="preserve">
+    <value>Channels</value>
+  </data>
+  <data name="Minimize" xml:space="preserve">
+    <value>Minimize</value>
+  </data>
+  <data name="MinimizeToTray" xml:space="preserve">
+    <value>Minimize to tray icon</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous Page</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next Page</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Share" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="GeneralSettingsButton" xml:space="preserve">
+    <value>General Settings</value>
+  </data>
+  <data name="InterfaceSettingsButton" xml:space="preserve">
+    <value>UI Settings</value>
+  </data>
+  <data name="LyricsSettingsButton" xml:space="preserve">
+    <value>Lyrics Settings</value>
+  </data>
+  <data name="HotKeySettingsButton" xml:space="preserve">
+    <value>Hot Key Settings</value>
+  </data>
+  <data name="ShareSettingsButton" xml:space="preserve">
+    <value>Share Settings</value>
+  </data>
+  <data name="ImportButton" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="ExportButton" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ThirdPartyClientsBlock" xml:space="preserve">
+    <value>A third-party client</value>
+  </data>
+  <data name="CopyUrlButton" xml:space="preserve">
+    <value>Share (click to copy link)</value>
+  </data>
+  <data name="ShareKeyButton" xml:space="preserve">
+    <value>One-key share</value>
+  </data>
+  <data name="DownloadSearchButton" xml:space="preserve">
+    <value>Search for music downloads</value>
+  </data>
+  <data name="AvailableAfterLoginBorder" xml:space="preserve">
+    <value>Available after login</value>
+  </data>
+  <data name="FirstTimePanelTextBlock" xml:space="preserve">
+    <value>Move the mouse to the cover
+Surprise!</value>
+  </data>
+  <data name="ExceptionWindowTitle" xml:space="preserve">
+    <value>An error has occured</value>
+  </data>
+  <data name="ShortMessageTextBlock" xml:space="preserve">
+    <value>Error summary:</value>
+  </data>
+  <data name="UserMessageTextBlock" xml:space="preserve">
+    <value>Please kindly explain what exactly you were doing. This will help me analyze the problem.</value>
+  </data>
+  <data name="ViewErrorMessageButton" xml:space="preserve">
+    <value>View the error report</value>
+  </data>
+  <data name="SendErrorButton" xml:space="preserve">
+    <value>Send error report</value>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="CheckBoxAdjustVolumeWithMouseWheel" xml:space="preserve">
+    <value>Adjust volume with mouse wheel</value>
+  </data>
+  <data name="CheckBoxRememberLastChannel" xml:space="preserve">
+    <value>Remember channel played last</value>
+  </data>
+  <data name="CheckBoxIsSearchFilterEnabled" xml:space="preserve">
+    <value>Remove search results that can not be played</value>
+  </data>
+  <data name="DownloadSearchSettingsGroupBox" xml:space="preserve">
+    <value>Download Searching Settings</value>
+  </data>
+  <data name="OutputDevicesTextBlock" xml:space="preserve">
+    <value>Output device</value>
+  </data>
+  <data name="AlbumSearchCheckBox" xml:space="preserve">
+    <value>Include album title</value>
+  </data>
+  <data name="TrimBracketsCheckBox" xml:space="preserve">
+    <value>Auto remove brackets and their contents</value>
+  </data>
+  <data name="CbSearchBaiduMusic" xml:space="preserve">
+    <value>Search Baidu Music</value>
+  </data>
+  <data name="ProxyServerGroupBox" xml:space="preserve">
+    <value>Proxy</value>
+  </data>
+  <data name="RbDefaultProxy" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="RbNoProxy" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="RbCustomProxy" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="HostComputerLabel" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="PortLabel" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="UserNameLabel" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="ProxyNoCredentialsLabel" xml:space="preserve">
+    <value>Leave username/password blank if not required.</value>
+  </data>
+  <data name="BtnApplyProxy" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="HelpWindowTitle" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="HelpWindowParagraphTitle" xml:space="preserve">
+    <value>Help Documentation of DoubanFM</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet" xml:space="preserve">
+    <value>How to set a font?</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet2" xml:space="preserve">
+    <value>You can set multiple fonts in this application. When you use some Chinese fonts, you will find their Latin glyphs don't look so nice. So it is necessary to specify fonts for Chinese and English respectively. Here's an example:</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet3" xml:space="preserve">
+    <value>豆瓣电台 豆瓣電台 DoubanFM 1234567</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet4" xml:space="preserve">
+    <value>Multiple fonts can be designated here with descending priority and separated by commas (either half-width or full-width will do). If some certain text can not be displayed in any designated fonts, the system default font will be used. Usually the English font is put before the Chinese one. The font should be set by inputing the name of the font like "Century,华文新魏", rather than selecting from the drop-down list. An English font that is designated after the Chinese font will often fail to apply because Chinese fonts already include English glyphs. Here's an example:</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet5" xml:space="preserve">
+    <value>The font not found in the system will be ignored. Other fonts will function as normal.</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet6" xml:space="preserve">
+    <value>From the example above, we can see that 华文新魏 does not include Traditional Chinese characters, so those ones will be shown in default font. Here we can set a third font:</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet7" xml:space="preserve">
+    <value>Case-insensitive:</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet8" xml:space="preserve">
+    <value>Spaces are allowed before and after a font.</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet9" xml:space="preserve">
+    <value>Light, SemiLight, SemiBold and Bold can also be added after the font to specify a weight. So that adjusting weight in lyrics settings will not affect the font itself. (Some fonts might not have a variety of weights. Usually there are only two weights for Chinese fonts. English fonts have more. A good example is that Segoe UI supports Light, SemiBold and Bold, but not SemiLight.)</value>
+  </data>
+  <data name="HelpWindowParagraphFontSet10" xml:space="preserve">
+    <value>When you set the fonts, you can use the font name in multiple languages. All fonts have English names and non-English fonts, for the most of times, have non-English names. For example, 宋体 has a English name "SimSun", while 新宋体 has the English name "NSimsun". 楷体 has its English name as "KaiTi"; the English name of 微软雅黑 is Microsoft YaHei. In Taiwan, the default Windows 7 Chinese font is 微軟正黑體, whose English name is Microsoft Jhenghei. In this application, only fonts that have Simplified Chinese names are shown in Chinese, others are shown in English. Therefore, 微软雅黑 is still 微软雅黑 in the drop-down list, 微軟正黑體 is called Microsoft Jhenghei and DFKai-SB stands for 標楷體.</value>
+  </data>
+  <data name="HelpWindowParagraphShareParagraph1" xml:space="preserve">
+    <value>Why others can not listen to the music that I share by link?</value>
+  </data>
+  <data name="HelpWindowParagraphShareParagraph2" xml:space="preserve">
+    <value>Douban disallows some users to jump from certain websites. For example, when you click the link from RenRen.com, it would direct you to the front page of Douban.fm, which is effectively the same as visiting douban.fm in the broswer. You can copy the shared link and paste it into the address bar of the browser, then you can listen to the music.</value>
+  </data>
+  <data name="HelpWindowParagraphLogin1" xml:space="preserve">
+    <value>I logged in and checked "Auto Log in". Why auto log in doesn't function when I open the application next time?</value>
+  </data>
+  <data name="HelpWindowParagraphLogin2" xml:space="preserve">
+    <value>Usually it's because you log out in a browser. Once you log out from one place, all other pages will be logged out too, including this application. That is to say, if you log in Douban in multiple browsers and log out in one of them, you will find your douban account is logged out in all broswers. So the only solution to this problem is to avoid logging out at other pages.</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes1" xml:space="preserve">
+    <value>The program crashed.</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes2" xml:space="preserve">
+    <value>If the program crashes,</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes3" xml:space="preserve">
+    <value>contact me</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes4" xml:space="preserve">
+    <value>. Please try to explain as detailed as possible what you were doing, or what channel you were listening to. Reports with error log are preferred.</value>
+  </data>
+  <data name="HelpWindowParagraphProgramCrashes5" xml:space="preserve">
+    <value>Where to find the error log?</value>
+  </data>
+  <data name="HelpWindowParagraphFontModification1" xml:space="preserve">
+    <value>What to do with unclear texts after font changes?</value>
+  </data>
+  <data name="HelpWindowParagraphFontModification2" xml:space="preserve">
+    <value>You can zoom in main window so that the words are easier to be read.</value>
+  </data>
+  <data name="HelpWindowParagraphFontModification3" xml:space="preserve">
+    <value>Why I can't use the software once logged in until I reset all the settings?</value>
+  </data>
+  <data name="HelpWindowParagraphOpenBrowser1" xml:space="preserve">
+    <value>Go to</value>
+  </data>
+  <data name="HelpWindowParagraphOpenBrowser2" xml:space="preserve">
+    <value>and login. Please check if you account has abnormal usage records. It might be that your account is locked or yet to be actived.</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer1" xml:space="preserve">
+    <value>Disclaimer: This software is a third-party client, not official.</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer2" xml:space="preserve">
+    <value>Author:</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer3" xml:space="preserve">
+    <value>Homepage:</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer4" xml:space="preserve">
+    <value>The Web version FAQ:</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer5" xml:space="preserve">
+    <value>DoubanFM official website:</value>
+  </data>
+  <data name="HelpWindowParagraphDisclaimer6" xml:space="preserve">
+    <value>The DoubanFM Help and Support:</value>
+  </data>
+  <data name="HotKeySettingWindowLikeHotkeyTextBlock" xml:space="preserve">
+    <value>Like</value>
+  </data>
+  <data name="HotKeySettingWindowDontPlayHotkeyTextBlock" xml:space="preserve">
+    <value>Never play again</value>
+  </data>
+  <data name="HotKeySettingWindowPlayPauseHotkeyTextBlock" xml:space="preserve">
+    <value>Play/Pause</value>
+  </data>
+  <data name="HotKeySettingWindowNextHotkeyTextBlock" xml:space="preserve">
+    <value>Next track</value>
+  </data>
+  <data name="HotKeySettingWindowMediaKeyInfoTextBlock" xml:space="preserve">
+    <value>Multimedia keys 'Play/Pause' and 'Next' are set.</value>
+  </data>
+  <data name="HotKeySettingWindowShowMinimizeTextBlock" xml:space="preserve">
+    <value>Show/Minimize window</value>
+  </data>
+  <data name="HotKeySettingWindowShowHideTextBlock" xml:space="preserve">
+    <value>Show/Hide window</value>
+  </data>
+  <data name="HotKeySettingWindowShowHideLyricsTextBlock" xml:space="preserve">
+    <value>Show/Hide lyrics</value>
+  </data>
+  <data name="HotKeySettingWindowShareKeyTextBlock" xml:space="preserve">
+    <value>One-key share</value>
+  </data>
+  <data name="HotKeySettingWindowSearchDownloadTextBlock" xml:space="preserve">
+    <value>Search download</value>
+  </data>
+  <data name="HotKeySettingWindowVolumeIncreaseTextBlock" xml:space="preserve">
+    <value>Volume up</value>
+  </data>
+  <data name="HotKeySettingWindowVolumeDecreaseTextBlock" xml:space="preserve">
+    <value>Volume down</value>
+  </data>
+  <data name="HotKeySettingWindowMuteSwitchTextBlock" xml:space="preserve">
+    <value>Mute/Unmute</value>
+  </data>
+  <data name="CbShowLyrics" xml:space="preserve">
+    <value>Enable lyrics</value>
+  </data>
+  <data name="CbEnableDesktopLyrics" xml:space="preserve">
+    <value>Desktop lyrics</value>
+  </data>
+  <data name="LyricsSettingsWindowOccupyCPULabel" xml:space="preserve">
+    <value>CPU usage may rise</value>
+  </data>
+  <data name="CbEnableEmbeddedLyrics" xml:space="preserve">
+    <value>Embedded lyrics</value>
+  </data>
+  <data name="LyricsSettingsWindowDesktopLyricsGroupBox" xml:space="preserve">
+    <value>Desktop Lyrics Settings</value>
+  </data>
+  <data name="LyricsSettingsWindowSingleLineLyricsRadioButton" xml:space="preserve">
+    <value>Single line</value>
+  </data>
+  <data name="LyricsSettingsWindowDoubleLineLyricsRadioButton" xml:space="preserve">
+    <value>Double lines</value>
+  </data>
+  <data name="LyricsSettingsWindowTopMostCb" xml:space="preserve">
+    <value>Force on top</value>
+  </data>
+  <data name="LyricsSettingsWindowTopMostCbToolTip" xml:space="preserve">
+    <value>Force on top can do the magic when you got the problem that lyrics are not shown on top. However, it may still show when running some fullscreen programs.</value>
+  </data>
+  <data name="LyricsSettingsWindowHideWhenPauseCb" xml:space="preserve">
+    <value>Hide when music is paused</value>
+  </data>
+  <data name="LyricsSettingsWindowOutputDisplayTB" xml:space="preserve">
+    <value>Output device</value>
+  </data>
+  <data name="LyricsSettingsWindowWritingGB" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="LyricsSettingsWindowTypefaceTB" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="LyricsSettingsWindowSizeTB" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="LyricsSettingsWindowThicknessTB" xml:space="preserve">
+    <value>Weight</value>
+  </data>
+  <data name="LyricsSettingsWindowStrokeWeightTB" xml:space="preserve">
+    <value>Stroke weight</value>
+  </data>
+  <data name="LyricsSettingsWindowColorGB" xml:space="preserve">
+    <value>Colors</value>
+  </data>
+  <data name="LyricsSettingsWindowForegroundColorTB" xml:space="preserve">
+    <value>Foreground</value>
+  </data>
+  <data name="CbAutoForeground" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="LyricsSettingsWindowStrokeColorTB" xml:space="preserve">
+    <value>Stroke</value>
+  </data>
+  <data name="LyricsSettingsWindowShadowColorTB" xml:space="preserve">
+    <value>Shadow</value>
+  </data>
+  <data name="LyricsSettingsWindowTransparencyTB" xml:space="preserve">
+    <value>Transparency</value>
+  </data>
+  <data name="LyricsSettingsWindowLayoutGB" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="LyricsSettingsWindowMarginTopTB" xml:space="preserve">
+    <value>T. Margin</value>
+  </data>
+  <data name="LyricsSettingsWindowMarginBottomTB" xml:space="preserve">
+    <value>B. Margin</value>
+  </data>
+  <data name="LyricsSettingsWindowMarginLeftTB" xml:space="preserve">
+    <value>L. Margin</value>
+  </data>
+  <data name="LyricsSettingsWindowMarginRightTB" xml:space="preserve">
+    <value>R. Margin</value>
+  </data>
+  <data name="LyricsSettingsWindowHorizontalAlignmentTB" xml:space="preserve">
+    <value>H. Alignment</value>
+  </data>
+  <data name="LyricsSettingsWindowVerticalAlignmentTB" xml:space="preserve">
+    <value>V. Alignment</value>
+  </data>
+  <data name="CbShowLyricsBackground" xml:space="preserve">
+    <value>Show lyrics borders to help adjust layout</value>
+  </data>
+  <data name="LyricsWindowLyricsRoot1TB" xml:space="preserve">
+    <value>Placeholder</value>
+  </data>
+  <data name="ShareSettingsWindowShareButtonLabel" xml:space="preserve">
+    <value>Share buttons to show:</value>
+  </data>
+  <data name="ShareSettingsWindowEnableKeyShareCb" xml:space="preserve">
+    <value>Enable one-key share</value>
+  </data>
+  <data name="ShareSettingsWindowKeyShareSiteLabel" xml:space="preserve">
+    <value>Sites to share on when use one-key share:</value>
+  </data>
+  <data name="UISettingsWindowPopupCb" xml:space="preserve">
+    <value>Popup when switching to a new song</value>
+  </data>
+  <data name="CheckBoxTopMost" xml:space="preserve">
+    <value>Always on top</value>
+  </data>
+  <data name="CheckBoxAlwaysShowNotifyIcon" xml:space="preserve">
+    <value>Always show tray icon</value>
+  </data>
+  <data name="RadioButtonSlideCoverWhenMouseMove" xml:space="preserve">
+    <value>Slide cover when the mouse hovers over</value>
+  </data>
+  <data name="CheckBoxOpenAlbumInfoWhenClickCover" xml:space="preserve">
+    <value>Open album info when cover is clicked</value>
+  </data>
+  <data name="RadioButtonSlideCoverWhenClick" xml:space="preserve">
+    <value>Slide cover when clicked</value>
+  </data>
+  <data name="UISettingsWindowMainInterfaceScaleTextBlock" xml:space="preserve">
+    <value>Main UI scale</value>
+  </data>
+  <data name="BtnScaleTransformReset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="UISettingsWindowMainInterfaceFontTextBlock" xml:space="preserve">
+    <value>Main UI font</value>
+  </data>
+  <data name="UISettingsWindowWindowBackgroundGB" xml:space="preserve">
+    <value>Window background</value>
+  </data>
+  <data name="UISettingsWindowWindowManualColorCB" xml:space="preserve">
+    <value>Custom color</value>
+  </data>
+  <data name="UISettingsWindowWindowSpectrumCB" xml:space="preserve">
+    <value>Spectrum</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Donate</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>Feedback</value>
+  </data>
+  <data name="DoubanFMOfficialWebsite" xml:space="preserve">
+    <value>The DoubanFM official website</value>
+  </data>
+  <data name="CheckforUpdates" xml:space="preserve">
+    <value>Check for updates</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="ShowLyrics" xml:space="preserve">
+    <value>Show Lyrics</value>
+  </data>
+  <data name="HideLyrics" xml:space="preserve">
+    <value>Hide lyrics</value>
+  </data>
+  <data name="SoftwareHome" xml:space="preserve">
+    <value>Homepage</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="OutputScreenFormatString" xml:space="preserve">
+    <value>Monitor: {0}</value>
+  </data>
+  <data name="CenterAlignment" xml:space="preserve">
+    <value>Center</value>
+  </data>
+  <data name="LeftAlignment" xml:space="preserve">
+    <value>Left</value>
+  </data>
+  <data name="RightAlignment" xml:space="preserve">
+    <value>Right</value>
+  </data>
+  <data name="StretchAlignment" xml:space="preserve">
+    <value>Justify</value>
+  </data>
+  <data name="TopAlignment" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="BottomAlignment" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="ShareText1" xml:space="preserve">
+    <value>I'm listening to {1} - {0}</value>
+  </data>
+  <data name="ShareSiteDouban" xml:space="preserve">
+    <value>Douban</value>
+  </data>
+  <data name="ShareSiteFacebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="ShareSiteFanfou" xml:space="preserve">
+    <value>Fanfou</value>
+  </data>
+  <data name="ShareSiteKaixin" xml:space="preserve">
+    <value>Kaixin</value>
+  </data>
+  <data name="ShareSiteMsn" xml:space="preserve">
+    <value>MSN</value>
+  </data>
+  <data name="ShareSiteRenren" xml:space="preserve">
+    <value>Renren</value>
+  </data>
+  <data name="ShareSiteTencentWeibo" xml:space="preserve">
+    <value>Tencent Weibo</value>
+  </data>
+  <data name="ShareSiteTwitter" xml:space="preserve">
+    <value>Twitter</value>
+  </data>
+  <data name="ShareSiteWeibo" xml:space="preserve">
+    <value>Sina Weibo</value>
+  </data>
+  <data name="ShareSiteQzone" xml:space="preserve">
+    <value>Qzone</value>
+  </data>
+  <data name="ShareSiteNone" xml:space="preserve">
+    <value>*Copy to clipboard*</value>
+  </data>
+  <data name="AlbumInfoPage" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="ApplicationWillClose" xml:space="preserve">
+    <value>Application will be shut down</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="GetPlayListFailedMessage" xml:space="preserve">
+    <value>Obtaining play list failed : {0}</value>
+  </data>
+  <data name="Listen" xml:space="preserve">
+    <value>Listen</value>
+  </data>
+  <data name="ResetFailed" xml:space="preserve">
+    <value>Reset failed</value>
+  </data>
+  <data name="ResetWarning" xml:space="preserve">
+    <value>Are you sure to reset settings?
+Application will restart after reset.</value>
+  </data>
+  <data name="SetProxyFailed" xml:space="preserve">
+    <value>Set proxy failed</value>
+  </data>
+  <data name="ShareFanfou" xml:space="preserve">
+    <value>Share on Fanfou</value>
+  </data>
+  <data name="ShareQzone" xml:space="preserve">
+    <value>Share on Qzone</value>
+  </data>
+  <data name="ShareTencentWeibo" xml:space="preserve">
+    <value>Share on Tencent Weibo</value>
+  </data>
+  <data name="SuccessfullyCopied" xml:space="preserve">
+    <value>Copy successful</value>
+  </data>
+  <data name="UrlCopyedToClipboard" xml:space="preserve">
+    <value>Link copied to clipborad</value>
+  </data>
+  <data name="ZipFileFilterName" xml:space="preserve">
+    <value>Zip files</value>
+  </data>
+  <data name="LanguageTextBlock" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LanguageChangedHint" xml:space="preserve">
+    <value>Language setting changed and will take effect at the next start up.</value>
+  </data>
+  <data name="CbSearchQQMusic" xml:space="preserve">
+    <value>Search QQ Music</value>
+  </data>
+  <data name="BitRate" xml:space="preserve">
+    <value>Bit rate</value>
+  </data>
+  <data name="UserExpiredCaption" xml:space="preserve">
+    <value>Your login status has expired</value>
+  </data>
+  <data name="UserExpiredMessage" xml:space="preserve">
+    <value>Your login status has expired. Please login again.</value>
+  </data>
+  <data name="CheckBoxEnableDownloadRateRestriction" xml:space="preserve">
+    <value>Limit download speed</value>
+  </data>
+</root>
