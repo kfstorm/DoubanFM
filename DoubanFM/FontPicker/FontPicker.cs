@@ -39,11 +39,19 @@ namespace DoubanFM
 		public static string GetFontName(FontFamily fontFamily, CultureInfo cultureInfo)
 		{
 			if (fontFamily == null) return string.Empty;
-			if (fontFamily.FamilyNames.ContainsKey(System.Windows.Markup.XmlLanguage.GetLanguage(cultureInfo.Name)))
-			{
-				return fontFamily.FamilyNames[System.Windows.Markup.XmlLanguage.GetLanguage(cultureInfo.Name)];
-			}
-			return fontFamily.FamilyNames.First().Value;
+		    try
+		    {
+		        if (fontFamily.FamilyNames.ContainsKey(System.Windows.Markup.XmlLanguage.GetLanguage(cultureInfo.Name)))
+		        {
+		            return fontFamily.FamilyNames[System.Windows.Markup.XmlLanguage.GetLanguage(cultureInfo.Name)];
+		        }
+		        return fontFamily.FamilyNames.First().Value;
+		    }
+		    catch (ArgumentException)
+            {
+                // WPF Bug: http://code.logos.com/blog/2012/11/how-to-crash-many-wpf-applications-wpf-4-edition.html
+                return fontFamily.Source;
+            }
 		}
 
 		/// <summary>
@@ -61,7 +69,7 @@ namespace DoubanFM
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(FontPicker), new FrameworkPropertyMetadata(typeof(FontPicker)));
 
 			//获取系统中已安装的字体
-			var fonts = from font in Fonts.SystemFontFamilies select GetFontName(font);
+		    var fonts = from font in Fonts.SystemFontFamilies let name = GetFontName(font) where !string.IsNullOrWhiteSpace(name) select name;
 			SystemFonts = fonts.ToList();
 			SystemFonts.Sort();
 		}
