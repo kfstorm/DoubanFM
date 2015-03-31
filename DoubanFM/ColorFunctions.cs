@@ -8,7 +8,10 @@ using System.Configuration;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System;
+using System.ComponentModel;
 using System.Threading;
+using System.Windows;
+
 namespace DoubanFM
 {
     /// <summary>
@@ -20,63 +23,71 @@ namespace DoubanFM
         /// <summary>
         /// 两种颜色不同的阀值
         /// </summary>
-        public readonly static double CoverColorDiff = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.CoverColorDiff"]);
+        public static readonly double CoverColorDiff = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.CoverColorDiff"]), 0.05);
         /// <summary>
         /// 亮度调整幅度
         /// </summary>
-        public readonly static double ReviseParameter = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.ReviseParameter"]);
+        public readonly static double ReviseParameter = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.ReviseParameter"]), 0.1);
         /// <summary>
         /// 用于调整封面右边取色区域的大小，具体表示右边区域宽度占图片宽度的百分比
         /// </summary>
-        public readonly static double RightSideWidth = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.RightSideWidth"]);
+        public readonly static double RightSideWidth = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.RightSideWidth"]), 0.1);
         /// <summary>
         /// 判断颜色是否太暗
         /// </summary>
-        public readonly static double TooDark = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.TooDark"]);
+        public readonly static double TooDark = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.TooDark"]), 0.15);
         /// <summary>
         /// 判断颜色是否太暗亮
         /// </summary>
-        public readonly static double TooBright = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.TooBright"]);
+        public readonly static double TooBright = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.TooBright"]), 0.4);
         /// <summary>
         /// 色相偏移
         /// </summary>
-        public readonly static double HueOffset = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.HueOffset"]);
+        public readonly static double HueOffset = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.HueOffset"]), 10);
         /// <summary>
         /// 进度条颜色调整参数
         /// </summary>
-        public readonly static double ProgressBarReviseParameter = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.ProgressBarReviseParameter"]);
+        public readonly static double ProgressBarReviseParameter = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.ProgressBarReviseParameter"]), 0.2);
         /// <summary>
         /// 判断颜色饱和度是否太低
         /// </summary>
-        public readonly static double NotSaturateEnough = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.NotSaturateEnough"]);
+        public readonly static double NotSaturateEnough = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.NotSaturateEnough"]), 0.4);
         /// <summary>
         /// 判断颜色饱和度是否接近0
         /// </summary>
-        public readonly static double AlmostZeroSaturation = double.Parse(ConfigurationManager.AppSettings["ColorFunctions.AlmostZeroSaturation"]);
+        public readonly static double AlmostZeroSaturation = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.AlmostZeroSaturation"]), 0.001);
         /// <summary>
         /// 计算图片平均色时是否使用颜色的饱和度作权重
         /// </summary>
-        public readonly static bool EnableColorWeight = bool.Parse(ConfigurationManager.AppSettings["ColorFunctions.EnableColorWeight"]);
+        public readonly static bool EnableColorWeight = GetValueOrDesignModeDefault(() => bool.Parse(ConfigurationManager.AppSettings["ColorFunctions.EnableColorWeight"]), true);
 
         /// <summary>
         /// 人脸的颜色
         /// </summary>
-        public static readonly Color FaceColor =
-            (Color)ColorConverter.ConvertFromString(ConfigurationManager.AppSettings["ColorFunctions.FaceColor"]);
+        public static readonly Color FaceColor = GetValueOrDesignModeDefault(() =>
+            (Color)ColorConverter.ConvertFromString(ConfigurationManager.AppSettings["ColorFunctions.FaceColor"]), Color.FromArgb(0xFF, 0xCD, 0xA3, 0x8F));
 
         /// <summary>
         /// 人脸色0权重的颜色差异阈值
         /// </summary>
-        public static readonly double ZeroWeightFaceColorDifference =
-            double.Parse(ConfigurationManager.AppSettings["ColorFunctions.ZeroWeightFaceColorDifference"]);
+        public static readonly double ZeroWeightFaceColorDifference = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.ZeroWeightFaceColorDifference"]), 0.03);
 
         /// <summary>
         /// 最低权重
         /// </summary>
-        public static readonly double MinWeight =
-            double.Parse(ConfigurationManager.AppSettings["ColorFunctions.MinWeight"]);
+        public static readonly double MinWeight = GetValueOrDesignModeDefault(() => double.Parse(ConfigurationManager.AppSettings["ColorFunctions.MinWeight"]), 0.2);
 
         public delegate void ComputeCompleteCallback(Color color);
+
+        private static T GetValueOrDesignModeDefault<T>(Func<T> func, T designModeDefaultValue)
+        {
+            if ((bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
+            {
+                // In design mode
+                return designModeDefaultValue;
+            }
+            return func();
+        }
 
         /// <summary>
         /// 异步从图片中获取背景颜色
