@@ -18,10 +18,6 @@ xcopy "%imagedir%" "%tempdir%\" /Q/E/Y
 if %errorlevel% NEQ 0 goto :clear
 xcopy "%projectdir%" "%tempdir%\" /Q/E/Y
 if %errorlevel% NEQ 0 goto :clear
-xcopy "..\LICENSE.txt" "%tempdir%\" /Q/Y
-if %errorlevel% NEQ 0 goto :clear
-xcopy "..\README.txt" "%tempdir%\" /Q/Y
-if %errorlevel% NEQ 0 goto :clear
 xcopy "DoubanFM.nsi" "%tempdir%\" /Q/Y
 if %errorlevel% NEQ 0 goto :clear
 if "%nosign%" == "true" goto :compile
@@ -56,5 +52,5 @@ if exist "%tempdir%" rmdir "%tempdir%" /s /q
 goto :eof
 
 :SignFile
-signtool sign /n K.F.Storm /i K.F.Storm /t "http://timestamp.globalsign.com/scripts/timstamp.dll" "%1"
+signtool sign /n K.F.Storm /i K.F.Storm /sha1 445D84D888E121C10503F13E1F6A16757F1F78B2 /t "http://timestamp.globalsign.com/scripts/timstamp.dll" "%1"
 @exit /B %errorlevel%

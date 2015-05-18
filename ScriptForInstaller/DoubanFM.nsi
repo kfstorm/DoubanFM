@@ -53,8 +53,6 @@ RequestExecutionLevel admin
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite on
-  File "LICENSE.txt"
-  File "README.txt"
   File "version.dat"
   File "DoubanFM.exe.config"
   File "Bass.Net.dll"
@@ -158,8 +156,6 @@ DeleteExe:
   Delete "$INSTDIR\DoubanFM.Core.dll"
   Delete "$INSTDIR\Hardcodet.Wpf.TaskbarNotification.dll"
   Delete "$INSTDIR\WPFSoundVisualizationLib.dll"
-  Delete "$INSTDIR\LICENSE.txt"
-  Delete "$INSTDIR\README.txt"
   Delete "$INSTDIR\version.dat"
   Delete "$INSTDIR\x86\bass.dll"
   Delete "$INSTDIR\x64\bass.dll"

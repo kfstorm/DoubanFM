@@ -26,7 +26,23 @@ if not defined VisualStudioVersion (
 
 :Build
 MSBuild DoubanFM.sln /t:Rebuild /p:Configuration=Release
+if %errorlevel% NEQ 0 exit /b 1
 
 :Copy
 rd bin /s /q
 robocopy DoubanFM\bin\Release bin *.dll *.exe *.config version.dat /MIR /XD
+
+:CreateInstaller
+if exist "%ProgramFiles(x86)%\NSIS\Unicode\makensis.exe" (
+    if exist "%ProgramFiles(x86)%\NSIS\Unicode\Plugins\FindProcDLL.dll" (
+        for /F %%I IN (bin\version.dat) DO set version=%%I
+        pushd ScriptForInstaller
+        make.bat %version%
+        popd
+        goto :EOF
+    )
+)
+
+echo NSIS is not found or not ready. Will not create the installer.
+exit /b 1
+
