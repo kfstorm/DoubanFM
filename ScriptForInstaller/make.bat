@@ -1,11 +1,10 @@
 @echo off
+setlocal
 set nosign=false
 set version=%1
-if "%1" == "" echo 必须输入版本号！
+if "%1" == "" echo Version number needed.
 if "%1" == "" goto :eof
-cd /d %~dp0
-@call "%VS120COMNTOOLS%\..\..\VC\vcvarsall.bat" x86
-@set "PATH=%WindowsSdkDir%bin;%PATH%"
+path %WindowsSdkDir%bin;%PATH%
 set projectdir=..\DoubanFM\bin\Release
 set imagedir=Images
 set tempdir=Temp
@@ -43,7 +42,7 @@ call :SignFile "%outputdir%\%setup%"
 if %errorlevel% NEQ 0 goto :clear
 
 :end
-if "%nosign%" == "true" echo 警告：没有数字签名
+if "%nosign%" == "true" echo Warning: No digital signiture.
 goto :clear
 
 :clear
@@ -54,3 +53,6 @@ goto :eof
 :SignFile
 signtool sign /n K.F.Storm /i K.F.Storm /sha1 445D84D888E121C10503F13E1F6A16757F1F78B2 /t "http://timestamp.globalsign.com/scripts/timstamp.dll" "%1"
 @exit /B %errorlevel%
+
+:eof
+endlocal
