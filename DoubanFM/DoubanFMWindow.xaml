@@ -534,7 +534,7 @@ Website : http://www.kfstorm.com
 									<Button x:Name="BtnDonate" Grid.Column="1" Style="{StaticResource DonateStyle}" Click="BtnDonate_Click"/>
 									<Button x:Name="VisitOfficialWebsite" Grid.Column="2" Click="VisitOfficialWebsite_Click" Style="{StaticResource DoubanFMOfficialWebsiteStyle}"/>
 								</Grid>
-								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011-2013 K.F.Storm</Label>
+								<Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Copyright © 2011-2015 K.F.Storm</Label>
 							</Grid>
 						</Border>
 					</TabItem>
