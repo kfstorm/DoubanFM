@@ -31,3 +31,4 @@ if %errorlevel% NEQ 0 exit /b 1
 :Copy
 rd bin /s /q
 robocopy DoubanFM\bin\Release bin *.dll *.exe *.config version.dat /MIR /XD app.publish
+if %errorlevel% LSS 8 exit /b 0
