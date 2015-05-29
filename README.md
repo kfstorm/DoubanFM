@@ -1,6 +1,8 @@
 # DoubanFM (K.F.Storm豆瓣电台)
 ## A Windows client for douban.fm
 
+[![Build status](https://ci.appveyor.com/api/projects/status/yyvnw6ym9rr2b6xy?svg=true)](https://ci.appveyor.com/project/kfstorm/doubanfm)
+
 这是一个豆瓣电台的 Windows 客户端，使用 C# 编写，基于 .NET Framework 中的 WPF 技术。软件界面运用了较多动画，界面风格仿造 Metro 风格，功能不强大，但界面很友好。 
    
 打开豆瓣电台客户端，聆听动人的音乐，无需打开网页就能收听豆瓣电台。清新的界面，平滑的动画，快捷的操作，体验如此美妙。 
