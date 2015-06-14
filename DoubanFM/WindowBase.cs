@@ -5,10 +5,11 @@
  * */
 
 using DoubanFM.Interop;
-using Kfstorm.DwmHelper;
 using System;
 using System.Windows;
 using System.Windows.Interop;
+using Kfstorm.WpfExtensions;
+using DwmHelper = Kfstorm.DwmHelper.DwmHelper;
 
 namespace DoubanFM
 {

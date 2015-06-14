@@ -61,7 +61,6 @@
     <Compile Include="Json\LogOnResult.cs" />
     <Compile Include="Json\PlayList.cs" />
     <Compile Include="Json\Song.cs" />
-    <Compile Include="Lyrics\Lyrics.cs" />
     <Compile Include="Lyrics\TTPlayerLyrics.cs" />
     <Compile Include="Lyrics\LyricsItem.cs" />
     <Compile Include="Lyrics\LyricsResult.cs" />

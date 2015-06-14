@@ -9,6 +9,7 @@ Website : http://www.kfstorm.com
 		xmlns:local="clr-namespace:DoubanFM"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:resx="clr-namespace:DoubanFM.Resources"
+        xmlns:ex="clr-namespace:Kfstorm.WpfExtensions;assembly=Kfstorm.WpfExtensions"
 		x:Name="Window"
 		Title="{x:Static resx:Resources.LyricsSettingsButton}" Background="#FF813131">
 	<Window.Resources>
@@ -74,7 +75,7 @@ Website : http://www.kfstorm.com
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <TextBlock VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowTypefaceTB}"/>
-							<local:FontPicker x:Name="FpFontPicker" Grid.Column="2" Margin="0,2" Height="24" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
+							<ex:FontPicker x:Name="FpFontPicker" Grid.Column="2" Margin="0,2" Height="24" Font="{Binding LyricsSetting.FontFamily, ElementName=Window}"/>
 							<TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowSizeTB}"/>
                             <Slider Grid.Row="1" x:Name="SliderFontSize" Grid.Column="2" Value="{Binding LyricsSetting.FontSize, ElementName=Window}" Maximum="100" Minimum="0.01" Margin="0,2" SmallChange="0.2" LargeChange="5"/>
                             <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowThicknessTB}"/>
@@ -103,12 +104,12 @@ Website : http://www.kfstorm.com
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
                                 <CheckBox x:Name="CbAutoForeground" Margin="5,2" VerticalAlignment="Center" IsChecked="{Binding LyricsSetting.AutoForeground, ElementName=Window}" Click="CbAutoForeground_Click" Content="{x:Static resx:Resources.CbAutoForeground}"/>
-                                <local:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}" IsEnabled="{Binding LyricsSetting.AutoForeground, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Height="24"/>
+                                <ex:PopupableColorPicker Grid.Column="1" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.Foreground, ElementName=Window}" IsEnabled="{Binding LyricsSetting.AutoForeground, ElementName=Window, Converter={StaticResource BoolReverseConverter}}" Height="24"/>
                             </Grid>
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowStrokeColorTB}"/>
-                            <local:PopupableColorPicker Grid.Row="1" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}" Height="24"/>
+                            <ex:PopupableColorPicker Grid.Row="1" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.StrokeColor, ElementName=Window}" Height="24"/>
                             <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowShadowColorTB}"/>
-                            <local:PopupableColorPicker Grid.Row="2" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}" IsAlphaEnabled="False" Height="24"/>
+                            <ex:PopupableColorPicker Grid.Row="2" Grid.Column="2" Margin="0,2" Background="{Binding Background, ElementName=Window}" Color="{Binding LyricsSetting.ShadowColor, ElementName=Window}" IsAlphaEnabled="False" Height="24"/>
                             <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{x:Static resx:Resources.LyricsSettingsWindowTransparencyTB}"/>
                             <Slider Grid.Row="3" x:Name="SliderOpacity" Grid.Column="2" Value="{Binding LyricsSetting.Opacity, ElementName=Window, Converter={StaticResource OpacityToTransparencyConverter}}" Maximum="1" Minimum="0" Margin="0,2" SmallChange="0.01" LargeChange="0.1" RenderTransformOrigin="0.5,0.5"/>
                         </Grid>

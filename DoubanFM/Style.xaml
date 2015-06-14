@@ -9,6 +9,7 @@ Website : http://www.kfstorm.com
 	xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
     xmlns:resx="clr-namespace:DoubanFM.Resources"
 	xmlns:local="clr-namespace:DoubanFM" xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ex="clr-namespace:Kfstorm.WpfExtensions;assembly=Kfstorm.WpfExtensions"
 	x:Class="DoubanFM.Style"
 	mc:Ignorable="d PresentationOptions">
 	<!-- 应该在此定义资源字典条目。-->
@@ -19,8 +20,8 @@ Website : http://www.kfstorm.com
 	<PowerEase x:Key="Smooth" Power="3" PresentationOptions:Freeze="True"/>
 	<local:SliderThumbWidthConverter x:Key="converter1"/>
 	<local:BoolReverseConverter x:Key="BoolReverseConverter"/>
-	<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-	<local:BoolReverseToVisibilityConverter x:Key="BoolReverseToVisibilityConverter"/>
+	<ex:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+	<ex:BooleanToVisibilityConverter x:Key="BoolReverseToVisibilityConverter" Reverse="True"/>
 	<local:ChannelToCanFavoriteVisibilityConverter x:Key="ChannelToCanFavoriteVisibilityConverter"/>
 	<local:BooleanChooserConverter x:Key="BooleanChooserConverter"/>
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />

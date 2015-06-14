@@ -29,7 +29,7 @@ namespace DoubanFM.Core
 		/// </summary>
 		/// <param name="artist">表演者</param>
 		/// <param name="title">标题</param>
-		public static Lyrics GetLyrics(string artist, string title)
+		public static string GetLyrics(string artist, string title)
 		{
             if (string.IsNullOrEmpty(artist) && string.IsNullOrEmpty(title)) return null;
 			if (title.ToLower().Contains("instrumental")) return null;
@@ -98,14 +98,7 @@ namespace DoubanFM.Core
 
 				//生成Lyrics的实例
 				if (string.IsNullOrEmpty(file2)) continue;
-				try
-				{
-					return new Lyrics(file2);
-				}
-				catch
-				{
-					continue;
-				}
+				return file2;
 			}
 
 			return null;

@@ -19,7 +19,7 @@ namespace DoubanFM.Core
         /// </summary>
         /// <param name="song">歌曲</param>
         /// <returns>歌词</returns>
-        public static Lyrics GetLyrics(Song song)
+        public static string GetLyrics(Song song)
         {
             //优先获取来自豆瓣的歌词。
             var lyrics = GetDoubanLyrics(song);
@@ -31,7 +31,7 @@ namespace DoubanFM.Core
         /// </summary>
         /// <param name="song">歌曲</param>
         /// <returns>歌词</returns>
-        protected static Lyrics GetDoubanLyrics(Song song)
+        protected static string GetDoubanLyrics(Song song)
         {
             Parameters parameters = new Parameters();
             parameters["song_id"] = song.SongId;
@@ -40,17 +40,7 @@ namespace DoubanFM.Core
             if (string.IsNullOrEmpty(content)) return null;
 
             var songInfo = Json.JsonHelper.FromJson<Json.SongInfo>(content);
-            if (songInfo == null || string.IsNullOrEmpty(songInfo.Lyric)) return null;
-            
-            try
-            {
-                return new Lyrics(songInfo.Lyric);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-                return null;
-            }
+            return songInfo == null ? null : songInfo.Lyric;
         }
     }
 }

@@ -8,6 +8,7 @@ Website : http://www.kfstorm.com
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:DoubanFM"
         xmlns:resx="clr-namespace:DoubanFM.Resources"
+        xmlns:ex="clr-namespace:Kfstorm.WpfExtensions;assembly=Kfstorm.WpfExtensions"
 		x:Name="Window"
 		Title="{x:Static resx:Resources.InterfaceSettingsButton}" Background="#FF813131" Foreground="White">
 	<Grid Width="300" Margin="10">
@@ -40,7 +41,7 @@ Website : http://www.kfstorm.com
                 <Slider Grid.Column="1" Value="{Binding Settings.ScaleTransform, Source={StaticResource Player}, Mode=TwoWay}" Minimum="0.5" Maximum="1.5" SmallChange="0.01" LargeChange="0.1" Margin="0,0,5,0" ValueChanged="Slider_ValueChanged" />
                 <Button Grid.Column="2" x:Name="BtnScaleTransformReset" Click="BtnScaleTransformReset_Click" Padding="5,0" Content="{x:Static resx:Resources.BtnScaleTransformReset}"/>
                 <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.UISettingsWindowMainInterfaceFontTextBlock}"/>
-                <local:FontPicker Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Font="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Height="24"/>
+                <ex:FontPicker Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Font="{Binding Settings.MainWindowFont, Source={StaticResource Player}}" Height="24"/>
             </Grid>
 			<GroupBox Header="{x:Static resx:Resources.UISettingsWindowWindowBackgroundGB}" Margin="0,2">
 				<Grid>
@@ -56,7 +57,7 @@ Website : http://www.kfstorm.com
                     <TextBlock VerticalAlignment="Center" Margin="5,0" Text="{x:Static resx:Resources.LyricsSettingsWindowTransparencyTB}"/>
 					<Slider Grid.Column="1" Value="{Binding Settings.BackgroundTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="0.99" LargeChange="0.1" SmallChange="0.01"/>
                     <CheckBox Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="{Binding Settings.AutoBackground, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}" Margin="0,5" Content="{x:Static resx:Resources.UISettingsWindowWindowManualColorCB}"/>
-                    <local:PopupableColorPicker Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5" Height="24" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}" IsAlphaEnabled="False" IsEnabled="{Binding Settings.AutoBackground, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}"/>
+                    <ex:PopupableColorPicker Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5" Height="24" Color="{Binding Settings.Background, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}" IsAlphaEnabled="False" IsEnabled="{Binding Settings.AutoBackground, Source={StaticResource Player}, Converter={StaticResource BoolReverseConverter}}"/>
 				</Grid>
 			</GroupBox>
 			<GroupBox Margin="0,2">
@@ -77,7 +78,7 @@ Website : http://www.kfstorm.com
                         <TextBlock VerticalAlignment="Center" Margin="5,0" Text="{x:Static resx:Resources.LyricsSettingsWindowTransparencyTB}"/>
 						<Slider Grid.Column="1" Value="{Binding Settings.SpectrumTransparency, Source={StaticResource Player}}" Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01" Margin="0,2"/>
                         <TextBlock Grid.Row="1" VerticalAlignment="Center" Margin="5,0" Text="{x:Static resx:Resources.LyricsSettingsWindowColorGB}"/>
-						<local:PopupableColorPicker Grid.Row="1" Grid.Column="1" Margin="0,2" Height="24" Color="{Binding Settings.SpectrumColor, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}" IsAlphaEnabled="False"/>
+						<ex:PopupableColorPicker Grid.Row="1" Grid.Column="1" Margin="0,2" Height="24" Color="{Binding Settings.SpectrumColor, Source={StaticResource Player}}" Background="{Binding Background, ElementName=Window}" IsAlphaEnabled="False"/>
 					</Grid>
 				</StackPanel>
 			</GroupBox>

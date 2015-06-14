@@ -22,6 +22,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Kfstorm.LrcParser;
 
 namespace DoubanFM
 {
@@ -38,14 +39,12 @@ namespace DoubanFM
 			set { SetValue(LyricsSettingProperty, value); }
 		}
 
-		private Lyrics _lyrics;
+		private ILrcFile _lyrics;
 
-	    private LyricsShower _lyricsShower;
-
-		/// <summary>
+	    /// <summary>
 		/// 歌词
 		/// </summary>
-		public Lyrics Lyrics
+		public ILrcFile Lyrics
 		{
 			get { return _lyrics; }
 			internal set
@@ -53,16 +52,35 @@ namespace DoubanFM
 				if (_lyrics != value)
 				{
 					_lyrics = value;
-				    _lyricsShower = _lyrics == null ? null : new LyricsShower(_lyrics);
-                    _lyricsCurrentIndex = int.MinValue;
+				    _state[0] = _state[1] = _state[2] = null;
+
+				    if (_lyrics != null)
+				    {
+                        //当相邻的空歌词与非空歌词相差时间太大时，插入一行空歌词，
+                        //以避免双行显示歌词时出现长时间第一行为空、第二行有字的情况。
+                        var distance = TimeSpan.FromSeconds(2);
+                        var lines = new List<IOneLineLyric>();
+				        IOneLineLyric lastLine = null;
+                        foreach (var line in _lyrics.Lyrics)
+                        {
+                            if (line.Timestamp < TimeSpan.Zero) continue;
+                            if (line.Timestamp - (lastLine == null?TimeSpan.Zero : lastLine.Timestamp) > distance)
+                            {
+                                if ((lastLine == null || string.IsNullOrWhiteSpace(lastLine.Content)) && !string.IsNullOrWhiteSpace(line.Content))
+                                {
+                                    lines.Add(new OneLineLyric(line.Timestamp - distance, null));
+                                }
+                            }
+                            lines.Add(line);
+                            lastLine = line;
+                        }
+				        _lyrics = new LrcFile(_lyrics.Metadata, lines, false);
+				    }
 				}
 			}
 		}
 
-        /// <summary>
-		/// 当前歌词所在位置
-		/// </summary>
-		private int _lyricsCurrentIndex = int.MinValue;
+        private readonly IOneLineLyric[] _state = new IOneLineLyric[3];
 
 		/// <summary>
 		/// 更换歌词的Storyboard
@@ -167,12 +185,19 @@ namespace DoubanFM
 		/// <summary>
 		/// 更换歌词
 		/// </summary>
-		protected void ChangeLyrics(string newLyrics1, string newLyrics2, string newLyrics3)
+		protected void ChangeLyrics(IOneLineLyric newLyrics1, IOneLineLyric newLyrics2, IOneLineLyric newLyrics3)
 		{
-			((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[2]).KeyFrames[0].Value = newLyrics1;
-			((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[3]).KeyFrames[0].Value = newLyrics2;
-			((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[4]).KeyFrames[0].Value = newLyrics3;
-			ChangeLyricsStoryboard.Begin();
+		    if (_state[0] != newLyrics1 || _state[1] != newLyrics2 || _state[2] != newLyrics3)
+		    {
+		        ((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[2]).KeyFrames[0].Value = newLyrics1 == null ? null : newLyrics1.Content;
+		        ((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[3]).KeyFrames[0].Value = newLyrics2 == null ? null : newLyrics2.Content;
+		        ((StringAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[4]).KeyFrames[0].Value = newLyrics3 == null ? null : newLyrics3.Content;
+		        ChangeLyricsStoryboard.Begin();
+
+                _state[0] = newLyrics1;
+                _state[1] = newLyrics2;
+		        _state[2] = newLyrics3;
+		    }
 		}
 
 		/// <summary>
@@ -180,18 +205,14 @@ namespace DoubanFM
 		/// </summary>
 		public void Refresh(TimeSpan time)
 		{
-            if (_lyricsShower != null)
+            if (_lyrics != null)
             {
-                _lyricsShower.CurrentTime = time +
-                                            ((DoubleAnimationUsingKeyFrames) ChangeLyricsStoryboard.Children[0])
-                                                .KeyFrames[0].KeyTime.TimeSpan;
-                if (_lyricsShower.CurrentIndex != _lyricsCurrentIndex)
-				{
-                    _lyricsCurrentIndex = _lyricsShower.CurrentIndex;
-                    string next2Lyrics = (_lyricsShower.CurrentIndex + 2 >= _lyricsShower.SortedTimes.Count) ? null : _lyricsShower.TimeAndLyrics[_lyricsShower.SortedTimes[_lyricsShower.CurrentIndex + 2]];
-                    ChangeLyrics(_lyricsShower.CurrentLyrics, _lyricsShower.NextLyrics, next2Lyrics);
-				}
-			}
+                var currentTime = time + ((DoubleAnimationUsingKeyFrames)ChangeLyricsStoryboard.Children[0]).KeyFrames[0].KeyTime.TimeSpan;
+                var current = Lyrics.BeforeOrAt(currentTime);
+                var next = Lyrics.After(currentTime);
+                var next2 = next == null ? null : Lyrics.After(next.Timestamp);
+                ChangeLyrics(current, next, next2);
+            }
 			else
 			{
 				HideLyricsStoryboard.Begin();

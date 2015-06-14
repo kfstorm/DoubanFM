@@ -46,6 +46,14 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Kfstorm.LrcParser, Version=1.0.3.12, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kfstorm.LrcParser.1.0.3\lib\portable-net40+sl50+win+wpa81+wp80\Kfstorm.LrcParser.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Kfstorm.WpfExtensions, Version=0.1.0.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kfstorm.WpfExtensions.0.1.0-alpha2\lib\net40\Kfstorm.WpfExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Deployment" />
@@ -69,12 +77,6 @@
     </ApplicationDefinition>
     <Compile Include="AppCommand.cs" />
     <Compile Include="ChildWindowBase.cs" />
-    <Compile Include="ColorPicker\ColorPicker.cs" />
-    <Compile Include="ColorPicker\ColorSpectrumSlider.cs" />
-    <Compile Include="ColorPicker\HsvColor.cs" />
-    <Compile Include="ColorPicker\PopupableColorPicker.xaml.cs">
-      <DependentUpon>PopupableColorPicker.xaml</DependentUpon>
-    </Compile>
     <Compile Include="FilePackage.cs" />
     <Compile Include="Interop\GWL.cs" />
     <Compile Include="Interop\HOOKPROC.cs" />
@@ -84,9 +86,7 @@
     <Compile Include="Interop\RECT.cs" />
     <Compile Include="Interop\SWP.cs" />
     <Compile Include="Interop\WH.cs" />
-    <Compile Include="Interop\WM.cs" />
     <Compile Include="Interop\WS.cs" />
-    <Compile Include="LyricsShower.cs" />
     <Compile Include="Resources\Resources.zh-CN.Designer.cs">
       <DependentUpon>Resources.zh-CN.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -97,14 +97,10 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="ShadowWindow.xaml.cs">
-      <DependentUpon>ShadowWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Wmi\DisplayConfiguration.cs" />
     <Compile Include="ExceptionWindow.xaml.cs">
       <DependentUpon>ExceptionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FontPicker\FontPicker.cs" />
     <Compile Include="HelpWindow.xaml.cs">
       <DependentUpon>HelpWindow.xaml</DependentUpon>
     </Compile>
@@ -153,10 +149,6 @@
     <Compile Include="Wmi\SoundDevice.cs" />
     <Compile Include="Wmi\WmiBase.cs" />
     <Compile Include="Screen.cs" />
-    <Page Include="ColorPicker\PopupableColorPicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="ExceptionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -174,10 +166,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NotifyIcon\PopupLiked.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ShadowWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -253,6 +241,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
@@ -328,24 +317,7 @@
     <Resource Include="icon_like.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOM.PNG" />
-    <Resource Include="Images\Shadow\ACTIVESHADOWLEFT.PNG" />
-    <Resource Include="Images\Shadow\ACTIVESHADOWRIGHT.PNG" />
-    <Resource Include="Images\Shadow\ACTIVESHADOWTOP.PNG" />
-    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOM.PNG" />
-    <Resource Include="Images\Shadow\INACTIVESHADOWLEFT.PNG" />
-    <Resource Include="Images\Shadow\INACTIVESHADOWRIGHT.PNG" />
-    <Resource Include="Images\Shadow\INACTIVESHADOWTOP.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOMLEFT.png" />
-    <Resource Include="Images\Shadow\ACTIVESHADOWBOTTOMRIGHT.png" />
-    <Resource Include="Images\Shadow\ACTIVESHADOWTOPLEFT.png" />
-    <Resource Include="Images\Shadow\ACTIVESHADOWTOPRIGHT.png" />
-    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOMLEFT.png" />
-    <Resource Include="Images\Shadow\INACTIVESHADOWBOTTOMRIGHT.png" />
-    <Resource Include="Images\Shadow\INACTIVESHADOWTOPLEFT.png" />
-    <Resource Include="Images\Shadow\INACTIVESHADOWTOPRIGHT.png" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

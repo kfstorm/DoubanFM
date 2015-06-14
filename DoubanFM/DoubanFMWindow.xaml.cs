@@ -26,6 +26,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shell;
 using System.Windows.Threading;
+using Kfstorm.WpfExtensions;
+using Kfstorm.LrcParser;
 
 namespace DoubanFM
 {
@@ -1101,7 +1103,7 @@ namespace DoubanFM
 		/// <summary>
 		/// 设置歌词
 		/// </summary>
-		private void SetLyrics(Lyrics lyrics)
+		private void SetLyrics(ILrcFile lyrics)
 		{
 			if (_lyricsWindow != null)
 				_lyricsWindow.Lyrics = lyrics;
@@ -1209,10 +1211,19 @@ namespace DoubanFM
 			downloadingLyrics = song;
 			ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
 			{
-				Lyrics lyrics = LyricsHelper.GetLyrics(song);
-				Dispatcher.Invoke(new Action(() =>
+				var lyrics = LyricsHelper.GetLyrics(song);
+			    ILrcFile lrcFile = null;
+			    try
+			    {
+			        lrcFile = LrcFile.FromText(lyrics);
+			    }
+			    catch
+			    {
+			        // ignored
+			    }
+			    Dispatcher.Invoke(new Action(() =>
 				{
-					if (_player.CurrentSong == song) SetLyrics(lyrics);
+					if (_player.CurrentSong == song) SetLyrics(lrcFile);
 				}));
 			}));
 		}

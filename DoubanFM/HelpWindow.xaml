@@ -9,6 +9,7 @@ Website : http://www.kfstorm.com
 	xmlns:local="clr-namespace:DoubanFM"
 	xmlns:core="clr-namespace:DoubanFM.Core;assembly=DoubanFM.Core"
 	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:ex="clr-namespace:Kfstorm.WpfExtensions;assembly=Kfstorm.WpfExtensions"
     xmlns:resx="clr-namespace:DoubanFM.Resources"
 	x:Class="DoubanFM.HelpWindow"
 	x:Name="Window"
@@ -51,7 +52,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp5" Font="Century,华文新魏"/>
+                            <ex:FontPicker x:Name="Fp5" Font="Century,华文新魏"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp5}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -62,7 +63,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp6" Font="华文新魏,Century"/>
+                            <ex:FontPicker x:Name="Fp6" Font="华文新魏,Century"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp6}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}" />
@@ -73,7 +74,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp7" Font="Century,找不到的字体,华文新魏"/>
+                            <ex:FontPicker x:Name="Fp7" Font="Century,找不到的字体,华文新魏"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp7}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -84,7 +85,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp1" Font="Century,华文新魏,楷体"/>
+                            <ex:FontPicker x:Name="Fp1" Font="Century,华文新魏,楷体"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp1}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -95,7 +96,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp2" Font="century,华文新魏,楷体"/>
+                            <ex:FontPicker x:Name="Fp2" Font="century,华文新魏,楷体"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp2}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -106,7 +107,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp3" Font="  Century  ,  华文新魏  ,  楷体  "/>
+                            <ex:FontPicker x:Name="Fp3" Font="  Century  ,  华文新魏  ,  楷体  "/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp3}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -117,7 +118,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp4" Font="Century Bold,华文新魏,楷体"/>
+                            <ex:FontPicker x:Name="Fp4" Font="Century Bold,华文新魏,楷体"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp4}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -125,7 +126,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp8" Font="Century,华文新魏 Bold,楷体"/>
+                            <ex:FontPicker x:Name="Fp8" Font="Century,华文新魏 Bold,楷体"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp8}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -133,7 +134,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp9" Font="Segoe UI Light,华文细黑 Bold"/>
+                            <ex:FontPicker x:Name="Fp9" Font="Segoe UI Light,华文细黑 Bold"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp9}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -144,7 +145,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp10" Font="宋体"/>
+                            <ex:FontPicker x:Name="Fp10" Font="宋体"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp10}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -152,7 +153,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp11" Font="SimSun"/>
+                            <ex:FontPicker x:Name="Fp11" Font="SimSun"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp11}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -160,7 +161,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp12" Font="KaiTi"/>
+                            <ex:FontPicker x:Name="Fp12" Font="KaiTi"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp12}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -168,7 +169,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp13" Font="微軟正黑體"/>
+                            <ex:FontPicker x:Name="Fp13" Font="微軟正黑體"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp13}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -176,7 +177,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp14" Font="Microsoft JhengHei"/>
+                            <ex:FontPicker x:Name="Fp14" Font="Microsoft JhengHei"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp14}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
@@ -184,7 +185,7 @@ Website : http://www.kfstorm.com
                     </Paragraph>
                     <Paragraph>
                         <InlineUIContainer>
-                            <local:FontPicker x:Name="Fp15" Font="標楷體"/>
+                            <ex:FontPicker x:Name="Fp15" Font="標楷體"/>
                         </InlineUIContainer>
                         <InlineUIContainer>
                             <TextBox TextWrapping="Wrap" FontFamily="{Binding Font, ElementName=Fp15}" Text="{x:Static resx:Resources.HelpWindowParagraphFontSet3}"/>
