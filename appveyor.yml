@@ -21,4 +21,5 @@ after_build:
 - ScriptForInstaller\make.bat %APPVEYOR_BUILD_VERSION% bin
 artifacts:
 - path: bin
-- path: ScriptForInstaller\Output
+- path: ScriptForInstaller\Output\DoubanFMSetup_%APPVEYOR_BUILD_VERSION%.exe
+  name: DoubanFMSetup_%APPVEYOR_BUILD_VERSION%.exe
