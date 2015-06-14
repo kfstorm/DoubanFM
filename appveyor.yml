@@ -22,4 +22,4 @@ after_build:
 artifacts:
 - path: bin
 - path: ScriptForInstaller\Output\DoubanFMSetup_%APPVEYOR_BUILD_VERSION%.exe
-  name: DoubanFMSetup_%APPVEYOR_BUILD_VERSION%.exe
+  name: Installer
