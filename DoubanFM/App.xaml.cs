@@ -44,24 +44,13 @@ namespace DoubanFM
 	    {
 	        Started = false;
 
-	        try
+	        if (ApplicationDeployment.IsNetworkDeployed)
 	        {
 	            AppVersion = ApplicationDeployment.CurrentDeployment.CurrentVersion;
 	        }
-	        catch (Exception ex)
-	        {
-	            Debug.WriteLine(ex.Message);
-	            try
+	        else
 	            {
-	                var exePath = System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName;
-	                var versionPath = Path.Combine(Path.GetDirectoryName(exePath), "version.dat");
-	                AppVersion = Version.Parse(File.ReadAllText(versionPath));
-	            }
-	            catch (Exception ex2)
-	            {
-	                Debug.WriteLine(ex2.Message);
-	                AppVersion = typeof (App).Assembly.GetName().Version;
-	            }
+                AppVersion = typeof(App).Assembly.GetName().Version;
 	        }
 	    }
 
