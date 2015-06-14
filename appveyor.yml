@@ -1,5 +1,7 @@
 version: 3.0.0.{build}
 skip_tags: true
+configuration: Release
+platform: Any CPU
 shallow_clone: true
 assembly_info:
   patch: true
@@ -7,16 +9,16 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-environment:
-  certificate_password:
-    secure: QagVcpKiBWqEaejaBGBxoBrBJ1+iKLjiM31OPv/jVSU=
-build_script:
+before_build:
 - nuget restore
-- build.cmd
+build:
+  verbosity: minimal
+after_build:
+- robocopy DoubanFM\bin\%CONFIGURATION% bin *.dll *.exe *.config /MIR /XD app.publish
 - ScriptForInstaller\NSIS\nsis-2.46-Unicode-setup.exe /S
 - 7z x ScriptForInstaller\NSIS\FindProcDLL_mod_by_hnedka.7z -y -oScriptForInstaller\NSIS
 - xcopy ScriptForInstaller\NSIS\Unicode\FindProcDLL.dll "%ProgramFiles(x86)%\NSIS\Unicode\Plugins\" /Y
-- ScriptForInstaller\make.bat %APPVEYOR_BUILD_VERSION% %certificate_password%
+- ScriptForInstaller\make.bat %APPVEYOR_BUILD_VERSION% bin
 artifacts:
 - path: bin
 - path: ScriptForInstaller\Output
