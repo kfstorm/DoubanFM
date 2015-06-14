@@ -4,6 +4,10 @@ set nosign=false
 set version=%1
 if "%1" == "" echo Version number needed.
 if "%1" == "" goto :eof
+set password=%2
+if "%2" == "" echo Certificate password needed.
+if "%2" == "" goto :eof
+pushd %~dp0
 path %WindowsSdkDir%bin;%PATH%
 set projectdir=..\DoubanFM\bin\Release
 set imagedir=Images
@@ -51,7 +55,7 @@ if exist "%tempdir%" rmdir "%tempdir%" /s /q
 goto :eof
 
 :SignFile
-signtool sign /n K.F.Storm /i K.F.Storm /sha1 445D84D888E121C10503F13E1F6A16757F1F78B2 /t "http://timestamp.globalsign.com/scripts/timstamp.dll" "%1"
+signtool sign /f key.pfx /p %password% /t "http://timestamp.globalsign.com/scripts/timstamp.dll" "%1"
 @exit /B %errorlevel%
 
 :eof
