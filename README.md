@@ -1,4 +1,7 @@
 # DoubanFM (K.F.Storm豆瓣电台)
+
+**[Not maintained any more | 已停止维护](http://www.kfstorm.com/blog/2015/11/05/k-f-storm%E8%B1%86%E7%93%A3%E7%94%B5%E5%8F%B0%E5%B7%B2%E5%81%9C%E6%AD%A2%E7%BB%B4%E6%8A%A4/)**
+
 ## A Windows client for douban.fm
 
 [![Build status](https://ci.appveyor.com/api/projects/status/yyvnw6ym9rr2b6xy/branch/master?svg=true)](https://ci.appveyor.com/project/kfstorm/doubanfm/branch/master)
